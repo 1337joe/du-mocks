@@ -240,4 +240,119 @@ function testGetFloatValue()
     lu.fail("NYI")
 end
 
+--- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
+function testGameBehavior()
+    local databank = mdu:new()
+    local slot1 = databank:getClosure()
+
+    -- copy from here
+    local key
+
+    key = "key1"
+    slot1.setStringValue(key, "string")
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "string")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
+    key = "key2"
+    slot1.setStringValue(key, nil)
+    assert(slot1.hasKey(key) == 0)
+    assert(slot1.getStringValue(key) == "")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
+    key = "key3"
+    slot1.setStringValue(key, true)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
+    key = "key4"
+    slot1.setStringValue(key, 4)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "4")
+    assert(slot1.getIntValue(key) == 4)
+    assert(slot1.getFloatValue(key) == 4.0)
+
+    key = "key5"
+    slot1.setStringValue(key, 5.5)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "5.5")
+    assert(slot1.getIntValue(key) == 5)
+    assert(slot1.getFloatValue(key) == 5.5)
+
+    key = "key6"
+    slot1.setIntValue(key, "string")
+    assert(slot1.hasKey(key) == 0)
+    assert(slot1.getStringValue(key) == "")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
+    key = "key7"
+    slot1.setIntValue(key, nil)
+    assert(slot1.hasKey(key) == 0)
+    assert(slot1.getStringValue(key) == "")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
+    key = "key8"
+    slot1.setIntValue(key, true)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
+    key = "key9"
+    slot1.setIntValue(key, 9)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "9")
+    assert(slot1.getIntValue(key) == 9)
+    assert(slot1.getFloatValue(key) == 9.0)
+
+    key = "key10"
+    slot1.setIntValue(key, 10.1)
+    assert(slot1.hasKey(key) == 0)
+    assert(slot1.getStringValue(key) == "")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0)
+
+    key = "key11"
+    slot1.setFloatValue(key, "string")
+    assert(slot1.hasKey(key) == 0)
+    assert(slot1.getStringValue(key) == "")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
+    key = "key12"
+    slot1.setFloatValue(key, nil)
+    assert(slot1.hasKey(key) == 0)
+    assert(slot1.getStringValue(key) == "")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
+    key = "key13"
+    slot1.setFloatValue(key, true)
+    assert(slot1.hasKey(key) == 0)
+    assert(slot1.getStringValue(key) == "")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
+    key = "key14"
+    slot1.setFloatValue(key, 14)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "14.0")
+    assert(slot1.getIntValue(key) == 14)
+    assert(slot1.getFloatValue(key) == 14.0)
+
+    key = "key15"
+    slot1.setFloatValue(key, 15.15)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "15.15")
+    assert(slot1.getIntValue(key) == 15)
+    assert(slot1.getFloatValue(key) == 15.15)
+    -- copy to here
+end
+
 os.exit(lu.LuaUnit.run())
