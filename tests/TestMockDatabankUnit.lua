@@ -257,7 +257,7 @@ function testGameBehavior()
 
     key = "key2"
     slot1.setStringValue(key, nil)
-    assert(slot1.hasKey(key) == 0)
+    assert(slot1.hasKey(key) == 1)
     assert(slot1.getStringValue(key) == "")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
@@ -285,22 +285,22 @@ function testGameBehavior()
 
     key = "key6"
     slot1.setIntValue(key, "string")
-    assert(slot1.hasKey(key) == 0)
-    assert(slot1.getStringValue(key) == "")
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
 
     key = "key7"
     slot1.setIntValue(key, nil)
-    assert(slot1.hasKey(key) == 0)
-    assert(slot1.getStringValue(key) == "")
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
 
     key = "key8"
     slot1.setIntValue(key, true)
     assert(slot1.hasKey(key) == 1)
-    assert(slot1.getStringValue(key) == "")
+    assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
 
@@ -313,36 +313,36 @@ function testGameBehavior()
 
     key = "key10"
     slot1.setIntValue(key, 10.1)
-    assert(slot1.hasKey(key) == 0)
-    assert(slot1.getStringValue(key) == "")
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0)
 
     key = "key11"
     slot1.setFloatValue(key, "string")
-    assert(slot1.hasKey(key) == 0)
-    assert(slot1.getStringValue(key) == "")
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
 
     key = "key12"
     slot1.setFloatValue(key, nil)
-    assert(slot1.hasKey(key) == 0)
-    assert(slot1.getStringValue(key) == "")
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
 
     key = "key13"
     slot1.setFloatValue(key, true)
-    assert(slot1.hasKey(key) == 0)
-    assert(slot1.getStringValue(key) == "")
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
 
     key = "key14"
     slot1.setFloatValue(key, 14)
     assert(slot1.hasKey(key) == 1)
-    assert(slot1.getStringValue(key) == "14.0")
+    assert(slot1.getStringValue(key) == "14")
     assert(slot1.getIntValue(key) == 14)
     assert(slot1.getFloatValue(key) == 14.0)
 
