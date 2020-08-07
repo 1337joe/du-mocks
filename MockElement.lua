@@ -55,8 +55,7 @@ end
 --- The element integrity between 0 and 100.
 -- @treturn 0..100 0 = element fully destroyed, 100 = element fully functional
 function M:getIntegrity()
-    -- TODO is this rounded or continuous?
-    return math.ceil(100 * self.hitPoints / self.maxHitPoints)
+    return 100 * self.hitPoints / self.maxHitPoints
 end
 
 --- The element current hit points (0 = destroyed).

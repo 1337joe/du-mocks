@@ -13,6 +13,9 @@ function M:new(o, id)
     setmetatable(o, self)
     self.__index = self
 
+    o.mass = 17.09
+    o.maxHitPoints = 50.0
+    o.hitPoints = 50.0
     o.data = {}
 
     return o

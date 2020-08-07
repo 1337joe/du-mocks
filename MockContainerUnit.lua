@@ -5,10 +5,29 @@
 
 local MockElement = require "MockElement"
 
+local containerDefinitions = {
+    XS = {
+        selfMass = 229.09,
+        maxHitPoints = 124.0
+    },
+    S = {
+        selfMass = 1281.31,
+        maxHitPoints = 999.0
+    },
+    M = {
+        selfMass = 7421.35,
+        maxHitPoints = 7997.0
+    },
+    L = {
+        selfMass = 14842.7
+        maxHitPoints = 17316.0
+    }
+}
+
 local M = MockElement:new()
 M.elementClass = "ItemContainer"
 
-function M:new(o, id)
+function M:new(o, id, size)
     o = o or MockElement:new(o, id)
     setmetatable(o, self)
     self.__index = self
@@ -16,7 +35,14 @@ function M:new(o, id)
     -- undefine mass in favor of self and items mass
     o.mass = nil
     o.itemsMass = 0
-    o.selfMass = 0
+
+    -- default to S
+    if containerDefinitions[size] == nil then
+        size = "S"
+    end
+    o.selfMass = containerDefinitions[size].selfMass
+    o.maxHitPoints = containerDefinitions[size].maxHitPoints
+    o.hitPoints = containerDefinitions[size].hitPoints
 
     return o
 end

@@ -8,8 +8,19 @@
 
 local MockElement = require "MockElement"
 
+local controlDefinitions = {
+    programmingBoard = {
+        mass = 27.74,
+        maxHitPoints = 50.0
+    },
+    hovercraftSeat = {
+        mass = 110.33,
+        maxHitPoints = 187.0
+    }
+}
+
 local M = MockElement:new()
-M.elementClass = "???" -- TODO
+M.elementClass = "Generic"
 
 function M:new(o, id)
     o = o or MockElement:new(o, id)

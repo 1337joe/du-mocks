@@ -474,7 +474,7 @@ function testGameBehavior()
     key = "key10.5"
     slot1.setIntValue(key, 0.0)
     assert(slot1.hasKey(key) == 1)
-    assert(slot1.getStringValue(key) == "0.0")
+    assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0)
 
@@ -530,7 +530,7 @@ function testGameBehavior()
     key = "key15.5"
     slot1.setFloatValue(key, 0.0)
     assert(slot1.hasKey(key) == 1)
-    assert(slot1.getStringValue(key) == "0.0")
+    assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
     -- copy to here
