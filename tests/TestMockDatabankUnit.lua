@@ -88,13 +88,14 @@ function testHasKey()
     actual = closure.hasKey("key")
     lu.assertEquals(actual, expected)
 
-    databank.data["key"] = "value"
+    local key = "key"
+    databank.data[key] = "value"
     expected = 1
-    actual = closure.hasKey("key")
+    actual = closure.hasKey(key)
     lu.assertEquals(actual, expected)
 end
 
---- Verify storage as string works.
+--- Verify storage as string works. In-game storage not visible, simply test that the key is set, not what's in storage.
 function testSetStringValue()
     local actual, expected, key
     local databank = mdu:new()
@@ -110,38 +111,34 @@ function testSetStringValue()
 
     -- int value
     key = "key2"
-    expected = "2"
     closure.setStringValue(key, 2)
     actual = databank.data[key]
-    lu.assertEquals(actual, expected)
-    lu.assertIsString(actual)
+    lu.assertNotNil(actual)
 
     -- float value
     key = "key3"
-    expected = "3.1"
     closure.setStringValue(key, 3.1)
     actual = databank.data[key]
-    lu.assertEquals(actual, expected)
-    lu.assertIsString(actual)
+    lu.assertNotNil(actual)
 
-    -- TODO unknown edge case behavior, test in-game
     -- nil value
     key = "key4"
     expected = ""
     closure.setStringValue(key, nil)
     actual = databank.data[key]
-    lu.fail("NYI")
---    lu.assertEquals(actual, expected)
---    lu.assertIsString(actual)
+    lu.assertNotNil(actual)
 
     -- boolean value
     key = "key5"
-    expected = "true"
     closure.setStringValue(key, true)
     actual = databank.data[key]
-    lu.fail("NYI")
---    lu.assertEquals(actual, expected)
---    lu.assertIsString(actual)
+    lu.assertNotNil(actual)
+
+    -- default value
+    key = "key6"
+    closure.setIntValue(key, "")
+    actual = databank.data[key]
+    lu.assertNotNil(actual)
 end
 
 --- Verify retrieval as string works.
@@ -183,7 +180,7 @@ function testGetStringValue()
     lu.assertIsString(actual)
 end
 
---- Verify storage as int works.
+--- Verify storage as int works. In-game storage not visible, simply test that the key is set, not what's in storage.
 function testSetIntValue()
     local actual, expected, key
     local databank = mdu:new()
@@ -201,20 +198,78 @@ function testSetIntValue()
     key = "key2"
     closure.setIntValue(key, 2.1)
     actual = databank.data[key]
-    lu.assertIsNil(actual)
+    lu.assertNotNil(actual)
+    lu.assertIsNumber(actual)
 
-    -- TODO unknown edge case behavior, test in-game
-    -- string
-    -- boolean
-    lu.fail("NYI")
+    -- string value
+    key = "key3"
+    closure.setIntValue(key, "key 3")
+    actual = databank.data[key]
+    lu.assertNotNil(actual)
+    lu.assertIsNumber(actual)
+
+    -- boolean value
+    key = "key4"
+    closure.setIntValue(key, true)
+    actual = databank.data[key]
+    lu.assertNotNil(actual)
+    lu.assertIsNumber(actual)
+
+    -- nil value
+    key = "key5"
+    closure.setIntValue(key, nil)
+    actual = databank.data[key]
+    lu.assertNotNil(actual)
+    lu.assertIsNumber(actual)
+
+    -- default value
+    key = "key6"
+    closure.setIntValue(key, 0)
+    actual = databank.data[key]
+    lu.assertNotNil(actual)
+    lu.assertIsNumber(actual)
 end
 
 --- Verify retrieval as int works.
 function testGetIntValue()
-    lu.fail("NYI")
+    local actual, expected, key
+    local databank = mdu:new()
+    local closure = databank:getClosure()
+
+    -- string value
+    key = "key1"
+    expected = 0
+    databank.data[key] = expected
+    actual = closure.getIntValue(key)
+    lu.assertEquals(actual, expected)
+    lu.assertIsNumber(actual)
+
+    -- int value
+    key = "key2"
+    expected = 2
+    databank.data[key] = 2
+    actual = closure.getIntValue(key)
+    lu.assertEquals(actual, expected)
+    lu.assertIsNumber(actual)
+
+    -- float value
+    key = "key3"
+    expected = 3
+    databank.data[key] = 3.1
+    actual = closure.getIntValue(key)
+    lu.assertEquals(actual, expected)
+    lu.assertIsNumber(actual)
+
+    -- nil value
+    key = "key4"
+    expected = 0
+    -- not set, defaults to 0
+    actual = closure.getIntValue(key)
+    lu.assertEquals(actual, expected)
+    lu.assertIsNumber(actual)
 end
 
---- Verify storage as int works.
+--- Verify storage as int works. In-game storage not visible, simply test that the key is set, not what's in storage.
 function testSetFloatValue()
     local actual, expected, key
     local databank = mdu:new()
@@ -228,16 +283,79 @@ function testSetFloatValue()
     lu.assertEquals(actual, expected)
     lu.assertIsNumber(actual)
 
-    -- TODO unknown edge case behavior, test in-game
-    -- 1
-    -- string
-    -- boolean
-    lu.fail("NYI")
+    -- int value
+    key = "key2"
+    closure.setFloatValue(key, 2)
+    actual = databank.data[key]
+    lu.assertNotNil(actual)
+    lu.assertIsNumber(actual)
+
+    -- string value
+    key = "key3"
+    closure.setFloatValue(key, "key 3")
+    actual = databank.data[key]
+    lu.assertNotNil(actual)
+    lu.assertIsNumber(actual)
+
+    -- boolean value
+    key = "key4"
+    closure.setFloatValue(key, true)
+    actual = databank.data[key]
+    lu.assertNotNil(actual)
+    lu.assertIsNumber(actual)
+
+    -- nil value
+    key = "key5"
+    closure.setFloatValue(key, nil)
+    actual = databank.data[key]
+    lu.assertNotNil(actual)
+    lu.assertIsNumber(actual)
+
+    -- default value
+    key = "key6"
+    closure.setFloatValue(key, 0.0)
+    actual = databank.data[key]
+    lu.assertNotNil(actual)
+    lu.assertIsNumber(actual)
 end
 
 --- Verify retrieval as float works.
 function testGetFloatValue()
-    lu.fail("NYI")
+    local actual, expected, key
+    local databank = mdu:new()
+    local closure = databank:getClosure()
+
+    -- string value
+    key = "key1"
+    expected = 0
+    databank.data[key] = expected
+    actual = closure.getFloatValue(key)
+    lu.assertEquals(actual, expected)
+    lu.assertIsNumber(actual)
+
+    -- int value
+    key = "key2"
+    expected = 2
+    databank.data[key] = 2
+    actual = closure.getFloatValue(key)
+    lu.assertEquals(actual, expected)
+    lu.assertIsNumber(actual)
+
+    -- float value
+    key = "key3"
+    expected = 3.1
+    databank.data[key] = 3.1
+    actual = closure.getFloatValue(key)
+    lu.assertEquals(actual, expected)
+    lu.assertIsNumber(actual)
+
+    -- nil value
+    key = "key4"
+    expected = 0
+    -- not set, defaults to 0
+    actual = closure.getFloatValue(key)
+    lu.assertEquals(actual, expected)
+    lu.assertIsNumber(actual)
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
@@ -252,6 +370,13 @@ function testGameBehavior()
     slot1.setStringValue(key, "string")
     assert(slot1.hasKey(key) == 1)
     assert(slot1.getStringValue(key) == "string")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
+    key = "key1.5"
+    slot1.setStringValue(key, "")
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
 
@@ -276,6 +401,13 @@ function testGameBehavior()
     assert(slot1.getIntValue(key) == 4)
     assert(slot1.getFloatValue(key) == 4.0)
 
+    key = "key4.5"
+    slot1.setStringValue(key, 0)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
     key = "key5"
     slot1.setStringValue(key, 5.5)
     assert(slot1.hasKey(key) == 1)
@@ -283,8 +415,22 @@ function testGameBehavior()
     assert(slot1.getIntValue(key) == 5)
     assert(slot1.getFloatValue(key) == 5.5)
 
+    key = "key5.5"
+    slot1.setStringValue(key, 0.0)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0.0")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0)
+
     key = "key6"
     slot1.setIntValue(key, "string")
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
+    key = "key6.5"
+    slot1.setIntValue(key, "")
     assert(slot1.hasKey(key) == 1)
     assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
@@ -311,6 +457,13 @@ function testGameBehavior()
     assert(slot1.getIntValue(key) == 9)
     assert(slot1.getFloatValue(key) == 9.0)
 
+    key = "key9.5"
+    slot1.setIntValue(key, 0)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
     key = "key10"
     slot1.setIntValue(key, 10.1)
     assert(slot1.hasKey(key) == 1)
@@ -318,8 +471,22 @@ function testGameBehavior()
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0)
 
+    key = "key10.5"
+    slot1.setIntValue(key, 0.0)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0.0")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0)
+
     key = "key11"
     slot1.setFloatValue(key, "string")
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
+    key = "key11.5"
+    slot1.setFloatValue(key, "")
     assert(slot1.hasKey(key) == 1)
     assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
@@ -346,12 +513,26 @@ function testGameBehavior()
     assert(slot1.getIntValue(key) == 14)
     assert(slot1.getFloatValue(key) == 14.0)
 
+    key = "key14.5"
+    slot1.setFloatValue(key, 0)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
+
     key = "key15"
     slot1.setFloatValue(key, 15.15)
     assert(slot1.hasKey(key) == 1)
     assert(slot1.getStringValue(key) == "15.15")
     assert(slot1.getIntValue(key) == 15)
     assert(slot1.getFloatValue(key) == 15.15)
+
+    key = "key15.5"
+    slot1.setFloatValue(key, 0.0)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "0.0")
+    assert(slot1.getIntValue(key) == 0)
+    assert(slot1.getFloatValue(key) == 0.0)
     -- copy to here
 end
 

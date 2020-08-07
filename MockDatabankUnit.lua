@@ -61,7 +61,10 @@ end
 -- @tparam string key The key used to store the value.
 -- @tparam string val The value, as a string.
 function M:setStringValue(key, val)
-    self.data[key] = tostring(val)
+    if val == nil or type(val) == "boolean" then
+        val = ""
+    end
+    self.data[key] = val
 end
 
 --- Returns value stored in the given key as a string.
@@ -84,6 +87,8 @@ function M:setIntValue(key, val)
     -- only store if an int
     if type(val) == "number" and val % 1 == 0 then
         self.data[key] = val
+    else
+        self.data[key] = 0
     end
 end
 
@@ -106,7 +111,9 @@ end
 -- @tparam float val The value, as a floating number.
 function M:setFloatValue(key, val)
     if type(val) == "number" then
-        self.data[key] = val * 1.0
+        self.data[key] = val
+    else
+        self.data[key] = 0
     end
 end
 
