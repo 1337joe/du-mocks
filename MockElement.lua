@@ -12,7 +12,7 @@ function M:new(o, id)
     -- define default instance fields
     o = o or {
         widgetShown = true,
-        mass = 0,
+        mass = 0, -- kg
         maxHitPoints = 100,
         hitPoints = 100,
     }

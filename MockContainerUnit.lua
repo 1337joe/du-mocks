@@ -19,7 +19,7 @@ local containerDefinitions = {
         maxHitPoints = 7997.0
     },
     L = {
-        selfMass = 14842.7
+        selfMass = 14842.7,
         maxHitPoints = 17316.0
     }
 }

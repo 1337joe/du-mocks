@@ -89,7 +89,7 @@ end
 function M:setIntValue(key, val)
     -- only store if an int
     if type(val) == "number" and val % 1 == 0 then
-        self.data[key] = val
+        self.data[key] = math.floor(val)
     else
         self.data[key] = 0
     end
@@ -113,7 +113,7 @@ end
 -- @tparam string key The key used to store the value.
 -- @tparam float val The value, as a floating number.
 function M:setFloatValue(key, val)
-    if type(val) == "number" then
+    if type(val) == "number" and val ~= 0 then
         self.data[key] = val
     else
         self.data[key] = 0
