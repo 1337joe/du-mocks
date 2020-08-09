@@ -131,6 +131,7 @@ function M:getClosure()
     closure.show = function() return self:show() end
     closure.getIntegrity = function() return self:getIntegrity() end
     closure.getId = function() return self:getId() end
+    closure.getMass = function() return self:getMass() end
     closure.getElementClass = function() return self:getElementClass() end
     return closure
 end
