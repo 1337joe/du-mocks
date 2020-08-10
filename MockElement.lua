@@ -133,12 +133,20 @@ end
 -- @treturn table A table encompasing the api calls of object.
 function M:mockGetClosure()
     local closure = {}
-    closure.hide = function() return self:hide() end
     closure.show = function() return self:show() end
+    closure.hide = function() return self:hide() end
+    closure.getData = function() return self:getData() end
+    closure.getDataId = function() return self:getDataId() end
+    closure.getWidgetType = function() return self:getWidgetType() end
     closure.getIntegrity = function() return self:getIntegrity() end
+    closure.getHitPoints = function() return self:getHitPoints() end
+    closure.getMaxHitPoints = function() return self:getMaxHitPoints() end
     closure.getId = function() return self:getId() end
     closure.getMass = function() return self:getMass() end
     closure.getElementClass = function() return self:getElementClass() end
+    closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
+    closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
+    closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
     return closure
 end
 

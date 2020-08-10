@@ -48,7 +48,7 @@ function testGetElementClass()
     lu.assertEquals(element.getElementClass(), "ManualSwitchUnit")
 end
 
--- Verify activate results in enabled switch.
+--- Verify activate results in enabled switch.
 function testActivate()
     local switch = mmsu:new()
     local closure = switch:mockGetClosure()
@@ -62,7 +62,7 @@ function testActivate()
     lu.assertTrue(switch.state)
 end
 
--- Verify deactivate results in disabled switch.
+--- Verify deactivate results in disabled switch.
 function testDeactivate()
     local switch = mmsu:new()
     local closure = switch:mockGetClosure()
@@ -76,7 +76,7 @@ function testDeactivate()
     lu.assertFalse(switch.state)
 end
 
--- Verify toggle results in swapped switch.
+--- Verify toggle results in swapped switch.
 function testToggle()
     local switch = mmsu:new()
     local closure = switch:mockGetClosure()
@@ -90,7 +90,7 @@ function testToggle()
     lu.assertFalse(switch.state)
 end
 
--- Verify get state properly translated results.
+--- Verify get state properly translated results.
 function testGetState()
     local switch = mmsu:new()
     local closure = switch:mockGetClosure()
@@ -105,7 +105,7 @@ function testGetState()
     lu.assertEquals(actual, 1)
 end
 
--- Verify callbacks can be registered and fire properly for `pressed()`.
+--- Verify callbacks can be registered and fire properly for `pressed()`.
 function testDoPressedValid()
     local switch = mmsu:new()
 
@@ -120,7 +120,7 @@ function testDoPressedValid()
     lu.assertEquals(pressed1Result, 1) -- fires handler after turning on
 end
 
--- Verify callbacks are properly handled for invalid calls for `pressed()`.
+--- Verify callbacks are properly handled for invalid calls for `pressed()`.
 function testDoPressedInvalid()
     local switch = mmsu:new()
 
@@ -135,7 +135,7 @@ function testDoPressedInvalid()
     lu.assertNil(pressed1Result) -- handler not fired
 end
 
--- Verify callbacks can be registered and properly handle errors for `pressed()`.
+--- Verify callbacks can be registered and properly handle errors for `pressed()`.
 function testDoPressedError()
     local switch = mmsu:new()
 
@@ -177,7 +177,7 @@ function testDoPressedError()
     lu.assertEquals(pressed2CallOrder, 2)
 end
 
--- Verify callbacks can be registered and fire properly for `released()`.
+--- Verify callbacks can be registered and fire properly for `released()`.
 function testDoReleasedValid()
     local switch = mmsu:new()
 
@@ -192,7 +192,7 @@ function testDoReleasedValid()
     lu.assertEquals(released1Result, 1) -- fires handler before turning off
 end
 
--- Verify callbacks are properly handled for invalid calls for `released()`.
+--- Verify callbacks are properly handled for invalid calls for `released()`.
 function testDoReleasedInvalid()
     local switch = mmsu:new()
 
@@ -207,7 +207,7 @@ function testDoReleasedInvalid()
     lu.assertNil(released1Result) -- handler not fired
 end
 
--- Verify callbacks can be registered and properly handle errors for `released()`.
+--- Verify callbacks can be registered and properly handle errors for `released()`.
 function testDoReleasedError()
     local switch = mmsu:new()
 
