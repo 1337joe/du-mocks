@@ -18,16 +18,16 @@ The mock files are commented to match the codex. To generate a browsable documen
 
 ### Current State
 
-* P = Partially complete
-* F = Fully complete
-* - = N/A
+* P = In Progress
+* :heavy_check_mark: = Completed
+* `-` = N/A
 
 | Mock | 1 | 2 | 3 | 4 | 5 |
 | ---- | - | - | - | - | - |
-| MockElement | F | P | | | - |
+| MockElement | :heavy_check_mark: | P | | | - |
 | MockSystem | P | | | | - |
 | MockControlUnit | P | | | | |
-| MockDatabankUnit | F | F | F | F | F |
-| MockContainerUnit | F | F | F | | F |
-| MockIndustryUnit | P | | | | |
-| MockManualSwitchUnit | F | F | F | F | F |
+| MockDatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| MockContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
+| MockIndustryUnit | :heavy_check_mark: | P | | | |
+| MockManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
