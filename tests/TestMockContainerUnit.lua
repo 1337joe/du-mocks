@@ -8,19 +8,39 @@ local lu = require("luaunit")
 
 local mcu = require("MockContainerUnit")
 
---- Verify constructor passes ID through properly and that instances are independant.
-function testGetId()
-    local container1 = mcu:new(nil, 1)
-    local container2 = mcu:new(nil, 2)
+--- Verify constructor arguments properly handled and independent between instances.
+function testConstructor()
 
-    lu.assertEquals(container1:getId(), 1)
-    lu.assertEquals(container2:getId(), 2)
+    -- default element:
+    -- ["container s"] = {mass = 1281.31,maxHitPoints = 999.0}
 
-    local closure1 = container1:getClosure()
-    local closure2 = container2:getClosure()
+    local databank1 = mcu:new(nil, 1, "Container XS")
+    local databank2 = mcu:new(nil, 2, "invalid")
+    local databank3 = mcu:new(nil, 3, "Container S")
+    local databank4 = mcu:new(nil, 4, "Container L")
+    local databank5 = mcu:new()
 
-    lu.assertEquals(closure1.getId(), 1)
-    lu.assertEquals(closure2.getId(), 2)
+    local databank1Closure = databank1:getClosure()
+    local databank2Closure = databank2:getClosure()
+    local databank3Closure = databank3:getClosure()
+    local databank4Closure = databank4:getClosure()
+    local databank5Closure = databank5:getClosure()
+
+    lu.assertEquals(databank1Closure.getId(), 1)
+    lu.assertEquals(databank2Closure.getId(), 2)
+    lu.assertEquals(databank3Closure.getId(), 3)
+    lu.assertEquals(databank4Closure.getId(), 4)
+    lu.assertEquals(databank5Closure.getId(), 0)
+
+    -- prove default element is selected
+    local defaultMass = 1281.31
+    lu.assertEquals(databank2Closure.getMass(), defaultMass)
+    lu.assertEquals(databank3Closure.getMass(), defaultMass)
+    lu.assertEquals(databank5Closure.getMass(), defaultMass)
+
+    -- non-defaults (proves independence)
+    lu.assertEquals(databank1Closure.getMass(), 229.09)
+    lu.assertEquals(databank4Closure.getMass(), 14842.7)
 end
 
 --- Verify element class is correct.

@@ -5,17 +5,27 @@
 
 local MockElement = require "MockElement"
 
+local elementDefinitions = {}
+elementDefinitions["databank"] = {mass = 17.09, maxHitPoints = 50.0}
+local DEFAULT_ELEMENT = "databank"
+
 local M = MockElement:new()
 M.elementClass = "DataBankUnit"
 
-function M:new(o, id)
-    o = o or MockElement:new(o, id)
+function M:new(o, id, elementName)
+    if not elementName then
+        elementName = DEFAULT_ELEMENT
+    else
+        elementName = string.lower(elementName)
+        if not elementDefinitions[elementName] then
+            elementName = DEFAULT_ELEMENT
+        end
+    end
+
+    o = o or MockElement:new(o, id, elementDefinitions[elementName])
     setmetatable(o, self)
     self.__index = self
 
-    o.mass = 17.09
-    o.maxHitPoints = 50.0
-    o.hitPoints = 50.0
     o.data = {}
 
     return o

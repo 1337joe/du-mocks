@@ -8,13 +8,38 @@ local lu = require("luaunit")
 
 local mdu = require("MockDatabankUnit")
 
---- Verify constructor passes ID through properly and that instances are independant.
-function testGetId()
-    local databank1 = mdu:new(nil, 1):getClosure()
-    local databank2 = mdu:new(nil, 2):getClosure()
+--- Verify constructor arguments properly handled and independent between instances.
+function testConstructor()
 
-    lu.assertEquals(databank1.getId(), 1)
-    lu.assertEquals(databank2.getId(), 2)
+    -- default element:
+    -- ["databank"] = {mass = 17.09, maxHitPoints = 50.0}
+
+    local databank1 = mdu:new(nil, 1, "Databank")
+    local databank2 = mdu:new(nil, 2, "invalid")
+    local databank3 = mdu:new()
+
+    local databank1Closure = databank1:getClosure()
+    local databank2Closure = databank2:getClosure()
+    local databank3Closure = databank3:getClosure()
+
+    lu.assertEquals(databank1Closure.getId(), 1)
+    lu.assertEquals(databank2Closure.getId(), 2)
+    lu.assertEquals(databank3Closure.getId(), 0)
+
+    -- prove default element is selected
+    local defaultMass = 17.09
+    lu.assertEquals(databank1Closure.getMass(), defaultMass)
+    lu.assertEquals(databank2Closure.getMass(), defaultMass)
+    lu.assertEquals(databank3Closure.getMass(), defaultMass)
+
+    -- do some damage, max hit points is 50 (prove independance)
+    databank1.hitPoints = 25.0
+    databank2.hitPoints = 12.5
+    databank3.hitPoints = 0.25
+
+    lu.assertEquals(databank1Closure.getIntegrity(), 50.0)
+    lu.assertEquals(databank2Closure.getIntegrity(), 25.0)
+    lu.assertEquals(databank3Closure.getIntegrity(), 0.5)
 end
 
 --- Verify element class is correct.
@@ -364,6 +389,8 @@ function testGameBehavior()
     local slot1 = databank:getClosure()
 
     -- copy from here
+    assert(slot1.getElementClass() == "DataBankUnit")
+
     local key
 
     key = "key1"

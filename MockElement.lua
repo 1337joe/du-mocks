@@ -8,7 +8,7 @@ local M = {
     widgetType = "",
 }
 
-function M:new(o, id)
+function M:new(o, id, elementDefinition)
     -- define default instance fields
     o = o or {
         widgetShown = true,
@@ -20,6 +20,12 @@ function M:new(o, id)
     self.__index = self
 
     o.id = id or 0
+
+    if elementDefinition then
+        o.mass = elementDefinition.mass or 0
+        o.maxHitPoints = elementDefinition.maxHitPoints or 100
+        o.hitPoints = elementDefinition.maxHitPoints or 100
+    end
 
     return o
 end

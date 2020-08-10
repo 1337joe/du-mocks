@@ -12,9 +12,9 @@ local mmsu = require("MockManualSwitchUnit")
 function testConstructor()
 
     -- default element:
-    -- ["Manual Switch"] = {mass = 13.27, maxHitPoints = 50.0}
+    -- ["manual switch"] = {mass = 13.27, maxHitPoints = 50.0}
 
-    local switch1 = mmsu:new(nil, 1, "Manual Button")
+    local switch1 = mmsu:new(nil, 1, "Manual Switch")
     local switch2 = mmsu:new(nil, 2, "invalid")
     local switch3 = mmsu:new()
 
@@ -297,6 +297,7 @@ function testGameBehavior()
     switch:mockRegisterReleased(releasedHandler2)
 
     -- copy from here to unit.start
+    assert(slot1.getElementClass() == "ManualSwitchUnit")
 
     -- ensure initial state, set up globals
     slot1.deactivate()

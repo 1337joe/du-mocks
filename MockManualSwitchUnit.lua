@@ -6,23 +6,25 @@
 local MockElement = require "MockElement"
 
 local elementDefinitions = {}
-elementDefinitions["Manual Switch"] = {mass = 13.27, maxHitPoints = 50.0}
+elementDefinitions["manual switch"] = {mass = 13.27, maxHitPoints = 50.0}
+local DEFAULT_ELEMENT = "manual switch"
 
 local M = MockElement:new()
 M.elementClass = "ManualSwitchUnit"
 
 function M:new(o, id, elementName)
-    o = o or MockElement:new(o, id)
+    if not elementName then
+        elementName = DEFAULT_ELEMENT
+    else
+        elementName = string.lower(elementName)
+        if not elementDefinitions[elementName] then
+            elementName = DEFAULT_ELEMENT
+        end
+    end
+
+    o = o or MockElement:new(o, id, elementDefinitions[elementName])
     setmetatable(o, self)
     self.__index = self
-
-    if not elementDefinitions[elementName] then
-        elementName = "Manual Switch"
-    end
-    local elementDefinition = elementDefinitions[elementName]
-    o.mass = elementDefinition.mass
-    o.maxHitPoints = elementDefinition.maxHitPoints
-    o.hitPoints = elementDefinition.maxHitPoints
 
     o.state = false
     o.pressedCallbacks = {}
