@@ -249,4 +249,75 @@ function testDoReleasedError()
     lu.assertEquals(released2CallOrder, 2)
 end
 
+--- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
+function testGameBehavior()
+    local switch = mmsu:new()
+    local slot1 = switch:getClosure()
+
+    -- stub this in directly to supress print
+    local system = {}
+    system.print = function() end
+
+    -- use locals here since all code is in this method
+    local pressedCount = 0
+    local releasedCount = 0
+
+    -- pressed handlers
+    local pressedHandler1 = function()
+        -- copy from here to slot1.pressed()
+        pressedCount = pressedCount + 1
+        assert(slot1.getState() == 1) -- toggles before calling handlers
+        assert(pressedCount == 1) -- should only ever be called once, when the user presses the switch
+        -- copy to here to slot1.pressed()
+    end
+    local pressedHandler2 = function()
+        -- copy from here to slot1.pressed()
+        pressedCount = pressedCount + 1
+        assert(pressedCount == 2) -- called second in pressed handler list
+        -- copy to here to slot1.pressed()
+    end
+    switch:mockRegisterPressed(pressedHandler1)
+    switch:mockRegisterPressed(pressedHandler2)
+
+    -- released handlers
+    local releasedHandler1 = function()
+        -- copy from here to slot1.released()
+        releasedCount = releasedCount + 1
+        assert(slot1.getState() == 1) -- won't toggle till after handlers finished
+        assert(releasedCount == 1) -- should only ever be called once, when the user releases the switch
+        -- copy to here to slot1.released()
+    end
+    local releasedHandler2 = function()
+        -- copy from here to slot1.released()
+        releasedCount = releasedCount + 1
+        assert(releasedCount == 2) -- called second in released handler list
+        -- copy to here to slot1.released()
+    end
+    switch:mockRegisterReleased(releasedHandler1)
+    switch:mockRegisterReleased(releasedHandler2)
+
+    -- copy from here to unit.start
+
+    -- ensure initial state, set up globals
+    slot1.deactivate()
+    assert(slot1.getState() == 0)
+    pressedCount = 0
+    releasedCount = 0
+
+    -- validate methods
+    slot1.activate()
+    assert(slot1.getState() == 1)
+    slot1.deactivate()
+    assert(slot1.getState() == 0)
+    slot1.toggle()
+    assert(slot1.getState() == 1)
+
+    system.print("please press and release the button")
+
+    -- copy to here to unit.start
+
+    switch:mockDoPressed()
+    switch:mockDoReleased()
+end
+
 os.exit(lu.LuaUnit.run())
