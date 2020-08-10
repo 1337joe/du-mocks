@@ -16,8 +16,8 @@ function testGetId()
     lu.assertEquals(element1:getId(), 1)
     lu.assertEquals(element2:getId(), 2)
 
-    local closure1 = element1:getClosure()
-    local closure2 = element2:getClosure()
+    local closure1 = element1:mockGetClosure()
+    local closure2 = element2:mockGetClosure()
 
     lu.assertEquals(closure1.getId(), 1)
     lu.assertEquals(closure2.getId(), 2)
@@ -26,7 +26,7 @@ end
 function testGetIntegrity()
     local expected, actual
     local element = me:new()
-    local closure = element:getClosure()
+    local closure = element:mockGetClosure()
     element.maxHitPoints = 100
 
     element.hitPoints = 50

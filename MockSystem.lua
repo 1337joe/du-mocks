@@ -12,11 +12,13 @@ local M = {}
 
 function M:new(o)
     -- define default instance fields
-    o = o or {
-        widgetPanels = {},
-    }
+    o = o or {}
     setmetatable(o, self)
     self.__index = self
+
+    o.widgetPanels = {} -- id (format: "p#") => {ordered list of widgets}
+    o.widgets = {} -- id (format: "w#") => current data ids
+    o.widgetData = {} -- id (format: "d#") => json
 
     return o
 end
@@ -140,9 +142,9 @@ function M.print(msg)
     print(msg)
 end
 
---- Bundles the object into a closure so functions can be called with "." instead of ":".
--- @treturn table A table encompasing this object.
-function M:getClosure()
+--- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
+-- @treturn table A table encompasing the api calls of object.
+function M:mockGetClosure()
     local closure = {}
     closure.createWidgetPanel = function(label) return self:createWidgetPanel(label) end
     closure.destroyWidgetPanel = function(label) return self:destroyWidgetPanel(label) end

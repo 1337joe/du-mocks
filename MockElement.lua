@@ -129,9 +129,9 @@ function M:getSignalOut(plug)
     return 0
 end
 
---- Bundles the object into a closure so functions can be called with "." instead of ":".
--- @treturn table A table encompasing this object.
-function M:getClosure()
+--- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
+-- @treturn table A table encompasing the api calls of object.
+function M:mockGetClosure()
     local closure = {}
     closure.hide = function() return self:hide() end
     closure.show = function() return self:show() end

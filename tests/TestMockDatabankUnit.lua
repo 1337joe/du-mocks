@@ -18,9 +18,9 @@ function testConstructor()
     local databank2 = mdu:new(nil, 2, "invalid")
     local databank3 = mdu:new()
 
-    local databank1Closure = databank1:getClosure()
-    local databank2Closure = databank2:getClosure()
-    local databank3Closure = databank3:getClosure()
+    local databank1Closure = databank1:mockGetClosure()
+    local databank2Closure = databank2:mockGetClosure()
+    local databank3Closure = databank3:mockGetClosure()
 
     lu.assertEquals(databank1Closure.getId(), 1)
     lu.assertEquals(databank2Closure.getId(), 2)
@@ -44,7 +44,7 @@ end
 
 --- Verify element class is correct.
 function testGetElementClass()
-    local databank = mdu:new():getClosure()
+    local databank = mdu:new():mockGetClosure()
     lu.assertEquals(databank.getElementClass(), "DataBankUnit")
 end
 
@@ -52,7 +52,7 @@ end
 function testClear()
     local actual, expected
     local databank = mdu:new()
-    local closure = databank:getClosure()
+    local closure = databank:mockGetClosure()
 
     databank.data = {key = 1}
     closure.clear()
@@ -67,7 +67,7 @@ end
 function testGetNbKeys()
     local actual, expected
     local databank = mdu:new()
-    local closure = databank:getClosure()
+    local closure = databank:mockGetClosure()
 
     expected = 0
     actual = closure.getNbKeys()
@@ -84,7 +84,7 @@ end
 function testGetKeys()
     local actual, expected
     local databank = mdu:new()
-    local closure = databank:getClosure()
+    local closure = databank:mockGetClosure()
 
     databank.data = {}
     expected = '[]'
@@ -107,7 +107,7 @@ end
 function testHasKey()
     local actual, expected
     local databank = mdu:new()
-    local closure = databank:getClosure()
+    local closure = databank:mockGetClosure()
 
     expected = 0
     actual = closure.hasKey("key")
@@ -124,7 +124,7 @@ end
 function testSetStringValue()
     local actual, expected, key
     local databank = mdu:new()
-    local closure = databank:getClosure()
+    local closure = databank:mockGetClosure()
 
     -- string value
     key = "key1"
@@ -170,7 +170,7 @@ end
 function testGetStringValue()
     local actual, expected, key
     local databank = mdu:new()
-    local closure = databank:getClosure()
+    local closure = databank:mockGetClosure()
 
     -- string value
     key = "key1"
@@ -209,7 +209,7 @@ end
 function testSetIntValue()
     local actual, expected, key
     local databank = mdu:new()
-    local closure = databank:getClosure()
+    local closure = databank:mockGetClosure()
 
     -- int value
     key = "key1"
@@ -259,7 +259,7 @@ end
 function testGetIntValue()
     local actual, expected, key
     local databank = mdu:new()
-    local closure = databank:getClosure()
+    local closure = databank:mockGetClosure()
 
     -- string value
     key = "key1"
@@ -298,7 +298,7 @@ end
 function testSetFloatValue()
     local actual, expected, key
     local databank = mdu:new()
-    local closure = databank:getClosure()
+    local closure = databank:mockGetClosure()
 
     -- float value
     key = "key1"
@@ -348,7 +348,7 @@ end
 function testGetFloatValue()
     local actual, expected, key
     local databank = mdu:new()
-    local closure = databank:getClosure()
+    local closure = databank:mockGetClosure()
 
     -- string value
     key = "key1"
@@ -386,7 +386,7 @@ end
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
 function testGameBehavior()
     local databank = mdu:new()
-    local slot1 = databank:getClosure()
+    local slot1 = databank:mockGetClosure()
 
     -- copy from here
     assert(slot1.getElementClass() == "DataBankUnit")

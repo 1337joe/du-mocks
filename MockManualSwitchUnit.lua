@@ -141,9 +141,11 @@ function M:mockDoReleased()
     end
 end
 
--- @see MockElement:getClosure
-function M:getClosure()
-    local closure = MockElement.getClosure(self)
+--- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
+-- @treturn table A table encompasing the api calls of object.
+-- @see MockElement:mockGetClosure
+function M:mockGetClosure()
+    local closure = MockElement.mockGetClosure(self)
     closure.activate = function() return self:activate() end
     closure.deactivate = function() return self:deactivate() end
     closure.toggle = function() return self:toggle() end

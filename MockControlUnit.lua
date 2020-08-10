@@ -45,9 +45,11 @@ end
 function M:setTimer(timerTagId, period)
 end
 
--- @see MockElement:getClosure
-function M:getClosure()
-    local closure = MockElement.getClosure(self)
+--- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
+-- @treturn table A table encompasing the api calls of object.
+-- @see MockElement:mockGetClosure
+function M:mockGetClosure()
+    local closure = MockElement.mockGetClosure(self)
     closure.exit = function() return self:exit() end
     closure.setTimer = function(timerTagId, period) return self:setTimer(timerTagId, period) end
     return closure

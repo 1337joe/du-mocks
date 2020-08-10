@@ -18,9 +18,9 @@ function testConstructor()
     local switch2 = mmsu:new(nil, 2, "invalid")
     local switch3 = mmsu:new()
 
-    local switch1Closure = switch1:getClosure()
-    local switch2Closure = switch2:getClosure()
-    local switch3Closure = switch3:getClosure()
+    local switch1Closure = switch1:mockGetClosure()
+    local switch2Closure = switch2:mockGetClosure()
+    local switch3Closure = switch3:mockGetClosure()
 
     lu.assertEquals(switch1Closure.getId(), 1)
     lu.assertEquals(switch2Closure.getId(), 2)
@@ -44,14 +44,14 @@ end
 
 --- Verify element class is correct.
 function testGetElementClass()
-    local element = mmsu:new():getClosure()
+    local element = mmsu:new():mockGetClosure()
     lu.assertEquals(element.getElementClass(), "ManualSwitchUnit")
 end
 
 -- Verify activate results in enabled switch.
 function testActivate()
     local switch = mmsu:new()
-    local closure = switch:getClosure()
+    local closure = switch:mockGetClosure()
 
     switch.state = false
     closure.activate()
@@ -65,7 +65,7 @@ end
 -- Verify deactivate results in disabled switch.
 function testDeactivate()
     local switch = mmsu:new()
-    local closure = switch:getClosure()
+    local closure = switch:mockGetClosure()
 
     switch.state = false
     closure.deactivate()
@@ -79,7 +79,7 @@ end
 -- Verify toggle results in swapped switch.
 function testToggle()
     local switch = mmsu:new()
-    local closure = switch:getClosure()
+    local closure = switch:mockGetClosure()
 
     switch.state = false
     closure.toggle()
@@ -93,7 +93,7 @@ end
 -- Verify get state properly translated results.
 function testGetState()
     local switch = mmsu:new()
-    local closure = switch:getClosure()
+    local closure = switch:mockGetClosure()
     local actual
 
     switch.state = false
@@ -252,7 +252,7 @@ end
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
 function testGameBehavior()
     local switch = mmsu:new()
-    local slot1 = switch:getClosure()
+    local slot1 = switch:mockGetClosure()
 
     -- stub this in directly to supress print
     local system = {}

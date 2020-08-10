@@ -20,11 +20,11 @@ function testConstructor()
     local databank4 = mcu:new(nil, 4, "Container L")
     local databank5 = mcu:new()
 
-    local databank1Closure = databank1:getClosure()
-    local databank2Closure = databank2:getClosure()
-    local databank3Closure = databank3:getClosure()
-    local databank4Closure = databank4:getClosure()
-    local databank5Closure = databank5:getClosure()
+    local databank1Closure = databank1:mockGetClosure()
+    local databank2Closure = databank2:mockGetClosure()
+    local databank3Closure = databank3:mockGetClosure()
+    local databank4Closure = databank4:mockGetClosure()
+    local databank5Closure = databank5:mockGetClosure()
 
     lu.assertEquals(databank1Closure.getId(), 1)
     lu.assertEquals(databank2Closure.getId(), 2)
@@ -45,7 +45,7 @@ end
 
 --- Verify element class is correct.
 function testGetElementClass()
-    local container = mcu:new():getClosure()
+    local container = mcu:new():mockGetClosure()
     lu.assertEquals(container.getElementClass(), "ItemContainer")
 end
 
@@ -54,16 +54,16 @@ function testGetMass()
     local expected, actual
     local container = mcu:new()
 
-    mcu.selfMass = 10
-    mcu.itemsMass = 0
+    container.selfMass = 10
+    container.itemsMass = 0
     expected = 10
-    actual = mcu:getMass()
+    actual = container:getMass()
     lu.assertEquals(actual, expected)
 
-    mcu.selfMass = 10
-    mcu.itemsMass = 20
+    container.selfMass = 10
+    container.itemsMass = 20
     expected = 30
-    actual = mcu:getMass()
+    actual = container:getMass()
     lu.assertEquals(actual, expected)
 end
 

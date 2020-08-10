@@ -54,9 +54,11 @@ function M:getSelfMass()
     return self.selfMass
 end
 
--- @see MockElement:getClosure
-function M:getClosure()
-    local closure = MockElement.getClosure(self)
+--- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
+-- @treturn table A table encompasing the api calls of object.
+-- @see MockElement:mockGetClosure
+function M:mockGetClosure()
+    local closure = MockElement.mockGetClosure(self)
     closure.getMass = function() return self:getMass() end
     closure.getItemsMass = function() return self:getItemsMass() end
     closure.getSelfMass = function() return self:getSelfMass() end
