@@ -49,7 +49,7 @@ The mock files are commented to match the codex. To generate a browsable documen
 | MockManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | MockPressureTileUnit | | | | | |
 | MockRadarUnit | | | | | |
-| MockTelemeterUnit | | | | | |
-| MockWarpDriveUnit | | | | | |
+| MockTelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
+| MockWarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
 | MockLibrary | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | - | - |
 | MockSystem | P | | | | - |

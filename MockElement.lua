@@ -8,6 +8,23 @@ local M = {
     widgetType = "",
 }
 
+-- Helper function, looks up an element definition by name, defaulting to defaultName if not found.
+-- @tparam table elementDefinitions The element definitions to search, keys are lower case element names.
+-- @tparam string elementName The name to search the definitions for.
+-- @tparam string defaultName The name to fall back to if elementName is not found.
+function M.findElement(elementDefinitions, elementName, defaultName)
+    if not elementName then
+        elementName = defaultName
+    else
+        elementName = string.lower(elementName)
+        if not elementDefinitions[elementName] then
+            elementName = defaultName
+        end
+    end
+
+    return elementDefinitions[elementName]
+end
+
 function M:new(o, id, elementDefinition)
     -- define default instance fields
     o = o or {

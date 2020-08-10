@@ -13,16 +13,9 @@ local M = MockElement:new()
 M.elementClass = "ManualSwitchUnit"
 
 function M:new(o, id, elementName)
-    if not elementName then
-        elementName = DEFAULT_ELEMENT
-    else
-        elementName = string.lower(elementName)
-        if not elementDefinitions[elementName] then
-            elementName = DEFAULT_ELEMENT
-        end
-    end
+    local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
 
-    o = o or MockElement:new(o, id, elementDefinitions[elementName])
+    o = o or MockElement:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
 

@@ -7,25 +7,18 @@ local MockElement = require "MockElement"
 
 local elementDefinitions = {}
 elementDefinitions["container xs"] = {mass = 229.09, maxHitPoints = 124.0}
-elementDefinitions["container s"] = {mass = 1281.31,maxHitPoints = 999.0}
-elementDefinitions["container m"] = {mass = 7421.35,maxHitPoints = 7997.0}
-elementDefinitions["container l"] = {mass = 14842.7,maxHitPoints = 17316.0}
+elementDefinitions["container s"] = {mass = 1281.31, maxHitPoints = 999.0}
+elementDefinitions["container m"] = {mass = 7421.35, maxHitPoints = 7997.0}
+elementDefinitions["container l"] = {mass = 14842.7, maxHitPoints = 17316.0}
 local DEFAULT_ELEMENT = "container s"
 
 local M = MockElement:new()
 M.elementClass = "ItemContainer"
 
 function M:new(o, id, elementName)
-    if not elementName then
-        elementName = DEFAULT_ELEMENT
-    else
-        elementName = string.lower(elementName)
-        if not elementDefinitions[elementName] then
-            elementName = DEFAULT_ELEMENT
-        end
-    end
+    local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
 
-    o = o or MockElement:new(o, id, elementDefinitions[elementName])
+    o = o or MockElement:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
 
