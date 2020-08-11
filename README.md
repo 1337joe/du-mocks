@@ -4,7 +4,21 @@ Mock objects for use testing DU scripts offline.
 
 ## Documentation
 
-The mock files are commented to match the codex. To generate a browsable documentation file run `ldoc .` in the base directory. Output can be found at `doc/index.html`.
+The mock files are commented to match the codex. To generate a browsable documentation file run the following in the base directory:
+
+```sh
+ldoc .
+```
+
+Output can be found at `doc/index.html`.
+
+## Testing
+
+Unit tests are provided to validate the funcionality and demonstrate usage of the mocks. To run the tests use:
+
+```sh
+./tests/runTests.sh
+```
 
 ## Progress
 
@@ -45,9 +59,9 @@ The mock files are commented to match the codex. To generate a browsable documen
 | MockGyroUnit | | | | | |
 | MockLaserDetectorUnit | | | | | |
 | MockLaserEmitterUnit | | | | | |
-| MockManualButtonUnit | | | | | |
+| MockManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | | | :heavy_check_mark: |
 | MockManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| MockPressureTileUnit | | | | | |
+| MockPressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | | | :heavy_check_mark: |
 | MockRadarUnit | | | | | |
 | MockTelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
 | MockWarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | | | |

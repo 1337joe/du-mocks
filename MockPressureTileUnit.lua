@@ -1,16 +1,16 @@
---- Manual switch unit.
--- A manual switch that can be in an on/off state.
--- @module MockManualSwitchUnit
+--- Pressure tile unit.
+-- Emits a signal when a player walks on the tile.
+-- @module MockPressureTileUnit
 -- @alias M
 
 local MockElement = require "MockElement"
 
 local elementDefinitions = {}
-elementDefinitions["manual switch"] = {mass = 13.27, maxHitPoints = 50.0}
-local DEFAULT_ELEMENT = "manual switch"
+elementDefinitions["pressure tile"] = {mass = 50.63, maxHitPoints = 50.0}
+local DEFAULT_ELEMENT = "pressure tile"
 
 local M = MockElement:new()
-M.elementClass = "ManualSwitchUnit"
+M.elementClass = "PressureTileUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
@@ -26,23 +26,8 @@ function M:new(o, id, elementName)
     return o
 end
 
---- Activate the switch on.
-function M:activate()
-    self.state = true
-end
-
---- Deactivate the switch.
-function M:deactivate()
-    self.state = false
-end
-
---- Toggle the state of the switch.
-function M:toggle()
-    self.state = not self.state
-end
-
---- Returns the activation state of the switch.
--- @return 1 when the switch is on, 0 otherwise.
+--- Returns the activation state of the pressure tile.
+-- @return 1 when the tile is pressed, 0 otherwise.
 function M:getState()
     if self.state then
         return 1
@@ -54,8 +39,8 @@ end
 --
 -- Event: `pressed()`
 --
--- The button has been pressed.
--- @tparam function callback The function to call when the button is pressed.
+-- Someone stepped on the tile.
+-- @tparam function callback The function to call when the tile is pressed.
 -- @treturn int The index of the callback.
 function M:mockRegisterPressed(callback)
     local index = #self.pressedCallbacks + 1
@@ -63,11 +48,11 @@ function M:mockRegisterPressed(callback)
     return index
 end
 
---- Mock only, not in-game: Simulates the user pressing the button. This is not triggered by calls to `activate()` or
--- `toggle()`. Calling this while the button is already deactivated is invalid and will have no effect.
+--- Mock only, not in-game: Simulates the user stepping on the tile. Calling this while the tile is already deactivated
+-- is invalid and will have no effect.
 --
 -- Note: the state updates to true <em>before</em> the event handlers are called, which is different behavior to
--- releasing the button.
+-- releasing the tile.
 function M:mockDoPressed()
     -- bail if already activated
     if self.state then
@@ -96,8 +81,8 @@ end
 --
 -- Event: `released()`
 --
--- The button has been released.
--- @tparam function callback The function to call when the button is released.
+-- Someone left the tile.
+-- @tparam function callback The function to call when the tile is released.
 -- @treturn int The index of the callback.
 function M:mockRegisterReleased(callback)
     local index = #self.releasedCallbacks + 1
@@ -105,11 +90,11 @@ function M:mockRegisterReleased(callback)
     return index
 end
 
---- Mock only, not in-game: Simulates the user releasing the button. This is not triggered by calls to `deactivate()` or
--- `toggle()`. Calling this while the button is already deactivated is invalid and will have no effect.
+--- Mock only, not in-game: Simulates the user stepping off the tile. Calling this while the tile is already deactivated
+-- is invalid and will have no effect.
 --
 -- Note: the state updates to true <em>after</em> the event handlers are called, which is different behavior to
--- pressing the button.
+-- pressing the tile.
 function M:mockDoReleased()
     -- bail if already deactivated
     if not self.state then
@@ -139,9 +124,6 @@ end
 -- @see MockElement:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
-    closure.activate = function() return self:activate() end
-    closure.deactivate = function() return self:deactivate() end
-    closure.toggle = function() return self:toggle() end
     closure.getState = function() return self:getState() end
     return closure
 end

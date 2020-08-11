@@ -1,16 +1,17 @@
---- Manual switch unit.
--- A manual switch that can be in an on/off state.
--- @module MockManualSwitchUnit
+--- Manual button.
+-- Emits a signal for the duration it is pressed.
+-- @module MockManualButton
 -- @alias M
 
 local MockElement = require "MockElement"
 
 local elementDefinitions = {}
-elementDefinitions["manual switch"] = {mass = 13.27, maxHitPoints = 50.0}
-local DEFAULT_ELEMENT = "manual switch"
+elementDefinitions["manual button xs"] = {mass = 13.27, maxHitPoints = 50.0}
+elementDefinitions["manual button s"] = {mass = 13.27, maxHitPoints = 50.0}
+local DEFAULT_ELEMENT = "manual button s"
 
 local M = MockElement:new()
-M.elementClass = "ManualSwitchUnit"
+M.elementClass = "ManualButtonUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
@@ -26,23 +27,8 @@ function M:new(o, id, elementName)
     return o
 end
 
---- Activate the switch on.
-function M:activate()
-    self.state = true
-end
-
---- Deactivate the switch.
-function M:deactivate()
-    self.state = false
-end
-
---- Toggle the state of the switch.
-function M:toggle()
-    self.state = not self.state
-end
-
---- Returns the activation state of the switch.
--- @return 1 when the switch is on, 0 otherwise.
+--- Returns the activation state of the button.
+-- @return 1 when the button is pressed, 0 otherwise.
 function M:getState()
     if self.state then
         return 1
@@ -63,8 +49,8 @@ function M:mockRegisterPressed(callback)
     return index
 end
 
---- Mock only, not in-game: Simulates the user pressing the button. This is not triggered by calls to `activate()` or
--- `toggle()`. Calling this while the button is already deactivated is invalid and will have no effect.
+--- Mock only, not in-game: Simulates the user pressing the button. Calling this while the button is already deactivated
+-- is invalid and will have no effect.
 --
 -- Note: the state updates to true <em>before</em> the event handlers are called, which is different behavior to
 -- releasing the button.
@@ -105,8 +91,8 @@ function M:mockRegisterReleased(callback)
     return index
 end
 
---- Mock only, not in-game: Simulates the user releasing the button. This is not triggered by calls to `deactivate()` or
--- `toggle()`. Calling this while the button is already deactivated is invalid and will have no effect.
+--- Mock only, not in-game: Simulates the user pressing the button. Calling this while the button is already deactivated
+-- is invalid and will have no effect.
 --
 -- Note: the state updates to true <em>after</em> the event handlers are called, which is different behavior to
 -- pressing the button.
@@ -139,9 +125,6 @@ end
 -- @see MockElement:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
-    closure.activate = function() return self:activate() end
-    closure.deactivate = function() return self:deactivate() end
-    closure.toggle = function() return self:toggle() end
     closure.getState = function() return self:getState() end
     return closure
 end
