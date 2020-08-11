@@ -57,8 +57,8 @@ Unit tests are provided to validate the funcionality and demonstrate usage of th
 | MockScreenUnit | | | | | |
 | MockDetectionZoneUnit | | | | | |
 | MockGyroUnit | | | | | |
-| MockLaserDetectorUnit | | | | | |
-| MockLaserEmitterUnit | | | | | |
+| MockLaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | | | P |
+| MockLaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | | | P |
 | MockManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | | | :heavy_check_mark: |
 | MockManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | MockPressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | | | :heavy_check_mark: |
