@@ -8,8 +8,10 @@ local lu = require("luaunit")
 
 local ml = require("MockLibrary")
 
+TestMockLibrary = {}
+
 --- Verify results pre-load properly for systemResolution3.
-function testSystemResolution3()
+function TestMockLibrary.testSystemResolution3()
     local library = ml:new()
     local closure = library:mockGetClosure()
     local expected, actual
@@ -32,7 +34,7 @@ function testSystemResolution3()
 end
 
 --- Verify error when attempting to run without loading results.
-function testSystemResolution3Error()
+function TestMockLibrary.testSystemResolution3Error()
     local library = ml:new()
     local closure = library:mockGetClosure()
 
@@ -41,7 +43,7 @@ function testSystemResolution3Error()
 end
 
 --- Verify results pre-load properly for systemResolution2.
-function testSystemResolution2()
+function TestMockLibrary.testSystemResolution2()
     local library = ml:new()
     local closure = library:mockGetClosure()
     local expected, actual
@@ -64,7 +66,7 @@ function testSystemResolution2()
 end
 
 --- Verify error when attempting to run without loading results.
-function testSystemResolution2Error()
+function TestMockLibrary.testSystemResolution2Error()
     local library = ml:new()
     local closure = library:mockGetClosure()
 

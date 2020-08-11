@@ -8,8 +8,10 @@ local lu = require("luaunit")
 
 local mdu = require("MockDatabankUnit")
 
+TestMockDatabankUnit = {}
+
 --- Verify constructor arguments properly handled and independent between instances.
-function testConstructor()
+function TestMockDatabankUnit.testConstructor()
 
     -- default element:
     -- ["databank"] = {mass = 17.09, maxHitPoints = 50.0}
@@ -43,13 +45,13 @@ function testConstructor()
 end
 
 --- Verify element class is correct.
-function testGetElementClass()
+function TestMockDatabankUnit.testGetElementClass()
     local databank = mdu:new():mockGetClosure()
     lu.assertEquals(databank.getElementClass(), "DataBankUnit")
 end
 
 --- Verify that clear empties the databank.
-function testClear()
+function TestMockDatabankUnit.testClear()
     local actual, expected
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -64,7 +66,7 @@ function testClear()
 end
 
 --- Verify number of keys counts properly.
-function testGetNbKeys()
+function TestMockDatabankUnit.testGetNbKeys()
     local actual, expected
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -81,7 +83,7 @@ function testGetNbKeys()
 end
 
 --- Verify keys can be retrieved in the proper format.
-function testGetKeys()
+function TestMockDatabankUnit.testGetKeys()
     local actual, expected
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -104,7 +106,7 @@ function testGetKeys()
 end
 
 --- Verify keys are detected and indicated with 0 or 1.
-function testHasKey()
+function TestMockDatabankUnit.testHasKey()
     local actual, expected
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -121,7 +123,7 @@ function testHasKey()
 end
 
 --- Verify storage as string works. In-game storage not visible, simply test that the key is set, not what's in storage.
-function testSetStringValue()
+function TestMockDatabankUnit.testSetStringValue()
     local actual, expected, key
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -167,7 +169,7 @@ function testSetStringValue()
 end
 
 --- Verify retrieval as string works.
-function testGetStringValue()
+function TestMockDatabankUnit.testGetStringValue()
     local actual, expected, key
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -206,7 +208,7 @@ function testGetStringValue()
 end
 
 --- Verify storage as int works. In-game storage not visible, simply test that the key is set, not what's in storage.
-function testSetIntValue()
+function TestMockDatabankUnit.testSetIntValue()
     local actual, expected, key
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -256,7 +258,7 @@ function testSetIntValue()
 end
 
 --- Verify retrieval as int works.
-function testGetIntValue()
+function TestMockDatabankUnit.testGetIntValue()
     local actual, expected, key
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -294,8 +296,8 @@ function testGetIntValue()
     lu.assertIsNumber(actual)
 end
 
---- Verify storage as int works. In-game storage not visible, simply test that the key is set, not what's in storage.
-function testSetFloatValue()
+--- Verify storage as float works. In-game storage not visible, simply test that the key is set, not what's in storage.
+function TestMockDatabankUnit.testSetFloatValue()
     local actual, expected, key
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -345,7 +347,7 @@ function testSetFloatValue()
 end
 
 --- Verify retrieval as float works.
-function testGetFloatValue()
+function TestMockDatabankUnit.testGetFloatValue()
     local actual, expected, key
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -384,7 +386,7 @@ function testGetFloatValue()
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function testGameBehavior()
+function TestMockDatabankUnit.testGameBehavior()
     local databank = mdu:new()
     local slot1 = databank:mockGetClosure()
 

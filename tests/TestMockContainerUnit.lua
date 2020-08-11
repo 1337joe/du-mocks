@@ -8,8 +8,10 @@ local lu = require("luaunit")
 
 local mcu = require("MockContainerUnit")
 
+TestMockContainerUnit = {}
+
 --- Verify constructor arguments properly handled and independent between instances.
-function testConstructor()
+function TestMockContainerUnit.testConstructor()
 
     -- default element:
     -- ["container s"] = {mass = 1281.31,maxHitPoints = 999.0}
@@ -44,13 +46,13 @@ function testConstructor()
 end
 
 --- Verify element class is correct.
-function testGetElementClass()
+function TestMockContainerUnit.testGetElementClass()
     local container = mcu:new():mockGetClosure()
     lu.assertEquals(container.getElementClass(), "ItemContainer")
 end
 
 --- Get mass is a function of self mass and item mass, verify relationhip.
-function testGetMass()
+function TestMockContainerUnit.testGetMass()
     local expected, actual
     local container = mcu:new()
 

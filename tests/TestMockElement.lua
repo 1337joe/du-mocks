@@ -8,8 +8,10 @@ local lu = require("luaunit")
 
 local me = require("MockElement")
 
+TestMockElement = {}
+
 --- Verify element definition helper method behaves properly.
-function testFindElement()
+function TestMockElement.testFindElement()
     local expected, actual
     local elementDefinitions = {}
     elementDefinitions["container xs"] = {mass = 229.09, maxHitPoints = 124.0}
@@ -63,7 +65,7 @@ function testFindElement()
 end
 
 --- Verify constructor passes ID through properly and that instances are independant.
-function testGetId()
+function TestMockElement.testGetId()
     local element1 = me:new(nil, 1)
     local element2 = me:new(nil, 2)
 
@@ -77,7 +79,7 @@ function testGetId()
     lu.assertEquals(closure2.getId(), 2)
 end
 
-function testGetIntegrity()
+function TestMockElement.testGetIntegrity()
     local expected, actual
     local element = me:new()
     local closure = element:mockGetClosure()
