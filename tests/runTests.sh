@@ -1,8 +1,8 @@
 #!/bin/sh
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
-rm -rf results
-mkdir results
+rm -rf tests/results
+mkdir -p tests/results/tests/
 
-find . -name Test\*.lua -exec lua -lluacov {} $@ -n results/{}.xml \;
+find ./tests -name Test\*.lua -exec lua -lluacov {} $@ -n tests/results/{}.xml \;
 
