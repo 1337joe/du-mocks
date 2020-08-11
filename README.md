@@ -14,11 +14,15 @@ Output can be found at `doc/index.html`.
 
 ## Testing
 
-Unit tests are provided to validate the funcionality and demonstrate usage of the mocks. To run the tests use:
+Unit tests are provided to validate the funcionality and demonstrate usage of the mocks. The tests depend on `luaunit` and `luacov` for the unit test framework and code coverage, respectively. To run all tests use:
 
 ```sh
 ./tests/runTests.sh
 ```
+
+Luaunit arguments may be passed in, such as `-o junit` to produce junit-style xml result files (though the junit file path is hardcoded to output to `tests/results/`).
+
+Individual test files are executable and may be run directly from within the tests directory.
 
 ## Progress
 
@@ -42,13 +46,13 @@ Unit tests are provided to validate the funcionality and demonstrate usage of th
 | MockContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
 | MockControlUnit | P | | | | |
 | MockDatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| MockDoorUnit | | | | | |
+| MockDoorUnit | :heavy_check_mark: | :heavy_check_mark: | | | P |
 | MockEngineUnit | | | | | |
 | MockFireworksUnit | | | | | |
-| MockForceFieldUnit | | | | | |
-| MockLandingGearUnit | | | | | |
-| MockLightUnit | | | | | |
-| MockAntiGravityGeneratorUnit | | | | | |
+| MockForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
+| MockLandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
+| MockLightUnit | :heavy_check_mark: | :heavy_check_mark: | | | P |
+| MockAntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
 | MockIndustryUnit | :heavy_check_mark: | P | | | |
 | MockCounterUnit | | | | | |
 | MockEmitterUnit | | | | | |
