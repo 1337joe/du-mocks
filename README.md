@@ -44,7 +44,7 @@ Individual test files are executable and may be run directly from within the tes
 | ---- | - | - | - | - | - |
 | MockElement | :heavy_check_mark: | P | P | | - |
 | MockContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
-| MockControlUnit | P | | | | |
+| MockControlUnit | :heavy_check_mark: | | | | |
 | MockDatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | MockDoorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | MockEngineUnit | | | | | |
@@ -59,7 +59,7 @@ Individual test files are executable and may be run directly from within the tes
 | MockReceiverUnit | :heavy_check_mark: | P | | | |
 | MockCoreUnit | :heavy_check_mark: | P | | | |
 | MockScreenUnit | | | | | |
-| MockDetectionZoneUnit | | | | | |
+| MockDetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
 | MockGyroUnit | | | | | |
 | MockLaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | MockLaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |

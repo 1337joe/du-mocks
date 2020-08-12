@@ -144,10 +144,10 @@ function M:deleteSticker(index)
 end
 
 --- Move the referenced sticker.
+-- @tparam int index Index of the sticker to move.
 -- @tparam meter x The x-coordinate in the construct. 0 = center.
 -- @tparam meter y The y-coordinate in the construct. 0 = center.
 -- @tparam meter z The z-coordinate in the construct. 0 = center.
--- @tparam int index Index of the sticker to move.
 -- @treturn int 1 in case of success, 0 otherwise
 function M:moveSticker(index, x, y, z)
     -- TODO implement something to mock this method
@@ -155,10 +155,10 @@ function M:moveSticker(index, x, y, z)
 end
 
 --- Rotate the referenced sticker.
+-- @tparam int index Index of the sticker to move.
 -- @tparam deg angle_x Rotation along the x-axis.
 -- @tparam deg angle_y Rotation along the y-axis.
 -- @tparam deg angle_z Rotation along the z-axis.
--- @tparam int index Index of the sticker to move.
 -- @treturn int 1 in case of success, 0 otherwise
 function M:rotateSticker(index, angle_x, angle_y, angle_z)
     -- TODO implement something to mock this method
