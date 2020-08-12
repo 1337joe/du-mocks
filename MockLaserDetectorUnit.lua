@@ -36,13 +36,24 @@ function M:getState()
     return 0
 end
 
+--- Event: A laser has just hit the detector.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+function M.EVENT_laserHit()
+    assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterLaserHit")
+end
+
+--- Event: All lasers have stopped hitting the detector.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+function M.EVENT_laserRelease()
+    assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterLaserRelease")
+end
+
 --- Mock only, not in-game: Register a handler for the in-game `laserHit()` event.
---
--- Event: `laserHit()`
---
--- A laser has just hit the detector.
 -- @tparam function callback The function to call when the laser hits.
 -- @treturn int The index of the callback.
+-- @see EVENT_laserHit
 function M:mockRegisterLaserHit(callback)
     local index = #self.hitCallbacks + 1
     self.hitCallbacks[index] = callback
@@ -54,7 +65,7 @@ end
 --
 -- Note: the state updates to true <em>before</em> the event handlers are called, which is different behavior to
 -- releasing the laser.
-function M:mockDoPressed()
+function M:mockDoLaserHit()
     -- bail if already activated
     if self.state then
         return
@@ -78,14 +89,11 @@ function M:mockDoPressed()
     end
 end
 
---- Mock only, not in-game: Register a handler for the in-game `released()` event.
---
--- Event: `released()`
---
--- All lasers have stopped hitting the detector.
+--- Mock only, not in-game: Register a handler for the in-game `laserRelease()` event.
 -- @tparam function callback The function to call when the lasers stop hitting.
 -- @treturn int The index of the callback.
-function M:mockRegisterReleased(callback)
+-- @see EVENT_laserRelease
+function M:mockRegisterLaserRelease(callback)
     local index = #self.releaseCallbacks + 1
     self.releaseCallbacks[index] = callback
     return index
@@ -96,7 +104,7 @@ end
 --
 -- Note: the state updates to true <em>after</em> the event handlers are called, which is different behavior to
 -- a laser hitting.
-function M:mockDoReleased()
+function M:mockDoLaserRelease()
     -- bail if already deactivated
     if not self.state then
         return

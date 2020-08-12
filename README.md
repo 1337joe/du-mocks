@@ -54,9 +54,9 @@ Individual test files are executable and may be run directly from within the tes
 | MockLightUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | MockAntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | MockIndustryUnit | :heavy_check_mark: | P | | | |
-| MockCounterUnit | | | | | |
-| MockEmitterUnit | | | | | |
-| MockReceiverUnit | | | | | |
+| MockCounterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
+| MockEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| MockReceiverUnit | :heavy_check_mark: | P | | | |
 | MockCoreUnit | | | | | |
 | MockScreenUnit | | | | | |
 | MockDetectionZoneUnit | | | | | |

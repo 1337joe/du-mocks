@@ -50,13 +50,24 @@ function M:getState()
     return 0
 end
 
+--- Event: The button has been pressed.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+function M.EVENT_pressed()
+    assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterPressed")
+end
+
+--- Event: The button has been released.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+function M.EVENT_released()
+    assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterReleased")
+end
+
 --- Mock only, not in-game: Register a handler for the in-game `pressed()` event.
---
--- Event: `pressed()`
---
--- The button has been pressed.
 -- @tparam function callback The function to call when the button is pressed.
 -- @treturn int The index of the callback.
+-- @see EVENT_pressed
 function M:mockRegisterPressed(callback)
     local index = #self.pressedCallbacks + 1
     self.pressedCallbacks[index] = callback
@@ -93,12 +104,9 @@ function M:mockDoPressed()
 end
 
 --- Mock only, not in-game: Register a handler for the in-game `released()` event.
---
--- Event: `released()`
---
--- The button has been released.
 -- @tparam function callback The function to call when the button is released.
 -- @treturn int The index of the callback.
+-- @see EVENT_released
 function M:mockRegisterReleased(callback)
     local index = #self.releasedCallbacks + 1
     self.releasedCallbacks[index] = callback
