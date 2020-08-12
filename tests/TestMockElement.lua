@@ -1,5 +1,5 @@
 #!/usr/bin/env lua
---- Tests on MockElement
+--- Tests on MockElement.
 -- @see MockElement
 
 package.path = package.path..";../?.lua"

@@ -1,5 +1,5 @@
 #!/usr/bin/env lua
---- Tests on MockManualSwitchUnit
+--- Tests on MockManualSwitchUnit.
 -- @see MockManualSwitchUnit
 
 package.path = package.path..";../?.lua"

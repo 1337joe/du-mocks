@@ -14,7 +14,7 @@ Output can be found at `doc/index.html`.
 
 ## Testing
 
-Unit tests are provided to validate the funcionality and demonstrate usage of the mocks. The tests depend on `luaunit` and `luacov` for the unit test framework and code coverage, respectively. To run all tests use:
+Unit tests are provided to validate the funcionality and demonstrate usage of the mocks. The tests depend on lua modules `luaunit` and `luacov` for the unit test framework and code coverage, respectively. To run all tests run the following script from the repository base directory:
 
 ```sh
 ./tests/runTests.sh
@@ -42,17 +42,17 @@ Individual test files are executable and may be run directly from within the tes
 
 | Mock | 1 | 2 | 3 | 4 | 5 |
 | ---- | - | - | - | - | - |
-| MockElement | :heavy_check_mark: | P | | | - |
+| MockElement | :heavy_check_mark: | P | P | | - |
 | MockContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
 | MockControlUnit | P | | | | |
 | MockDatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| MockDoorUnit | :heavy_check_mark: | :heavy_check_mark: | | | P |
+| MockDoorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | MockEngineUnit | | | | | |
 | MockFireworksUnit | | | | | |
-| MockForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
-| MockLandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
-| MockLightUnit | :heavy_check_mark: | :heavy_check_mark: | | | P |
-| MockAntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
+| MockForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| MockLandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| MockLightUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
+| MockAntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | MockIndustryUnit | :heavy_check_mark: | P | | | |
 | MockCounterUnit | | | | | |
 | MockEmitterUnit | | | | | |
@@ -61,13 +61,13 @@ Individual test files are executable and may be run directly from within the tes
 | MockScreenUnit | | | | | |
 | MockDetectionZoneUnit | | | | | |
 | MockGyroUnit | | | | | |
-| MockLaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | | | P |
-| MockLaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | | | P |
-| MockManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | | | :heavy_check_mark: |
+| MockLaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
+| MockLaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
+| MockManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
 | MockManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| MockPressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | | | :heavy_check_mark: |
+| MockPressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
 | MockRadarUnit | | | | | |
-| MockTelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
-| MockWarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
+| MockTelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| MockWarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | MockLibrary | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | - | - |
 | MockSystem | P | | | | - |

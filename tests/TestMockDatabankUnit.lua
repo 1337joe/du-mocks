@@ -1,5 +1,5 @@
 #!/usr/bin/env lua
---- Tests on MockDatabankUnit
+--- Tests on MockDatabankUnit.
 -- @see MockDatabankUnit
 
 package.path = package.path..";../?.lua"
