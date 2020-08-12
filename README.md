@@ -58,9 +58,9 @@ Individual test files are executable and may be run directly from within the tes
 | MockEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | MockReceiverUnit | :heavy_check_mark: | P | | | |
 | MockCoreUnit | :heavy_check_mark: | P | | | |
-| MockScreenUnit | | | | | |
-| MockDetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | | | |
-| MockGyroUnit | | | | | |
+| MockScreenUnit | :heavy_check_mark: | | P | | |
+| MockDetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| MockGyroUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | MockLaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | MockLaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | MockManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
