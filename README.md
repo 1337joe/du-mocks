@@ -48,7 +48,7 @@ Individual test files are executable and may be run directly from within the tes
 | MockDatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | MockDoorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | MockEngineUnit | | | | | |
-| MockFireworksUnit | | | | | |
+| MockFireworksUnit | :heavy_check_mark: | P | | | |
 | MockForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | MockLandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | MockLightUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
@@ -57,7 +57,7 @@ Individual test files are executable and may be run directly from within the tes
 | MockCounterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | MockEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | MockReceiverUnit | :heavy_check_mark: | P | | | |
-| MockCoreUnit | | | | | |
+| MockCoreUnit | :heavy_check_mark: | P | | | |
 | MockScreenUnit | | | | | |
 | MockDetectionZoneUnit | | | | | |
 | MockGyroUnit | | | | | |

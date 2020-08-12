@@ -135,7 +135,7 @@ end
 
 --- Get the status of the industry.
 -- @treturn string The status of the industry can be: STOPPED, RUNNING, JAMMED_MISSING_INGREDIENT, JAMMED_OUTPUT_FULL,
--- JAMMED_NO_OUTPUT_CONTAINER
+-- JAMMED_NO_OUTPUT_CONTAINER.
 function M:getStatus()
     return self.status
 end
@@ -160,6 +160,23 @@ function M:getUptime()
     end
     return os.time() - self.startedTime -- TODO should include fractional part? check game
 end
+
+--- Event: Emitted when the industry unit has completed a run.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+function M.EVENT_completed()
+    assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterCompleted")
+end
+
+--- Event: Emitted when the industry status has changed.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam string status The status of the industry can be: STOPPED, RUNNING, JAMMED_MISSING_INGREDIENT,
+-- JAMMED_OUTPUT_FULL, JAMMED_NO_OUTPUT_CONTAINER.
+function M.EVENT_statusChanged(status)
+    assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterStatusChanged")
+end
+
 
 -- TODO register callbacks: completed
 
