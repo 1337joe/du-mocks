@@ -2,6 +2,15 @@
 
 Mock objects for use testing DU scripts offline.
 
+To use this project simply place the project root directory on your lua package path and load modules with the `dumocks.` prefix, like so:
+
+```lua
+package.path = package.path..";../du-mocks/?.lua"
+local mockWarpDrive = require("dumocks.WarpDriveUnit")
+```
+
+Note: If you get a `module 'dumocks.Element' not found` on loading a module besides Element, your path is probably pointing to the inside of the `dumocks` package instead of one level above it like the path should be.
+
 ## Documentation
 
 The mock files are commented to match the codex. To generate a browsable documentation file run the following in the base directory:
@@ -10,7 +19,7 @@ The mock files are commented to match the codex. To generate a browsable documen
 ldoc .
 ```
 
-Output can be found at `doc/index.html`.
+Output can be found at `doc/index.html`. Note that the documentation won't show the package prefix (`dumocks.`), but it's still needed to load modules.
 
 ## Testing
 
@@ -40,34 +49,34 @@ Individual test files are executable and may be run directly from within the tes
 * :heavy_check_mark: = Completed
 * `-` = N/A
 
-| Mock | 1 | 2 | 3 | 4 | 5 |
+| Unit | 1 | 2 | 3 | 4 | 5 |
 | ---- | - | - | - | - | - |
-| MockElement | :heavy_check_mark: | P | P | | - |
-| MockContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
-| MockControlUnit | :heavy_check_mark: | | | | |
-| MockDatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| MockDoorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
-| MockEngineUnit | | | | | |
-| MockFireworksUnit | :heavy_check_mark: | P | | | |
-| MockForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| MockLandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| MockLightUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
-| MockAntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| MockIndustryUnit | :heavy_check_mark: | P | | | |
-| MockCounterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
-| MockEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| MockReceiverUnit | :heavy_check_mark: | P | | | |
-| MockCoreUnit | :heavy_check_mark: | P | | | |
-| MockScreenUnit | :heavy_check_mark: | | P | | |
-| MockDetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| MockGyroUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| MockLaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
-| MockLaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
-| MockManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
-| MockManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| MockPressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
-| MockRadarUnit | | | | | |
-| MockTelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| MockWarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| MockLibrary | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | - | - |
-| MockSystem | P | | | | - |
+| Element | :heavy_check_mark: | P | P | | - |
+| ContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
+| ControlUnit | :heavy_check_mark: | | | | |
+| DatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| DoorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
+| EngineUnit | | | | | |
+| FireworksUnit | :heavy_check_mark: | P | | | |
+| ForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| LandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| LightUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
+| AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| IndustryUnit | :heavy_check_mark: | P | | | |
+| CounterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
+| EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| ReceiverUnit | :heavy_check_mark: | P | | | |
+| CoreUnit | :heavy_check_mark: | P | | | |
+| ScreenUnit | :heavy_check_mark: | | P | | |
+| DetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| GyroUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| LaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
+| LaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
+| ManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
+| ManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| PressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
+| RadarUnit | | | | | |
+| TelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| Library | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | - | - |
+| System | P | | | | - |

@@ -1,26 +1,26 @@
 #!/usr/bin/env lua
---- Tests on dumocks.AntiGravityGeneratorUnit.
--- @see dumocks.AntiGravityGeneratorUnit
+--- Tests on dumocks.EmitterUnit.
+-- @see dumocks.EmitterUnit
 
 -- set search path to include root of project
 package.path = package.path..";../?.lua"
 
 local lu = require("luaunit")
 
-local maggu = require("dumocks.AntiGravityGeneratorUnit")
+local meu = require("dumocks.EmitterUnit")
 
-TestAntiGravityGeneratorUnit = {}
+TestEmitterUnit = {}
 
 --- Verify element class is correct.
-function TestAntiGravityGeneratorUnit.testGetElementClass()
-    local element = maggu:new():mockGetClosure()
+function TestEmitterUnit.testGetElementClass()
+    local element = meu:new():mockGetClosure()
     lu.fail("Not Yet Implemented")
     lu.assertEquals(element.getElementClass(), "Unit")
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestAntiGravityGeneratorUnit.testGameBehavior()
-    local mock = maggu:new()
+function TestEmitterUnit.testGameBehavior()
+    local mock = meu:new()
     local slot1 = mock:mockGetClosure()
 
     -- copy from here to unit.start
