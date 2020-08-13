@@ -41,7 +41,7 @@ function M.EVENT_leave(id)
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterLeave")
 end
 
---- Mock only, not in-game: Register a handler for the in-game `enter()` event.
+--- Mock only, not in-game: Register a handler for the in-game `enter(id)` event.
 -- @tparam function callback The function to call when the a player enters.
 -- @treturn int The index of the callback.
 -- @see EVENT_enter
@@ -70,7 +70,7 @@ function M:mockDoEnter(id)
     end
 end
 
---- Mock only, not in-game: Register a handler for the in-game `leave()` event.
+--- Mock only, not in-game: Register a handler for the in-game `leave(id)` event.
 -- @tparam function callback The function to call when the tile is released.
 -- @treturn int The index of the callback.
 -- @see EVENT_leave
@@ -81,11 +81,12 @@ function M:mockRegisterLeave(callback)
 end
 
 --- Mock only, not in-game: Simulates a player leaving the detection zone.
+-- @tparam int id The ID of the player who left.
 function M:mockDoLeave(id)
     -- call callbacks in order, saving exceptions until end
     local errors = ""
     for i,callback in pairs(self.leaveCallbacks) do
-        local status, err = pcall(callback)
+        local status, err = pcall(callback, id)
         if not status then
             errors = errors.."\nError while running callback "..i..": "..err
         end

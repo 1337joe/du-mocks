@@ -56,7 +56,7 @@ Individual test files are executable and may be run directly from within the tes
 | ControlUnit | :heavy_check_mark: | | P | | |
 | DatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | DoorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
-| EngineUnit | | | | | |
+| EngineUnit | :heavy_check_mark: | P | P | | |
 | FireworksUnit | :heavy_check_mark: | P | P | | |
 | ForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | LandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
@@ -75,8 +75,8 @@ Individual test files are executable and may be run directly from within the tes
 | ManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
 | ManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | PressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
-| RadarUnit | | | | | |
+| RadarUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | TelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | Library | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | - | - |
-| System | P | | P | | - |
+| System | :heavy_check_mark: | P | P | | - |
