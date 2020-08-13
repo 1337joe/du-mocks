@@ -15,7 +15,7 @@ TestContainerUnit = {}
 function TestContainerUnit.testConstructor()
 
     -- default element:
-    -- ["container s"] = {mass = 1281.31,maxHitPoints = 999.0}
+    -- ["container s"] = {mass = 1281.31, maxHitPoints = 999.0}
 
     local databank1 = mcu:new(nil, 1, "Container XS")
     local databank2 = mcu:new(nil, 2, "invalid")
@@ -46,10 +46,25 @@ function TestContainerUnit.testConstructor()
     lu.assertEquals(databank4Closure.getMass(), 14842.7)
 end
 
---- Verify element class is correct.
+--- Verify element class is correct for various types.
 function TestContainerUnit.testGetElementClass()
-    local container = mcu:new():mockGetClosure()
+    local container
+
+    -- default - item container
+    container = mcu:new():mockGetClosure()
     lu.assertEquals(container.getElementClass(), "ItemContainer")
+
+    -- selected item container
+    container = mcu:new(nil, 0, "container m"):mockGetClosure()
+    lu.assertEquals(container.getElementClass(), "ItemContainer")
+
+    -- atmo fuel container
+    container = mcu:new(nil, 0, "atmospheric fuel tank s"):mockGetClosure()
+    lu.assertEquals(container.getElementClass(), "AtmoFuelContainer")
+
+    -- space fuel container
+    container = mcu:new(nil, 0, "space fuel tank s"):mockGetClosure()
+    lu.assertEquals(container.getElementClass(), "SpaceFuelContainer")
 end
 
 --- Get mass is a function of self mass and item mass, verify relationhip.

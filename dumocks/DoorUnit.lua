@@ -5,9 +5,11 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
+elementDefinitions["sliding door s"] = {mass = 749.15, maxHitPoints = 56.0}
 elementDefinitions["reinforced sliding door"] = {mass = 4197.11, maxHitPoints = 969.0}
+elementDefinitions["hatch s"] = {mass = 98.56, maxHitPoints = 969.0}
 -- TODO others
-local DEFAULT_ELEMENT = "reinforced sliding door"
+local DEFAULT_ELEMENT = "sliding door s"
 
 local M = MockElement:new()
 M.elementClass = "DoorUnit"

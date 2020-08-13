@@ -12,9 +12,9 @@ local mdzu = require("dumocks.DetectionZoneUnit")
 TestDetectionZoneUnit = {}
 
 --- Verify element class is correct.
-function TestDetectionZoneUnit.skipTestGetElementClass()
+function TestDetectionZoneUnit.testGetElementClass()
     local element = mdzu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "Unit")
+    lu.assertEquals(element.getElementClass(), "DetectionZoneUnit")
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
@@ -25,7 +25,7 @@ function TestDetectionZoneUnit.skipTestGameBehavior()
     -- copy from here to unit.start
     assert(false, "Not Yet Implemented")
 
-    assert(slot1.getElementClass() == "Unit")
+    assert(slot1.getElementClass() == "DetectionZoneUnit")
 
     -- copy to here to unit.start
 end

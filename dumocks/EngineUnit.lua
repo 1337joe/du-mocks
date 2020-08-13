@@ -5,9 +5,10 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-elementDefinitions["hover engine s"] = {mass = 56.91, maxHitPoints = 53.0}
-elementDefinitions["atmo airbrake l"] = {mass = 1501.55, maxHitPoints = 767.0}
-elementDefinitions["stabilizer xs"] = {mass = 69.88, maxHitPoints = 50.0}
+elementDefinitions["hover engine s"] = {mass = 56.91, maxHitPoints = 53.0} -- Hovercraft
+elementDefinitions["atmo airbrake l"] = {mass = 1501.55, maxHitPoints = 767.0} -- Airbrake
+elementDefinitions["stabilizer xs"] = {mass = 69.88, maxHitPoints = 50.0} -- Stabilizer
+elementDefinitions["space engine s"] = {mass = 761.74, maxHitPoints = 221.0} -- SpaceEngineSmallGroup
 local DEFAULT_ELEMENT = "hover engine s"
 
 local M = MockElement:new()

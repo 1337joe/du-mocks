@@ -6,12 +6,16 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-elementDefinitions["dynamic core unit xs"] = {mass = 70.89, maxHitPoints = 50}
+elementDefinitions["dynamic core unit xs"] = {mass = 70.89, maxHitPoints = 50.0} -- CoreUnitDynamic
+elementDefinitions["dynamic core unit s"] = {mass = 375.97, maxHitPoints = 183.0} -- CoreUnitDynamic
+elementDefinitions["static core unit m"] = {mass = 1926.91, maxHitPoints = 1184.0} -- CoreUnitStatic
+elementDefinitions["space core unit xs"] = {mass = 38.99, maxHitPoints = 50.0} -- CoreUnitSpace
 -- TODO others
 local DEFAULT_ELEMENT = "dynamic core unit xs"
 
 local M = MockElement:new()
 M.elementClass = "CoreUnitDynamic" -- TODO subclass for different types, or set based on element picked?
+-- "CoreUnitStatic"
 M.widgetType = "core"
 
 function M:new(o, id, elementName)
@@ -178,82 +182,107 @@ end
 -- @tparam int uid The UID of the element.
 -- @treturn string Name of the element.
 function M:getElementNameById(uid)
-    return self.elements[uid] and self.elements[uid].name
+    if self.elements[uid] and self.elements[uid].name then
+        return self.elements[uid].name
+    end
+    return ""
 end
 
 --- Type of the element, identified by its UID.
 -- @tparam int uid The UID of the element.
 -- @treturn string The type of the element.
 function M:getElementTypeById(uid)
-    return self.elements[uid] and self.elements[uid].type
+    if self.elements[uid] and self.elements[uid].type then
+        return self.elements[uid].type
+    end
+    return ""
 end
 
 --- Current level of hit points of the element, identified by its UID.
 -- @tparam int uid The UID of the element.
 -- @treturn float Current level of hit points of the element.
 function M:getElementHitPointsById(uid)
-    return self.elements[uid] and self.elements[uid].hp
+    if self.elements[uid] and self.elements[uid].hp then
+        return self.elements[uid].hp
+    end
+    return 0.0
 end
 
 --- Max level of hit points of the element, identified by its UID.
 -- @tparam int uid The UID of the element.
 -- @treturn float Max level of hit points of the element.
 function M:getElementMaxHitPointsById(uid)
-    return self.elements[uid] and self.elements[uid].maxHp
+    if self.elements[uid] and self.elements[uid].maxHp then
+        return self.elements[uid].maxHp
+    end
+    return 0.0
 end
 
 --- Mass of the element, identified by its UID.
 -- @tparam int uid The UID of the element.
 -- @treturn float Mass of the element.
 function M:getElementMassById(uid)
-    return self.elements[uid] and self.elements[uid].mass
+    if self.elements[uid] and self.elements[uid].mass then
+        return self.elements[uid].mass
+    end
+    return 0.0
 end
 
 --- Altitude above sea level, with respect to the closest planet (0 in space).
 -- @treturn m The sea level altitude.
 function M:getAltitude()
+    -- TODO returns 0.0 for space construct
     return self.altitude
 end
 
 --- Local gravity intensity.
 -- @treturn m/s2 The gravitation acceleration where the construct is located.
 function M:g()
+    -- TODO returns 0.0 for static and space construct
     return self.g
 end
 
 --- Local gravity vector in world coordinates.
 -- @treturn m/s2 The local gravity field vector in world coordinates.
 function M:getWorldGravity()
+    -- TODO returns {0.0, 0.0, 0.0} for static and space construct
+    -- sample dynamic value: {1.5739563655308,-9.33176430249,-2.8107843460705}
     return self.worldGravity
 end
 
 --- Vertical unit vector along gravity, in world coordinates (0 in space).
 -- @treturn m/s2 The local vertical vector in world coordinates.
 function M:getWorldVertical()
+    -- TODO returns {0.0, 0.0, 0.0} for static and space construct
+    -- sample dynamic value: {0.15943373305866,-0.94526001568521, -0.28471808426895}
     return self.worldVertical
 end
 
 --- The construct's angular velocity, in construct local coordinates.
 -- @treturn rad/s Angular velocity vector, in construct local coordinates.
 function M:getAngularVelocity()
+    -- TODO returns {0.0, 0.0, 0.0} for static and space construct
     return self.angularVelocity
 end
 
 --- The constructs angular velocity, in world coordinates.
 -- @treturn rad/s Angular velocity vector, in world coordinates.
 function M:getWorldAngularVelocity()
+    -- TODO returns {0.0, 0.0, 0.0} for static and space construct
     return self.worldAngularVelocity
 end
 
 --- The construct's angular acceleration, in construct local coordinates.
 -- @treturn rad/s2 Angular acceleration vector, in construct local coordinates.
 function M:getAngularAcceleration()
+    -- TODO returns {0.0, 0.0, 0.0} for static and space construct
     return self.angularAcceleration
 end
 
 --- The construct's angular acceleration, in world coordinates.
 -- @treturn rad/s2 Angular acceleration vector, in world coordinates.
 function M:getWorldAngularAcceleration()
+    -- TODO returns {0.0, 0.0, 0.0} for static and space construct
     return self.worldAngularAcceleration
 end
 

@@ -103,7 +103,6 @@ end
 function M:getIntValue(key)
     local value = self.data[key]
     if value == nil or type(value) ~= "number" then
-        -- TODO verify numbers stored as strings don't parse
         value = 0
     else
         value = math.floor(value)
@@ -128,7 +127,6 @@ end
 function M:getFloatValue(key)
     local value = self.data[key]
     if value == nil or type(value) ~= "number" then
-        -- TODO verify numbers stored as strings don't parse
         value = 0.0
     else
         value = value * 1.0

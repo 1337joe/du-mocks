@@ -5,11 +5,14 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
--- TODO
-local DEFAULT_ELEMENT = ""
+elementDefinitions["detection zone xs"] = {mass = 7.79, maxHitPoints = 50.0}
+elementDefinitions["detection zone s"] = {mass = 7.79, maxHitPoints = 50.0}
+elementDefinitions["detection zone m"] = {mass = 7.79, maxHitPoints = 50.0}
+elementDefinitions["detection zone l"] = {mass = 7.79, maxHitPoints = 50.0}
+local DEFAULT_ELEMENT = "detection zone s"
 
 local M = MockElement:new()
-M.elementClass = "???Unit"
+M.elementClass = "DetectionZoneUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)

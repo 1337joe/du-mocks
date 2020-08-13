@@ -257,7 +257,7 @@ function TestManualSwitchUnit.testGameBehavior()
     local switch = mmsu:new()
     local slot1 = switch:mockGetClosure()
 
-    -- stub this in directly to supress print
+    -- stub this in directly to supress print in the unit test
     local system = {}
     system.print = function() end
 

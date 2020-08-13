@@ -5,11 +5,12 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
--- TODO
-local DEFAULT_ELEMENT = ""
+elementDefinitions["receiver xs"] = {mass = 13.27, maxHitPoints = 50.0, range = 100.0}
+-- TODO others
+local DEFAULT_ELEMENT = "receiver xs"
 
 local M = MockElement:new()
-M.elementClass = "???"
+M.elementClass = "ReceiverUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
@@ -18,7 +19,7 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
-    o.range = 1 -- TODO when default element is defined: elementDefinition.getRange
+    o.range = elementDefinition.range
     o.receiveCallbacks = {}
 
     return o
@@ -41,12 +42,13 @@ end
 
 --- Mock only, not in-game: Register a handler for the in-game `receive(channel,message)` event.
 -- @tparam string channel The channel to filter on, or "*" for all.
+-- @tparam string message The message to filter for, or "*" for all.
 -- @tparam function callback The function to call when the button is pressed.
 -- @treturn int The index of the callback.
 -- @see EVENT_receive
-function M:mockRegisterReceive(channel, callback)
+function M:mockRegisterReceive(channel, message, callback)
 
-    -- TODO: store channel with the callback
+    -- TODO: store channel and message filters with the callback
 
     local index = #self.receiveCallbacks + 1
     self.receiveCallbacks[index] = callback
@@ -58,7 +60,7 @@ end
 -- @tparam string message The message received.
 function M:mockDoReceive(channel, message)
 
-    -- TODO filter on the channel
+    -- TODO filter on the channel and on message
 
     -- call callbacks in order, saving exceptions until end
     local errors = ""

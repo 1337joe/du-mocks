@@ -7,22 +7,20 @@
 
 local MockElement = require "dumocks.Element"
 
-local controlDefinitions = {
-    programmingBoard = {
-        mass = 27.74,
-        maxHitPoints = 50.0
-    },
-    hovercraftSeat = {
-        mass = 110.33,
-        maxHitPoints = 187.0
-    }
-}
+local elementDefinitions = {}
+elementDefinitions["programming board"] = {mass = 27.74, maxHitPoints = 50.0} -- Generic
+elementDefinitions["hovercraft seat"] = {mass = 110.33, maxHitPoints = 187.0} -- CockpitHovercraftUnit
+elementDefinitions["command seat controller"] = {mass = 158.45, maxHitPoints = 250.0} -- CockpitCommandmentUnit
+-- TODO others
+local DEFAULT_ELEMENT = "programming board"
 
 local M = MockElement:new()
 M.elementClass = "Generic"
 
 function M:new(o, id)
-    o = o or MockElement:new(o, id)
+    local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
+
+    o = o or MockElement:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
 
@@ -54,8 +52,9 @@ end
 -- @tparam second period The period of the timer, in seconds. The time resolution is limited by the framerate here, so
 -- you cannot set arbitrarily fast timers.
 function M:setTimer(timerTagId, period)
-    -- TODO what happens if period is negative?
+    -- TODO what happens if period is negative? treats it as 0s
     self.timers[timerTagId] = period
+    -- TODO * is a valid timer filter
 end
 
 --- Stop the timer with the given ID.

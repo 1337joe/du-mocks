@@ -53,30 +53,30 @@ Individual test files are executable and may be run directly from within the tes
 | ---- | - | - | - | - | - |
 | Element | :heavy_check_mark: | P | P | | - |
 | ContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
-| ControlUnit | :heavy_check_mark: | | P | | |
+| ControlUnit | :heavy_check_mark: | | P | | P |
 | DatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| DoorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
-| EngineUnit | :heavy_check_mark: | P | P | | |
+| DoorUnit | :heavy_check_mark: | :heavy_check_mark: | P | :heavy_check_mark: | P |
+| EngineUnit | :heavy_check_mark: | P | P | | P |
 | FireworksUnit | :heavy_check_mark: | P | P | | |
-| ForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| LandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| LightUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
+| ForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | P | :heavy_check_mark: | :heavy_check_mark: |
+| LandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | P | :heavy_check_mark: | P |
+| LightUnit | :heavy_check_mark: | :heavy_check_mark: | P | :heavy_check_mark: | :heavy_check_mark: |
 | AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| IndustryUnit | :heavy_check_mark: | P | P | | |
-| CounterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
-| EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| ReceiverUnit | :heavy_check_mark: | P | P | | |
-| CoreUnit | :heavy_check_mark: | P | P | | |
-| ScreenUnit | :heavy_check_mark: | | P | | |
-| DetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| GyroUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| LaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
-| LaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
+| IndustryUnit | :heavy_check_mark: | P | P | | :heavy_check_mark: |
+| CounterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
+| EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
+| ReceiverUnit | :heavy_check_mark: | P | P | | P |
+| CoreUnit | :heavy_check_mark: | P | P | | P |
+| ScreenUnit | :heavy_check_mark: | | P | | P |
+| DetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
+| GyroUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
+| LaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
+| LaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
 | ManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
 | ManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | PressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
 | RadarUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | TelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
 | Library | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | - | - |
 | System | :heavy_check_mark: | P | P | | - |

@@ -5,10 +5,14 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-local DEFAULT_ELEMENT = ""
+elementDefinitions["force field xs"] = {mass = 110.62, maxHitPoints = 50.0}
+elementDefinitions["force field s"] = {mass = 110.62, maxHitPoints = 50.0}
+elementDefinitions["force field m"] = {mass = 110.62, maxHitPoints = 50.0}
+elementDefinitions["force field l"] = {mass = 110.62, maxHitPoints = 50.0}
+local DEFAULT_ELEMENT = "force field xs"
 
 local M = MockElement:new()
-M.elementClass = "???"
+M.elementClass = "ForceFieldUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)

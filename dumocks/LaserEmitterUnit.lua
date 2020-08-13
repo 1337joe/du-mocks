@@ -7,7 +7,7 @@ local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
 elementDefinitions["laser emitter"] = {mass = 7.47, maxHitPoints = 50.0}
--- TODO infrared laser emitter?
+elementDefinitions["infrared laser emitter"] = {mass = 9.93, maxHitPoints = 50.0}
 local DEFAULT_ELEMENT = "laser emitter"
 
 local M = MockElement:new()

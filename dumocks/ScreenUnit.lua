@@ -7,7 +7,13 @@ local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
 elementDefinitions["screen xs"] = {mass = 18.67, maxHitPoints = 50.0}
--- TODO others
+elementDefinitions["screen s"] = {mass = 18.67, maxHitPoints = 50.0}
+elementDefinitions["screen m"] = {mass = 18.67, maxHitPoints = 50.0}
+-- elementDefinitions["screen xl] = {mass = ??? TODO EXACT NUMBER, maxHitPoints = 28116.0}
+elementDefinitions["transparent screen xs"] = {mass = 18.67, maxHitPoints = 50.0}
+elementDefinitions["transparent screen s"] = {mass = 18.67, maxHitPoints = 50.0}
+elementDefinitions["transparent screen m"] = {mass = 18.67, maxHitPoints = 50.0}
+elementDefinitions["transparent screen l"] = {mass = 18.67, maxHitPoints = 50.0}
 local DEFAULT_ELEMENT = "screen xs"
 
 local M = MockElement:new()

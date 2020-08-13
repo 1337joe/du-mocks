@@ -5,10 +5,13 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-local DEFAULT_ELEMENT = ""
+elementDefinitions["landing gear xs"] = {mass = 49.88, maxHitPoints = 63.0}
+elementDefinitions["landing gear s"] = {mass = 258.76, maxHitPoints = 1045.0}
+elementDefinitions["landing gear m"] = {mass = 1460.65, maxHitPoints = 9939.0}
+local DEFAULT_ELEMENT = "landing gear s"
 
 local M = MockElement:new()
-M.elementClass = "???"
+M.elementClass = "LandingGearUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)

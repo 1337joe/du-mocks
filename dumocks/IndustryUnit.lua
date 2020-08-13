@@ -5,15 +5,22 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
+elementDefinitions["3d printer m"] = {mass = 1997.46, maxHitPoints = 5512.0}
 elementDefinitions["assembler xs"] = {mass = 100.93, maxHitPoints = 2250.0}
 elementDefinitions["assembler s"] = {mass = 522.14, maxHitPoints = 7829.0}
 elementDefinitions["assembler m"] = {mass = 2802.36, maxHitPoints = 26422.0}
 elementDefinitions["assembler l"] = {mass = 15382.4, maxHitPoints = 89176.0}
 elementDefinitions["assembler xl"] = {86293.68, maxHitPoints = 300967.0}
+elementDefinitions["chemical industry m"] = {mass = 2302.34, maxHitPoints = 5563.0}
+elementDefinitions["electronics industry m"] = {mass = 1620.46, maxHitPoints = 1095.0}
+elementDefinitions["glass furnace m"] = {mass = 2834.56, maxHitPoints = 2655.0}
+elementDefinitions["honeycomb refinery m"] = {mass = 2989.96, maxHitPoints = 6440.0}
+elementDefinitions["metalwork industry m"] = {mass = 2598.96, maxHitPoints = 4892.0}
+elementDefinitions["recycler m"] = {mass = 2353.96, maxHitPoints = 18029.0}
 elementDefinitions["refiner m"] = {mass = 2302.34, maxHitPoints = 5540.0}
+elementDefinitions["smelter"] = {mass = 2057.34, maxHitPoints = 7697.0}
 elementDefinitions["transfer unit"] = {mass=10147.65, maxHitPoints = 1329.0}
 local DEFAULT_ELEMENT = "assembler m"
-
 
 local M = MockElement:new()
 M.elementClass = "IndustryUnit"

@@ -12,9 +12,9 @@ local mgu = require("dumocks.GyroUnit")
 TestGyroUnit = {}
 
 --- Verify element class is correct.
-function TestGyroUnit.skipTestGetElementClass()
+function TestGyroUnit.testGetElementClass()
     local element = mgu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "Unit")
+    lu.assertEquals(element.getElementClass(), "GyroUnit")
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
@@ -25,7 +25,7 @@ function TestGyroUnit.skipTestGameBehavior()
     -- copy from here to unit.start
     assert(false, "Not Yet Implemented")
 
-    assert(slot1.getElementClass() == "Unit")
+    assert(slot1.getElementClass() == "GyroUnit")
 
     -- copy to here to unit.start
 end

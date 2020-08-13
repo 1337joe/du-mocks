@@ -5,11 +5,11 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
--- TODO
-local DEFAULT_ELEMENT = ""
+elementDefinitions["gyroscope"] = {mass = 104.41, maxHitPoints = 50}
+local DEFAULT_ELEMENT = "gyroscope"
 
 local M = MockElement:new()
-M.elementClass = "???"
+M.elementClass = "GyroUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)

@@ -5,14 +5,23 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-elementDefinitions["light xs"] = {mass = 70.05, maxHitPoints = 50.0}
+elementDefinitions["square light xs"] = {mass = 70.05, maxHitPoints = 50.0}
+elementDefinitions["square light s"] = {mass = 79.34, maxHitPoints = 50.0}
+elementDefinitions["square light m"] = {mass = 79.34, maxHitPoints = 50.0}
+elementDefinitions["square light l"] = {mass = 79.34, maxHitPoints = 57.0}
 elementDefinitions["long light xs"] = {mass = 70.05, maxHitPoints = 50.0}
+elementDefinitions["long light s"] = {mass = 79.34, maxHitPoints = 50.0}
+elementDefinitions["long light m"] = {mass = 79.34, maxHitPoints = 50.0}
+elementDefinitions["long light l"] = {mass = 79.34, maxHitPoints = 50.0}
+elementDefinitions["vertical light xs"] = {mass = 70.05, maxHitPoints = 50.0}
+elementDefinitions["vertical light xs"] = {mass = 79.34, maxHitPoints = 50.0}
+elementDefinitions["vertical light xs"] = {mass = 79.34, maxHitPoints = 62.0}
+elementDefinitions["vertical light xs"] = {mass = 371.80, maxHitPoints = 499.0}
 elementDefinitions["headlight"] = {mass = 79.34, maxHitPoints = 50.0}
--- TODO others
-local DEFAULT_ELEMENT = "light xs"
+local DEFAULT_ELEMENT = "square light xs"
 
 local M = MockElement:new()
-M.elementClass = "LightUnit" -- TODO verify, notes had a space between words for light xs but not for headlight
+M.elementClass = "LightUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)

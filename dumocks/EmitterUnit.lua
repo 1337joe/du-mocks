@@ -5,11 +5,12 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
--- TODO
-local DEFAULT_ELEMENT = ""
+elementDefinitions["emitter xs"] = {mass = 69.31, maxHitPoints = 50.0, range = 100.0}
+-- TODO others
+local DEFAULT_ELEMENT = "emitter xs"
 
 local M = MockElement:new()
-M.elementClass = "???"
+M.elementClass = "EmitterUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
@@ -18,7 +19,7 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
-    o.range = 1 -- TODO when default element is defined: elementDefinition.getRange
+    o.range = elementDefinition.range
     o.propagateSendErrors = false -- in-game module gets no feedback, make optional for testing purposes
     o.receiverCallbacks = {}
 

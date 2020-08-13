@@ -7,7 +7,10 @@ local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
 elementDefinitions["counter 2"] = {mass = 9.93, maxHitPoints = 50.0, maxCount = 2}
--- TODO others
+elementDefinitions["counter 3"] = {mass = 9.93, maxHitPoints = 50.0, maxCount = 3}
+elementDefinitions["counter 5"] = {mass = 9.93, maxHitPoints = 50.0, maxCount = 5}
+elementDefinitions["counter 7"] = {mass = 9.93, maxHitPoints = 50.0, maxCount = 7}
+elementDefinitions["counter 10"] = {mass = 9.93, maxHitPoints = 50.0, maxCount = 10}
 local DEFAULT_ELEMENT = "counter 2"
 
 local M = MockElement:new()
@@ -20,8 +23,7 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
-    -- TODO indexed at 0 or 1? assuming 1
-    o.activeOut = 1
+    o.activeOut = 0 -- indexed at 0
     o.maxCount = elementDefinition.maxCount
 
     return o
@@ -35,8 +37,7 @@ end
 
 --- Moves the counter one step further (equivalent to signal received on the IN plug).
 function M:next()
-    -- mod resets to 0 when max reached, add 1 after for 1-index
-    self.activeOut = (self.activeOut % self.maxCount) + 1
+    self.activeOut = (self.activeOut + 1) % self.maxCount
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
