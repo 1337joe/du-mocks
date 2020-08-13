@@ -18,7 +18,7 @@ function TestLightUnit.testGetElementClass()
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestLightUnit.testGameBehavior()
+function TestLightUnit.skipTestGameBehavior()
     local mock = mlu:new()
     local slot1 = mock:mockGetClosure()
 

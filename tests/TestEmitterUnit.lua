@@ -12,14 +12,13 @@ local meu = require("dumocks.EmitterUnit")
 TestEmitterUnit = {}
 
 --- Verify element class is correct.
-function TestEmitterUnit.testGetElementClass()
+function TestEmitterUnit.skipTestGetElementClass()
     local element = meu:new():mockGetClosure()
-    lu.fail("Not Yet Implemented")
     lu.assertEquals(element.getElementClass(), "Unit")
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestEmitterUnit.testGameBehavior()
+function TestEmitterUnit.skipTestGameBehavior()
     local mock = meu:new()
     local slot1 = mock:mockGetClosure()
 

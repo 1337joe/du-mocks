@@ -12,14 +12,13 @@ local mffu = require("dumocks.ForceFieldUnit")
 TestForceFieldUnit = {}
 
 --- Verify element class is correct.
-function TestForceFieldUnit.testGetElementClass()
+function TestForceFieldUnit.skipTestGetElementClass()
     local element = mffu:new():mockGetClosure()
-    lu.fail("Not Yet Implemented")
     lu.assertEquals(element.getElementClass(), "Unit")
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestForceFieldUnit.testGameBehavior()
+function TestForceFieldUnit.skipTestGameBehavior()
     local mock = mffu:new()
     local slot1 = mock:mockGetClosure()
 

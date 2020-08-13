@@ -18,7 +18,7 @@ function TestLaserEmitterUnit.testGetElementClass()
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestLaserEmitterUnit.testGameBehavior()
+function TestLaserEmitterUnit.skipTestGameBehavior()
     local mock = mleu:new()
     local slot1 = mock:mockGetClosure()
 

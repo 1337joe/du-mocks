@@ -1,25 +1,25 @@
 #!/usr/bin/env lua
---- Tests on dumocks.TelemeterUnit.
--- @see dumocks.TelemeterUnit
+--- Tests on dumocks.FireworksUnit.
+-- @see dumocks.FireworksUnit
 
 -- set search path to include root of project
 package.path = package.path..";../?.lua"
 
 local lu = require("luaunit")
 
-local mtu = require("dumocks.TelemeterUnit")
+local mfu = require("dumocks.FireworksUnit")
 
-TestTelemeterUnit = {}
+TestFireworksUnit = {}
 
 --- Verify element class is correct.
-function TestTelemeterUnit.skipTestGetElementClass()
-    local element = mtu:new():mockGetClosure()
+function TestFireworksUnit.skipTestGetElementClass()
+    local element = mfu:new():mockGetClosure()
     lu.assertEquals(element.getElementClass(), "Unit")
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestTelemeterUnit.skipTestGameBehavior()
-    local mock = mtu:new()
+function TestFireworksUnit.skipTestGameBehavior()
+    local mock = mfu:new()
     local slot1 = mock:mockGetClosure()
 
     -- copy from here to unit.start

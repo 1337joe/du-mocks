@@ -18,7 +18,7 @@ function TestLaserDetectorUnit.testGetElementClass()
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestLaserDetectorUnit.testGameBehavior()
+function TestLaserDetectorUnit.skipTestGameBehavior()
     local mock = mldu:new()
     local slot1 = mock:mockGetClosure()
 

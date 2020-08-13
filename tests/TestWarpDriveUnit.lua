@@ -12,14 +12,13 @@ local mwdu = require("dumocks.WarpDriveUnit")
 TestWarpDriveUnit = {}
 
 --- Verify element class is correct.
-function TestWarpDriveUnit.testGetElementClass()
+function TestWarpDriveUnit.skipTestGetElementClass()
     local element = mwdu:new():mockGetClosure()
-    lu.fail("Not Yet Implemented")
     lu.assertEquals(element.getElementClass(), "Unit")
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestWarpDriveUnit.testGameBehavior()
+function TestWarpDriveUnit.skipTestGameBehavior()
     local mock = mwdu:new()
     local slot1 = mock:mockGetClosure()
 

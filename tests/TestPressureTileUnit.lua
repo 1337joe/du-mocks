@@ -18,7 +18,7 @@ function TestPressureTileUnit.testGetElementClass()
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestPressureTileUnit.testGameBehavior()
+function TestPressureTileUnit.skipTestGameBehavior()
     local mock = mptu:new()
     local slot1 = mock:mockGetClosure()
 

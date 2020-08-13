@@ -12,14 +12,13 @@ local mlgu = require("dumocks.LandingGearUnit")
 TestLandingGearUnit = {}
 
 --- Verify element class is correct.
-function TestLandingGearUnit.testGetElementClass()
+function TestLandingGearUnit.skipTestGetElementClass()
     local element = mlgu:new():mockGetClosure()
-    lu.fail("Not Yet Implemented")
     lu.assertEquals(element.getElementClass(), "Unit")
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestLandingGearUnit.testGameBehavior()
+function TestLandingGearUnit.skipTestGameBehavior()
     local mock = mlgu:new()
     local slot1 = mock:mockGetClosure()
 

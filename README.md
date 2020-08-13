@@ -53,20 +53,20 @@ Individual test files are executable and may be run directly from within the tes
 | ---- | - | - | - | - | - |
 | Element | :heavy_check_mark: | P | P | | - |
 | ContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
-| ControlUnit | :heavy_check_mark: | | | | |
+| ControlUnit | :heavy_check_mark: | | P | | |
 | DatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | DoorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | EngineUnit | | | | | |
-| FireworksUnit | :heavy_check_mark: | P | | | |
+| FireworksUnit | :heavy_check_mark: | P | P | | |
 | ForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | LandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | LightUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| IndustryUnit | :heavy_check_mark: | P | | | |
+| IndustryUnit | :heavy_check_mark: | P | P | | |
 | CounterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| ReceiverUnit | :heavy_check_mark: | P | | | |
-| CoreUnit | :heavy_check_mark: | P | | | |
+| ReceiverUnit | :heavy_check_mark: | P | P | | |
+| CoreUnit | :heavy_check_mark: | P | P | | |
 | ScreenUnit | :heavy_check_mark: | | P | | |
 | DetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | GyroUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
@@ -79,4 +79,4 @@ Individual test files are executable and may be run directly from within the tes
 | TelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | Library | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | - | - |
-| System | P | | | | - |
+| System | P | | P | | - |

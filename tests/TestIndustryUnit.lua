@@ -1,29 +1,29 @@
 #!/usr/bin/env lua
---- Tests on dumocks.ManualButtonUnit.
--- @see dumocks.ManualButtonUnit
+--- Tests on dumocks.IndustryUnit.
+-- @see dumocks.IndustryUnit
 
 -- set search path to include root of project
 package.path = package.path..";../?.lua"
 
 local lu = require("luaunit")
 
-local mmbu = require("dumocks.ManualButtonUnit")
+local miu = require("dumocks.IndustryUnit")
 
-TestManualButtonUnit = {}
+TestIndustryUnit = {}
 
 --- Verify element class is correct.
-function TestManualButtonUnit.testGetElementClass()
-    local element = mmbu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "ManualButtonUnit")
+function TestIndustryUnit.testGetElementClass()
+    local element = miu:new():mockGetClosure()
+    lu.assertEquals(element.getElementClass(), "IndustryUnit")
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestManualButtonUnit.skipTestGameBehavior()
-    local mock = mmbu:new()
+function TestIndustryUnit.skipTestGameBehavior()
+    local mock = miu:new()
     local slot1 = mock:mockGetClosure()
 
     -- copy from here to unit.start
-    assert(slot1.getElementClass() == "ManualButtonUnit")
+    assert(slot1.getElementClass() == "IndustryUnit")
 
     assert(false, "Not Yet Implemented")
     -- copy to here to unit.start
