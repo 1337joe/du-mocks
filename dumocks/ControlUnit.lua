@@ -26,6 +26,10 @@ function M:new(o, id)
     setmetatable(o, self)
     self.__index = self
 
+    o.errorOnExit = false -- use to abort execution when exit is called
+    o.exitCalled = false
+    o.timers = {} -- map: "timer name"=>timerDurationSeconds
+
     return o
 end
 
@@ -33,6 +37,14 @@ end
 -- it with care. It is typically used in the coding of emergency control unit scripts to stop control once the ECU
 -- thinks that the ship has safely landed.
 function M:exit()
+    if self.exitCalled then
+        error("Exit called multiple times.")
+    end
+    self.exitCalled = true
+
+    if self.errorOnExit then
+        error("Exit called.")
+    end
 end
 
 --- Set up a timer with a given tag ID in a given period. This will start to trigger the 'tick' event with the
@@ -42,11 +54,14 @@ end
 -- @tparam second period The period of the timer, in seconds. The time resolution is limited by the framerate here, so
 -- you cannot set arbitrarily fast timers.
 function M:setTimer(timerTagId, period)
+    -- TODO what happens if period is negative?
+    self.timers[timerTagId] = period
 end
 
 --- Stop the timer with the given ID.
 -- @tparam string timerTagId The ID of the timer to stop, as a string.
 function M:stopTimer(timerTagId)
+    self.timers[timerTagId] = nil
 end
 
 --- Returns the local atmosphere density, between 0 and 1.

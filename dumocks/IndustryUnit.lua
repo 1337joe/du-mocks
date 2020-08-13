@@ -4,15 +4,16 @@
 
 local MockElement = require "dumocks.Element"
 
-local elementDefinitions = {
--- Assembler XS: mass = 100.93, maxHitPoints = 2250.0
--- Assembler S: mass = 522.14, maxHitPoints = 7829.0
--- Assembler M: mass = 2802.36, maxHitPoints = 26422.0
--- Assembler L: mass = 15382.4, maxHitPoints = 89176.0
--- Assembler XL: mass = 86293.68, maxHitPoints = 300967.0
--- Transfer Unit: mass=10147.65, maxHitPoints = 1329.0
--- Refiner M: mass = 2302.34, maxHitPoints = 5540.0
-}
+local elementDefinitions = {}
+elementDefinitions["assembler xs"] = {mass = 100.93, maxHitPoints = 2250.0}
+elementDefinitions["assembler s"] = {mass = 522.14, maxHitPoints = 7829.0}
+elementDefinitions["assembler m"] = {mass = 2802.36, maxHitPoints = 26422.0}
+elementDefinitions["assembler l"] = {mass = 15382.4, maxHitPoints = 89176.0}
+elementDefinitions["assembler xl"] = {86293.68, maxHitPoints = 300967.0}
+elementDefinitions["refiner m"] = {mass = 2302.34, maxHitPoints = 5540.0}
+elementDefinitions["transfer unit"] = {mass=10147.65, maxHitPoints = 1329.0}
+local DEFAULT_ELEMENT = "assembler m"
+
 
 local M = MockElement:new()
 M.elementClass = "IndustryUnit"
@@ -32,12 +33,15 @@ M.mode = {
     SOFT_STOP = "SOFT_STOP",
 }
 
-function M:new(o, id, size)
-    o = o or MockElement:new(o, id)
+function M:new(o, id, elementName)
+    local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
+
+    o = o or MockElement:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
 
-    o.state = M.status.STOPPED
+    o.currentMode = nil
+    o.currentStatus = M.status.STOPPED
     o.hasInputContainer = true
     o.hasInputIngredients = true
     o.hasInputSpace = true
@@ -45,7 +49,6 @@ function M:new(o, id, size)
     o.hasOutputSpace = true
     o.startedTime = 0
     o.cycles = 0
-    o.mode = nil
     o.remainingJobs = 0 -- batch mode
     o.targetCount = 0 -- maintain mode
     o.outputCount = 0 -- maintain mode
@@ -56,20 +59,20 @@ end
 
 --- Start the production, and it will run unless it is stopped or the input resources run out.
 function M:start()
-    self.mode = M.mode.INFINITE
+    self.currentMode = M.mode.INFINITE
     self.startedTime = os.time()
     self.cycles = 0
 
     if self.hasInputContainer and self.hasInputIngredients then
         if self.hasOutput and not self.hasOutputSpace then
-            self.state = M.status.JAMMED_OUTPUT_FULL
+            self.currentStatus = M.status.JAMMED_OUTPUT_FULL
         elseif not self.hasOutput then
-            self.state = M.status.JAMMED_NO_OUTPUT_CONTAINER
+            self.currentStatus = M.status.JAMMED_NO_OUTPUT_CONTAINER
         else
-            self.state = M.status.RUNNING
+            self.currentStatus = M.status.RUNNING
         end
     else
-        self.state = M.status.JAMMED_MISSING_INGREDIENT
+        self.currentStatus = M.status.JAMMED_MISSING_INGREDIENT
     end
 end
 
@@ -77,51 +80,51 @@ end
 -- and pauses production when it is equal or higher.
 -- @tparam int quantity Quantity to maintain inside output containers.
 function M:startAndMaintain(quantity)
-    self.mode = M.mode.MAINTAIN
+    self.currentMode = M.mode.MAINTAIN
     self.targetCount = quantity
     self.startedTime = os.time()
     self.cycles = 0
 
     if self.targetCount >= self.outputCount then
-        self.state = M.status.PENDING
+        self.currentStatus = M.status.PENDING
     elseif self.hasInputContainer and self.hasInputIngredients then
         if self.hasOutput and not self.hasOutputSpace then
-            self.state = M.status.JAMMED_OUTPUT_FULL
+            self.currentStatus = M.status.JAMMED_OUTPUT_FULL
         elseif not self.hasOutput then
-            self.state = M.status.JAMMED_NO_OUTPUT_CONTAINER
+            self.currentStatus = M.status.JAMMED_NO_OUTPUT_CONTAINER
         else
-            self.state = M.status.RUNNING
+            self.currentStatus = M.status.RUNNING
         end
     else
-        self.state = M.status.JAMMED_MISSING_INGREDIENT
+        self.currentStatus = M.status.JAMMED_MISSING_INGREDIENT
     end
 end
 
 --- Start the production of numBatches and then stop.
 -- @tparam int numBatches Number of batches to run before unit stops.
 function M:batchStart(numBatches)
-    self.mode = M.mode.MAINTAIN
+    self.currentMode = M.mode.MAINTAIN
     self.remainingJobs = numBatches
     self.startedTime = os.time()
     self.cycles = 0
 
     if self.hasInputContainer and self.hasInputIngredients then
         if self.hasOutput and not self.hasOutputSpace then
-            self.state = M.status.JAMMED_OUTPUT_FULL
+            self.currentStatus = M.status.JAMMED_OUTPUT_FULL
         elseif not self.hasOutput then
-            self.state = M.status.JAMMED_NO_OUTPUT_CONTAINER
+            self.currentStatus = M.status.JAMMED_NO_OUTPUT_CONTAINER
         else
-            self.state = M.status.RUNNING
+            self.currentStatus = M.status.RUNNING
         end
     else
-        self.state = M.status.JAMMED_MISSING_INGREDIENT
+        self.currentStatus = M.status.JAMMED_MISSING_INGREDIENT
     end
 end
 
 --- End the job and stop. The production keeps going until it is complete, then it switches to "STOPPED" status. If the
 -- output container is full, then it switches to "JAMMED".
 function M:softStop()
-    self.mode = M.mode.SOFT_STOP
+    self.currentMode = M.mode.SOFT_STOP
 end
 
 --- Stop production immediately. The resources are given back to the input container. If there is not enough room in the
@@ -136,7 +139,7 @@ end
 -- @treturn string The status of the industry can be: STOPPED, RUNNING, JAMMED_MISSING_INGREDIENT, JAMMED_OUTPUT_FULL,
 -- JAMMED_NO_OUTPUT_CONTAINER.
 function M:getStatus()
-    return self.status
+    return self.currentStatus
 end
 
 --- Get the count of completed cycles since the player started the unit.
@@ -154,7 +157,7 @@ end
 --- Get the time elapsed in seconds since the player started the unit for the latest time.
 -- @treturn s The time elapsed in seconds.
 function M:getUptime()
-    if self.state == M.status.STOPPED then
+    if self.currentStatus == M.status.STOPPED then
         return 0
     end
     return os.time() - self.startedTime -- TODO should include fractional part? check game
@@ -213,7 +216,15 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
---    closure.getSelfMass = function() return self:getSelfMass() end
+    closure.start = function() return self:start() end
+    closure.startAndMaintain = function(quantity) return self:startAndMaintain(quantity) end
+    closure.batchStart = function(numBatches) return self:batchStart(numBatches) end
+    closure.softStop = function() return self:softStop() end
+    closure.hardStop = function(allowIngredientLoss) return self:hardStop(allowIngredientLoss) end
+    closure.getStatus = function() return self:getStatus() end
+    closure.getCycleCountSinceStartup = function() return self:getCycleCountSinceStartup() end
+    closure.getEfficiency = function() return self:getEfficiency() end
+    closure.getUptime = function() return self:getUptime() end
     return closure
 end
 
