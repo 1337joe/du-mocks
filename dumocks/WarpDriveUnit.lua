@@ -1,6 +1,5 @@
---- Warp drive unit.
--- Based on the principle of the Alcubierre drive, this unit creates a powerful negative energy-density field capable to
--- distort space-time and transport your ship at hyper speeds through space.
+--- Based on the principle of the Alcubierre drive, this unit creates a powerful negative energy-density field capable
+-- to distort space-time and transport your ship at hyper speeds through space.
 -- @module WarpDriveUnit
 -- @alias M
 

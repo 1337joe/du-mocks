@@ -1,5 +1,4 @@
---- Force field unit.
--- A forcefield to create an uncrossable energy barrier
+--- A forcefield to create an uncrossable energy barrier
 -- @module ForceFieldUnit
 -- @alias M
 

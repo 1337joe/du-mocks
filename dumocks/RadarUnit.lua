@@ -1,5 +1,4 @@
---- Radar unit.
--- List local constructs and access their ID.
+--- List local constructs and access their ID.
 -- @module RadarUnit
 -- @alias M
 

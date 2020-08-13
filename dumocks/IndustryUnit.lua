@@ -1,5 +1,4 @@
---- Industry unit.
--- Can mass-produce produce any item/element.
+--- Can mass-produce produce any item/element.
 -- @module IndustryUnit
 -- @alias M
 

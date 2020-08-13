@@ -1,5 +1,4 @@
---- Detection zone unit.
--- Detect the intrusion of any player inside the effect zone.
+--- Detect the intrusion of any player inside the effect zone.
 -- @module DetectionZoneUnit
 -- @alias M
 

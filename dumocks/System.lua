@@ -1,5 +1,4 @@
---- System.
--- System is a virtual element that represents your computer. It gives access to events like key strokes or mouse
+--- System is a virtual element that represents your computer. It gives access to events like key strokes or mouse
 -- movements that can be used inside your scripts. It also gives you access to regular updates that can be used to pace
 -- the execution of your script.
 -- @module System

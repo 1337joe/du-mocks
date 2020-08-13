@@ -1,5 +1,4 @@
---- Light unit.
--- Emits a source of light
+--- Emits a source of light
 -- @module LightUnit
 -- @alias M
 

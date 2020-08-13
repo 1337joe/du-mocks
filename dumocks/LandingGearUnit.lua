@@ -1,5 +1,4 @@
---- Landing gear unit.
--- A landing gear that can be opened or closed.
+--- A landing gear that can be opened or closed.
 -- @module LandingGearUnit
 -- @alias M
 

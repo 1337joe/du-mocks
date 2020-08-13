@@ -1,5 +1,4 @@
---- Control unit.
--- Control units come in various forms: cockpits, programming boards, emergency control units, etc. A control unit
+--- Control units come in various forms: cockpits, programming boards, emergency control units, etc. A control unit
 -- stores a set of Lua scripts that can be used to control the elements that are plugged in on its CONTROL plugs.
 -- Kinematics control units like cockpit or commander seats are also capable of controlling the ship's engines via the
 -- update ICC method.

@@ -1,5 +1,4 @@
---- Manual switch unit.
--- A manual switch that can be in an on/off state.
+--- A manual switch that can be in an on/off state.
 -- @module ManualSwitchUnit
 -- @alias M
 

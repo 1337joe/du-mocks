@@ -1,5 +1,4 @@
---- Container unit.
--- Stores items.
+--- Stores items.
 -- @module ContainerUnit
 -- @alias M
 

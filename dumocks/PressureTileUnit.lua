@@ -1,5 +1,4 @@
---- Pressure tile unit.
--- Emits a signal when a player walks on the tile.
+--- Emits a signal when a player walks on the tile.
 -- @module PressureTileUnit
 -- @alias M
 

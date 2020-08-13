@@ -1,5 +1,4 @@
---- Emitter unit.
--- This unit is capable of emitting messages on channels.
+--- This unit is capable of emitting messages on channels.
 -- @module EmitterUnit
 -- @alias M
 

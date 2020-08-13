@@ -1,5 +1,4 @@
---- Screen unit.
--- Screen units can display any HTML code or text message, and you can use them to create visually interactive feedback
+--- Screen units can display any HTML code or text message, and you can use them to create visually interactive feedback
 -- for your running Lua script by connecting one or more of them to your control unit.
 -- @module ScreenUnit
 -- @alias M

@@ -1,5 +1,4 @@
---- Fireworks unit.
--- A unit capable to launch fireworks that are stored in the attached container.
+--- A unit capable to launch fireworks that are stored in the attached container.
 -- @module FireworksUnit
 -- @alias M
 

@@ -1,5 +1,4 @@
---- Core unit.
--- This is the heart of your construct. It represents the construct and gives access to all construct-related
+--- This is the heart of your construct. It represents the construct and gives access to all construct-related
 -- information.
 -- @module CoreUnit
 -- @alias M

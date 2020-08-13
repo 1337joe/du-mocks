@@ -1,5 +1,4 @@
---- Engine unit.
--- An engine is capable to produce a force and/or a torque to move your construct.
+--- An engine is capable to produce a force and/or a torque to move your construct.
 -- @module EngineUnit
 -- @alias M
 

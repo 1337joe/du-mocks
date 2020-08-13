@@ -1,5 +1,4 @@
---- Receiver unit.
--- Receives messages on given channels.
+--- Receives messages on given channels.
 -- @module ReceiverUnit
 -- @alias M
 

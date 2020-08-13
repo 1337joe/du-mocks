@@ -1,5 +1,4 @@
---- Anti gravity generator unit.
--- Generates graviton condensates to power anti-gravity pulsors
+--- Generates graviton condensates to power anti-gravity pulsors.
 -- @module AntiGravityGeneratorUnit
 -- @alias M
 

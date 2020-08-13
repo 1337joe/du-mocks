@@ -1,5 +1,4 @@
---- Telemeter unit.
--- Measures the distance to an obstacle in front of it.
+--- Measures the distance to an obstacle in front of it.
 -- @module TelemeterUnit
 -- @alias M
 

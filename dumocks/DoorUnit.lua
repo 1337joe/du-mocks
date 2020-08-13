@@ -1,5 +1,4 @@
---- Door unit.
--- A door that can be opened or closed.
+--- A door that can be opened or closed.
 -- @module DoorUnit
 -- @alias M
 

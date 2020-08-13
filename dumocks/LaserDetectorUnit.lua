@@ -1,5 +1,4 @@
---- Laser detector unit.
--- Detec the hit of a laser.
+--- Detect the hit of a laser.
 -- @module LaserDetectorUnit
 -- @alias M
 

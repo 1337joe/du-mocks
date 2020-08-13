@@ -1,5 +1,4 @@
---- Gyro unit.
--- A general kinematic unit to obtain information about the ship orientation, velocity, and acceleration.
+--- A general kinematic unit to obtain information about the ship orientation, velocity, and acceleration.
 -- @module GyroUnit
 -- @alias M
 

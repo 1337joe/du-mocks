@@ -1,5 +1,4 @@
---- Databank unit.
--- Stores key/value pairs in a persistent way.
+--- Stores key/value pairs in a persistent way.
 -- @module DatabankUnit
 -- @alias M
 

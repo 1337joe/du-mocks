@@ -1,6 +1,5 @@
---- Library.
--- Contains a list of useful math and helper methods that would be slow to implement in Lua, and which are given here as
--- fast C++ implementation.
+--- Contains a list of useful math and helper methods that would be slow to implement in Lua, and which are given here
+-- as fast C++ implementation.
 -- @module Library
 -- @alias M
 

@@ -1,5 +1,4 @@
---- Manual button.
--- Emits a signal for the duration it is pressed.
+--- Emits a signal for the duration it is pressed.
 -- @module ManualButtonUnit
 -- @alias M
 
