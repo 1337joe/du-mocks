@@ -62,7 +62,7 @@ Individual test files are executable and may be run directly from within the tes
 | LandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | P | :heavy_check_mark: | P |
 | LightUnit | :heavy_check_mark: | :heavy_check_mark: | P | :heavy_check_mark: | :heavy_check_mark: |
 | AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
-| IndustryUnit | :heavy_check_mark: | P | P | | :heavy_check_mark: |
+| IndustryUnit | :heavy_check_mark: | P | P | P | :heavy_check_mark: |
 | CounterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
 | EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | ReceiverUnit | :heavy_check_mark: | P | P | | P |

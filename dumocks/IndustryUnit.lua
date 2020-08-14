@@ -47,6 +47,8 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
+    o.currentTime = 0 -- used to populate startedTime and calculate uptime in the absense of a mock clock
+
     o.currentMode = nil
     o.currentStatus = M.status.STOPPED
     o.hasInputContainer = true
@@ -61,13 +63,16 @@ function M:new(o, id, elementName)
     o.outputCount = 0 -- maintain mode
     o.runningTime = 0
 
+    self.completedCallbacks = {}
+    self.statusChangedCallbacks = {}
+
     return o
 end
 
 --- Start the production, and it will run unless it is stopped or the input resources run out.
 function M:start()
     self.currentMode = M.mode.INFINITE
-    self.startedTime = os.time()
+    self.startedTime = self.currentTime
     self.cycles = 0
 
     if self.hasInputContainer and self.hasInputIngredients then
@@ -89,7 +94,7 @@ end
 function M:startAndMaintain(quantity)
     self.currentMode = M.mode.MAINTAIN
     self.targetCount = quantity
-    self.startedTime = os.time()
+    self.startedTime = self.currentTime
     self.cycles = 0
 
     if self.targetCount >= self.outputCount then
@@ -112,7 +117,7 @@ end
 function M:batchStart(numBatches)
     self.currentMode = M.mode.MAINTAIN
     self.remainingJobs = numBatches
-    self.startedTime = os.time()
+    self.startedTime = self.currentTime
     self.cycles = 0
 
     if self.hasInputContainer and self.hasInputIngredients then
@@ -158,16 +163,17 @@ end
 --- Get the efficiency of the industry.
 -- @treturn 0..1 The efficiency rate between 0 and 1.
 function M:getEfficiency()
-    return 0 -- TODO implement
+    if self.currentStatus == M.status.STOPPED then
+        return 0.0
+    end
+    return 0 -- TODO implement, need to track time in non-running states after starting?
 end
 
 --- Get the time elapsed in seconds since the player started the unit for the latest time.
 -- @treturn s The time elapsed in seconds.
 function M:getUptime()
-    if self.currentStatus == M.status.STOPPED then
-        return 0
-    end
-    return os.time() - self.startedTime -- TODO should include fractional part? check game
+    -- even if stopped this shows the count since last started
+    return self.currentTime - self.startedTime
 end
 
 --- Event: Emitted when the industry unit has completed a run.
@@ -186,13 +192,34 @@ function M.EVENT_statusChanged(status)
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterStatusChanged")
 end
 
+--- Mock only, not in-game: Register a handler for the in-game `completed()` event.
+-- @tparam function callback The function to call when the button is pressed.
+-- @treturn int The index of the callback.
+-- @see EVENT_completed
+function M:mockRegisterCompleted(callback)
+    local index = #self.completedCallbacks + 1
+    self.completedCallbacks[index] = callback
+    return index
+end
 
--- TODO register callbacks: completed
+--- Mock only, not in-game: Simulates the industry unit completing a run. Will update/check internal state and call mockDoStatusChanged as necessary.
+-- @see mockDoStatusChanged
+function M.mockDoCompleted()
 
-function M.doCompleted()
-
-    -- TODO does this hit before or after the callback
+    -- bump cycle count before calling callbacks
     self.cycles = self.cycles + 1
+
+    -- call callbacks in order, saving exceptions until end
+    local errors = ""
+    for i,callback in pairs(self.pressedCallbacks) do
+        local status,err = pcall(callback)
+        if not status then
+            errors = errors.."\nError while running callback "..i..": "..err
+        end
+    end
+
+
+
 
     --call completed callbacks
 
@@ -210,11 +237,28 @@ function M.doCompleted()
 
         --call status changed callbacks
     end
+
+    -- propagate errors
+    if string.len(errors) > 0 then
+        error("Errors raised in callbacks:"..errors)
+    end
 end
 
--- TODO register callbacks: statusChanged
 
-function M.doStatusChanged()
+--- Mock only, not in-game: Register a handler for the in-game `statusChanged(status)` event.
+-- @tparam function callback The function to call when the button is pressed.
+-- @tparam string filter The status to filter on, or "*" for all.
+-- @treturn int The index of the callback.
+-- @see EVENT_statusChanged
+function M:mockRegisterStatusChanged(callback, filter)
+    filter = filter or "*"
+
+    local index = #self.statusChangedCallbacks + 1
+    self.statusChangedCallbacks[index] = callback
+    return index
+end
+
+function M.mockDoStatusChanged()
     -- TODO
 end
 

@@ -34,8 +34,6 @@ function TestLightUnit.testGameBehavior()
     -- ensure initial state, set up globals
     slot1.deactivate()
     assert(slot1.getState() == 0)
-    pressedCount = 0
-    releasedCount = 0
 
     -- validate methods
     slot1.activate()
