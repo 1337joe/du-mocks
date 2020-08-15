@@ -29,7 +29,7 @@ Unit tests are provided to validate the funcionality and demonstrate usage of th
 ./tests/runTests.sh
 ```
 
-Luaunit arguments may be passed in, such as `-o junit` to produce junit-style xml result files (though the junit file path is hardcoded to output to `tests/results/`).
+Luaunit arguments may be passed in, such as `-o junit` to produce junit-style xml result files (though the junit file path is hardcoded to output to `tests/`).
 
 Individual test files are executable and may be run directly from within the tests directory.
 
