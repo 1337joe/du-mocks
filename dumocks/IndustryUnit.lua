@@ -40,6 +40,16 @@ M.mode = {
     SOFT_STOP = "SOFT_STOP",
 }
 
+-- Wrapper around accessing the currentTime field to allow for a method to provide time or just set the time directly.
+local function getTime(timeProvider)
+    if type(timeProvider) == "number" then
+        return timeProvider
+    elseif type(timeProvider) == "function" then
+        return timeProvider()
+    end
+    return nil
+end
+
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
 
@@ -61,10 +71,11 @@ function M:new(o, id, elementName)
     o.remainingJobs = 0 -- batch mode
     o.targetCount = 0 -- maintain mode
     o.outputCount = 0 -- maintain mode
-    o.runningTime = 0
 
-    self.completedCallbacks = {}
-    self.statusChangedCallbacks = {}
+    o.stateTimeStamps = {} -- for tracking efficiency, list of {status = newStatus, time = getTime(self.currentTime)}
+
+    o.completedCallbacks = {}
+    o.statusChangedCallbacks = {}
 
     return o
 end
@@ -72,20 +83,11 @@ end
 --- Start the production, and it will run unless it is stopped or the input resources run out.
 function M:start()
     self.currentMode = M.mode.INFINITE
-    self.startedTime = self.currentTime
+    self.startedTime = getTime(self.currentTime)
+    self.stateTimeStamps = {}
     self.cycles = 0
 
-    if self.hasInputContainer and self.hasInputIngredients then
-        if self.hasOutput and not self.hasOutputSpace then
-            self.currentStatus = M.status.JAMMED_OUTPUT_FULL
-        elseif not self.hasOutput then
-            self.currentStatus = M.status.JAMMED_NO_OUTPUT_CONTAINER
-        else
-            self.currentStatus = M.status.RUNNING
-        end
-    else
-        self.currentStatus = M.status.JAMMED_MISSING_INGREDIENT
-    end
+    self:mockDoEvaluateStatus()
 end
 
 --- Start maintaining the specified quantity. Resumes production when the quantity in the output container is too low,
@@ -94,43 +96,23 @@ end
 function M:startAndMaintain(quantity)
     self.currentMode = M.mode.MAINTAIN
     self.targetCount = quantity
-    self.startedTime = self.currentTime
+    self.startedTime = getTime(self.currentTime)
+    self.stateTimeStamps = {}
     self.cycles = 0
 
-    if self.targetCount >= self.outputCount then
-        self.currentStatus = M.status.PENDING
-    elseif self.hasInputContainer and self.hasInputIngredients then
-        if self.hasOutput and not self.hasOutputSpace then
-            self.currentStatus = M.status.JAMMED_OUTPUT_FULL
-        elseif not self.hasOutput then
-            self.currentStatus = M.status.JAMMED_NO_OUTPUT_CONTAINER
-        else
-            self.currentStatus = M.status.RUNNING
-        end
-    else
-        self.currentStatus = M.status.JAMMED_MISSING_INGREDIENT
-    end
+    self:mockDoEvaluateStatus()
 end
 
 --- Start the production of numBatches and then stop.
 -- @tparam int numBatches Number of batches to run before unit stops.
 function M:batchStart(numBatches)
-    self.currentMode = M.mode.MAINTAIN
+    self.currentMode = M.mode.BATCH
     self.remainingJobs = numBatches
-    self.startedTime = self.currentTime
+    self.startedTime = getTime(self.currentTime)
+    self.stateTimeStamps = {}
     self.cycles = 0
 
-    if self.hasInputContainer and self.hasInputIngredients then
-        if self.hasOutput and not self.hasOutputSpace then
-            self.currentStatus = M.status.JAMMED_OUTPUT_FULL
-        elseif not self.hasOutput then
-            self.currentStatus = M.status.JAMMED_NO_OUTPUT_CONTAINER
-        else
-            self.currentStatus = M.status.RUNNING
-        end
-    else
-        self.currentStatus = M.status.JAMMED_MISSING_INGREDIENT
-    end
+    self:mockDoEvaluateStatus()
 end
 
 --- End the job and stop. The production keeps going until it is complete, then it switches to "STOPPED" status. If the
@@ -145,6 +127,10 @@ end
 -- @tparam 0/1 allowIngredientLoss 0 = forbid loss, 1 = enable loss.
 function M:hardStop(allowIngredientLoss)
     allowIngredientLoss = allowIngredientLoss == 1 -- convert to boolean for convenience
+
+    -- TODO how to handle this state, set to nil or create new mode?
+
+    self:mockDoEvaluateStatus()
 end
 
 --- Get the status of the industry.
@@ -166,14 +152,46 @@ function M:getEfficiency()
     if self.currentStatus == M.status.STOPPED then
         return 0.0
     end
-    return 0 -- TODO implement, need to track time in non-running states after starting?
+
+    local runningTime = 0
+    local otherTime = 0
+
+    local previousState = nil
+    local previousTime = 0.0
+    for _,stateChange in pairs(self.stateTimeStamps) do
+        local state = stateChange.status
+        local time = stateChange.time
+
+        if previousState == M.status.RUNNING then
+            runningTime = runningTime + time - previousTime
+        elseif previousState then -- not nil
+            otherTime = otherTime + time - previousTime
+        end
+
+        previousState = state
+        previousTime = time
+    end
+
+    if not previousState then
+        return 0.0
+    elseif previousState == M.status.RUNNING then
+        runningTime = runningTime + getTime(self.currentTime) - previousTime
+    else
+        otherTime = otherTime + getTime(self.currentTime) - previousTime
+    end
+
+    if runningTime == 0.0 then
+        return 0.0
+    end
+
+    return runningTime / (runningTime + otherTime)
 end
 
 --- Get the time elapsed in seconds since the player started the unit for the latest time.
 -- @treturn s The time elapsed in seconds.
 function M:getUptime()
     -- even if stopped this shows the count since last started
-    return self.currentTime - self.startedTime
+    return getTime(self.currentTime) - self.startedTime
 end
 
 --- Event: Emitted when the industry unit has completed a run.
@@ -204,46 +222,34 @@ end
 
 --- Mock only, not in-game: Simulates the industry unit completing a run. Will update/check internal state and call mockDoStatusChanged as necessary.
 -- @see mockDoStatusChanged
-function M.mockDoCompleted()
+function M:mockDoCompleted()
 
     -- bump cycle count before calling callbacks
     self.cycles = self.cycles + 1
 
     -- call callbacks in order, saving exceptions until end
     local errors = ""
-    for i,callback in pairs(self.pressedCallbacks) do
+    for i,callback in pairs(self.completedCallbacks) do
         local status,err = pcall(callback)
         if not status then
             errors = errors.."\nError while running callback "..i..": "..err
         end
     end
 
-
-
-
-    --call completed callbacks
-
-    self.remainingJobs = self.remainingJobs - 1
-
-    if self.pendingStop then
+    if self.currentMode == M.mode.SOFT_STOP then
         self.remainingJobs = 0
-    end
-
-    --manage inventory updates?
-    --at least check states
-
-    if self.remainingJobs == 0 then
-        --stop
-
-        --call status changed callbacks
+    elseif self.currentMode == M.mode.BATCH then
+        self.remainingJobs = self.remainingJobs - 1
     end
 
     -- propagate errors
     if string.len(errors) > 0 then
         error("Errors raised in callbacks:"..errors)
     end
-end
 
+    -- evaluate to see if state needs to change, after error propagation because it may have its own errors
+    self:mockDoEvaluateStatus()
+end
 
 --- Mock only, not in-game: Register a handler for the in-game `statusChanged(status)` event.
 -- @tparam function callback The function to call when the button is pressed.
@@ -254,12 +260,88 @@ function M:mockRegisterStatusChanged(callback, filter)
     filter = filter or "*"
 
     local index = #self.statusChangedCallbacks + 1
-    self.statusChangedCallbacks[index] = callback
+    self.statusChangedCallbacks[index] = {callback = callback, filter = filter}
     return index
 end
 
-function M.mockDoStatusChanged()
-    -- TODO
+--- Mock only, not in-game: Evaluate the state of the element as well as any input and output connections and change the
+-- machine status if necessary. This will call status changed listeners if applicable.
+function M:mockDoEvaluateStatus()
+    local oldStatus = self.currentStatus
+    local newStatus = oldStatus
+
+    if self.currentMode == M.mode.INFINITE then
+        if self.hasInputContainer and self.hasInputIngredients then
+            if self.hasOutput and not self.hasOutputSpace then
+                newStatus = M.status.JAMMED_OUTPUT_FULL
+            elseif not self.hasOutput then
+                newStatus = M.status.JAMMED_NO_OUTPUT_CONTAINER
+            else
+                newStatus = M.status.RUNNING
+            end
+        else
+            newStatus = M.status.JAMMED_MISSING_INGREDIENT
+        end
+    elseif self.currentMode == M.mode.MAINTAIN then
+        if self.targetCount >= self.outputCount then
+            newStatus = M.status.PENDING
+        elseif self.hasInputContainer and self.hasInputIngredients then
+            if self.hasOutput and not self.hasOutputSpace then
+                newStatus = M.status.JAMMED_OUTPUT_FULL
+            elseif not self.hasOutput then
+                newStatus = M.status.JAMMED_NO_OUTPUT_CONTAINER
+            else
+                newStatus = M.status.RUNNING
+            end
+        else
+            newStatus = M.status.JAMMED_MISSING_INGREDIENT
+        end
+    elseif self.currentMode == M.mode.BATCH then
+        if self.remainingJobs == 0 then
+            newStatus = M.status.STOPPED
+        elseif self.hasInputContainer and self.hasInputIngredients then
+            if self.hasOutput and not self.hasOutputSpace then
+                newStatus = M.status.JAMMED_OUTPUT_FULL
+            elseif not self.hasOutput then
+                newStatus = M.status.JAMMED_NO_OUTPUT_CONTAINER
+            else
+                newStatus = M.status.RUNNING
+            end
+        else
+            newStatus = M.status.JAMMED_MISSING_INGREDIENT
+        end
+    elseif self.currentMode == M.mode.SOFT_STOP then
+        if self.remainingJobs == 0 then
+            newStatus = M.status.STOPPED
+        end
+    end
+
+    --if no change then no need to notify
+    if oldStatus == newStatus then
+        return
+    end
+
+    -- perform status change
+    self.currentStatus = newStatus
+
+    -- track time for efficiency
+    table.insert(self.stateTimeStamps, {status = newStatus, time = getTime(self.currentTime)})
+
+    -- call callbacks in order, saving exceptions until end
+    local errors = ""
+    for i,callback in pairs(self.statusChangedCallbacks) do
+        if callback.filter == "*" or callback.filter == newStatus then
+            local status,err = pcall(callback.callback, newStatus)
+            if not status then
+                errors = errors.."\nError while running callback "..i..": "..err
+            end
+        end
+    end
+
+    -- propagate errors
+    if string.len(errors) > 0 then
+        error("Errors raised in callbacks:"..errors)
+    end
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
