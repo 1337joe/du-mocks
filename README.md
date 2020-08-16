@@ -33,6 +33,37 @@ Luaunit arguments may be passed in, such as `-o junit` to produce junit-style xm
 
 Individual test files are executable and may be run directly from within the tests directory.
 
+### Characterization Tests
+
+Many, eventually all, unit tests include characterization tests that can be run in-game to validate expected behavior as well as on the relevant mock object to verify the mock behaves as the game does. These are aided by an extraction tool that can parse out the code blocks and build a document that can be pasted in-game to a control module. To run this tool, execute (replacing `TestFile` with the appropriate test file path/name):
+
+```sh
+./tests/bundleCharacterizationTest.lua TestFile
+```
+
+This will print the result out in the console, or an output file can be specified as a second argument to the program.
+
+Blocks of code to be extracted should be surrounded by comment blocks with the following format:
+
+```lua
+---------------
+-- copy from here to slot1.statusChanged(status): *
+---------------
+
+<CODE GOES HERE>
+
+---------------
+-- copy to here to slot1.statusChanged(status): *
+---------------
+```
+
+Format notes:
+
+* The start and end blocks should match on method signatures. 
+* `slot1` indicates what slot should receive the code (other options besides a numbered slot are `library`, `system`, and `unit`).
+* `statusChanged(status)` must match the method signature of the handler you want to create. If in doubt create one in-game and export the configuration to clipboard, then paste in notepad to examine it.
+* Arguments to be passed in follow the method signature (optionally indictaed by a colon), and should be separated by spaces or commas in the case of multiple arguments.
+
 ## Progress
 
 ### Steps Required for Each Mock to be Complete
@@ -40,7 +71,7 @@ Individual test files are executable and may be run directly from within the tes
 1. Full documentation matching the Codex.
 2. Implementation to allow each method to be used for testing.
 3. Unit testing for each method.
-4. A game-behavior test that can be run in-game and using the mock to validate behavior.
+4. A characterization (game-behavior) test that can be run in-game and using the mock to validate behavior matches.
 5. Element definitions for the in-game elements that the mock applies to.
 
 ### Current State

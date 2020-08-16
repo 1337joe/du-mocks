@@ -191,7 +191,7 @@ function TestManualSwitchUnit.testDoReleasedValid()
     switch.state = true -- ensure pressed
     switch:mockDoReleased()
 
-    lu.assertTrue(switch.state) -- turns off switch
+    lu.assertFalse(switch.state) -- turns off switch
     lu.assertEquals(released1Result, 1) -- fires handler before turning off
 end
 
@@ -244,8 +244,8 @@ function TestManualSwitchUnit.testDoReleasedError()
     -- verify error message from first callback propagated up
     lu.assertStrContains(err, released1Message)
 
-     -- still turned on switch
-    lu.assertTrue(switch.state)
+     -- still turned off switch
+    lu.assertFalse(switch.state)
 
     -- verify order and that second callback was reached
     lu.assertEquals(released1CallOrder, 1)
@@ -258,6 +258,7 @@ function TestManualSwitchUnit.testGameBehavior()
     local slot1 = switch:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
+    local unit = {getData = function() return '"showScriptError":false' end}
     local system = {}
     system.print = function() end
 
@@ -267,39 +268,57 @@ function TestManualSwitchUnit.testGameBehavior()
 
     -- pressed handlers
     local pressedHandler1 = function()
+        ---------------
         -- copy from here to slot1.pressed()
+        ---------------
         pressedCount = pressedCount + 1
         assert(slot1.getState() == 1) -- toggles before calling handlers
         assert(pressedCount == 1) -- should only ever be called once, when the user presses the switch
+        ---------------
         -- copy to here to slot1.pressed()
+        ---------------
     end
     local pressedHandler2 = function()
+        ---------------
         -- copy from here to slot1.pressed()
+        ---------------
         pressedCount = pressedCount + 1
         assert(pressedCount == 2) -- called second in pressed handler list
+        ---------------
         -- copy to here to slot1.pressed()
+        ---------------
     end
     switch:mockRegisterPressed(pressedHandler1)
     switch:mockRegisterPressed(pressedHandler2)
 
     -- released handlers
     local releasedHandler1 = function()
+        ---------------
         -- copy from here to slot1.released()
+        ---------------
         releasedCount = releasedCount + 1
         assert(slot1.getState() == 1) -- won't toggle till after handlers finished
         assert(releasedCount == 1) -- should only ever be called once, when the user releases the switch
+        ---------------
         -- copy to here to slot1.released()
+        ---------------
     end
     local releasedHandler2 = function()
+        ---------------
         -- copy from here to slot1.released()
+        ---------------
         releasedCount = releasedCount + 1
         assert(releasedCount == 2) -- called second in released handler list
+        ---------------
         -- copy to here to slot1.released()
+        ---------------
     end
     switch:mockRegisterReleased(releasedHandler1)
     switch:mockRegisterReleased(releasedHandler2)
 
-    -- copy from here to unit.start
+    ---------------
+    -- copy from here to unit.start()
+    ---------------
     assert(slot1.getElementClass() == "ManualSwitchUnit")
 
     -- ensure initial state, set up globals
@@ -316,12 +335,34 @@ function TestManualSwitchUnit.testGameBehavior()
     slot1.toggle()
     assert(slot1.getState() == 1)
 
-    system.print("please press and release the button")
+    -- prep for user interaction
+    slot1.deactivate()
+    assert(slot1.getState() == 0)
 
-    -- copy to here to unit.start
+    system.print("please enable and disable the switch")
+    ---------------
+    -- copy to here to unit.start()
+    ---------------
 
     switch:mockDoPressed()
     switch:mockDoReleased()
+
+    ---------------
+    -- copy from here to unit.stop()
+    ---------------
+    assert(slot1.getState() == 0)
+    assert(pressedCount == 2, "Pressed count should be 2: "..pressedCount)
+    assert(releasedCount == 2)
+
+    -- multi-part script, can't just print success because end of script was reached
+    if string.find(unit.getData(), '"showScriptError":false') then
+        system.print("Success")
+    else
+        system.print("Failed")
+    end
+    ---------------
+    -- copy to here to unit.stop()
+    ---------------
 end
 
 os.exit(lu.LuaUnit.run())

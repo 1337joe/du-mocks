@@ -27,7 +27,7 @@ function TestForceFieldUnit.testGameBehavior()
     system.print = function() end
 
     ---------------
-    -- copy from here to unit.start
+    -- copy from here to unit.start()
     ---------------
     assert(slot1.getElementClass() == "ForceFieldUnit")
 
@@ -45,7 +45,7 @@ function TestForceFieldUnit.testGameBehavior()
 
     system.print("Success")
     ---------------
-    -- copy to here to unit.start
+    -- copy to here to unit.start()
     ---------------
 end
 

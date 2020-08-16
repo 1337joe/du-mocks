@@ -119,6 +119,8 @@ end
 -- output container is full, then it switches to "JAMMED".
 function M:softStop()
     self.currentMode = M.mode.SOFT_STOP
+
+    self:mockDoEvaluateStatus()
 end
 
 --- Stop production immediately. The resources are given back to the input container. If there is not enough room in the
@@ -220,9 +222,13 @@ function M:mockRegisterCompleted(callback)
     return index
 end
 
---- Mock only, not in-game: Simulates the industry unit completing a run. Will update/check internal state and call mockDoStatusChanged as necessary.
--- @see mockDoStatusChanged
+--- Mock only, not in-game: Simulates the industry unit completing a run. Will update/check internal state and call
+-- mockDoEvaluateStatus as necessary. Calling this while the status is not RUNNING will have no effect.
+-- @see mockDoEvaluateStatus
 function M:mockDoCompleted()
+    if self.currentStatus ~= M.status.RUNNING then
+        return
+    end
 
     -- bump cycle count before calling callbacks
     self.cycles = self.cycles + 1
@@ -311,7 +317,7 @@ function M:mockDoEvaluateStatus()
             newStatus = M.status.JAMMED_MISSING_INGREDIENT
         end
     elseif self.currentMode == M.mode.SOFT_STOP then
-        if self.remainingJobs == 0 then
+        if self.remainingJobs == 0 or oldStatus ~= M.status.RUNNING then
             newStatus = M.status.STOPPED
         end
     end

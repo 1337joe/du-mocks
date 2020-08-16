@@ -83,7 +83,7 @@ function TestIndustryUnit.testGameBehavior()
     -- status changed handlers
     local statusChangedHandler = function(status)
         ---------------
-        -- copy from here to slot1.statusChanged(*)
+        -- copy from here to slot1.statusChanged(status): *
         ---------------
         statusChangedCallCount = statusChangedCallCount + 1
         assert(slot1.getStatus() == status)
@@ -102,12 +102,12 @@ function TestIndustryUnit.testGameBehavior()
             slot1.softStop()
         end
         ---------------
-        -- copy to here to slot1.statusChanged(*)
+        -- copy to here to slot1.statusChanged(status): *
         ---------------
     end
     local statusChangedStoppedHandler = function(status)
         ---------------
-        -- copy from here to slot1.statusChanged(STOPPED)
+        -- copy from here to slot1.statusChanged(status): STOPPED
         ---------------
         statusChangedCallCount = statusChangedCallCount + 1
         assert(status == "STOPPED", "Should only be called on stop event.")
@@ -116,7 +116,7 @@ function TestIndustryUnit.testGameBehavior()
 
         system.print("Last job completed, you may stop the programming board now.")
         ---------------
-        -- copy to here to slot1.statusChanged(STOPPED)
+        -- copy to here to slot1.statusChanged(status): STOPPED
         ---------------
     end
     mock:mockRegisterStatusChanged(statusChangedHandler)
@@ -125,7 +125,7 @@ function TestIndustryUnit.testGameBehavior()
     mock.currentTime = 0.0
 
     ---------------
-    -- copy from here to unit.start
+    -- copy from here to unit.start()
     ---------------
     assert(slot1.getElementClass() == "IndustryUnit", slot1.getElementClass())
 
@@ -136,7 +136,7 @@ function TestIndustryUnit.testGameBehavior()
 
     slot1.batchStart(3) -- start 3, but will softStop on 2
     ---------------
-    -- copy to here to unit.start
+    -- copy to here to unit.start()
     ---------------
 
     -- simulate two 1-second jobs finishing with a 1-second gap waiting for ingredients
@@ -150,7 +150,7 @@ function TestIndustryUnit.testGameBehavior()
     mock:mockDoCompleted()
 
     ---------------
-    -- copy from here to unit.stop
+    -- copy from here to unit.stop()
     ---------------
     assert(slot1.getStatus() == "STOPPED", slot1.getStatus())
     assert(slot1.getCycleCountSinceStartup() == 2, slot1.getCycleCountSinceStartup())
@@ -167,7 +167,7 @@ function TestIndustryUnit.testGameBehavior()
         system.print("Failed")
     end
     ---------------
-    -- copy to here to unit.stop
+    -- copy to here to unit.stop()
     ---------------
 end
 

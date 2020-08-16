@@ -391,7 +391,9 @@ function TestDatabankUnit.testGameBehavior()
     local databank = mdu:new()
     local slot1 = databank:mockGetClosure()
 
-    -- copy from here
+    ---------------
+    -- copy from here to unit.start()
+    ---------------
     assert(slot1.getElementClass() == "DataBankUnit")
 
     local key
@@ -563,7 +565,9 @@ function TestDatabankUnit.testGameBehavior()
     assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
-    -- copy to here
+    ---------------
+    -- copy to here to unit.start()
+    ---------------
 end
 
 os.exit(lu.LuaUnit.run())
