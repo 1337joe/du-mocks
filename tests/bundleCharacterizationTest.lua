@@ -72,7 +72,7 @@ local BOILERPLATE_END = [[
 }]]
 -- fill with: sanitized code, formatted arguments, method signature, slot number, key number
 local CODE_FORMAT = '{"code":"%s","filter":{"args":[%s],"signature":"%s","slotKey":"%d"},"key":"%d"}'
-local ARGS_FORMAT = '{"value":"%s"}'
+local ARGS_FORMAT = '{"%s":"%s"}'
 
 -- sanitize a block of code
 local function sanitize(code)
@@ -101,7 +101,11 @@ for _,block in pairs(blocks) do
         if string.len(formattedArgs) > 0 then
             formattedArgs = formattedArgs..","
         end
-        formattedArgs = formattedArgs..string.format(ARGS_FORMAT, argValue)
+        local argLabel = "value"
+        if argValue == "*" then
+            argLabel = "variable"
+        end
+        formattedArgs = formattedArgs..string.format(ARGS_FORMAT, argLabel, argValue)
     end
     local slotKey
     if slot == "unit" then

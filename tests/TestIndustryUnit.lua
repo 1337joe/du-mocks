@@ -55,13 +55,13 @@ function TestIndustryUnit.testGameBehavior()
             assert(slot1.getEfficiency() > 0.9 and slot1.getEfficiency() <= 1.0,
                 "Expected high efficiency due to supplies already on hand, are you lagging? "..slot1.getEfficiency())
 
-            assert(statusChangedCallCount == 1, "Only RUNNING state change should be first.")
+            assert(statusChangedCallCount == 1, "Only RUNNING state change should be first: "..statusChangedCallCount)
         else
             assert(math.abs(slot1.getUptime() - 3.0) < 0.3, "1s recipe: expected < 0.1s deviance per 1s job, are you lagging? "..slot1.getUptime())
             assert(slot1.getEfficiency() > 0.6 and slot1.getEfficiency() <= 0.75,
                 "~3 seconds to do 2x 1 second jobs, expect ~0.66 efficiency: "..slot1.getEfficiency())
 
-            assert(statusChangedCallCount == 3, "Only RUNNING state change should be first.")
+            assert(statusChangedCallCount == 3, "Only RUNNING state change should be first: "..statusChangedCallCount)
         end
         ---------------
         -- copy to here to slot1.completed()
@@ -111,7 +111,7 @@ function TestIndustryUnit.testGameBehavior()
         ---------------
         statusChangedCallCount = statusChangedCallCount + 1
         assert(status == "STOPPED", "Should only be called on stop event.")
-        assert(slot1.getCycleCountSinceStartup() == 2)
+        assert(slot1.getCycleCountSinceStartup() == 2, slot1.getCycleCountSinceStartup())
         assert(completedCallCount == 4, "Should only be called after all completed calls.")
 
         system.print("Last job completed, you may stop the programming board now.")
