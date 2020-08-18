@@ -13,13 +13,13 @@ Note: If you get a `module 'dumocks.Element' not found` on loading a module besi
 
 ## Documentation
 
-The mock files are commented to match the codex. To generate a browsable documentation file run the following in the base directory:
+The mock files are commented to match the codex as much as possible. In the case that the codex does not acurately or fully describe the Lua API the mocks should follow actual API behavior instead of the codex. To generate a browsable documentation file run the following in the base directory:
 
 ```sh
 ldoc .
 ```
 
-Output can be found at `doc/index.html`. Note that the documentation won't show the package prefix (`dumocks.`), but it's still needed to load modules.
+Output can be found at `doc/index.html`. Note that the documentation won't show the package prefix (`dumocks.`) in file names, but it's still needed to load modules.
 
 ## Testing
 
@@ -41,7 +41,7 @@ Many, eventually all, unit tests include characterization tests that can be run 
 ./tests/bundleCharacterizationTest.lua TestFile
 ```
 
-This will print the result out in the console, or an output file can be specified as a second argument to the program.
+This will print the result out in the console (for piping to `xclip -selection c` or `clip.exe`, depending on your platform), or an output file can be specified as a second argument to the program.
 
 Blocks of code to be extracted should be surrounded by comment blocks with the following format:
 
@@ -86,7 +86,7 @@ Format notes:
 | ContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
 | ControlUnit | :heavy_check_mark: | | P | | P |
 | DatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| DoorUnit | :heavy_check_mark: | :heavy_check_mark: | P | :heavy_check_mark: | P |
+| DoorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | P |
 | EngineUnit | :heavy_check_mark: | P | P | | P |
 | FireworksUnit | :heavy_check_mark: | P | P | | |
 | ForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | P | :heavy_check_mark: | :heavy_check_mark: |

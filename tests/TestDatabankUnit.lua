@@ -9,10 +9,10 @@ local lu = require("luaunit")
 
 local mdu = require("dumocks.DatabankUnit")
 
-TestDatabankUnit = {}
+_G.TestDatabankUnit = {}
 
 --- Verify constructor arguments properly handled and independent between instances.
-function TestDatabankUnit.testConstructor()
+function _G.TestDatabankUnit.testConstructor()
 
     -- default element:
     -- ["databank"] = {mass = 17.09, maxHitPoints = 50.0}
@@ -46,14 +46,13 @@ function TestDatabankUnit.testConstructor()
 end
 
 --- Verify element class is correct.
-function TestDatabankUnit.testGetElementClass()
+function _G.TestDatabankUnit.testGetElementClass()
     local databank = mdu:new():mockGetClosure()
     lu.assertEquals(databank.getElementClass(), "DataBankUnit")
 end
 
 --- Verify that clear empties the databank.
-function TestDatabankUnit.testClear()
-    local actual, expected
+function _G.TestDatabankUnit.testClear()
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
 
@@ -67,7 +66,7 @@ function TestDatabankUnit.testClear()
 end
 
 --- Verify number of keys counts properly.
-function TestDatabankUnit.testGetNbKeys()
+function _G.TestDatabankUnit.testGetNbKeys()
     local actual, expected
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -84,7 +83,7 @@ function TestDatabankUnit.testGetNbKeys()
 end
 
 --- Verify keys can be retrieved in the proper format.
-function TestDatabankUnit.testGetKeys()
+function _G.TestDatabankUnit.testGetKeys()
     local actual, expected
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -107,7 +106,7 @@ function TestDatabankUnit.testGetKeys()
 end
 
 --- Verify keys are detected and indicated with 0 or 1.
-function TestDatabankUnit.testHasKey()
+function _G.TestDatabankUnit.testHasKey()
     local actual, expected
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -124,7 +123,7 @@ function TestDatabankUnit.testHasKey()
 end
 
 --- Verify storage as string works. In-game storage not visible, simply test that the key is set, not what's in storage.
-function TestDatabankUnit.testSetStringValue()
+function _G.TestDatabankUnit.testSetStringValue()
     local actual, expected, key
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -151,7 +150,6 @@ function TestDatabankUnit.testSetStringValue()
 
     -- nil value
     key = "key4"
-    expected = ""
     closure.setStringValue(key, nil)
     actual = databank.data[key]
     lu.assertNotNil(actual)
@@ -164,13 +162,13 @@ function TestDatabankUnit.testSetStringValue()
 
     -- default value
     key = "key6"
-    closure.setIntValue(key, "")
+    closure.setStringValue(key, "")
     actual = databank.data[key]
     lu.assertNotNil(actual)
 end
 
 --- Verify retrieval as string works.
-function TestDatabankUnit.testGetStringValue()
+function _G.TestDatabankUnit.testGetStringValue()
     local actual, expected, key
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -209,7 +207,7 @@ function TestDatabankUnit.testGetStringValue()
 end
 
 --- Verify storage as int works. In-game storage not visible, simply test that the key is set, not what's in storage.
-function TestDatabankUnit.testSetIntValue()
+function _G.TestDatabankUnit.testSetIntValue()
     local actual, expected, key
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -259,7 +257,7 @@ function TestDatabankUnit.testSetIntValue()
 end
 
 --- Verify retrieval as int works.
-function TestDatabankUnit.testGetIntValue()
+function _G.TestDatabankUnit.testGetIntValue()
     local actual, expected, key
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -298,7 +296,7 @@ function TestDatabankUnit.testGetIntValue()
 end
 
 --- Verify storage as float works. In-game storage not visible, simply test that the key is set, not what's in storage.
-function TestDatabankUnit.testSetFloatValue()
+function _G.TestDatabankUnit.testSetFloatValue()
     local actual, expected, key
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -348,7 +346,7 @@ function TestDatabankUnit.testSetFloatValue()
 end
 
 --- Verify retrieval as float works.
-function TestDatabankUnit.testGetFloatValue()
+function _G.TestDatabankUnit.testGetFloatValue()
     local actual, expected, key
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
@@ -386,8 +384,15 @@ function TestDatabankUnit.testGetFloatValue()
     lu.assertIsNumber(actual)
 end
 
---- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestDatabankUnit.testGameBehavior()
+--- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
+-- in-game.
+--
+-- Test setup:
+-- 1. 1x Databank, connected to Programming Board on slot1
+--
+-- Exercises: getElementClass, hasKey, getKeys, getNbKeys, clear, setStringValue, getStringValue, setIntValue,
+-- getIntValue, setFloatValue, getFloatValue
+function _G.TestDatabankUnit.testGameBehavior()
     local databank = mdu:new()
     local slot1 = databank:mockGetClosure()
 
@@ -404,6 +409,11 @@ function TestDatabankUnit.testGameBehavior()
     assert(slot1.getStringValue(key) == "string")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
+
+    assert(slot1.getKeys() == '["key1"]')
+    assert(slot1.getNbKeys() == 1, "Number of keys: "..slot1.getNbKeys())
+    slot1.clear()
+    assert(slot1.getNbKeys() == 0)
 
     key = "key1.5"
     slot1.setStringValue(key, "")

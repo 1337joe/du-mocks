@@ -9,10 +9,10 @@ local lu = require("luaunit")
 
 local mmsu = require("dumocks.ManualSwitchUnit")
 
-TestManualSwitchUnit = {}
+_G.TestManualSwitchUnit = {}
 
 --- Verify constructor arguments properly handled and independent between instances.
-function TestManualSwitchUnit.testConstructor()
+function _G.TestManualSwitchUnit.testConstructor()
 
     -- default element:
     -- ["manual switch"] = {mass = 13.27, maxHitPoints = 50.0}
@@ -46,13 +46,13 @@ function TestManualSwitchUnit.testConstructor()
 end
 
 --- Verify element class is correct.
-function TestManualSwitchUnit.testGetElementClass()
+function _G.TestManualSwitchUnit.testGetElementClass()
     local element = mmsu:new():mockGetClosure()
     lu.assertEquals(element.getElementClass(), "ManualSwitchUnit")
 end
 
 --- Verify activate results in enabled switch.
-function TestManualSwitchUnit.testActivate()
+function _G.TestManualSwitchUnit.testActivate()
     local switch = mmsu:new()
     local closure = switch:mockGetClosure()
 
@@ -66,7 +66,7 @@ function TestManualSwitchUnit.testActivate()
 end
 
 --- Verify deactivate results in disabled switch.
-function TestManualSwitchUnit.testDeactivate()
+function _G.TestManualSwitchUnit.testDeactivate()
     local switch = mmsu:new()
     local closure = switch:mockGetClosure()
 
@@ -80,7 +80,7 @@ function TestManualSwitchUnit.testDeactivate()
 end
 
 --- Verify toggle results in swapped switch.
-function TestManualSwitchUnit.testToggle()
+function _G.TestManualSwitchUnit.testToggle()
     local switch = mmsu:new()
     local closure = switch:mockGetClosure()
 
@@ -94,7 +94,7 @@ function TestManualSwitchUnit.testToggle()
 end
 
 --- Verify get state properly translated results.
-function TestManualSwitchUnit.testGetState()
+function _G.TestManualSwitchUnit.testGetState()
     local switch = mmsu:new()
     local closure = switch:mockGetClosure()
     local actual
@@ -109,7 +109,7 @@ function TestManualSwitchUnit.testGetState()
 end
 
 --- Verify callbacks can be registered and fire properly for `pressed()`.
-function TestManualSwitchUnit.testDoPressedValid()
+function _G.TestManualSwitchUnit.testDoPressedValid()
     local switch = mmsu:new()
 
     local pressed1Result = nil
@@ -124,7 +124,7 @@ function TestManualSwitchUnit.testDoPressedValid()
 end
 
 --- Verify callbacks are properly handled for invalid calls for `pressed()`.
-function TestManualSwitchUnit.testDoPressedInvalid()
+function _G.TestManualSwitchUnit.testDoPressedInvalid()
     local switch = mmsu:new()
 
     local pressed1Result = nil
@@ -139,7 +139,7 @@ function TestManualSwitchUnit.testDoPressedInvalid()
 end
 
 --- Verify callbacks can be registered and properly handle errors for `pressed()`.
-function TestManualSwitchUnit.testDoPressedError()
+function _G.TestManualSwitchUnit.testDoPressedError()
     local switch = mmsu:new()
 
     local callbackNumber = 0
@@ -181,7 +181,7 @@ function TestManualSwitchUnit.testDoPressedError()
 end
 
 --- Verify callbacks can be registered and fire properly for `released()`.
-function TestManualSwitchUnit.testDoReleasedValid()
+function _G.TestManualSwitchUnit.testDoReleasedValid()
     local switch = mmsu:new()
 
     local released1Result = nil
@@ -196,7 +196,7 @@ function TestManualSwitchUnit.testDoReleasedValid()
 end
 
 --- Verify callbacks are properly handled for invalid calls for `released()`.
-function TestManualSwitchUnit.testDoReleasedInvalid()
+function _G.TestManualSwitchUnit.testDoReleasedInvalid()
     local switch = mmsu:new()
 
     local released1Result = nil
@@ -211,7 +211,7 @@ function TestManualSwitchUnit.testDoReleasedInvalid()
 end
 
 --- Verify callbacks can be registered and properly handle errors for `released()`.
-function TestManualSwitchUnit.testDoReleasedError()
+function _G.TestManualSwitchUnit.testDoReleasedError()
     local switch = mmsu:new()
 
     local callbackNumber = 0
@@ -252,8 +252,14 @@ function TestManualSwitchUnit.testDoReleasedError()
     lu.assertEquals(released2CallOrder, 2)
 end
 
---- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestManualSwitchUnit.testGameBehavior()
+--- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
+-- in-game.
+--
+-- Test setup:
+-- 1. 1x Switch, connected to Programming Board on slot1
+--
+-- Exercises: getElementClass, deactivate, activate, toggle, getState, EVENT_pressed, EVENT_released
+function _G.TestManualSwitchUnit.testGameBehavior()
     local switch = mmsu:new()
     local slot1 = switch:mockGetClosure()
 
