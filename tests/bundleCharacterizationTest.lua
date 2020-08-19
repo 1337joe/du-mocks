@@ -44,6 +44,11 @@ for target,code,target2 in string.gmatch(fileContents, BLOCK_PATTERN) do
     table.insert(blocks, {target=target, code=code})
 end
 
+-- bail early if no code blocks
+if #blocks == 0 then
+    return
+end
+
 -- prepare output
 local TARGET_PATTERN = "([a-zA-Z0-9]+)%.([a-zA-Z()*]+)(.*)"
 local ARGS_PATTERN = "([a-zA-Z_*]+)"

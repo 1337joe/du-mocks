@@ -14,9 +14,9 @@ elementDefinitions["long light s"] = {mass = 79.34, maxHitPoints = 50.0}
 elementDefinitions["long light m"] = {mass = 79.34, maxHitPoints = 50.0}
 elementDefinitions["long light l"] = {mass = 79.34, maxHitPoints = 50.0}
 elementDefinitions["vertical light xs"] = {mass = 70.05, maxHitPoints = 50.0}
-elementDefinitions["vertical light xs"] = {mass = 79.34, maxHitPoints = 50.0}
-elementDefinitions["vertical light xs"] = {mass = 79.34, maxHitPoints = 62.0}
-elementDefinitions["vertical light xs"] = {mass = 371.80, maxHitPoints = 499.0}
+elementDefinitions["vertical light s"] = {mass = 79.34, maxHitPoints = 50.0}
+elementDefinitions["vertical light m"] = {mass = 79.34, maxHitPoints = 62.0}
+elementDefinitions["vertical light l"] = {mass = 371.80, maxHitPoints = 499.0}
 elementDefinitions["headlight"] = {mass = 79.34, maxHitPoints = 50.0}
 local DEFAULT_ELEMENT = "square light xs"
 

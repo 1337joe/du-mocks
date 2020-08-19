@@ -41,17 +41,18 @@ function M.EVENT_receive(channel, message)
 end
 
 --- Mock only, not in-game: Register a handler for the in-game `receive(channel,message)` event.
+-- @tparam function callback The function to call when the button is pressed.
 -- @tparam string channel The channel to filter on, or "*" for all.
 -- @tparam string message The message to filter for, or "*" for all.
--- @tparam function callback The function to call when the button is pressed.
 -- @treturn int The index of the callback.
 -- @see EVENT_receive
-function M:mockRegisterReceive(channel, message, callback)
-
-    -- TODO: store channel and message filters with the callback
+function M:mockRegisterReceive(callback, channel, message)
+    -- default to all
+    channel = channel or "*"
+    message = message or "*"
 
     local index = #self.receiveCallbacks + 1
-    self.receiveCallbacks[index] = callback
+    self.receiveCallbacks[index] = {callback = callback, channel = channel, message = message}
     return index
 end
 
@@ -59,15 +60,16 @@ end
 -- @tparam string channel The channel; can be used as a filter.
 -- @tparam string message The message received.
 function M:mockDoReceive(channel, message)
-
-    -- TODO filter on the channel and on message
-
     -- call callbacks in order, saving exceptions until end
     local errors = ""
     for i,callback in pairs(self.receiveCallbacks) do
-        local status,err = pcall(callback)
-        if not status then
-            errors = errors.."\nError while running callback "..i..": "..err
+        -- filter on the channel and on message
+        if (callback.channel == "*" or callback.channel == channel) and
+                (callback.message == "*" or callback.message == message) then
+            local status,err = pcall(callback.callback, channel, message)
+            if not status then
+                errors = errors.."\nError while running callback "..i..": "..err
+            end
         end
     end
 

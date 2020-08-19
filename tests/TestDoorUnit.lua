@@ -32,7 +32,7 @@ function _G.TestDoorUnit.testConstructor()
     lu.assertEquals(doorClosure2.getId(), 2)
     lu.assertEquals(doorClosure3.getId(), 3)
 
-    -- prove default element is selected where appropriate
+    -- prove default element is selected only where appropriate
     local defaultMass = 749.15
     lu.assertEquals(doorClosure0.getMass(), defaultMass)
     lu.assertEquals(doorClosure1.getMass(), defaultMass)

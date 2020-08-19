@@ -119,7 +119,7 @@ function M:mockDoReleased()
     end
 
     -- state changes after calling handlers
-    self.state = true
+    self.state = false
 
     -- propagate errors
     if string.len(errors) > 0 then

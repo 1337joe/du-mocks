@@ -19,7 +19,7 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
-    o.range = elementDefinition.range
+    o.range = elementDefinition.range -- meters
     o.propagateSendErrors = false -- in-game module gets no feedback, make optional for testing purposes
     o.receiverCallbacks = {}
 

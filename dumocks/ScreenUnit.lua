@@ -26,7 +26,7 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
-
+    o.state = false
 
     return o
 end
@@ -110,6 +110,20 @@ end
 function M:clear()
 end
 
+--- Turn on the screen.
+--
+-- Note: This is not documented in the codex.
+function M:activate()
+    self.state = true
+end
+
+--- Turn off the screen.
+--
+-- Note: This is not documented in the codex.
+function M:deactivate()
+    self.state = false
+end
+
 --- Event: Emitted when the player starts a click on the screen unit.
 --
 -- Note: This is documentation on an event handler, not a callable method.
@@ -133,6 +147,7 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
+    -- codex-documented methods
     closure.addText = function(x, y, fontSize, text) return self:addText(x, y, fontSize, text) end
     closure.setCenteredText = function(text) return self:setCenteredText(text) end
     closure.setHTML = function(html) return self:setHTML(html) end
@@ -145,6 +160,11 @@ function M:mockGetClosure()
     closure.getMouseY = function() return self:getMouseY() end
     closure.getMouseState = function() return self:getMouseState() end
     closure.clear = function() return self:clear() end
+
+    -- undocumented methods
+    closure.activate = function() return self:activate() end
+    closure.deactivate = function() return self:deactivate() end
+
     return closure
 end
 

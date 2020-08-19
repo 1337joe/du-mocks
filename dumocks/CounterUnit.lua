@@ -32,7 +32,7 @@ end
 --- Returns the rank of the currently active OUT plug.
 -- @return The index of the active plug.
 function M:getCounterState()
-    return self.activeOut
+    return self.activeOut % self.maxCount
 end
 
 --- Moves the counter one step further (equivalent to signal received on the IN plug).

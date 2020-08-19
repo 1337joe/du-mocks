@@ -62,6 +62,7 @@ function M:mockGetClosure()
     closure.deactivate = function() return self:deactivate() end
     closure.toggle = function() return self:toggle() end
     closure.getState = function() return self:getState() end
+    closure.setBaseAltitude = function(altitude) return self:setBaseAltitude(altitude) end
     return closure
 end
 
