@@ -11,7 +11,6 @@ local mlgu = require("dumocks.LandingGearUnit")
 
 _G.TestLandingGearUnit = {}
 
-
 --- Verify constructor arguments properly handled and independent between instances.
 function _G.TestLandingGearUnit.testConstructor()
 

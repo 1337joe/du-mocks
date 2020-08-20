@@ -9,10 +9,10 @@ local lu = require("luaunit")
 
 local mcu = require("dumocks.ContainerUnit")
 
-TestContainerUnit = {}
+_G.TestContainerUnit = {}
 
 --- Verify constructor arguments properly handled and independent between instances.
-function TestContainerUnit.testConstructor()
+function _G.TestContainerUnit.testConstructor()
 
     -- default element:
     -- ["container s"] = {mass = 1281.31, maxHitPoints = 999.0}
@@ -47,7 +47,7 @@ function TestContainerUnit.testConstructor()
 end
 
 --- Verify element class is correct for various types.
-function TestContainerUnit.testGetElementClass()
+function _G.TestContainerUnit.testGetElementClass()
     local container
 
     -- default - item container
@@ -68,7 +68,7 @@ function TestContainerUnit.testGetElementClass()
 end
 
 --- Get mass is a function of self mass and item mass, verify relationhip.
-function TestContainerUnit.testGetMass()
+function _G.TestContainerUnit.testGetMass()
     local expected, actual
     local container = mcu:new()
 

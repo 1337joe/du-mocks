@@ -8,25 +8,27 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-elementDefinitions["programming board"] = {mass = 27.74, maxHitPoints = 50.0} -- Generic
-elementDefinitions["hovercraft seat"] = {mass = 110.33, maxHitPoints = 187.0} -- CockpitHovercraftUnit
-elementDefinitions["command seat controller"] = {mass = 158.45, maxHitPoints = 250.0} -- CockpitCommandmentUnit
+elementDefinitions["programming board"] = {mass = 27.74, maxHitPoints = 50.0, class = "Generic"}
+elementDefinitions["hovercraft seat"] = {mass = 110.33, maxHitPoints = 187.0, class = "CockpitHovercraftUnit"}
+elementDefinitions["command seat controller"] = {mass = 158.45, maxHitPoints = 250.0, class = "CockpitCommandmentUnit"}
 -- TODO others
 local DEFAULT_ELEMENT = "programming board"
 
 local M = MockElement:new()
-M.elementClass = "Generic"
 
-function M:new(o, id)
+function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
 
     o = o or MockElement:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
 
+    o.elementClass = elementDefinition.class
+
     o.errorOnExit = false -- use to abort execution when exit is called
     o.exitCalled = false
     o.timers = {} -- map: "timer name"=>timerDurationSeconds
+    o.tickCallbacks = {}
 
     return o
 end
@@ -52,9 +54,7 @@ end
 -- @tparam second period The period of the timer, in seconds. The time resolution is limited by the framerate here, so
 -- you cannot set arbitrarily fast timers.
 function M:setTimer(timerTagId, period)
-    -- TODO what happens if period is negative? treats it as 0s
     self.timers[timerTagId] = period
-    -- TODO * is a valid timer filter
 end
 
 --- Stop the timer with the given ID.
@@ -228,6 +228,39 @@ end
 -- @param timerId The ID (int) of the timer that just ticked (see setTimer to set a timer with a given ID)
 function M.EVENT_tick(timerId)
     assert(false, "This is implemented for documentation purposes only.")
+end
+
+--- Mock only, not in-game: Register a handler for the in-game `tick(timerId)` event.
+-- @tparam function callback The function to call when the timer ticks.
+-- @tparam string filter The timerId to filter on, or "*" for all.
+-- @treturn int The index of the callback.
+-- @see EVENT_tick
+function M:mockRegisterTimer(callback, filter)
+    filter = filter or "*"
+
+    local index = #self.tickCallbacks + 1
+    self.tickCallbacks[index] = {callback = callback, filter = filter}
+    return index
+end
+
+--- Mock only, not in-game: Simulates a timer tick.
+-- @tparam string id The ID of the timer that ticked.
+function M:mockDoTick(timerId)
+    -- call callbacks in order, saving exceptions until end
+    local errors = ""
+    for i,callback in pairs(self.tickCallbacks) do
+        if callback.filter == "*" or callback.filter == timerId then
+            local status, err = pcall(callback.callback, timerId)
+            if not status then
+                errors = errors.."\nError while running callback "..i..": "..err
+            end
+        end
+    end
+
+    -- propagate errors
+    if string.len(errors) > 0 then
+        error("Errors raised in callbacks:"..errors)
+    end
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".

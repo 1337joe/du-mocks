@@ -6,16 +6,14 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-elementDefinitions["dynamic core unit xs"] = {mass = 70.89, maxHitPoints = 50.0} -- CoreUnitDynamic
-elementDefinitions["dynamic core unit s"] = {mass = 375.97, maxHitPoints = 183.0} -- CoreUnitDynamic
-elementDefinitions["static core unit m"] = {mass = 1926.91, maxHitPoints = 1184.0} -- CoreUnitStatic
-elementDefinitions["space core unit xs"] = {mass = 38.99, maxHitPoints = 50.0} -- CoreUnitSpace
+elementDefinitions["dynamic core unit xs"] = {mass = 70.89, maxHitPoints = 50.0, class = "CoreUnitDynamic"}
+elementDefinitions["dynamic core unit s"] = {mass = 375.97, maxHitPoints = 183.0, class = "CoreUnitDynamic"}
+elementDefinitions["space core unit xs"] = {mass = 38.99, maxHitPoints = 50.0, class = "CoreUnitSpace"}
+elementDefinitions["static core unit m"] = {mass = 1926.91, maxHitPoints = 1184.0, class = "CoreUnitStatic"}
 -- TODO others
 local DEFAULT_ELEMENT = "dynamic core unit xs"
 
 local M = MockElement:new()
-M.elementClass = "CoreUnitDynamic" -- TODO subclass for different types, or set based on element picked?
--- "CoreUnitStatic"
 M.widgetType = "core"
 
 function M:new(o, id, elementName)
@@ -24,6 +22,8 @@ function M:new(o, id, elementName)
     o = o or MockElement:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
+
+    self.elementClass = elementDefinition.class
 
     o.constructMass = 0 -- kg
     o.constructIMass = 0 -- kg*m2
