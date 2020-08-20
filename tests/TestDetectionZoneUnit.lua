@@ -87,6 +87,27 @@ function _G.TestDetectionZoneUnit.testEnterError()
     lu.assertEquals(callback2Order, 2)
 end
 
+--- Verify filtering on enter id works.
+function _G.TestDetectionZoneUnit.testEnterFilter()
+    local mock = mdzu:new()
+
+    local expected, actual
+    local callback = function(id)
+        actual = id
+    end
+    mock:mockRegisterEnter(callback, "1")
+
+    actual = nil
+    expected = 1
+    mock:mockDoEnter(expected)
+    lu.assertEquals(actual, expected)
+
+    actual = nil
+    expected = 9999
+    mock:mockDoEnter(expected)
+    lu.assertNil(actual)
+end
+
 --- Verify leave works without errors.
 function _G.TestDetectionZoneUnit.testLeave()
     local mock = mdzu:new()
@@ -132,6 +153,28 @@ function _G.TestDetectionZoneUnit.testLeaveError()
     lu.assertEquals(callback1Order, 1)
     lu.assertEquals(callback2Order, 2)
 end
+
+--- Verify filtering on leave id works.
+function _G.TestDetectionZoneUnit.testLeaveFilter()
+    local mock = mdzu:new()
+
+    local expected, actual
+    local callback = function(id)
+        actual = id
+    end
+    mock:mockRegisterLeave(callback, "1")
+
+    actual = nil
+    expected = 1
+    mock:mockDoLeave(expected)
+    lu.assertEquals(actual, expected)
+
+    actual = nil
+    expected = 9999
+    mock:mockDoLeave(expected)
+    lu.assertNil(actual)
+end
+
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --

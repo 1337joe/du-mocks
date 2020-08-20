@@ -45,24 +45,28 @@ end
 
 --- Mock only, not in-game: Register a handler for the in-game `enter(id)` event.
 -- @tparam function callback The function to call when the a player enters.
+-- @tparam string filter The id to filter on, or "*" for all.
 -- @treturn int The index of the callback.
 -- @see EVENT_enter
-function M:mockRegisterEnter(callback)
+function M:mockRegisterEnter(callback, filter)
+    filter = filter or "*"
+
     local index = #self.enterCallbacks + 1
-    self.enterCallbacks[index] = callback
+    self.enterCallbacks[index] = {callback = callback, filter = filter}
     return index
 end
 
 --- Mock only, not in-game: Simulates a user entering the detection zone.
 -- @tparam int id The ID of the player who entered.
 function M:mockDoEnter(id)
-
     -- call callbacks in order, saving exceptions until end
     local errors = ""
     for i,callback in pairs(self.enterCallbacks) do
-        local status,err = pcall(callback, id)
-        if not status then
-            errors = errors.."\nError while running callback "..i..": "..err
+        if callback.filter == "*" or callback.filter == tostring(id) then
+            local status, err = pcall(callback.callback, id)
+            if not status then
+                errors = errors.."\nError while running callback "..i..": "..err
+            end
         end
     end
 
@@ -73,12 +77,15 @@ function M:mockDoEnter(id)
 end
 
 --- Mock only, not in-game: Register a handler for the in-game `leave(id)` event.
--- @tparam function callback The function to call when the tile is released.
+-- @tparam function callback The function to call when a player leaves.
+-- @tparam string filter The id to filter on, or "*" for all.
 -- @treturn int The index of the callback.
 -- @see EVENT_leave
-function M:mockRegisterLeave(callback)
+function M:mockRegisterLeave(callback, filter)
+    filter = filter or "*"
+
     local index = #self.leaveCallbacks + 1
-    self.leaveCallbacks[index] = callback
+    self.leaveCallbacks[index] = {callback = callback, filter = filter}
     return index
 end
 
@@ -88,9 +95,11 @@ function M:mockDoLeave(id)
     -- call callbacks in order, saving exceptions until end
     local errors = ""
     for i,callback in pairs(self.leaveCallbacks) do
-        local status, err = pcall(callback, id)
-        if not status then
-            errors = errors.."\nError while running callback "..i..": "..err
+        if callback.filter == "*" or callback.filter == tostring(id) then
+            local status, err = pcall(callback.callback, id)
+            if not status then
+                errors = errors.."\nError while running callback "..i..": "..err
+            end
         end
     end
 
