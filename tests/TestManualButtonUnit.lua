@@ -11,6 +11,30 @@ local mmbu = require("dumocks.ManualButtonUnit")
 
 _G.TestManualButtonUnit = {}
 
+--- Verify constructor arguments properly handled.
+function _G.TestManualButtonUnit.testConstructor()
+
+    -- default element:
+    -- ["manual button s"] = {mass = 13.27, maxHitPoints = 50.0}
+
+    local button0 = mmbu:new()
+    local button1 = mmbu:new(nil, 1, "Manual Button S")
+    local button2 = mmbu:new(nil, 2, "invalid")
+
+    local buttonClosure0 = button0:mockGetClosure()
+    local buttonClosure1 = button1:mockGetClosure()
+    local buttonClosure2 = button2:mockGetClosure()
+
+    lu.assertEquals(buttonClosure0.getId(), 0)
+    lu.assertEquals(buttonClosure1.getId(), 1)
+    lu.assertEquals(buttonClosure2.getId(), 2)
+
+    local defaultMass = 13.27
+    lu.assertEquals(buttonClosure0.getMass(), defaultMass)
+    lu.assertEquals(buttonClosure1.getMass(), defaultMass)
+    lu.assertEquals(buttonClosure2.getMass(), defaultMass)
+end
+
 --- Verify element class is correct.
 function _G.TestManualButtonUnit.testGetElementClass()
     local element = mmbu:new():mockGetClosure()
@@ -29,9 +53,8 @@ function _G.TestManualButtonUnit.testGetState()
     lu.assertEquals(closure.getState(), 1)
 end
 
-
---- Verify hit works without errors.
-function _G.TestManualButtonUnit.testHit()
+--- Verify press works without errors.
+function _G.TestManualButtonUnit.testPress()
     local mock = mmbu:new()
     local closure = mock:mockGetClosure()
 
@@ -58,8 +81,8 @@ function _G.TestManualButtonUnit.testHit()
     lu.assertTrue(mock.state)
 end
 
---- Verify hit works with and propagates errors.
-function _G.TestManualButtonUnit.testHitError()
+--- Verify press works with and propagates errors.
+function _G.TestManualButtonUnit.testPressError()
     local mock = mmbu:new()
 
     local calls = 0
