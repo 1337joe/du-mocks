@@ -54,6 +54,39 @@ function _G.TestControlUnit.testGetElementClass()
     lu.assertEquals(element.getElementClass(), "CockpitCommandmentUnit")
 end
 
+--- Verify timers can be started.
+function _G.TestControlUnit.testStartTimer()
+    local mock = mcu:new()
+    local closure = mock:mockGetClosure()
+
+    -- non-string timerId
+    -- negative duration
+    --TODO
+    --lu.fail("NYI")
+end
+
+--- Verify getMasterPlayerId.
+function _G.TestControlUnit.testGetMasterPlayerId()
+    local mock = mcu:new()
+    local closure = mock:mockGetClosure()
+
+    local expected = 10
+    mock.masterPlayerId = expected
+    lu.assertEquals(closure.getMasterPlayerId(), expected)
+end
+
+--- Verify isRemoteControlled translates to numbers.
+function _G.TestControlUnit.testIsRemoteControlled()
+    local mock = mcu:new()
+    local closure = mock:mockGetClosure()
+
+    mock.remoteControlled = false
+    lu.assertEquals(closure.isRemoteControlled(), 0)
+
+    mock.remoteControlled = true
+    lu.assertEquals(closure.isRemoteControlled(), 1)
+end
+
 --- Verify tick works without errors.
 function _G.TestControlUnit.testTick()
     local mock = mcu:new()

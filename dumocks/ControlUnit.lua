@@ -29,6 +29,8 @@ function M:new(o, id, elementName)
     o.exitCalled = false
     o.timers = {} -- map: "timer name"=>timerDurationSeconds
     o.tickCallbacks = {}
+    o.masterPlayerId = nil
+    o.remoteControlled = false
 
     return o
 end
@@ -81,6 +83,7 @@ end
 --- Return the ID of the player currently running the control unit.
 -- @treturn int ID of the player running the control unit.
 function M:getMasterPlayerId()
+    return self.masterPlayerId
 end
 
 --- Automatically assign the engines within the taglist to result in the given acceleration and angular acceleration
@@ -196,6 +199,10 @@ end
 --- Check if the construct is remote controlled.
 -- @treturn 0/1 1 if the construct is remote controlled.
 function M:isRemoteControlled()
+    if self.remoteControlled then
+        return 1
+    end
+    return 0
 end
 
 --- The ground engines will stabilize to this altitude within their limits. THe stabilization will be done by adjusting
