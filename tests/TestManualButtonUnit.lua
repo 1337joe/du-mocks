@@ -162,4 +162,112 @@ function _G.TestManualButtonUnit.skipTestGameBehavior()
     -- copy to here to unit.start
 end
 
+--- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
+-- in-game.
+--
+-- Test setup:
+-- 1. 1x Manual Button S, connected to Programming Board on slot1
+--
+-- Exercises: getElementClass, getState, EVENT_pressed, EVENT_released
+function _G.TestManualButtonUnit.testGameBehavior()
+    local button = mmbu:new()
+    local slot1 = button:mockGetClosure()
+
+    -- stub this in directly to supress print in the unit test
+    local unit = {getData = function() return '"showScriptError":false' end}
+    local system = {}
+    system.print = function() end
+
+    -- use locals here since all code is in this method
+    local pressedCount = 0
+    local releasedCount = 0
+
+    -- pressed handlers
+    local pressedHandler1 = function()
+        ---------------
+        -- copy from here to slot1.pressed()
+        ---------------
+        pressedCount = pressedCount + 1
+        assert(slot1.getState() == 1) -- toggles before calling handlers
+        assert(pressedCount == 1) -- should only ever be called once, when the user presses the button
+        ---------------
+        -- copy to here to slot1.pressed()
+        ---------------
+    end
+    local pressedHandler2 = function()
+        ---------------
+        -- copy from here to slot1.pressed()
+        ---------------
+        pressedCount = pressedCount + 1
+        assert(pressedCount == 2) -- called second in pressed handler list
+        ---------------
+        -- copy to here to slot1.pressed()
+        ---------------
+    end
+    button:mockRegisterPressed(pressedHandler1)
+    button:mockRegisterPressed(pressedHandler2)
+
+    -- released handlers
+    local releasedHandler1 = function()
+        ---------------
+        -- copy from here to slot1.released()
+        ---------------
+        releasedCount = releasedCount + 1
+        assert(slot1.getState() == 1) -- won't toggle till after handlers finished
+        assert(releasedCount == 1) -- should only ever be called once, when the user releases the button
+        ---------------
+        -- copy to here to slot1.released()
+        ---------------
+    end
+    local releasedHandler2 = function()
+        ---------------
+        -- copy from here to slot1.released()
+        ---------------
+        releasedCount = releasedCount + 1
+        assert(releasedCount == 2) -- called second in released handler list
+        ---------------
+        -- copy to here to slot1.released()
+        ---------------
+    end
+    button:mockRegisterReleased(releasedHandler1)
+    button:mockRegisterReleased(releasedHandler2)
+
+    ---------------
+    -- copy from here to unit.start()
+    ---------------
+    assert(slot1.getElementClass() == "ManualButtonUnit")
+
+    -- ensure initial state, set up globals
+    pressedCount = 0
+    releasedCount = 0
+
+    -- prep for user interaction
+    assert(slot1.getState() == 0)
+
+    system.print("please enable and disable the button")
+    ---------------
+    -- copy to here to unit.start()
+    ---------------
+
+    button:mockDoPressed()
+    button:mockDoReleased()
+
+    ---------------
+    -- copy from here to unit.stop()
+    ---------------
+    assert(slot1.getState() == 0)
+    assert(pressedCount == 2, "Pressed count should be 2: "..pressedCount)
+    assert(releasedCount == 2)
+
+    -- multi-part script, can't just print success because end of script was reached
+    if string.find(unit.getData(), '"showScriptError":false') then
+        system.print("Success")
+    else
+        system.print("Failed")
+    end
+    ---------------
+    -- copy to here to unit.stop()
+    ---------------
+end
+
 os.exit(lu.LuaUnit.run())

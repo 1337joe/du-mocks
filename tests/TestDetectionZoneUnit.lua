@@ -132,18 +132,111 @@ function _G.TestDetectionZoneUnit.testLeaveError()
     lu.assertEquals(callback1Order, 1)
     lu.assertEquals(callback2Order, 2)
 end
+--- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
+-- in-game.
+--
+-- Test setup:
+-- 1. 1x Detection Zone XS, connected to Programming Board on slot1
+--
+-- Exercises: getElementClass, EVENT_enter, EVENT_leave
+function _G.TestDetectionZoneUnit.testGameBehavior()
+    local zone = mdzu:new()
+    local slot1 = zone:mockGetClosure()
 
---- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function _G.TestDetectionZoneUnit.skipTestGameBehavior()
-    local mock = mdzu:new()
-    local slot1 = mock:mockGetClosure()
+    -- stub this in directly to supress print in the unit test
+    local unit = {getData = function() return '"showScriptError":false' end}
+    local system = {}
+    system.print = function() end
 
-    -- copy from here to unit.start
-    assert(false, "Not Yet Implemented")
+    -- use locals here since all code is in this method
+    local enterCount, leaveCount
+    local enterPlayer, leavePlayer
 
+    -- enter handlers
+    local enterHandler1 = function(id)
+        ---------------
+        -- copy from here to slot1.enter(*)
+        ---------------
+        enterPlayer = id
+        enterCount = enterCount + 1
+        assert(enterCount == 1) -- should only ever be called once, when the user presses the button
+        ---------------
+        -- copy to here to slot1.enter(*)
+        ---------------
+    end
+    local enterHandler2 = function(_)
+        ---------------
+        -- copy from here to slot1.enter(*)
+        ---------------
+        enterCount = enterCount + 1
+        assert(enterCount == 2) -- called second in enter handler list
+        ---------------
+        -- copy to here to slot1.enter(*)
+        ---------------
+    end
+    zone:mockRegisterEnter(enterHandler1)
+    zone:mockRegisterEnter(enterHandler2)
+
+    -- leave handlers
+    local leaveHandler1 = function(id)
+        ---------------
+        -- copy from here to slot1.leave(*)
+        ---------------
+        leavePlayer = id
+        leaveCount = leaveCount + 1
+        assert(leaveCount == 1) -- should only ever be called once, when the user releases the button
+        ---------------
+        -- copy to here to slot1.leave(*)
+        ---------------
+    end
+    local leaveHandler2 = function(_)
+        ---------------
+        -- copy from here to slot1.leave(*)
+        ---------------
+        leaveCount = leaveCount + 1
+        assert(leaveCount == 2) -- called second in leave handler list
+        ---------------
+        -- copy to here to slot1.leave(*)
+        ---------------
+    end
+    zone:mockRegisterLeave(leaveHandler1)
+    zone:mockRegisterLeave(leaveHandler2)
+
+    ---------------
+    -- copy from here to unit.start()
+    ---------------
     assert(slot1.getElementClass() == "DetectionZoneUnit")
 
-    -- copy to here to unit.start
+    -- ensure initial state, set up globals
+    enterCount = 0
+    leaveCount = 0
+    enterPlayer = nil
+    leavePlayer = nil
+
+    system.print("please enter and leave the zone")
+    ---------------
+    -- copy to here to unit.start()
+    ---------------
+
+    zone:mockDoEnter(10)
+    zone:mockDoLeave(10)
+
+    ---------------
+    -- copy from here to unit.stop()
+    ---------------
+    assert(enterCount == 2, "Enter count should be 2: "..enterCount)
+    assert(leaveCount == 2)
+    assert(enterPlayer == leavePlayer)
+
+    -- multi-part script, can't just print success because end of script was reached
+    if string.find(unit.getData(), '"showScriptError":false') then
+        system.print("Success")
+    else
+        system.print("Failed")
+    end
+    ---------------
+    -- copy to here to unit.stop()
+    ---------------
 end
 
 os.exit(lu.LuaUnit.run())
