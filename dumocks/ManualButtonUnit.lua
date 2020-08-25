@@ -62,8 +62,7 @@ end
 --- Mock only, not in-game: Simulates the user pressing the button. Calling this while the button is already deactivated
 -- is invalid and will have no effect.
 --
--- Note: the state updates to true <em>before</em> the event handlers are called, which is different behavior to
--- releasing the button.
+-- Note: The state updates to true before the event handlers are called.
 function M:mockDoPressed()
     -- bail if already activated
     if self.state then
@@ -101,13 +100,15 @@ end
 --- Mock only, not in-game: Simulates the user pressing the button. Calling this while the button is already deactivated
 -- is invalid and will have no effect.
 --
--- Note: the state updates to true <em>after</em> the event handlers are called, which is different behavior to
--- pressing the button.
+-- Note: The state updates to false before the event handlers are called.
 function M:mockDoReleased()
     -- bail if already deactivated
     if not self.state then
         return
     end
+
+    -- state changes before calling handlers
+    self.state = false
 
     -- call callbacks in order, saving exceptions until end
     local errors = ""
@@ -117,9 +118,6 @@ function M:mockDoReleased()
             errors = errors.."\nError while running callback "..i..": "..err
         end
     end
-
-    -- state changes after calling handlers
-    self.state = false
 
     -- propagate errors
     if string.len(errors) > 0 then

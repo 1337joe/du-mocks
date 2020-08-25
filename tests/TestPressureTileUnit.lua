@@ -131,7 +131,7 @@ function _G.TestPressureTileUnit.testReleased()
     called = false
     mock:mockDoReleased()
     lu.assertTrue(called)
-    lu.assertEquals(detectorState, 1) -- changes after callbacks
+    lu.assertEquals(detectorState, 0) -- changes before callbacks
 
     lu.assertFalse(mock.state)
 
@@ -174,18 +174,6 @@ function _G.TestPressureTileUnit.testReleasedError()
     lu.assertFalse(mock.state)
 end
 
---- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function _G.TestPressureTileUnit.skipTestGameBehavior()
-    local mock = mptu:new()
-    local slot1 = mock:mockGetClosure()
-
-    -- copy from here to unit.start
-    assert(slot1.getElementClass() == "PressureTileUnit")
-
-    assert(false, "Not Yet Implemented")
-    -- copy to here to unit.start
-end
-
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --
@@ -198,7 +186,9 @@ function _G.TestPressureTileUnit.testGameBehavior()
     local slot1 = tile:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
-    local unit = {getData = function() return '"showScriptError":false' end}
+    local unit = {}
+    unit.getData = function() return '"showScriptError":false' end
+    unit.exit = function() end
     local system = {}
     system.print = function() end
 
@@ -237,7 +227,7 @@ function _G.TestPressureTileUnit.testGameBehavior()
         -- copy from here to slot1.released()
         ---------------
         releasedCount = releasedCount + 1
-        assert(slot1.getState() == 1) -- won't toggle till after handlers finished
+        assert(slot1.getState() == 0) -- toggles before calling handlers
         assert(releasedCount == 1) -- should only ever be called once, when the user releases the tile
         ---------------
         -- copy to here to slot1.released()
@@ -249,6 +239,8 @@ function _G.TestPressureTileUnit.testGameBehavior()
         ---------------
         releasedCount = releasedCount + 1
         assert(releasedCount == 2) -- called second in released handler list
+
+        unit.exit() -- run stop to report final result
         ---------------
         -- copy to here to slot1.released()
         ---------------

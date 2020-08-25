@@ -95,7 +95,7 @@ Format notes:
 | LightUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | IndustryUnit | :heavy_check_mark: | P | P | P | :heavy_check_mark: |
-| CounterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | U | :heavy_check_mark: |
+| CounterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | P |
 | ReceiverUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | P |
 | CoreUnit | :heavy_check_mark: | P | P | | P |
@@ -104,9 +104,9 @@ Format notes:
 | GyroUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
 | LaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
 | LaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
-| ManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | U | :heavy_check_mark: |
+| ManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | ManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| PressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | U | :heavy_check_mark: |
+| PressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | RadarUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | TelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |

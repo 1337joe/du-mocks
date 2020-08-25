@@ -53,6 +53,12 @@ function M:setBaseAltitude(altitude)
     self.targetAltitude = altitude
 end
 
+--- Return the base altitude for the anti-gravity field.
+-- @tparam m The base altitude.
+function M:getBaseAltitude()
+    return self.targetAltitude
+end
+
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure

@@ -203,7 +203,7 @@ end
 
 --- Return the current time since the arrival of the Arkship.
 -- @treturn second The current time in seconds, with a microsecond precision.
-function M.getTime()
+function M:getTime()
     -- creates dependency on posix
     -- local s, ns = posix.clock_gettime(0)
     -- return s + math.floor(ns / 1000 + .5)
@@ -229,8 +229,13 @@ end
 
 --- Print a message in the Lua console.
 -- @tparam string msg The message to print.
-function M.print(msg)
+function M:print(msg)
     print(msg)
+end
+
+--- Print a message to the game log file at `INFO` level. Log file is located in `<user>/AppData/Local/NQ/DualUniverse/log/`.
+-- @tparam string msg The message to print.
+function M:logInfo(msg)
 end
 
 --- Event: Emitted when an action starts.
@@ -290,27 +295,27 @@ function M:mockGetClosure()
     closure.destroyWidget = function(widgetId) return self:destroyWidget(widgetId) end
     closure.createData = function(dataJson) return self:createData(dataJson) end
     closure.destroyData = function(dataId) return self:destroyData(dataId) end
-    closure.updateData = function(dataId, dataJson) return self.updateData(dataId, dataJson) end
-    closure.addDataToWidget = function(dataId, widgetId) return self.addDataToWidget(dataId, widgetId) end
-    closure.removeDataFromWidget = function(dataId, widgetId) return self.removeDataFromWidget(dataId, widgetId) end
-    closure.getMouseWheel = function() return self.getMouseWheel() end
-    closure.getMouseDeltaX = function() return self.getMouseDeltaX() end
-    closure.getMouseDeltaY = function() return self.getMouseDeltaY() end
-    closure.getMousePosX = function() return self.getMousePosX() end
-    closure.getMousePosY = function() return self.getMousePosY() end
-    closure.getThrottleInputFromMouseWheel = function() return self.getThrottleInputFromMouseWheel() end
-    closure.getControlDeviceForwardInput = function() return self.getControlDeviceForwardInput() end
-    closure.getControlDeviceYawInput = function() return self.getControlDeviceYawInput() end
-    closure.getControlDeviceLeftRightInput = function() return self.getControlDeviceLeftRightInput() end
+    closure.updateData = function(dataId, dataJson) return self:updateData(dataId, dataJson) end
+    closure.addDataToWidget = function(dataId, widgetId) return self:addDataToWidget(dataId, widgetId) end
+    closure.removeDataFromWidget = function(dataId, widgetId) return self:removeDataFromWidget(dataId, widgetId) end
+    closure.getMouseWheel = function() return self:getMouseWheel() end
+    closure.getMouseDeltaX = function() return self:getMouseDeltaX() end
+    closure.getMouseDeltaY = function() return self:getMouseDeltaY() end
+    closure.getMousePosX = function() return self:getMousePosX() end
+    closure.getMousePosY = function() return self:getMousePosY() end
+    closure.getThrottleInputFromMouseWheel = function() return self:getThrottleInputFromMouseWheel() end
+    closure.getControlDeviceForwardInput = function() return self:getControlDeviceForwardInput() end
+    closure.getControlDeviceYawInput = function() return self:getControlDeviceYawInput() end
+    closure.getControlDeviceLeftRightInput = function() return self:getControlDeviceLeftRightInput() end
     closure.lockView = function() return self.lockView() end
-    closure.isViewLocked = function() return self.isViewLocked() end
-    closure.freeze = function(bool) return self.freeze() end
-    closure.isFrozen = function() return self.isFrozen() end
-    closure.getTime = function() return self.getTime() end
-    closure.getActionUpdateDeltaTime = function() return self.getActionUpdateDeltaTime() end
-    closure.getPlayerName = function(id) return self.getPlayerName(id) end
-    closure.getPlayerWorldPos = function(id) return self.getPlayerWorldPos(id) end
-    closure.print = function(msg) return self.print(msg) end
+    closure.isViewLocked = function() return self:isViewLocked() end
+    closure.freeze = function(bool) return self:freeze() end
+    closure.isFrozen = function() return self:isFrozen() end
+    closure.getTime = function() return self:getTime() end
+    closure.getActionUpdateDeltaTime = function() return self:getActionUpdateDeltaTime() end
+    closure.getPlayerName = function(id) return self:getPlayerName(id) end
+    closure.getPlayerWorldPos = function(id) return self:getPlayerWorldPos(id) end
+    closure.print = function(msg) return self:print(msg) end
     return closure
 end
 

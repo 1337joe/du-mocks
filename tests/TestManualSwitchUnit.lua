@@ -264,7 +264,9 @@ function _G.TestManualSwitchUnit.testGameBehavior()
     local slot1 = switch:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
-    local unit = {getData = function() return '"showScriptError":false' end}
+    local unit = {}
+    unit.getData = function() return '"showScriptError":false' end
+    unit.exit = function() end
     local system = {}
     system.print = function() end
 
@@ -315,6 +317,8 @@ function _G.TestManualSwitchUnit.testGameBehavior()
         ---------------
         releasedCount = releasedCount + 1
         assert(releasedCount == 2) -- called second in released handler list
+
+        unit.exit() -- run stop to report final result
         ---------------
         -- copy to here to slot1.released()
         ---------------
