@@ -1,6 +1,6 @@
 # DU Mocks
 
-Mock objects for use testing DU scripts offline.
+Mock objects for use testing Dual Universe scripts offline.
 
 To use this project simply place the project root directory on your lua package path and load modules with the `dumocks.` prefix, like so:
 
@@ -20,6 +20,8 @@ ldoc .
 ```
 
 Output can be found at `doc/index.html`. Note that the documentation won't show the package prefix (`dumocks.`) in file names, but it's still needed to load modules.
+
+An already compiled and uploaded copy of the documentation can be found at: https://du.w3asel.com
 
 ## Testing
 

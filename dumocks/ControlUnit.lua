@@ -251,7 +251,7 @@ function M:mockRegisterTimer(callback, filter)
 end
 
 --- Mock only, not in-game: Simulates a timer tick.
--- @tparam string id The ID of the timer that ticked.
+-- @tparam string timerId The ID of the timer that ticked.
 function M:mockDoTick(timerId)
     -- call callbacks in order, saving exceptions until end
     local errors = ""
