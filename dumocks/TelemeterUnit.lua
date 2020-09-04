@@ -5,10 +5,11 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
+elementDefinitions["telemeter"] = {mass = 49.79, maxHitPoints = 50.0}
 local DEFAULT_ELEMENT = "telemeter"
 
 local M = MockElement:new()
-M.elementClass = "???"
+M.elementClass = "TelemeterUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
@@ -18,7 +19,7 @@ function M:new(o, id, elementName)
     self.__index = self
 
     o.distance = -1
-    o.maxDistance = 20 -- m
+    o.maxDistance = 100 -- m
 
     return o
 end
@@ -26,10 +27,13 @@ end
 --- Returns the distance to the first obstacle in front of the telemeter.
 -- @treturn meter The distance to the obstacle. Returns -1 if there are no obstacles up to getMaxDistance.
 function M:getDistance()
+    if self.distance > self.maxDistance or self.distance < 0 then
+        return -1
+    end
     return self.distance
 end
 
---- Returns the max distance from which an obstacle can be detected (default is 20m).
+--- Returns the max distance from which an obstacle can be detected (default is 100m).
 -- @treturn meter The max distance to detectable obstacles.
 function M:getMaxDistance()
     return self.maxDistance

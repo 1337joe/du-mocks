@@ -173,7 +173,6 @@ function _G.TestManualButtonUnit.testReleasedError()
     lu.assertFalse(mock.state)
 end
 
-
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --

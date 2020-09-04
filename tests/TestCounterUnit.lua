@@ -113,6 +113,8 @@ function _G.TestCounterUnit.testGameBehavior()
     local slot1 = mock:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
+    local unit = {}
+    unit.exit = function() end
     local system = {}
     system.print = function() end
 
@@ -139,6 +141,7 @@ function _G.TestCounterUnit.testGameBehavior()
     assert(slot1.getCounterState() == 0, "Active out: "..slot1.getCounterState())
 
     system.print("Success")
+    unit.exit()
     ---------------
     -- copy to here to unit.start()
     ---------------
