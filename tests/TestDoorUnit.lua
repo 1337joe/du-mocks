@@ -112,6 +112,8 @@ function _G.TestDoorUnit.testGameBehavior()
     local slot1 = mock:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
+    local unit = {}
+    unit.exit = function() end
     local system = {}
     system.print = function() end
 
@@ -133,6 +135,8 @@ function _G.TestDoorUnit.testGameBehavior()
     assert(slot1.getState() == 1)
 
     system.print("Success")
+
+    unit.exit()
     ---------------
     -- copy to here to unit.start()
     ---------------

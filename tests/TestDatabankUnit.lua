@@ -120,6 +120,12 @@ function _G.TestDatabankUnit.testHasKey()
     expected = 1
     actual = closure.hasKey(key)
     lu.assertEquals(actual, expected)
+
+    local key = 1
+    databank.data[tostring(key)] = "value"
+    expected = 1
+    actual = closure.hasKey(key)
+    lu.assertEquals(actual, expected)
 end
 
 --- Verify storage as string works. In-game storage not visible, simply test that the key is set, not what's in storage.
@@ -165,6 +171,12 @@ function _G.TestDatabankUnit.testSetStringValue()
     closure.setStringValue(key, "")
     actual = databank.data[key]
     lu.assertNotNil(actual)
+
+    -- non-string key
+    key = 1
+    closure.setStringValue(key, "String")
+    actual = databank.data[tostring(key)]
+    lu.assertNotNil(actual)
 end
 
 --- Verify retrieval as string works.
@@ -201,6 +213,14 @@ function _G.TestDatabankUnit.testGetStringValue()
     key = "key4"
     expected = ""
     -- not set, defaults to nil
+    actual = closure.getStringValue(key)
+    lu.assertEquals(actual, expected)
+    lu.assertIsString(actual)
+
+    -- non-string key
+    key = 5
+    expected = "value"
+    databank.data[tostring(key)] = "value"
     actual = closure.getStringValue(key)
     lu.assertEquals(actual, expected)
     lu.assertIsString(actual)
@@ -254,6 +274,13 @@ function _G.TestDatabankUnit.testSetIntValue()
     actual = databank.data[key]
     lu.assertNotNil(actual)
     lu.assertIsNumber(actual)
+
+    -- non-string key
+    key = 1
+    closure.setIntValue(key, 1)
+    actual = databank.data[tostring(key)]
+    lu.assertNotNil(actual)
+    lu.assertIsNumber(actual)
 end
 
 --- Verify retrieval as int works.
@@ -290,6 +317,14 @@ function _G.TestDatabankUnit.testGetIntValue()
     key = "key4"
     expected = 0
     -- not set, defaults to 0
+    actual = closure.getIntValue(key)
+    lu.assertEquals(actual, expected)
+    lu.assertIsNumber(actual)
+
+    -- non-string key
+    key = 5
+    expected = 2
+    databank.data[tostring(key)] = 2
     actual = closure.getIntValue(key)
     lu.assertEquals(actual, expected)
     lu.assertIsNumber(actual)
@@ -343,6 +378,13 @@ function _G.TestDatabankUnit.testSetFloatValue()
     actual = databank.data[key]
     lu.assertNotNil(actual)
     lu.assertIsNumber(actual)
+
+    -- non-string key
+    key = 1
+    closure.setFloatValue(key, 1.1)
+    actual = databank.data[tostring(key)]
+    lu.assertNotNil(actual)
+    lu.assertIsNumber(actual)
 end
 
 --- Verify retrieval as float works.
@@ -382,6 +424,14 @@ function _G.TestDatabankUnit.testGetFloatValue()
     actual = closure.getFloatValue(key)
     lu.assertEquals(actual, expected)
     lu.assertIsNumber(actual)
+
+    -- non-string key
+    key = 5
+    expected = 3.1
+    databank.data[tostring(key)] = 3.1
+    actual = closure.getFloatValue(key)
+    lu.assertEquals(actual, expected)
+    lu.assertIsNumber(actual)
 end
 
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
@@ -396,10 +446,17 @@ function _G.TestDatabankUnit.testGameBehavior()
     local databank = mdu:new()
     local slot1 = databank:mockGetClosure()
 
+    -- stub this in directly to supress print in the unit test
+    local unit = {}
+    unit.exit = function() end
+    local system = {}
+    system.print = function() end
+
     ---------------
     -- copy from here to unit.start()
     ---------------
     assert(slot1.getElementClass() == "DataBankUnit")
+    slot1.clear()
 
     local key
 
@@ -575,6 +632,27 @@ function _G.TestDatabankUnit.testGameBehavior()
     assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
+
+    -- non-string keys
+    key = 1
+    slot1.setStringValue(key, "string")
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "string")
+    key = tostring(key)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "string")
+
+    key = 1.2
+    slot1.setStringValue(key, "string")
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "string")
+    key = tostring(key)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "string")
+
+    system.print("Success")
+    unit.exit()
+
     ---------------
     -- copy to here to unit.start()
     ---------------

@@ -56,6 +56,7 @@ end
 --- Returns 1 if the key is present in the databank, 0 otherwise.
 -- @treturn bool 1 if the key exists and 0 otherwise
 function M:hasKey(key)
+    key = tostring(key)
     if self.data[key] ~= nil then
         return 1
     end
@@ -66,6 +67,7 @@ end
 -- @tparam string key The key used to store the value.
 -- @tparam string val The value, as a string.
 function M:setStringValue(key, val)
+    key = tostring(key)
     if val == nil or type(val) == "boolean" then
         val = ""
     end
@@ -76,6 +78,7 @@ end
 -- @tparam string key The key used to retrieve the value.
 -- @treturn string The value as a string.
 function M:getStringValue(key)
+    key = tostring(key)
     local value = self.data[key]
     if value == nil then
         value = ""
@@ -89,6 +92,7 @@ end
 -- @tparam string key The key used to store the value.
 -- @tparam int val The value, as an integer.
 function M:setIntValue(key, val)
+    key = tostring(key)
     -- only store if an int
     if type(val) == "number" and val % 1 == 0 then
         self.data[key] = math.floor(val)
@@ -101,6 +105,7 @@ end
 -- @tparam string key The key used to retrieve the value.
 -- @treturn int The value as an integer.
 function M:getIntValue(key)
+    key = tostring(key)
     local value = self.data[key]
     if value == nil or type(value) ~= "number" then
         value = 0
@@ -114,6 +119,7 @@ end
 -- @tparam string key The key used to store the value.
 -- @tparam float val The value, as a floating number.
 function M:setFloatValue(key, val)
+    key = tostring(key)
     if type(val) == "number" and val ~= 0 then
         self.data[key] = val
     else
@@ -125,6 +131,7 @@ end
 -- @tparam string key The key used to retrieve the value.
 -- @treturn float The value as a floating number.
 function M:getFloatValue(key)
+    key = tostring(key)
     local value = self.data[key]
     if value == nil or type(value) ~= "number" then
         value = 0.0
