@@ -95,7 +95,7 @@ Format notes:
 | ForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | LandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | P |
 | LightUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | IndustryUnit | :heavy_check_mark: | P | P | P | :heavy_check_mark: |
 | CounterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | P |

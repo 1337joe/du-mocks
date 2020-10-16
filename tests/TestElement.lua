@@ -24,31 +24,31 @@ function TestElement.testFindElement()
 
     -- unset
     elementName = nil
-    expected = elementDefinitions[DEFAULT_ELEMENT]
+    expected = {name = "container s", mass = 1281.31,maxHitPoints = 999.0}
     actual = me.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
     lu.assertEquals(actual, expected)
 
     -- invalid
     elementName = "invalid"
-    expected = elementDefinitions[DEFAULT_ELEMENT]
+    expected = {name = "container s", mass = 1281.31,maxHitPoints = 999.0}
     actual = me.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
     lu.assertEquals(actual, expected)
 
     -- valid, not default
     elementName = "container xs"
-    expected = elementDefinitions["container xs"]
+    expected = {name = "container xs", mass = 229.09, maxHitPoints = 124.0}
     actual = me.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
     lu.assertEquals(actual, expected)
 
     -- valid, not default, capitalized
     elementName = "Container XS"
-    expected = elementDefinitions["container xs"]
+    expected = {name = "container xs", mass = 229.09, maxHitPoints = 124.0}
     actual = me.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
     lu.assertEquals(actual, expected)
 
     -- valid, default
     elementName = "container s"
-    expected = elementDefinitions["container s"]
+    expected = {name = "container s", mass = 1281.31,maxHitPoints = 999.0}
     actual = me.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
     lu.assertEquals(actual, expected)
 

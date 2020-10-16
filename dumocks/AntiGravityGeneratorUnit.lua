@@ -5,10 +5,13 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-local DEFAULT_ELEMENT = ""
+elementDefinitions["anti-gravity generator s"] = {mass = 27134.86, maxHitPoints = 43117.0}
+-- elementDefinitions["anti-gravity generator m"] = {mass = , maxHitPoints = }
+-- elementDefinitions["anti-gravity generator l"] = {mass = , maxHitPoints = }
+local DEFAULT_ELEMENT = "anti-gravity generator s"
 
 local M = MockElement:new()
-M.elementClass = "???"
+M.elementClass = "AntiGravityGeneratorUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
@@ -18,9 +21,19 @@ function M:new(o, id, elementName)
     self.__index = self
 
     o.state = false
-    o.targetAltitude = 1000 -- m
+    o.targetAltitude = 2000.0 -- m
+    -- setting base altitude sets the target, the base altitude slowly adjusts to match it
+    o.baseAltitude = 2000.0 -- m
+    o.antiGravityPower = 0.0
+    o.antiGravityField = 0.0
 
     return o
+end
+
+local DATA_TEMPLATE = '{"antiGPower":%f,"antiGravityField":%f,"baseAltitude\":%f,\"helperId\":\"antigravity_generator'..
+    '\",\"name\":\"%s [%d]\",\"showError\":false,\"type\":\"antigravity_generator\"}'
+function M:getData()
+    return string.format(DATA_TEMPLATE, self.antiGravityPower, self.antiGravityField, self.baseAltitude, self.name, self.id)
 end
 
 --- Start the anti-g generator.
@@ -54,9 +67,12 @@ function M:setBaseAltitude(altitude)
 end
 
 --- Return the base altitude for the anti-gravity field.
+--
+-- Note: This is the altitude that the anti-gravity generator is currently trying to hold at. It will adjust slowly
+-- to match the altitude provided to setBaseAltitude but will not instantly reflect the value set.
 -- @tparam m The base altitude.
 function M:getBaseAltitude()
-    return self.targetAltitude
+    return self.baseAltitude
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".

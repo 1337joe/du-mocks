@@ -22,7 +22,11 @@ function M.findElement(elementDefinitions, elementName, defaultName)
         end
     end
 
-    return elementDefinitions[elementName]
+    local chosenDefinition = elementDefinitions[elementName]
+    if chosenDefinition then
+        chosenDefinition.name = elementName
+    end
+    return chosenDefinition
 end
 
 function M:new(o, id, elementDefinition)
@@ -37,8 +41,10 @@ function M:new(o, id, elementDefinition)
     self.__index = self
 
     o.id = id or 0
+    o.name = "" -- not directly accessible but used to label default widgets; defaults to name of element type
 
     if elementDefinition then
+        o.name = elementDefinition.name or ""
         o.mass = elementDefinition.mass or 0
         o.maxHitPoints = elementDefinition.maxHitPoints or 100
         o.hitPoints = elementDefinition.maxHitPoints or 100
@@ -60,7 +66,7 @@ end
 --- Get element data as JSON.
 -- @treturn string Data as JSON.
 function M:getData()
-    return nil
+    return "{}"
 end
 
 --- Get element data ID.

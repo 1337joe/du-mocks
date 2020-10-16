@@ -83,10 +83,12 @@ function _G.TestAntiGravityGeneratorUnit.testSetBaseAltitude()
     expected = 1600
     closure.setBaseAltitude(expected)
     lu.assertEquals(mock.targetAltitude, expected)
+    lu.assertNotEquals(mock.baseAltitude, expected)
 
     expected = 16000
     closure.setBaseAltitude(expected)
     lu.assertEquals(mock.targetAltitude, expected)
+    lu.assertNotEquals(mock.baseAltitude, expected)
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
