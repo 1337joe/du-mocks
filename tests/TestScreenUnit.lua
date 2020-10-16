@@ -554,7 +554,7 @@ function _G.TestScreenUnit.testMoveContent()
     lu.assertEquals(2, id2)
 
     -- move visible content
-    closure.moveContent(id1, 75, 50)
+    closure.moveContent(id1, 75, "50")
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:75.000000vw; top:50.000000vh; display: block;"><div>1</div></div>' ..
         '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
@@ -566,16 +566,16 @@ function _G.TestScreenUnit.testMoveContent()
         '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: none;"><div>2</div></div>')
 
     -- move non-visible content
-    closure.moveContent(id2, 50, 25)
+    closure.moveContent(id2, "string", nil)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:75.000000vw; top:50.000000vh; display: block;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:50.000000vw; top:25.000000vh; display: none;"><div>2</div></div>')
+        '<div style="position:absolute; left:0.000000vw; top:0.000000vh; display: none;"><div>2</div></div>')
 
     -- move non-existent content
     closure.moveContent(0)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:75.000000vw; top:50.000000vh; display: block;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:50.000000vw; top:25.000000vh; display: none;"><div>2</div></div>')
+        '<div style="position:absolute; left:0.000000vw; top:0.000000vh; display: none;"><div>2</div></div>')
 end
 
 --- Verify clear blanks the screen.
