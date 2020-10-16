@@ -9,7 +9,7 @@ local elementDefinitions = {}
 elementDefinitions["screen xs"] = {mass = 18.67, maxHitPoints = 50.0}
 elementDefinitions["screen s"] = {mass = 18.67, maxHitPoints = 50.0}
 elementDefinitions["screen m"] = {mass = 18.67, maxHitPoints = 50.0}
--- elementDefinitions["screen xl] = {mass = ??? TODO EXACT NUMBER, maxHitPoints = 28116.0}
+elementDefinitions["screen xl"] = {mass = 12810.88, maxHitPoints = 28116.0}
 elementDefinitions["transparent screen xs"] = {mass = 18.67, maxHitPoints = 50.0}
 elementDefinitions["transparent screen s"] = {mass = 18.67, maxHitPoints = 50.0}
 elementDefinitions["transparent screen m"] = {mass = 18.67, maxHitPoints = 50.0}
@@ -27,10 +27,79 @@ function M:new(o, id, elementName)
     self.__index = self
 
     o.state = false
+    o.html = "" -- this is the displayed content, for use in checking what's on the screen
+
+    o.directHtml = ""
+    o.contentList = {}
+    o.contentNextIndex = 1
+
+    o.mouseX = -1
+    o.mouseY = -1
+    o.mouseState = false
+
+    self.propagateHtmlErrors = false -- if errors in callbacks should throw exceptions
+    self.htmlCallbacks = {}
+
+    self.mouseDownCallbacks = {}
+    self.mouseUpCallbacks = {}
 
     return o
 end
 
+local CONTENT_TEMPLATE = '<div style="position:absolute; left:%.6fvw; top:%.6fvh; display: %s;">%s</div>'
+-- Rebuilds the current state, including all declared and visible content, into a single internal html string.
+-- @tparam ScreenUnit The screen to rebuild html for.
+local function generateHtml(screen)
+    local html = ""
+    html = html .. screen.directHtml
+
+    local display
+    for _,content in pairs(screen.contentList) do
+        if content.visible ~= false then
+            display = "block"
+        else
+            display = "none"
+        end
+        html = html .. string.format(CONTENT_TEMPLATE, content.x, content.y, display, content.html)
+    end
+
+    screen.html = html
+
+    -- call callbacks in order, saving exceptions until end
+    local errors = ""
+    for i,callback in pairs(screen.htmlCallbacks) do
+        local status,err = pcall(callback, html)
+        if not status then
+            errors = errors.."\nError while running callback "..i..": "..err
+        end
+    end
+
+    -- propagate errors
+    if screen.propagateHtmlErrors and string.len(errors) > 0 then
+        error("Errors raised in callbacks:"..errors)
+    end
+end
+
+local function validateText(text)
+    if text == nil then
+        text = ""
+    elseif type(text) ~= "string" then
+        text = tostring(text)
+    end
+    return text
+end
+
+local function validateFloat(value)
+    if type(value) ~= "number" then
+        value = tonumber(value)
+    end
+    if value == nil then
+        value = 0
+    end
+    return value
+end
+
+local ADD_TEXT_TEMPLATE = '<div style="font-size:%.6fvw">%s</div>'
 --- Displays the given text at the given coordinates in the screen, and returns an ID to move it later.
 -- @tparam 0..100 x Horizontal position, as a percentage of the screen width.
 -- @tparam 0..100 y Vertical position, as a percentage of the screen height.
@@ -38,16 +107,37 @@ end
 -- @tparam string text The text to display.
 -- @return An integer ID that can be used later to update/remove the added element.
 function M:addText(x, y, fontSize, text)
+    fontSize = validateFloat(fontSize)
+    text = validateText(text)
+
+    local htmlContent = string.format(ADD_TEXT_TEMPLATE, fontSize, text)
+    return self:addContent(x, y, htmlContent)
 end
 
+local CENTERED_TEXT_TEMPLATE = '<div class="bootstrap" style="font-size:%.6fvw; ">%s</div>'
 --- Displays the given text centered in the screen with a font to maximize its visibility.
 -- @tparam string text The text to display.
 function M:setCenteredText(text)
+    text = validateText(text)
+    local fontSize
+    if string.len(text) == 0 then
+        fontSize = 12
+    else
+        -- calculated based on lengths 1-8
+        fontSize = 12 - 1.442695041 * math.log(string.len(text))
+    end
+
+    -- intentionally clear any additional content
+    self:setHTML(string.format(CENTERED_TEXT_TEMPLATE, fontSize, text))
 end
 
 --- Set the whole screen HTML content (overrides anything already set).
 -- @tparam html html The HTML content to display.
 function M:setHTML(html)
+    self.contentList = {}
+    self.directHtml = validateText(html)
+
+    generateHtml(self)
 end
 
 --- Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
@@ -56,11 +146,38 @@ end
 -- @tparam html html The HTML content to display, which can contain SVG elements to make drawings.
 -- @return An integer ID that can be used later to update/remove the added element.
 function M:addContent(x, y, html)
+    x = validateFloat(x)
+    y = validateFloat(y)
+    html = validateText(html)
+
+    local content = {
+        x = x,
+        y = y,
+        html = html,
+        visible = true
+    }
+
+    local index = self.contentNextIndex
+    self.contentNextIndex = self.contentNextIndex + 1
+
+    self.contentList[index] = content
+
+    generateHtml(self)
+    return index
 end
 
---- Displays SVG code (anything that fits within a <svg> section), which overrides any preexisting content.
+local SVG_TEMPLATE = '<svg class="bootstrap" viewBox="0 0 1920 1080" style="width:100%%; height:100%%">%s</svg>'
+--- Displays SVG code (anything that fits within a &lt;svg&gt; section), which overrides any preexisting content.
 -- @tparam svg svg The SVG content to display, which fits inside a 1920x1080 canvas.
 function M:setSVG(svg)
+    if svg == nil then
+        svg = ""
+    elseif type(svg) ~= "string" then
+        svg = tostring(svg)
+    end
+
+    -- intentionally clear any additional content
+    self:setHTML(string.format(SVG_TEMPLATE, svg))
 end
 
 --- Update the element with the given ID (returned by setContent) with a new HTML content.
@@ -68,12 +185,23 @@ end
 -- that you can store to use later here.
 -- @tparam html html The HTML content to display, which can contain SVG elements to make drawings.
 function M:resetContent(id, html)
+    self.contentList[id].html = html
+
+    generateHtml(self)
 end
 
 --- Delete the element with the given ID (returned by setContent).
 -- @param id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
 -- that you can store to use later here.
 function M:deleteContent(id)
+    -- deleting non-existent index is no-op
+    if not self.contentList[id] then
+        return
+    end
+
+    self.contentList[id] = nil
+
+    generateHtml(self)
 end
 
 --- Update the visibility of the element with the given ID (returned by setContent).
@@ -81,33 +209,69 @@ end
 -- that you can store to use later here.
 -- @tparam 0/1 state 0 = invisible, 1 = visible.
 function M:showContent(id, state)
+    -- showing non-existent index is no-op
+    if not self.contentList[id] then
+        return
+    end
+
+    self.contentList[id].visible = state == 1
+
+    generateHtml(self)
 end
 
 --- Move the element with the given id (returned by setContent) to a new position in the screen.
 -- @param id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+-- that you can store to use later here.
 -- @tparam 0..100 x Horizontal position, as a percentage of the screen width.
 -- @tparam 0..100 y Vertical position, as a percentage of the screen height.
--- that you can store to use later here.
 function M:moveContent(id, x, y)
+    -- moving non-existent index is no-op
+    if not self.contentList[id] then
+        return
+    end
+
+    x = validateFloat(x)
+    y = validateFloat(y)
+
+    self.contentList[id].x = x
+    self.contentList[id].y = y
+
+    generateHtml(self)
 end
 
 --- Returns the x-coordinate of the position pointed at in the screen.
 -- @treturn 0..1 The x-position as a percentage of screen width; -1 if nothing is pointed at.
 function M:getMouseX()
+    if self.mouseX < 0 or self.mouseX > 1 then
+        return -1
+    end
+    return self.mouseX
 end
 
 --- Returns the y-coordinate of the position pointed at in the screen.
 -- @treturn 0..1 The y-position as a percentage of screen height; -1 if nothing is pointed at.
 function M:getMouseY()
+    if self.mouseY < 0 or self.mouseY > 1 then
+        return -1
+    end
+    return self.mouseY
 end
 
 --- Returns the state of the mouse click.
 -- @treturn 0/1 0 when the mouse is not clicked and 1 otherwise.
 function M:getMouseState()
+    if self.mouseState then
+        return 1
+    end
+    return 0
 end
 
 --- Clear the screen.
 function M:clear()
+    self.directHtml = ""
+    self.contentList = {}
+
+    generateHtml(self)
 end
 
 --- Turn on the screen.
@@ -122,6 +286,24 @@ end
 -- Note: This is not documented in the codex.
 function M:deactivate()
     self.state = false
+end
+
+--- Toggle the state of the screen.
+--
+-- Note: This is not documented in the codex.
+function M:toggle()
+    self.state = not self.state
+end
+
+--- Returns the activation state of the screen.
+--
+-- Note: This is not documented in the codex.
+-- @return 1 when the screen is on, 0 otherwise.
+function M:getState()
+    if self.state then
+        return 1
+    end
+    return 0
 end
 
 --- Event: Emitted when the player starts a click on the screen unit.
@@ -142,6 +324,100 @@ function M.EVENT_mouseUp(x, y)
     assert(false, "This is implemented for documentation purposes only.")
 end
 
+--- Mock only, not in-game: Register a handler for the in-game `mouseDown(x,y)` event.
+-- @tparam function callback The function to call when the mouse button is pressed.
+-- @tparam string channel The x to filter on, or "*" for all.
+-- @tparam string message The y to filter for, or "*" for all.
+-- @treturn int The index of the callback.
+-- @see EVENT_receive
+function M:mockRegisterMouseDown(callback, x, y)
+    -- default to all
+    x = x or "*"
+    y = y or "*"
+
+    local index = #self.mouseDownCallbacks + 1
+    self.mouseDownCallbacks[index] = {callback = callback, x = x, y = y}
+    return index
+end
+
+--- Mock only, not in-game: Simulates a mouse press on the screen.
+-- @tparam float x X-coordinate of the click in percentage of the screen width.
+-- @tparam float y Y-coordinate of the click in percentage of the screen width.
+function M:mockDoMouseDown(x, y)
+    assert(x > 0 and x < 1, "Mouse X value out of range: " .. x)
+    assert(y > 0 and y < 1, "Mouse Y value out of range: " .. y)
+
+    -- call callbacks in order, saving exceptions until end
+    local errors = ""
+    for i,callback in pairs(self.mouseDownCallbacks) do
+        -- filter on the channel and on message
+        if (callback.x == "*" or callback.x == x) and
+                (callback.y == "*" or callback.y == y) then
+            local status,err = pcall(callback.callback, x, y)
+            if not status then
+                errors = errors.."\nError while running callback "..i..": "..err
+            end
+        end
+    end
+
+    -- propagate errors
+    if string.len(errors) > 0 then
+        error("Errors raised in callbacks:"..errors)
+    end
+end
+
+--- Mock only, not in-game: Register a handler for the in-game `mouseUp(x,y)` event.
+-- @tparam function callback The function to call when the mouse button is released.
+-- @tparam string channel The x to filter on, or "*" for all.
+-- @tparam string message The y to filter for, or "*" for all.
+-- @treturn int The index of the callback.
+-- @see EVENT_receive
+function M:mockRegisterMouseUp(callback, x, y)
+    -- default to all
+    x = x or "*"
+    y = y or "*"
+
+    local index = #self.mouseUpCallbacks + 1
+    self.mouseUpCallbacks[index] = {callback = callback, x = x, y = y}
+    return index
+end
+
+--- Mock only, not in-game: Simulates a mouse release on the screen.
+-- @tparam float x X-coordinate of the click in percentage of the screen width.
+-- @tparam float y Y-coordinate of the click in percentage of the screen width.
+function M:mockDoMouseUp(x, y)
+    assert(x > 0 and x < 1, "Mouse X value out of range: " .. x)
+    assert(y > 0 and y < 1, "Mouse Y value out of range: " .. y)
+
+    -- call callbacks in order, saving exceptions until end
+    local errors = ""
+    for i,callback in pairs(self.mouseUpCallbacks) do
+        -- filter on the channel and on message
+        if (callback.x == "*" or callback.x == x) and
+                (callback.y == "*" or callback.y == y) then
+            local status,err = pcall(callback.callback, x, y)
+            if not status then
+                errors = errors.."\nError while running callback "..i..": "..err
+            end
+        end
+    end
+
+    -- propagate errors
+    if string.len(errors) > 0 then
+        error("Errors raised in callbacks:"..errors)
+    end
+end
+
+--- Mock only, not in-game: Register a callback to be notified when the screen html changes.
+-- @tparam function callback The function to call (with html) when the screen updates is called.
+-- @treturn int The index of the callback.
+-- @see send
+function M:mockRegisterHtmlCallback(callback)
+    local index = #self.htmlCallbacks + 1
+    self.htmlCallbacks[index] = callback
+    return index
+end
+
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
@@ -151,6 +427,7 @@ function M:mockGetClosure()
     closure.addText = function(x, y, fontSize, text) return self:addText(x, y, fontSize, text) end
     closure.setCenteredText = function(text) return self:setCenteredText(text) end
     closure.setHTML = function(html) return self:setHTML(html) end
+    closure.addContent = function(x, y, html) return self:addContent(x, y, html) end
     closure.setSVG = function(svg) return self:setSVG(svg) end
     closure.resetContent = function(id, html) return self:resetContent(id, html) end
     closure.deleteContent = function(id) return self:deleteContent(id) end
@@ -164,6 +441,8 @@ function M:mockGetClosure()
     -- undocumented methods
     closure.activate = function() return self:activate() end
     closure.deactivate = function() return self:deactivate() end
+    closure.toggle = function() return self:toggle() end
+    closure.getState = function() return self:getState() end
 
     return closure
 end

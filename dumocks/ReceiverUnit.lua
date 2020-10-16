@@ -41,7 +41,7 @@ function M.EVENT_receive(channel, message)
 end
 
 --- Mock only, not in-game: Register a handler for the in-game `receive(channel,message)` event.
--- @tparam function callback The function to call when the button is pressed.
+-- @tparam function callback The function to call when the a message is received.
 -- @tparam string channel The channel to filter on, or "*" for all.
 -- @tparam string message The message to filter for, or "*" for all.
 -- @treturn int The index of the callback.

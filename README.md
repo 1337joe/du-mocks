@@ -101,7 +101,7 @@ Format notes:
 | EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | P |
 | ReceiverUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | P |
 | CoreUnit | :heavy_check_mark: | P | P | | P |
-| ScreenUnit | :heavy_check_mark: | | P | | P |
+| ScreenUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| | :heavy_check_mark: |
 | DetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | U | :heavy_check_mark: |
 | GyroUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
 | LaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |

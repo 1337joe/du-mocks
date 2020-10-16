@@ -5,7 +5,7 @@
 -- parse arguments
 if not arg[1] or arg[1] == "--help" or arg[1] == "-h" then
     print("Expected arguments: inputFile [outputFile]")
-    print("If outputFile is not provided will stream results to stdout.") -- TODO go to clipboard instead if supported
+    print("If outputFile is not provided will stream results to stdout.")
     -- TODO better help display, more detailed argument handling
     return
 end

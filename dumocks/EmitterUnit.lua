@@ -51,7 +51,7 @@ function M:getRange()
     return self.range
 end
 
---- Mock only, not in-game: Register a receiver of calls to send()
+--- Mock only, not in-game: Register a receiver of calls to send().
 -- @tparam function callback The function to call (with channel and message arguments) when the send is called.
 -- @treturn int The index of the callback.
 -- @see send
