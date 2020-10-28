@@ -13,6 +13,9 @@ local DEFAULT_ELEMENT = "anti-gravity generator s"
 local M = MockElement:new()
 M.elementClass = "AntiGravityGeneratorUnit"
 
+local AG_MIN_BASE_ALTITUDE = 1000
+local AG_ALTITUDE_RATE = 4 -- m/s
+
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
 
@@ -63,6 +66,7 @@ end
 --- Sets the base altitude for the anti-gravity field.
 -- @tparam m altitude The desired altitude. It will be reached with a slow acceleration (not instantaneous).
 function M:setBaseAltitude(altitude)
+    altitude = math.max(AG_MIN_BASE_ALTITUDE, altitude)
     self.targetAltitude = altitude
 end
 
@@ -75,6 +79,18 @@ function M:getBaseAltitude()
     return self.baseAltitude
 end
 
+--- Mock only, not in-game: Updates the base altitude to approach the target altitude at 4 m/s.
+-- @tparam number seconds The number of seconds to move at 4 m/s.
+function M:mockStepBaseAltitude(seconds)
+    seconds = seconds or 1
+
+    if self.baseAltitude < self.targetAltitude then
+        self.baseAltitude = math.min(self.baseAltitude + AG_ALTITUDE_RATE * seconds, self.targetAltitude)
+    elseif self.baseAltitude > self.targetAltitude then
+        self.baseAltitude = math.max(self.baseAltitude - AG_ALTITUDE_RATE * seconds, self.targetAltitude)
+    end
+end
+
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
@@ -85,6 +101,7 @@ function M:mockGetClosure()
     closure.toggle = function() return self:toggle() end
     closure.getState = function() return self:getState() end
     closure.setBaseAltitude = function(altitude) return self:setBaseAltitude(altitude) end
+    closure.getBaseAltitude = function() return self:getBaseAltitude() end
     return closure
 end
 

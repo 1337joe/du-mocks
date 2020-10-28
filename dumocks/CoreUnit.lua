@@ -42,7 +42,7 @@ function M:new(o, id, elementName)
     o.angularAcceleration = 0 -- rad/s2
     o.worldAngularAcceleration = 0 -- rad/s2
     o.velocity = 0 -- m/s
-    o.worldVelocity = 0 -- m/s
+    o.worldVelocity = {0, 0, 0} -- m/s
     o.acceleration = 0 -- m/s2
     o.worldAcceleration = 0 -- m/s2
     o.constructOrientationUp = {0, 0, 0} -- vec3

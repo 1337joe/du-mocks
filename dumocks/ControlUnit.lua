@@ -32,6 +32,8 @@ function M:new(o, id, elementName)
     o.masterPlayerId = nil
     o.remoteControlled = false
 
+    o.linkedElements = {}
+
     return o
 end
 
@@ -333,6 +335,21 @@ function M:mockGetClosure()
         return self:computeGroundEngineAltitudeStabilizationCapabilities()
     end
     closure.getThrottle = function() return self:getThrottle() end
+
+    -- add in fields to match the game
+
+    -- all exported methods (everything above)
+    local export = {}
+    for k, v in pairs(closure) do
+        export[k] = v
+    end
+    closure.export = export
+
+    -- all linked elements by name
+    for name, element in pairs(self.linkedElements) do
+        closure[name] = element
+    end
+
     return closure
 end
 

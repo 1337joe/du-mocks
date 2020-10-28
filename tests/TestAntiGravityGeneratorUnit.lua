@@ -71,7 +71,7 @@ function _G.TestAntiGravityGeneratorUnit.testGetState()
     lu.assertEquals(closure.getState(), 1)
 end
 
---- Verify that set base altitude properly sets a value.
+--- Verify that set base altitude properly sets a value within the agg limits.
 function _G.TestAntiGravityGeneratorUnit.testSetBaseAltitude()
     local mock = maggu:new()
     local closure = mock:mockGetClosure()
@@ -89,6 +89,60 @@ function _G.TestAntiGravityGeneratorUnit.testSetBaseAltitude()
     closure.setBaseAltitude(expected)
     lu.assertEquals(mock.targetAltitude, expected)
     lu.assertNotEquals(mock.baseAltitude, expected)
+
+    expected = 1000
+    closure.setBaseAltitude(500)
+    lu.assertEquals(mock.targetAltitude, expected)
+    lu.assertNotEquals(mock.baseAltitude, expected)
+end
+
+--- Verify that get base altitude returns properly.
+function _G.TestAntiGravityGeneratorUnit.testGetBaseAltitude()
+    local mock = maggu:new()
+    local closure = mock:mockGetClosure()
+
+    local expected, actual
+
+    expected = 2000
+    mock.baseAltitude = expected
+    actual = closure.getBaseAltitude()
+    lu.assertEquals(actual, expected)
+
+    expected = 1234.5
+    mock.baseAltitude = expected
+    actual = closure.getBaseAltitude()
+    lu.assertEquals(actual, expected)
+end
+
+function _G.TestAntiGravityGeneratorUnit.testStepBaseAltitude()
+    local mock = maggu:new()
+    local closure = mock:mockGetClosure()
+
+    local expected, actual
+
+    mock.targetAltitude = 5000
+    mock.baseAltitude = 10000
+
+    -- 1 full second decrease
+    expected = 9996
+    mock:mockStepBaseAltitude()
+    lu.assertEquals(mock.baseAltitude, expected)
+
+    -- >1, not full second decrease
+    expected = 9954
+    mock:mockStepBaseAltitude(10.5)
+    lu.assertEquals(mock.baseAltitude, expected)
+
+    -- decrease all the way to target
+    expected = 5000
+    mock:mockStepBaseAltitude(2000)
+    lu.assertEquals(mock.baseAltitude, expected)
+
+    -- half-step increase to target
+    mock.baseAltitude = 4998
+    expected = 5000
+    mock:mockStepBaseAltitude()
+    lu.assertEquals(mock.baseAltitude, expected)
 end
 
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
