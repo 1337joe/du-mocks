@@ -17,6 +17,74 @@ function TestIndustryUnit.testGetElementClass()
     lu.assertEquals(element.getElementClass(), "IndustryUnit")
 end
 
+function TestIndustryUnit.testStart()
+    local mock = miu:new()
+    local closure = mock:mockGetClosure()
+
+    -- verify default state is stopped
+    lu.assertEquals(closure.getStatus(), miu.status.STOPPED)
+
+    -- nominal - goes to running
+    mock = miu:new()
+    closure = mock:mockGetClosure()
+    mock.hasInputContainer = true
+    mock.hasInputIngredients = true
+    mock.hasOutput = true
+    mock.hasOutputSpace = true
+    closure.start()
+    lu.assertEquals(closure.getStatus(), miu.status.RUNNING)
+
+    -- not nominal - missing inputs
+    mock = miu:new()
+    closure = mock:mockGetClosure()
+    mock.hasInputContainer = false
+    mock.hasInputIngredients = true
+    mock.hasOutput = true
+    mock.hasOutputSpace = true
+    closure.start()
+    lu.assertEquals(closure.getStatus(), miu.status.JAMMED_MISSING_INGREDIENT)
+
+    -- not nominal - missing inputs
+    mock = miu:new()
+    closure = mock:mockGetClosure()
+    mock.hasInputContainer = true
+    mock.hasInputIngredients = false
+    mock.hasOutput = true
+    mock.hasOutputSpace = true
+    closure.start()
+    lu.assertEquals(closure.getStatus(), miu.status.JAMMED_MISSING_INGREDIENT)
+
+    -- not nominal - missing inputs
+    mock = miu:new()
+    closure = mock:mockGetClosure()
+    mock.hasInputContainer = false
+    mock.hasInputIngredients = false
+    mock.hasOutput = true
+    mock.hasOutputSpace = true
+    closure.start()
+    lu.assertEquals(closure.getStatus(), miu.status.JAMMED_MISSING_INGREDIENT)
+
+    -- not nominal - missing output
+    mock = miu:new()
+    closure = mock:mockGetClosure()
+    mock.hasInputContainer = true
+    mock.hasInputIngredients = true
+    mock.hasOutput = false
+    mock.hasOutputSpace = true
+    closure.start()
+    lu.assertEquals(closure.getStatus(), miu.status.RUNNING)
+
+    -- not nominal - missing output space
+    mock = miu:new()
+    closure = mock:mockGetClosure()
+    mock.hasInputContainer = true
+    mock.hasInputIngredients = true
+    mock.hasOutput = true
+    mock.hasOutputSpace = false
+    closure.start()
+    lu.assertEquals(closure.getStatus(), miu.status.RUNNING)
+end
+
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run 
 -- in-game.
 --

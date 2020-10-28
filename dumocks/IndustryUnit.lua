@@ -263,6 +263,7 @@ end
 -- @treturn int The index of the callback.
 -- @see EVENT_statusChanged
 function M:mockRegisterStatusChanged(callback, filter)
+    -- default to all
     filter = filter or "*"
 
     local index = #self.statusChangedCallbacks + 1
@@ -278,12 +279,13 @@ function M:mockDoEvaluateStatus()
 
     if self.currentMode == M.mode.INFINITE then
         if self.hasInputContainer and self.hasInputIngredients then
-            if self.hasOutput and not self.hasOutputSpace then
-                newStatus = M.status.JAMMED_OUTPUT_FULL
-            elseif not self.hasOutput then
+            -- go to running on start, show error after time has passed for job to finish
+            if getTime(self.currentTime) == self.startedTime or (self.hasOutput and self.hasOutputSpace) then
+                newStatus = M.status.RUNNING
+            elseif not self.hasOutputSpace then
                 newStatus = M.status.JAMMED_NO_OUTPUT_CONTAINER
             else
-                newStatus = M.status.RUNNING
+                newStatus = M.status.JAMMED_OUTPUT_FULL
             end
         else
             newStatus = M.status.JAMMED_MISSING_INGREDIENT
