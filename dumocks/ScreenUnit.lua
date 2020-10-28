@@ -326,10 +326,10 @@ end
 
 --- Mock only, not in-game: Register a handler for the in-game `mouseDown(x,y)` event.
 -- @tparam function callback The function to call when the mouse button is pressed.
--- @tparam string channel The x to filter on, or "*" for all.
--- @tparam string message The y to filter for, or "*" for all.
+-- @tparam string x The x to filter on, or "*" for all.
+-- @tparam string y The y to filter for, or "*" for all.
 -- @treturn int The index of the callback.
--- @see EVENT_receive
+-- @see EVENT_mouseDown
 function M:mockRegisterMouseDown(callback, x, y)
     -- default to all
     x = x or "*"
@@ -368,10 +368,10 @@ end
 
 --- Mock only, not in-game: Register a handler for the in-game `mouseUp(x,y)` event.
 -- @tparam function callback The function to call when the mouse button is released.
--- @tparam string channel The x to filter on, or "*" for all.
--- @tparam string message The y to filter for, or "*" for all.
+-- @tparam string x The x to filter on, or "*" for all.
+-- @tparam string y The y to filter for, or "*" for all.
 -- @treturn int The index of the callback.
--- @see EVENT_receive
+-- @see EVENT_mouseUp
 function M:mockRegisterMouseUp(callback, x, y)
     -- default to all
     x = x or "*"
@@ -411,7 +411,6 @@ end
 --- Mock only, not in-game: Register a callback to be notified when the screen html changes.
 -- @tparam function callback The function to call (with html) when the screen updates is called.
 -- @treturn int The index of the callback.
--- @see send
 function M:mockRegisterHtmlCallback(callback)
     local index = #self.htmlCallbacks + 1
     self.htmlCallbacks[index] = callback
