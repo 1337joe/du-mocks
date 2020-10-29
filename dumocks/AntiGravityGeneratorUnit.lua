@@ -33,7 +33,7 @@ function M:new(o, id, elementName)
     return o
 end
 
-local DATA_TEMPLATE = '{"antiGPower":%f,"antiGravityField":%f,"baseAltitude\":%f,\"helperId\":\"antigravity_generator'..
+local DATA_TEMPLATE = '{"antiGPower":%.17f,"antiGravityField":%.16f,"baseAltitude\":%f,\"helperId\":\"antigravity_generator'..
     '\",\"name\":\"%s [%d]\",\"showError\":false,\"type\":\"antigravity_generator\"}'
 function M:getData()
     return string.format(DATA_TEMPLATE, self.antiGravityPower, self.antiGravityField, self.baseAltitude, self.name, self.id)

@@ -145,6 +145,26 @@ function _G.TestAntiGravityGeneratorUnit.testStepBaseAltitude()
     lu.assertEquals(mock.baseAltitude, expected)
 end
 
+--- Verify format and content of getData string.
+function _G.TestAntiGravityGeneratorUnit.testGetData()
+    local mock = maggu:new(nil, 2)
+    local closure = mock:mockGetClosure()
+
+    mock.name = "Anti-gravity generator s"
+    mock.baseAltitude = 1217.0
+    mock.antiGravityField = 1.2000000178813932
+    mock.antiGravityPower = 0.38769580129994552
+
+    local data = closure.getData()
+    lu.assertStrContains(data, '"name":"Anti-gravity generator s [2]"')
+    lu.assertStrContains(data, '"type":"antigravity_generator"')
+    lu.assertStrContains(data, '"helperId":"antigravity_generator"')
+    lu.assertStrContains(data, '"showError":false')
+    lu.assertStrContains(data, '"antiGPower":0.38769580129994552')
+    lu.assertStrContains(data, '"antiGravityField":1.2000000178813932')
+    lu.assertStrContains(data, '"baseAltitude":1217.0')
+end
+
 --- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
 function _G.TestAntiGravityGeneratorUnit.skipTestGameBehavior()
     local mock = maggu:new()
