@@ -1,55 +1,49 @@
 #!/usr/bin/env lua
---- Tests on dumocks.LightUnit.
--- @see dumocks.LightUnit
+--- Tests on dumocks.SignUnit.
+-- @see dumocks.SignUnit
 
 -- set search path to include root of project
 package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
-local mlu = require("dumocks.LightUnit")
+local msu = require("dumocks.SignUnit")
 
-_G.TestLightUnit = {}
-
+_G.TestSignUnit = {}
 
 --- Verify constructor arguments properly handled and independent between instances.
-function _G.TestLightUnit.testConstructor()
+function _G.TestSignUnit.testConstructor()
 
     -- default element:
-    -- ["square light xs"] = {mass = 70.05, maxHitPoints = 50.0}
+    -- ["sign xs"] = {mass = 18.67, maxHitPoints = 50.0}
 
-    local light0 = mlu:new()
-    local light1 = mlu:new(nil, 1, "Square Light XS")
-    local light2 = mlu:new(nil, 2, "invalid")
-    local light3 = mlu:new(nil, 3, "square light l")
+    local sign0 = msu:new()
+    local sign1 = msu:new(nil, 1, "Sign XS")
+    local sign2 = msu:new(nil, 2, "invalid")
+    local sign3 = msu:new(nil, 3, "vertical sign m")
 
-    local lightClosure0 = light0:mockGetClosure()
-    local lightClosure1 = light1:mockGetClosure()
-    local lightClosure2 = light2:mockGetClosure()
-    local lightClosure3 = light3:mockGetClosure()
+    local signClosure0 = sign0:mockGetClosure()
+    local signClosure1 = sign1:mockGetClosure()
+    local signClosure2 = sign2:mockGetClosure()
+    local signClosure3 = sign3:mockGetClosure()
 
-    lu.assertEquals(lightClosure0.getId(), 0)
-    lu.assertEquals(lightClosure1.getId(), 1)
-    lu.assertEquals(lightClosure2.getId(), 2)
-    lu.assertEquals(lightClosure3.getId(), 3)
+    lu.assertEquals(signClosure0.getId(), 0)
+    lu.assertEquals(signClosure1.getId(), 1)
+    lu.assertEquals(signClosure2.getId(), 2)
+    lu.assertEquals(signClosure3.getId(), 3)
 
-    -- prove default element is selected only where appropriate
-    local defaultMass = 70.05
-    lu.assertEquals(lightClosure0.getMass(), defaultMass)
-    lu.assertEquals(lightClosure1.getMass(), defaultMass)
-    lu.assertEquals(lightClosure2.getMass(), defaultMass)
-    lu.assertNotEquals(lightClosure3.getMass(), defaultMass)
+    -- all signs share attributes, can't verify element selection
 end
 
 --- Verify element class is correct.
-function _G.TestLightUnit.testGetElementClass()
-    local element = mlu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "LightUnit")
+function _G.TestSignUnit.testGetElementClass()
+    local element = msu:new():mockGetClosure()
+    lu.assertEquals(element.getElementClass(), "ScreenSignUnit")
 end
 
---- Verify that activate leaves the light on.
-function _G.TestLightUnit.testActivate()
-    local mock = mlu:new()
+--- Verify that activate leaves the sign on.
+function _G.TestSignUnit.testActivate()
+    local mock = msu:new()
     local closure = mock:mockGetClosure()
 
     mock.state = false
@@ -61,9 +55,9 @@ function _G.TestLightUnit.testActivate()
     lu.assertTrue(mock.state)
 end
 
---- Verify that deactivate leaves the light off.
-function _G.TestLightUnit.testDeactivate()
-    local mock = mlu:new()
+--- Verify that deactivate leaves the sign off.
+function _G.TestSignUnit.testDeactivate()
+    local mock = msu:new()
     local closure = mock:mockGetClosure()
 
     mock.state = false
@@ -76,8 +70,8 @@ function _G.TestLightUnit.testDeactivate()
 end
 
 --- Verify that toggle changes the state.
-function _G.TestLightUnit.testToggle()
-    local mock = mlu:new()
+function _G.TestSignUnit.testToggle()
+    local mock = msu:new()
     local closure = mock:mockGetClosure()
 
     mock.state = false
@@ -90,8 +84,8 @@ function _G.TestLightUnit.testToggle()
 end
 
 --- Verify that get state retrieves the state properly.
-function _G.TestLightUnit.testGetState()
-    local mock = mlu:new()
+function _G.TestSignUnit.testGetState()
+    local mock = msu:new()
     local closure = mock:mockGetClosure()
 
     mock.state = false
@@ -105,11 +99,11 @@ end
 -- in-game.
 --
 -- Test setup:
--- 1. 1x Light, connected to Programming Board on slot1
+-- 1. 1x sign, connected to Programming Board on slot1
 --
 -- Exercises: getElementClass, deactivate, activate, toggle, getState
-function _G.TestLightUnit.testGameBehavior()
-    local mock = mlu:new()
+function _G.TestSignUnit.testGameBehavior()
+    local mock = msu:new()
     local slot1 = mock:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
@@ -123,7 +117,7 @@ function _G.TestLightUnit.testGameBehavior()
     ---------------
     -- copy from here to unit.start
     ---------------
-    assert(slot1.getElementClass() == "LightUnit")
+    assert(slot1.getElementClass() == "ScreenSignUnit")
 
     -- ensure initial state, set up globals
     slot1.deactivate()

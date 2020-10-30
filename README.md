@@ -1,6 +1,6 @@
 # DU Mocks
 
-Mock objects for use testing Dual Universe scripts offline.
+Mock objects for generating a more useful codex and for use testing Dual Universe scripts offline.
 
 To use this project simply place the project root directory on your lua package path and load modules with the `dumocks.` prefix, like so:
 
@@ -21,7 +21,7 @@ ldoc .
 
 Output can be found at `doc/index.html`. Note that the documentation won't show the package prefix (`dumocks.`) in file names, but it's still needed to load modules.
 
-An already compiled and uploaded copy of the documentation can be found at: https://du.w3asel.com
+An already compiled and uploaded copy of the documentation can be found at: https://du.w3asel.com/du-mocks/mock-codex
 
 ## Testing
 
@@ -85,32 +85,33 @@ Format notes:
 
 | Unit | 1 | 2 | 3 | 4 | 5 |
 | ---- | - | - | - | - | - |
+| Library | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | - | - |
+| System | :heavy_check_mark: | P | P | | - |
 | Element | :heavy_check_mark: | P | P | | - |
+| AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
 | ContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
 | ControlUnit | :heavy_check_mark: | | P | | P |
+| CoreUnit | :heavy_check_mark: | P | P | | P |
+| CounterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | DatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| DetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | U | :heavy_check_mark: |
 | DoorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | P |
+| EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | P |
 | EngineUnit | :heavy_check_mark: | P | P | | P |
 | FireworksUnit | :heavy_check_mark: | P | P | | |
 | ForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| LandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | P |
-| LightUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | P | | P |
-| IndustryUnit | :heavy_check_mark: | P | P | P | :heavy_check_mark: |
-| CounterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | P |
-| ReceiverUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | P |
-| CoreUnit | :heavy_check_mark: | P | P | | P |
-| ScreenUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| | :heavy_check_mark: |
-| DetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | U | :heavy_check_mark: |
 | GyroUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
+| IndustryUnit | :heavy_check_mark: | P | P | P | :heavy_check_mark: |
+| LandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | P |
 | LaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
 | LaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
+| LightUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | ManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | ManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | PressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | RadarUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
+| ReceiverUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | P |
+| ScreenUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| | :heavy_check_mark: |
+| SignUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark: |
 | TelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
-| Library | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | - | - |
-| System | :heavy_check_mark: | P | P | | - |
