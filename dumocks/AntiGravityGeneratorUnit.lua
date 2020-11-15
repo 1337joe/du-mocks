@@ -6,7 +6,7 @@ local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
 elementDefinitions["anti-gravity generator s"] = {mass = 27134.86, maxHitPoints = 43117.0}
--- elementDefinitions["anti-gravity generator m"] = {mass = , maxHitPoints = }
+elementDefinitions["anti-gravity generator m"] = {mass = 137716.32, maxHitPoints = 304568.0}
 -- elementDefinitions["anti-gravity generator l"] = {mass = , maxHitPoints = }
 local DEFAULT_ELEMENT = "anti-gravity generator s"
 

@@ -9,6 +9,7 @@ local elementDefinitions = {}
 elementDefinitions["dynamic core unit xs"] = {mass = 70.89, maxHitPoints = 50.0, class = "CoreUnitDynamic"}
 elementDefinitions["dynamic core unit s"] = {mass = 375.97, maxHitPoints = 183.0, class = "CoreUnitDynamic"}
 elementDefinitions["dynamic core unit m"] = {mass = 1984.6, maxHitPoints = 1288.0, class = "CoreUnitDynamic"}
+elementDefinitions["dynamic core unit l"] = {mass = 12141.47, maxHitPoints = 11541.0, class = "CoreUnitDynamic"}
 elementDefinitions["space core unit xs"] = {mass = 38.99, maxHitPoints = 50.0, class = "CoreUnitSpace"}
 elementDefinitions["static core unit xs"] = {mass = 70.89, maxHitPoints = 50.0, class = "CoreUnitStatic"}
 elementDefinitions["static core unit s"] = {mass = 360.18, maxHitPoints = 167.0, class = "CoreUnitStatic"}
@@ -36,7 +37,7 @@ function M:new(o, id, elementName)
     o.constructId = 0
     o.worldAirFrictionAngularAcceleration = {0, 0, 0} -- vec3
     o.worldAirFrictionAcceleration = {0, 0, 0} -- vec3
-    o.elements = {} -- map: UID => {name="", type="", hp=0.0, maxHp=0.0, mass=0.0}
+    o.elements = {} -- map: UID => {name="", type="", position={0,0,0}, hp=0.0, maxHp=0.0, mass=0.0}
     o.altitude = 0 -- m
     o.g = 0 -- m/s2
     o.worldGravity = 0 -- m/s2
@@ -200,6 +201,16 @@ function M:getElementTypeById(uid)
         return self.elements[uid].type
     end
     return ""
+end
+
+--- Position of the element, identified by its UID.
+-- @tparam int uid The UID of the element.
+-- @treturn vec3 The position of the element.
+function M:getElementPositionById(uid)
+    if self.elements[uid] and self.elements[uid].position then
+        return self.elements[uid].position
+    end
+    return {}
 end
 
 --- Current level of hit points of the element, identified by its UID.
@@ -377,6 +388,7 @@ function M:mockGetClosure()
     closure.getElementIdList = function() return self:getElementIdList() end
     closure.getElementNameById = function(uid) return self:getElementNameById(uid) end
     closure.getElementTypeById = function(uid) return self:getElementTypeById(uid) end
+    closure.getElementPositionById = function(uid) return self:getElementPositionById(uid) end
     closure.getElementHitPointsById = function(uid) return self:getElementHitPointsById(uid) end
     closure.getElementMaxHitPointsById = function(uid) return self:getElementMaxHitPointsById(uid) end
     closure.getElementMassById = function(uid) return self:getElementMassById(uid) end
