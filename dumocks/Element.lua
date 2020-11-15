@@ -122,6 +122,9 @@ end
 -- OUT, 'type' is one of the following => ITEM, FUEL, ELECTRICITY, SIGNAL, HEAT, FLUID, CONTROL, and 'index' is a number
 -- between 0 and the total number of plugs of the given type in the given direction. Some plugs have special names like
 -- "on" or "off" for the manual switch unit, just check in-game for the plug names if you have a doubt.
+--
+-- Note: This will have no effect if called on a plug that is connected to something that generates a signal, such as a
+-- switch or button.
 -- @param plug The plug name, of the form IN-SIGNAL-index
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
@@ -136,8 +139,8 @@ end
 -- @param plug The plug name of the form IN-SIGNAL-index
 -- @treturn 0/1 The plug signal state
 function M:getSignalIn(plug)
-    -- TODO query state
-    return 0
+    -- default response for invalid plug name
+    return -1
 end
 
 --- Return the value of a signal in the specified OUT plug of the element.
@@ -148,8 +151,8 @@ end
 -- @param plug The plug name of the form OUT-SIGNAL-index
 -- @treturn 0/1 The plug signal state
 function M:getSignalOut(plug)
-    -- TODO query state
-    return 0
+    -- default response for invalid plug name
+    return -1
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
@@ -169,7 +172,12 @@ function M:mockGetClosure()
     closure.getElementClass = function() return self:getElementClass() end
     closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
     closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
-    closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
+
+    -- not applicable to all elements, add in individual element definitions where appropriate
+    -- closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
+
+    -- unknown use, but present in all elements
+    closure.load = function() end
     return closure
 end
 

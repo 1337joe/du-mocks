@@ -101,15 +101,153 @@ function _G.TestCounterUnit.testNext()
     lu.assertEquals(mock.activeOut, 1)
 end
 
+--- Verify set signal in updates state.
+function _G.TestCounterUnit.testSetSignalIn()
+    local mock = mcu:new()
+    local closure = mock:mockGetClosure()
+
+    -- no error thrown
+    closure.setSignalIn("INVALID", "blah")
+
+    local previousState
+
+    -- expected values
+    previousState = mock.activeOut
+    closure.setSignalIn("in", 0.0)
+    lu.assertEquals(mock.plugIn, 0.0)
+    lu.assertEquals(mock.activeOut, previousState)
+
+    previousState = mock.activeOut
+    closure.setSignalIn("in", 1.0)
+    lu.assertEquals(mock.plugIn, 1.0)
+    lu.assertNotEquals(mock.activeOut, previousState)
+
+    -- invalid and out of range values (alternating high-low results to allow state advancement)
+    previousState = mock.activeOut
+    closure.setSignalIn("in", -1.0)
+    lu.assertEquals(mock.plugIn, 0.0)
+    lu.assertEquals(mock.activeOut, previousState)
+
+    previousState = mock.activeOut
+    closure.setSignalIn("in", 5.0)
+    lu.assertEquals(mock.plugIn, 1.0)
+    lu.assertNotEquals(mock.activeOut, previousState)
+
+    previousState = mock.activeOut
+    closure.setSignalIn("in", "words")
+    lu.assertEquals(mock.plugIn, 0.0)
+    lu.assertEquals(mock.activeOut, previousState)
+
+    previousState = mock.activeOut
+    closure.setSignalIn("in", nil)
+    lu.assertEquals(mock.plugIn, 0.0)
+    lu.assertEquals(mock.activeOut, previousState)
+
+    -- weirdness with fractional values (always advances if different)
+    previousState = mock.activeOut
+    closure.setSignalIn("in", 0.7)
+    lu.assertEquals(mock.plugIn, 0.7)
+    lu.assertNotEquals(mock.activeOut, previousState)
+
+    previousState = mock.activeOut
+    closure.setSignalIn("in", "0.7")
+    lu.assertEquals(mock.plugIn, 0.7)
+    lu.assertEquals(mock.activeOut, previousState)
+
+    previousState = mock.activeOut
+    closure.setSignalIn("in", 0.5)
+    lu.assertEquals(mock.plugIn, 0.5)
+    lu.assertNotEquals(mock.activeOut, previousState)
+end
+
+--- Verify get signal in aligns with state.
+function _G.TestCounterUnit.testGetSignalIn()
+    local mock = mcu:new()
+    local closure = mock:mockGetClosure()
+
+    -- capitalization matters
+    lu.assertEquals(closure.getSignalIn("IN"), -1.0)
+
+    -- expected values
+    mock.plugIn = 1
+    lu.assertEquals(closure.getSignalIn("in"), 1.0)
+
+    mock.plugIn = 0
+    lu.assertEquals(closure.getSignalIn("in"), 0.0)
+
+    -- unexpectedly valid values
+    mock.plugIn = 0.5
+    lu.assertEquals(closure.getSignalIn("in"), 0.5)
+
+    mock.plugIn = "0.7"
+    lu.assertEquals(closure.getSignalIn("in"), 0.7)
+
+    -- invalid values
+    mock.plugIn = nil
+    lu.assertEquals(closure.getSignalIn("in"), 0.0)
+
+    mock.plugIn = "words"
+    lu.assertEquals(closure.getSignalIn("in"), 0.0)
+end
+
+--- Verify get signal out aligns with state.
+function _G.TestCounterUnit.testGetSignalOut()
+    local mock = mcu:new()
+    local closure = mock:mockGetClosure()
+
+    lu.assertEquals(mock.maxCount, 2) -- default
+
+    -- invalid indices
+    lu.assertEquals(closure.getSignalOut("OUT-signal-blah"), -1.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-3"), -1.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-10"), -1.0)
+
+    -- verify reflects current state
+    mock.activeOut = 0
+    lu.assertEquals(closure.getSignalOut("OUT-signal-0"), 1.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-1"), 0.0)
+    mock.activeOut = 1
+    lu.assertEquals(closure.getSignalOut("OUT-signal-0"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-1"), 1.0)
+
+    -- not default element
+    mock.maxCount = 10
+    -- verify reflects current state
+    mock.activeOut = 0
+    lu.assertEquals(closure.getSignalOut("OUT-signal-0"), 1.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-1"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-2"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-3"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-4"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-5"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-6"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-7"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-8"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-9"), 0.0)
+    mock.activeOut = 8
+    lu.assertEquals(closure.getSignalOut("OUT-signal-0"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-1"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-2"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-3"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-4"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-5"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-6"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-7"), 0.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-8"), 1.0)
+    lu.assertEquals(closure.getSignalOut("OUT-signal-9"), 0.0)
+end
+
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --
 -- Test setup:
 -- 1. 1x Counter 5, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, getCounterState, next
+-- Nothing should be connected to the "in" plug.
+--
+-- Exercises: getElementClass, getCounterState, next, setSignalIn, getSignalIn, getSignalOut
 function _G.TestCounterUnit.testGameBehavior()
-    local mock = mcu:new(nil, 0, "counter 5")
+    local mock = mcu:new(nil, 1, "counter 5")
     local slot1 = mock:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
@@ -121,9 +259,109 @@ function _G.TestCounterUnit.testGameBehavior()
     ---------------
     -- copy from here to unit.start()
     ---------------
+    -- verify expected functions
+    local expectedFunctions = {"getCounterState", "next", "setSignalIn", "getSignalIn","getSignalOut", 
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+    local unexpectedFunctions = {}
+    for key, value in pairs(slot1) do
+        if type(value) == "function" then
+            for index, funcName in pairs(expectedFunctions) do
+                if key == funcName then
+                    table.remove(expectedFunctions, index)
+                    goto continueOuter
+                end
+            end
+
+            table.insert(unexpectedFunctions, key)
+        end
+
+        ::continueOuter::
+    end
+    local message = ""
+    if #expectedFunctions > 0 then
+        message = message .. "Missing expected functions: " .. table.concat(expectedFunctions, ", ") .. "\n"
+    end
+    if #unexpectedFunctions > 0 then
+        message = message .. "Found unexpected functions: " .. table.concat(unexpectedFunctions, ", ") .. "\n"
+    end
+    assert(message:len() == 0, message)
+
+    -- test element class and inherited methods
     assert(slot1.getElementClass() == "CounterUnit")
+    assert(slot1.getData() == "{}")
+    assert(slot1.getDataId() == "")
+    assert(slot1.getWidgetType() == "")
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() == 50.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() == 9.93)
+
+    -- advance counter using in signal, needs to not actually be linked to set value
+    slot1.setSignalIn("in", 0.0)
+    assert(slot1.getSignalIn("in") == 0.0)
+    local oldState = slot1.getCounterState()
+    slot1.setSignalIn("in", 1.0)
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(oldState ~= slot1.getCounterState())
+    oldState = slot1.getCounterState()
+    -- weirdness with assigning fractions between 0 and 1: advances and sets to fractional value
+    slot1.setSignalIn("in", 0.7)
+    assert(slot1.getSignalIn("in") == 0.7)
+    assert(oldState ~= slot1.getCounterState())
+    oldState = slot1.getCounterState()
+    -- doesn't advance if same number
+    slot1.setSignalIn("in", 0.7)
+    assert(slot1.getSignalIn("in") == 0.7)
+    assert(oldState == slot1.getCounterState())
+    oldState = slot1.getCounterState()
+    -- out of 0-1 range sets to 0 or 1 and advances according to stored value
+    slot1.setSignalIn("in", -1)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(oldState == slot1.getCounterState())
+    oldState = slot1.getCounterState()
+    slot1.setSignalIn("in", 5)
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(oldState ~= slot1.getCounterState())
+    oldState = slot1.getCounterState()
+    -- string that can be converted to number behaves like number
+    slot1.setSignalIn("in", "-3")
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(oldState == slot1.getCounterState())
+    oldState = slot1.getCounterState()
+    slot1.setSignalIn("in", "7")
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(oldState ~= slot1.getCounterState())
+    oldState = slot1.getCounterState()
+    slot1.setSignalIn("in", "0.7")
+    assert(slot1.getSignalIn("in") == 0.7)
+    assert(oldState ~= slot1.getCounterState())
+    oldState = slot1.getCounterState()
+    -- setting to non-numeric value sets to 0 and doesn't advance
+    slot1.setSignalIn("in", "text")
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(oldState == slot1.getCounterState())
+    slot1.setSignalIn("in", nil)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(oldState == slot1.getCounterState())
+
+    -- verify incorrect slot names are harmless
+    slot1.setSignalIn("invalid", 1.0)
+    assert(slot1.getSignalIn("invalid") == -1.0)
+    assert(slot1.getSignalOut("invalid") == -1.0)
+
+    -- reset
+    while slot1.getCounterState() ~= 0 do
+        slot1.next()
+    end
 
     assert(slot1.getCounterState() == 0, "Active out: "..slot1.getCounterState())
+
+    assert(slot1.getSignalOut("OUT-signal-0") == 1.0)
+    assert(slot1.getSignalOut("OUT-signal-1") == 0.0)
+    assert(slot1.getSignalOut("OUT-signal-2") == 0.0)
+    assert(slot1.getSignalOut("OUT-signal-3") == 0.0)
+    assert(slot1.getSignalOut("OUT-signal-4") == 0.0)
 
     slot1.next()
     assert(slot1.getCounterState() == 1, "Active out: "..slot1.getCounterState())
@@ -133,6 +371,12 @@ function _G.TestCounterUnit.testGameBehavior()
 
     slot1.next()
     assert(slot1.getCounterState() == 3, "Active out: "..slot1.getCounterState())
+
+    assert(slot1.getSignalOut("OUT-signal-0") == 0.0)
+    assert(slot1.getSignalOut("OUT-signal-1") == 0.0)
+    assert(slot1.getSignalOut("OUT-signal-2") == 0.0)
+    assert(slot1.getSignalOut("OUT-signal-3") == 1.0)
+    assert(slot1.getSignalOut("OUT-signal-4") == 0.0)
 
     slot1.next()
     assert(slot1.getCounterState() == 4, "Active out: "..slot1.getCounterState())

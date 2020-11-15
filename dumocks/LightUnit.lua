@@ -1,4 +1,5 @@
 --- Emits a source of light
+-- @see Element
 -- @module LightUnit
 -- @alias M
 
@@ -32,6 +33,8 @@ function M:new(o, id, elementName)
 
     o.state = false
 
+    o.plugIn = 0.0
+
     return o
 end
 
@@ -57,6 +60,63 @@ function M:getState()
         return 1
     end
     return 0
+end
+
+--- Set the value of a signal in the specified IN plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"in" for the in signal (has no actual effect on light state when modified this way).</li>
+-- </ul>
+-- @param plug A valid plug name to set.
+-- @tparam 0/1 state The plug signal state
+function M:setSignalIn(plug, state)
+    if plug == "in" then
+        local value = tonumber(state)
+        if type(value) ~= "number" then
+            value = 0.0
+        end
+
+        -- expected behavior, but in fact nothing happens in-game
+        if value > 0.0 then
+            -- self:activate()
+        else
+            -- self:deactivate()
+        end
+
+        if value <= 0 then
+            self.plugIn = 0
+        elseif value >= 1.0 then
+            self.plugIn = 1.0
+        else
+            self.plugIn = value
+        end
+    end
+end
+
+--- Return the value of a signal in the specified IN plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"in" for the in signal.</li>
+-- </ul>
+-- @param plug A valid plug name to query.
+-- @treturn 0/1 The plug signal state
+function M:getSignalIn(plug)
+    if plug == "in" then
+        -- clamp to valid values
+        local value = tonumber(self.plugIn)
+        if type(value) ~= "number" then
+            return 0.0
+        elseif value >= 1.0 then
+            return 1.0
+        elseif value <= 0.0 then
+            return 0.0
+        else
+            return value
+        end
+    end
+    return -1
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".

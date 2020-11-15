@@ -105,11 +105,11 @@ end
 -- in-game.
 --
 -- Test setup:
--- 1. 1x Light, connected to Programming Board on slot1
+-- 1. 1x Long Light Light L, connected to Programming Board on slot1
 --
 -- Exercises: getElementClass, deactivate, activate, toggle, getState
 function _G.TestLightUnit.testGameBehavior()
-    local mock = mlu:new()
+    local mock = mlu:new(nil, 1, "long light m")
     local slot1 = mock:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
@@ -123,9 +123,75 @@ function _G.TestLightUnit.testGameBehavior()
     ---------------
     -- copy from here to unit.start
     ---------------
-    assert(slot1.getElementClass() == "LightUnit")
+    -- test element class and expected functions
+    local expectedFunctions = {"activate", "deactivate", "toggle", "getState", 
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
+                               "load"}
+    local unexpectedFunctions = {}
+    for key, value in pairs(slot1) do
+        if type(value) == "function" then
+            for index, funcName in pairs(expectedFunctions) do
+                if key == funcName then
+                    table.remove(expectedFunctions, index)
+                    goto continueOuter
+                end
+            end
 
-    -- ensure initial state, set up globals
+            table.insert(unexpectedFunctions, key)
+        end
+
+        ::continueOuter::
+    end
+    local message = ""
+    if #expectedFunctions > 0 then
+        message = message .. "Missing expected functions: " .. table.concat(expectedFunctions, ", ") .. "\n"
+    end
+    if #unexpectedFunctions > 0 then
+        message = message .. "Found unexpected functions: " .. table.concat(unexpectedFunctions, ", ") .. "\n"
+    end
+    assert(message:len() == 0, message)
+
+    -- test element class and inherited methods
+    assert(slot1.getElementClass() == "LightUnit")
+    assert(slot1.getData() == "{}")
+    assert(slot1.getDataId() == "")
+    assert(slot1.getWidgetType() == "")
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() == 50.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() == 79.34)
+
+    -- play with set signal, has no actual effect on light state when set programmatically
+    local initialState = slot1.getState()
+    slot1.setSignalIn("in", 0.0)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", 1.0)
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(slot1.getState() == initialState)
+    -- fractions within [0,1] work, and string numbers are cast
+    slot1.setSignalIn("in", 0.7)
+    assert(slot1.getSignalIn("in") == 0.7)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", "0.5")
+    assert(slot1.getSignalIn("in") == 0.5)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", "0.0")
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", "7.0")
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(slot1.getState() == initialState)
+    -- invalid sets to 0
+    slot1.setSignalIn("in", "text")
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", nil)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+
+    -- ensure initial state
     slot1.deactivate()
     assert(slot1.getState() == 0)
 

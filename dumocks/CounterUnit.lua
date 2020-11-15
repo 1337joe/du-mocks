@@ -1,5 +1,6 @@
 --- Cycle its output signal over a set of n-plugs, incrementing the activate plug by one step at each impulse received
 -- on its IN plug.
+-- @see Element
 -- @module CounterUnit
 -- @alias M
 
@@ -26,6 +27,8 @@ function M:new(o, id, elementName)
     o.activeOut = 0 -- indexed at 0
     o.maxCount = elementDefinition.maxCount
 
+    o.plugIn = 0.0
+
     return o
 end
 
@@ -40,6 +43,81 @@ function M:next()
     self.activeOut = (self.activeOut + 1) % self.maxCount
 end
 
+--- Set the value of a signal in the specified IN plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"in" for the in signal.</li>
+-- </ul>
+-- @param plug A valid plug name to set.
+-- @tparam 0/1 state The plug signal state
+function M:setSignalIn(plug, state)
+    if plug == "in" then
+        local value = tonumber(state)
+        if type(value) ~= "number" then
+            value = 0.0
+        end
+
+        if value ~= self.plugIn and value > 0.0 then
+            self:next()
+        end
+
+        if value <= 0 then
+            self.plugIn = 0
+        elseif value >= 1.0 then
+            self.plugIn = 1.0
+        else
+            self.plugIn = value
+        end
+    end
+end
+
+--- Return the value of a signal in the specified IN plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"in" for the in signal.</li>
+-- </ul>
+-- @param plug A valid plug name to query.
+-- @treturn 0/1 The plug signal state
+function M:getSignalIn(plug)
+    if plug == "in" then
+        -- clamp to valid values
+        local value = tonumber(self.plugIn)
+        if type(value) ~= "number" then
+            return 0.0
+        elseif value >= 1.0 then
+            return 1.0
+        elseif value <= 0.0 then
+            return 0.0
+        else
+            return value
+        end
+    end
+    return -1
+end
+
+local OUT_SIGNAL_PATTERN = "OUT%-signal%-(%d+)"
+--- Return the value of a signal in the specified OUT plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"OUT-signal-&lt;i&gt;" where &lt;i&gt; is replaced by a number from 0 to the counter number minus 1 (so range of [0,4] for a 5 Counter).</li>
+-- </ul>
+-- @param plug A valid plug name to query.
+-- @treturn 0/1 The plug signal state
+function M:getSignalOut(plug)
+    local plugIndex = tonumber(string.match(plug, OUT_SIGNAL_PATTERN))
+    if plugIndex ~= nil and plugIndex >= 0 and plugIndex < self.maxCount then
+        if plugIndex == self.activeOut then
+            return 1.0
+        else
+            return 0.0
+        end
+    end
+    return -1.0
+end
+
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
@@ -47,6 +125,8 @@ function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
     closure.getCounterState = function() return self:getCounterState() end
     closure.next = function() return self:next() end
+
+    closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
     return closure
 end
 
