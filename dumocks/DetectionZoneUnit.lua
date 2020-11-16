@@ -1,4 +1,9 @@
 --- Detect the intrusion of any player inside the effect zone.
+--
+-- Element Class: DetectionZoneUnit
+--
+-- Extends: Element
+-- @see Element
 -- @module DetectionZoneUnit
 -- @alias M
 
@@ -29,8 +34,6 @@ function M:new(o, id, elementName)
     return o
 end
 
-
-local OUT_SIGNAL_PATTERN = "OUT%-signal%-(%d+)"
 --- Return the value of a signal in the specified OUT plug of the element.
 --
 -- Valid plug names are:

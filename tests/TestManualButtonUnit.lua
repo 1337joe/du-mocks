@@ -35,24 +35,6 @@ function _G.TestManualButtonUnit.testConstructor()
     lu.assertEquals(buttonClosure2.getMass(), defaultMass)
 end
 
---- Verify element class is correct.
-function _G.TestManualButtonUnit.testGetElementClass()
-    local element = mmbu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "ManualButtonUnit")
-end
-
---- Verify that get state retrieves the state properly.
-function _G.TestManualButtonUnit.testGetState()
-    local mock = mmbu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    lu.assertEquals(closure.getState(), 0)
-
-    mock.state = true
-    lu.assertEquals(closure.getState(), 1)
-end
-
 --- Verify press works without errors.
 function _G.TestManualButtonUnit.testPress()
     local mock = mmbu:new()
@@ -179,9 +161,9 @@ end
 -- Test setup:
 -- 1. 1x Manual Button S, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, getState, EVENT_pressed, EVENT_released
+-- Exercises: getElementClass, getState, EVENT_pressed, EVENT_released, getSignalOut
 function _G.TestManualButtonUnit.testGameBehavior()
-    local button = mmbu:new()
+    local button = mmbu:new(nil, 1)
     local slot1 = button:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
@@ -203,6 +185,7 @@ function _G.TestManualButtonUnit.testGameBehavior()
         pressedCount = pressedCount + 1
         assert(slot1.getState() == 1) -- toggles before calling handlers
         assert(pressedCount == 1) -- should only ever be called once, when the user presses the button
+        assert(slot1.getSignalOut("out") == 1.0)
         ---------------
         -- copy to here to slot1.pressed()
         ---------------
@@ -228,6 +211,7 @@ function _G.TestManualButtonUnit.testGameBehavior()
         releasedCount = releasedCount + 1
         assert(slot1.getState() == 0) -- toggled before calling handlers
         assert(releasedCount == 1) -- should only ever be called once, when the user releases the button
+        assert(slot1.getSignalOut("out") == 0.0)
         ---------------
         -- copy to here to slot1.released()
         ---------------
@@ -250,7 +234,45 @@ function _G.TestManualButtonUnit.testGameBehavior()
     ---------------
     -- copy from here to unit.start()
     ---------------
+    -- verify expected functions
+    local expectedFunctions = {"getState", "getSignalOut",
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+    local unexpectedFunctions = {}
+    for key, value in pairs(slot1) do
+        if type(value) == "function" then
+            for index, funcName in pairs(expectedFunctions) do
+                if key == funcName then
+                    table.remove(expectedFunctions, index)
+                    goto continueOuter
+                end
+            end
+
+            table.insert(unexpectedFunctions, key)
+        end
+
+        ::continueOuter::
+    end
+    local message = ""
+    if #expectedFunctions > 0 then
+        message = message .. "Missing expected functions: " .. table.concat(expectedFunctions, ", ") .. "\n"
+    end
+    if #unexpectedFunctions > 0 then
+        message = message .. "Found unexpected functions: " .. table.concat(unexpectedFunctions, ", ") .. "\n"
+    end
+    assert(message:len() == 0, message)
+
+    -- test element class and inherited methods
     assert(slot1.getElementClass() == "ManualButtonUnit")
+    assert(slot1.getData() == "{}")
+    assert(slot1.getDataId() == "")
+    assert(slot1.getWidgetType() == "")
+    slot1.show()
+    slot1.hide()
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() == 50.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() == 13.27)
 
     -- ensure initial state, set up globals
     pressedCount = 0

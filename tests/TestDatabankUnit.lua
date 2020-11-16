@@ -45,12 +45,6 @@ function _G.TestDatabankUnit.testConstructor()
     lu.assertEquals(databank3Closure.getIntegrity(), 0.5)
 end
 
---- Verify element class is correct.
-function _G.TestDatabankUnit.testGetElementClass()
-    local databank = mdu:new():mockGetClosure()
-    lu.assertEquals(databank.getElementClass(), "DataBankUnit")
-end
-
 --- Verify that clear empties the databank.
 function _G.TestDatabankUnit.testClear()
     local databank = mdu:new()
@@ -443,7 +437,7 @@ end
 -- Exercises: getElementClass, hasKey, getKeys, getNbKeys, clear, setStringValue, getStringValue, setIntValue,
 -- getIntValue, setFloatValue, getFloatValue
 function _G.TestDatabankUnit.testGameBehavior()
-    local databank = mdu:new()
+    local databank = mdu:new(nil, 1)
     local slot1 = databank:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
@@ -455,7 +449,48 @@ function _G.TestDatabankUnit.testGameBehavior()
     ---------------
     -- copy from here to unit.start()
     ---------------
+    -- verify expected functions
+    local expectedFunctions = {"hasKey", "getKeys", "getNbKeys", "clear", "setStringValue", "getStringValue",
+                               "setIntValue", "getIntValue", "setFloatValue", "getFloatValue",
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass",
+                               "load"}
+    local unexpectedFunctions = {}
+    for key, value in pairs(slot1) do
+        if type(value) == "function" then
+            for index, funcName in pairs(expectedFunctions) do
+                if key == funcName then
+                    table.remove(expectedFunctions, index)
+                    goto continueOuter
+                end
+            end
+
+            table.insert(unexpectedFunctions, key)
+        end
+
+        ::continueOuter::
+    end
+    local message = ""
+    if #expectedFunctions > 0 then
+        message = message .. "Missing expected functions: " .. table.concat(expectedFunctions, ", ") .. "\n"
+    end
+    if #unexpectedFunctions > 0 then
+        message = message .. "Found unexpected functions: " .. table.concat(unexpectedFunctions, ", ") .. "\n"
+    end
+    assert(message:len() == 0, message)
+
+    -- test element class and inherited methods
     assert(slot1.getElementClass() == "DataBankUnit")
+    assert(slot1.getData() == "{}")
+    assert(slot1.getDataId() == "")
+    assert(slot1.getWidgetType() == "")
+    slot1.show()
+    slot1.hide()
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() == 50.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() == 17.09)
+
     slot1.clear()
 
     local key

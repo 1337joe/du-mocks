@@ -1,37 +1,53 @@
 --- Emits a signal when a player walks on the tile.
+--
+-- Element class: PressureTileUnit
+--
+-- Extends: Element &gt; ElementWithState
+-- @see Element
+-- @see ElementWithState
 -- @module PressureTileUnit
 -- @alias M
 
 local MockElement = require "dumocks.Element"
+local MockElementWithState = require "dumocks.ElementWithState"
 
 local elementDefinitions = {}
 elementDefinitions["pressure tile"] = {mass = 50.63, maxHitPoints = 50.0}
 local DEFAULT_ELEMENT = "pressure tile"
 
-local M = MockElement:new()
+local M = MockElementWithState:new()
 M.elementClass = "PressureTileUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
 
-    o = o or MockElement:new(o, id, elementDefinition)
+    o = o or MockElementWithState:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
 
-    o.state = false
     o.pressedCallbacks = {}
     o.releasedCallbacks = {}
 
     return o
 end
 
---- Returns the activation state of the pressure tile.
--- @return 1 when the tile is pressed, 0 otherwise.
-function M:getState()
-    if self.state then
-        return 1
+--- Return the value of a signal in the specified OUT plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"out" for the out signal.</li>
+-- </ul>
+-- @param plug A valid plug name to query.
+-- @treturn 0/1 The plug signal state
+function M:getSignalOut(plug)
+    if plug == "out" then
+        if self.state then
+            return 1.0
+        else
+            return 0.0
+        end
     end
-    return 0
+    return MockElement.getSignalOut(self, plug)
 end
 
 --- Event: Someone stepped on the tile.
@@ -128,8 +144,9 @@ end
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
-    local closure = MockElement.mockGetClosure(self)
-    closure.getState = function() return self:getState() end
+    local closure = MockElementWithState.mockGetClosure(self)
+
+    closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
     return closure
 end
 

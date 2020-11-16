@@ -1,4 +1,11 @@
 --- Stores key/value pairs in a persistent way.
+--
+-- Storage capacity: 30 kB
+--
+-- Element class: DataBankUnit
+--
+-- Extends: Element
+-- @see Element
 -- @module DatabankUnit
 -- @alias M
 

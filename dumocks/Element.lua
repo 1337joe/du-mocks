@@ -2,8 +2,14 @@
 --
 -- Extended by:
 -- <ul>
+--   <li>CounterUnit</li>
+--   <li>DatabankUnit</li>
+--   <li>DetectionZoneUnit</li>
 --   <li>ElementWithState</li>
 -- </ul>
+-- @see CounterUnit
+-- @see DatabankUnit
+-- @see DetectionZoneUnit
 -- @see ElementWithState
 -- @module Element
 -- @alias M
