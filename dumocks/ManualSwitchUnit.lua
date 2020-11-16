@@ -1,52 +1,111 @@
 --- A manual switch that can be in an on/off state.
+--
+-- Element class: ManualSwitchUnit
+--
+-- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
+-- @see Element
+-- @see ElementWithState
+-- @see ElementWithToggle
 -- @module ManualSwitchUnit
 -- @alias M
 
 local MockElement = require "dumocks.Element"
+local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
 elementDefinitions["manual switch"] = {mass = 13.27, maxHitPoints = 50.0}
 local DEFAULT_ELEMENT = "manual switch"
 
-local M = MockElement:new()
+local M = MockElementWithToggle:new()
 M.elementClass = "ManualSwitchUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
 
-    o = o or MockElement:new(o, id, elementDefinition)
+    o = o or MockElementWithToggle:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
 
-    o.state = false
     o.pressedCallbacks = {}
     o.releasedCallbacks = {}
+
+    self.plugOn = 0.0
 
     return o
 end
 
---- Activate the switch on.
-function M:activate()
-    self.state = true
-end
+--- Set the value of a signal in the specified IN plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"on" for the in signal.</li>
+-- </ul>
+-- @param plug A valid plug name to set.
+-- @tparam 0/1 state The plug signal state
+function M:setSignalIn(plug, state)
+    if plug == "on" then
+        local value = tonumber(state)
+        if type(value) ~= "number" then
+            value = 0.0
+        end
 
---- Deactivate the switch.
-function M:deactivate()
-    self.state = false
-end
+        -- turns on with signal but not off
+        if value > 0.0 then
+            self:activate()
+        end
 
---- Toggle the state of the switch.
-function M:toggle()
-    self.state = not self.state
-end
-
---- Returns the activation state of the switch.
--- @return 1 when the switch is on, 0 otherwise.
-function M:getState()
-    if self.state then
-        return 1
+        if value <= 0 then
+            self.plugOn = 0
+        elseif value >= 1.0 then
+            self.plugOn = 1.0
+        else
+            self.plugOn = value
+        end
     end
-    return 0
+end
+
+--- Return the value of a signal in the specified IN plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"on" for the in signal.</li>
+-- </ul>
+-- @param plug A valid plug name to query.
+-- @treturn 0/1 The plug signal state
+function M:getSignalIn(plug)
+    if plug == "on" then
+        -- clamp to valid values
+        local value = tonumber(self.plugOn)
+        if type(value) ~= "number" then
+            return 0.0
+        elseif value >= 1.0 then
+            return 1.0
+        elseif value <= 0.0 then
+            return 0.0
+        else
+            return value
+        end
+    end
+    return MockElement.getSignalIn(self)
+end
+
+--- Return the value of a signal in the specified OUT plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"out" for the out signal.</li>
+-- </ul>
+-- @param plug A valid plug name to query.
+-- @treturn 0/1 The plug signal state
+function M:getSignalOut(plug)
+    if plug == "out" then
+        if self.state then
+            return 1.0
+        else
+            return 0.0
+        end
+    end
+    return MockElement.getSignalOut(self, plug)
 end
 
 --- Event: The button has been pressed.
@@ -145,11 +204,11 @@ end
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
-    local closure = MockElement.mockGetClosure(self)
-    closure.activate = function() return self:activate() end
-    closure.deactivate = function() return self:deactivate() end
-    closure.toggle = function() return self:toggle() end
-    closure.getState = function() return self:getState() end
+    local closure = MockElementWithToggle.mockGetClosure(self)
+
+    closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
+    closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
+    closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
     return closure
 end
 

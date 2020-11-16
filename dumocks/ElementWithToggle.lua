@@ -8,6 +8,7 @@
 --   <li>ForceFieldUnit</li>
 --   <li>LandingGearUnit</li>
 --   <li>LightUnit</li>
+--   <li>ManualSwitchUnit</li>
 -- </ul>
 -- @see Element
 -- @see ElementWithState
@@ -15,6 +16,7 @@
 -- @see ForceFieldUnit
 -- @see LandingGearUnit
 -- @see LightUnit
+-- @see ManualSwitchUnit
 -- @module ElementWithToggle
 -- @alias M
 

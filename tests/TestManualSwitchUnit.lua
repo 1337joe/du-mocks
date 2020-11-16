@@ -45,69 +45,6 @@ function _G.TestManualSwitchUnit.testConstructor()
     lu.assertEquals(switch3Closure.getIntegrity(), 0.5)
 end
 
---- Verify element class is correct.
-function _G.TestManualSwitchUnit.testGetElementClass()
-    local element = mmsu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "ManualSwitchUnit")
-end
-
---- Verify activate results in enabled switch.
-function _G.TestManualSwitchUnit.testActivate()
-    local switch = mmsu:new()
-    local closure = switch:mockGetClosure()
-
-    switch.state = false
-    closure.activate()
-    lu.assertTrue(switch.state)
-
-    switch.state = true
-    closure.activate()
-    lu.assertTrue(switch.state)
-end
-
---- Verify deactivate results in disabled switch.
-function _G.TestManualSwitchUnit.testDeactivate()
-    local switch = mmsu:new()
-    local closure = switch:mockGetClosure()
-
-    switch.state = false
-    closure.deactivate()
-    lu.assertFalse(switch.state)
-
-    switch.state = true
-    closure.deactivate()
-    lu.assertFalse(switch.state)
-end
-
---- Verify toggle results in swapped switch.
-function _G.TestManualSwitchUnit.testToggle()
-    local switch = mmsu:new()
-    local closure = switch:mockGetClosure()
-
-    switch.state = false
-    closure.toggle()
-    lu.assertTrue(switch.state)
-
-    switch.state = true
-    closure.toggle()
-    lu.assertFalse(switch.state)
-end
-
---- Verify get state properly translated results.
-function _G.TestManualSwitchUnit.testGetState()
-    local switch = mmsu:new()
-    local closure = switch:mockGetClosure()
-    local actual
-
-    switch.state = false
-    actual = closure.getState()
-    lu.assertEquals(actual, 0)
-
-    switch.state = true
-    actual = closure.getState()
-    lu.assertEquals(actual, 1)
-end
-
 --- Verify callbacks can be registered and fire properly for `pressed()`.
 function _G.TestManualSwitchUnit.testDoPressedValid()
     local switch = mmsu:new()
@@ -258,9 +195,9 @@ end
 -- Test setup:
 -- 1. 1x Switch, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState, EVENT_pressed, EVENT_released
+-- Exercises: getElementClass, deactivate, activate, toggle, getState, EVENT_pressed, EVENT_released, setSignalIn, getSignalIn, getSignalOut
 function _G.TestManualSwitchUnit.testGameBehavior()
-    local switch = mmsu:new()
+    local switch = mmsu:new(nil, 1)
     local slot1 = switch:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
@@ -282,6 +219,7 @@ function _G.TestManualSwitchUnit.testGameBehavior()
         pressedCount = pressedCount + 1
         assert(slot1.getState() == 1) -- toggles before calling handlers
         assert(pressedCount == 1) -- should only ever be called once, when the user presses the switch
+        assert(slot1.getSignalOut("out") == 1.0)
         ---------------
         -- copy to here to slot1.pressed()
         ---------------
@@ -307,6 +245,7 @@ function _G.TestManualSwitchUnit.testGameBehavior()
         releasedCount = releasedCount + 1
         assert(slot1.getState() == 1) -- won't toggle till after handlers finished
         assert(releasedCount == 1) -- should only ever be called once, when the user releases the switch
+        assert(slot1.getSignalOut("out") == 1.0)
         ---------------
         -- copy to here to slot1.released()
         ---------------
@@ -329,7 +268,89 @@ function _G.TestManualSwitchUnit.testGameBehavior()
     ---------------
     -- copy from here to unit.start()
     ---------------
+    -- verify expected functions
+    local expectedFunctions = {"activate", "deactivate", "toggle", "getState", "getSignalOut",
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
+                               "load"}
+    local unexpectedFunctions = {}
+    for key, value in pairs(slot1) do
+        if type(value) == "function" then
+            for index, funcName in pairs(expectedFunctions) do
+                if key == funcName then
+                    table.remove(expectedFunctions, index)
+                    goto continueOuter
+                end
+            end
+
+            table.insert(unexpectedFunctions, key)
+        end
+
+        ::continueOuter::
+    end
+    local message = ""
+    if #expectedFunctions > 0 then
+        message = message .. "Missing expected functions: " .. table.concat(expectedFunctions, ", ") .. "\n"
+    end
+    if #unexpectedFunctions > 0 then
+        message = message .. "Found unexpected functions: " .. table.concat(unexpectedFunctions, ", ") .. "\n"
+    end
+    assert(message:len() == 0, message)
+
+    -- test element class and inherited methods
     assert(slot1.getElementClass() == "ManualSwitchUnit")
+    assert(slot1.getData() == "{}")
+    assert(slot1.getDataId() == "")
+    assert(slot1.getWidgetType() == "")
+    slot1.show()
+    slot1.hide()
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() == 50.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() == 13.27)
+
+    slot1.deactivate()
+
+    -- play with set signal, reset periodically as switch cannot be turned off with the "on" signal
+    slot1.setSignalIn("on", 0.0)
+    assert(slot1.getSignalIn("on") == 0.0)
+    assert(slot1.getState() == 0.0)
+    -- turns on
+    slot1.setSignalIn("on", 1.0)
+    assert(slot1.getSignalIn("on") == 1.0)
+    assert(slot1.getState() == 1.0)
+    -- but not back off
+    slot1.setSignalIn("on", 0.0)
+    assert(slot1.getSignalIn("on") == 0.0)
+    assert(slot1.getState() == 1.0)
+    -- fractions within [0,1] work, and string numbers are cast
+    slot1.deactivate()
+    slot1.setSignalIn("on", 0.7)
+    assert(slot1.getSignalIn("on") == 0.7)
+    assert(slot1.getState() == 1.0)
+    slot1.deactivate()
+    slot1.setSignalIn("on", "0.5")
+    assert(slot1.getSignalIn("on") == 0.5)
+    assert(slot1.getState() == 1.0)
+    slot1.deactivate()
+    slot1.setSignalIn("on", "0.0")
+    assert(slot1.getSignalIn("on") == 0.0)
+    assert(slot1.getState() == 0.0)
+    slot1.setSignalIn("on", "7.0")
+    assert(slot1.getSignalIn("on") == 1.0)
+    assert(slot1.getState() == 1.0)
+    -- invalid sets to 0
+    slot1.deactivate()
+    slot1.setSignalIn("on", "text")
+    assert(slot1.getSignalIn("on") == 0.0)
+    assert(slot1.getState() == 0.0)
+    slot1.setSignalIn("on", nil)
+    assert(slot1.getSignalIn("on") == 0.0)
+    assert(slot1.getState() == 0.0)
+
+    -- ensure initial state
+    slot1.deactivate()
+    assert(slot1.getState() == 0)
 
     -- ensure initial state, set up globals
     slot1.deactivate()
@@ -337,13 +358,18 @@ function _G.TestManualSwitchUnit.testGameBehavior()
     pressedCount = 0
     releasedCount = 0
 
+-- channels: on, out
+
     -- validate methods
     slot1.activate()
     assert(slot1.getState() == 1)
+    assert(slot1.getSignalOut("out") == 1.0)
     slot1.deactivate()
     assert(slot1.getState() == 0)
+    assert(slot1.getSignalOut("out") == 0.0)
     slot1.toggle()
     assert(slot1.getState() == 1)
+    assert(slot1.getSignalOut("out") == 1.0)
 
     -- prep for user interaction
     slot1.deactivate()
