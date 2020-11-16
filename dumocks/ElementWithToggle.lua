@@ -6,12 +6,14 @@
 -- <ul>
 --   <li>DoorUnit</li>
 --   <li>ForceFieldUnit</li>
+--   <li>LandingGearUnit</li>
 --   <li>LightUnit</li>
 -- </ul>
 -- @see Element
 -- @see ElementWithState
 -- @see DoorUnit
 -- @see ForceFieldUnit
+-- @see LandingGearUnit
 -- @see LightUnit
 -- @module ElementWithToggle
 -- @alias M

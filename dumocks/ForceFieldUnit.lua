@@ -29,6 +29,8 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
+    o.plugIn = 0.0
+
     return o
 end
 

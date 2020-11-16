@@ -38,8 +38,6 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
-    o.state = false
-
     o.plugIn = 0.0
 
     return o

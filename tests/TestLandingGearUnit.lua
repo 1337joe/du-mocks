@@ -40,87 +40,97 @@ function _G.TestLandingGearUnit.testConstructor()
     lu.assertNotEquals(gearClosure3.getMass(), defaultMass)
 end
 
---- Verify element class is correct.
-function _G.TestLandingGearUnit.testGetElementClass()
-    local element = mlgu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "LandingGearUnit")
-end
-
---- Verify that activate leaves the gear down.
-function _G.TestLandingGearUnit.testActivate()
-    local mock = mlgu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    closure.activate()
-    lu.assertTrue(mock.state)
-
-    mock.state = true
-    closure.activate()
-    lu.assertTrue(mock.state)
-end
-
---- Verify that deactivate leaves the gear up.
-function _G.TestLandingGearUnit.testDeactivate()
-    local mock = mlgu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    closure.deactivate()
-    lu.assertFalse(mock.state)
-
-    mock.state = true
-    closure.deactivate()
-    lu.assertFalse(mock.state)
-end
-
---- Verify that toggle changes the state.
-function _G.TestLandingGearUnit.testToggle()
-    local mock = mlgu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    closure.toggle()
-    lu.assertTrue(mock.state)
-
-    mock.state = true
-    closure.toggle()
-    lu.assertFalse(mock.state)
-end
-
---- Verify that get state retrieves the state properly.
-function _G.TestLandingGearUnit.testGetState()
-    local mock = mlgu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    lu.assertEquals(closure.getState(), 0)
-
-    mock.state = true
-    lu.assertEquals(closure.getState(), 1)
-end
-
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --
 -- Test setup:
 -- 1. 1x Landing Gear, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState
+-- Exercises: getElementClass, deactivate, activate, toggle, getState, setSignalIn, getSignalIn
 function _G.TestLandingGearUnit.testGameBehavior()
-    local mock = mlgu:new()
+    local mock = mlgu:new(nil, 1, "landing gear xs")
     local slot1 = mock:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
+    local unit = {}
+    unit.exit = function() end
     local system = {}
     system.print = function() end
 
     ---------------
     -- copy from here to unit.start()
     ---------------
-    assert(slot1.getElementClass() == "LandingGearUnit")
+    -- verify expected functions
+    local expectedFunctions = {"activate", "deactivate", "toggle", "getState", 
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
+                               "load"}
+    local unexpectedFunctions = {}
+    for key, value in pairs(slot1) do
+        if type(value) == "function" then
+            for index, funcName in pairs(expectedFunctions) do
+                if key == funcName then
+                    table.remove(expectedFunctions, index)
+                    goto continueOuter
+                end
+            end
 
-    -- ensure initial state, set up globals
+            table.insert(unexpectedFunctions, key)
+        end
+
+        ::continueOuter::
+    end
+    local message = ""
+    if #expectedFunctions > 0 then
+        message = message .. "Missing expected functions: " .. table.concat(expectedFunctions, ", ") .. "\n"
+    end
+    if #unexpectedFunctions > 0 then
+        message = message .. "Found unexpected functions: " .. table.concat(unexpectedFunctions, ", ") .. "\n"
+    end
+    assert(message:len() == 0, message)
+
+    -- test element class and inherited methods
+    assert(slot1.getElementClass() == "LandingGearUnit")
+    assert(slot1.getData() == "{}")
+    assert(slot1.getDataId() == "")
+    assert(slot1.getWidgetType() == "")
+    slot1.show()
+    slot1.hide()
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() == 63.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() == 49.88)
+
+    -- play with set signal, has no actual effect on state when set programmatically
+    local initialState = slot1.getState()
+    slot1.setSignalIn("in", 0.0)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", 1.0)
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(slot1.getState() == initialState)
+    -- fractions within [0,1] work, and string numbers are cast
+    slot1.setSignalIn("in", 0.7)
+    assert(slot1.getSignalIn("in") == 0.7)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", "0.5")
+    assert(slot1.getSignalIn("in") == 0.5)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", "0.0")
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", "7.0")
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(slot1.getState() == initialState)
+    -- invalid sets to 0
+    slot1.setSignalIn("in", "text")
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", nil)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+
+    -- ensure initial state
     slot1.deactivate()
     assert(slot1.getState() == 0)
 
@@ -133,6 +143,7 @@ function _G.TestLandingGearUnit.testGameBehavior()
     assert(slot1.getState() == 1)
 
     system.print("Success")
+    unit.exit()
     ---------------
     -- copy to here to unit.start()
     ---------------
