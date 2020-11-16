@@ -24,7 +24,32 @@ function M:new(o, id, elementName)
     o.enterCallbacks = {}
     o.leaveCallbacks = {}
 
+    self.plugOut = 0.0
+
     return o
+end
+
+
+local OUT_SIGNAL_PATTERN = "OUT%-signal%-(%d+)"
+--- Return the value of a signal in the specified OUT plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"out" for the out signal.</li>
+-- </ul>
+-- @param plug A valid plug name to query.
+-- @treturn 0/1 The plug signal state
+function M:getSignalOut(plug)
+    if plug == "out" then
+        -- clamp to valid values
+        local value = tonumber(self.plugOut)
+        if value ~= 0.0 then
+            return 1.0
+        else
+            return 0.0
+        end
+    end
+    return MockElement.getSignalOut(self, plug)
 end
 
 --- Event: A player just entered the zone
@@ -59,6 +84,8 @@ end
 --- Mock only, not in-game: Simulates a user entering the detection zone.
 -- @tparam int id The ID of the player who entered.
 function M:mockDoEnter(id)
+    self.plugOut = 1.0
+
     -- call callbacks in order, saving exceptions until end
     local errors = ""
     for i,callback in pairs(self.enterCallbacks) do
@@ -90,6 +117,8 @@ function M:mockRegisterLeave(callback, filter)
 end
 
 --- Mock only, not in-game: Simulates a player leaving the detection zone.
+--
+-- Note: This does not set plugOut to 0.0 because it can't track if everyone has left. Do this manually if it's relevant.
 -- @tparam int id The ID of the player who left.
 function M:mockDoLeave(id)
     -- call callbacks in order, saving exceptions until end
@@ -114,7 +143,8 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
-    -- no additional methods
+
+    closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
     return closure
 end
 

@@ -95,7 +95,7 @@ Format notes:
 | CoreUnit | :heavy_check_mark: | P | P | | P |
 | CounterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| DetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | U | :heavy_check_mark: |
+| DetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DoorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
 | EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | P |
 | EngineUnit | :heavy_check_mark: | P | P | | P |

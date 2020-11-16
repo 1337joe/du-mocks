@@ -35,12 +35,6 @@ function _G.TestDetectionZoneUnit.testConstructor()
     -- all detection zones share attributes, can't verify element selection
 end
 
---- Verify element class is correct.
-function _G.TestDetectionZoneUnit.testGetElementClass()
-    local element = mdzu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "DetectionZoneUnit")
-end
-
 --- Verify enter works without errors.
 function _G.TestDetectionZoneUnit.testEnter()
     local mock = mdzu:new()
@@ -181,15 +175,21 @@ end
 -- Test setup:
 -- 1. 1x Detection Zone XS, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, EVENT_enter, EVENT_leave
+-- Exercises: getElementClass, EVENT_enter, EVENT_leave, getSignalOut
 function _G.TestDetectionZoneUnit.testGameBehavior()
-    local zone = mdzu:new()
+    local zone = mdzu:new(nil, 1)
     local slot1 = zone:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
-    local unit = {getData = function() return '"showScriptError":false' end}
+    local unit = {}
+    unit.getData = function()
+        return '"showScriptError":false'
+    end
+    unit.exit = function()
+    end
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     -- use locals here since all code is in this method
     local enterCount, leaveCount
@@ -198,23 +198,24 @@ function _G.TestDetectionZoneUnit.testGameBehavior()
     -- enter handlers
     local enterHandler1 = function(id)
         ---------------
-        -- copy from here to slot1.enter(*)
+        -- copy from here to slot1.enter(id) *
         ---------------
         enterPlayer = id
         enterCount = enterCount + 1
         assert(enterCount == 1) -- should only ever be called once, when the user presses the button
+        assert(slot1.getSignalOut("out") == 1.0)
         ---------------
-        -- copy to here to slot1.enter(*)
+        -- copy to here to slot1.enter(id) *
         ---------------
     end
     local enterHandler2 = function(_)
         ---------------
-        -- copy from here to slot1.enter(*)
+        -- copy from here to slot1.enter(id) *
         ---------------
         enterCount = enterCount + 1
         assert(enterCount == 2) -- called second in enter handler list
         ---------------
-        -- copy to here to slot1.enter(*)
+        -- copy to here to slot1.enter(id) *
         ---------------
     end
     zone:mockRegisterEnter(enterHandler1)
@@ -223,23 +224,26 @@ function _G.TestDetectionZoneUnit.testGameBehavior()
     -- leave handlers
     local leaveHandler1 = function(id)
         ---------------
-        -- copy from here to slot1.leave(*)
+        -- copy from here to slot1.leave(id) *
         ---------------
         leavePlayer = id
         leaveCount = leaveCount + 1
-        assert(leaveCount == 1) -- should only ever be called once, when the user releases the button
+        assert(leaveCount == 1) -- should only ever be called once, when the user leaves the zone
+        assert(slot1.getSignalOut("out") == 0.0)
         ---------------
-        -- copy to here to slot1.leave(*)
+        -- copy to here to slot1.leave(id) *
         ---------------
     end
     local leaveHandler2 = function(_)
         ---------------
-        -- copy from here to slot1.leave(*)
+        -- copy from here to slot1.leave(id) *
         ---------------
         leaveCount = leaveCount + 1
         assert(leaveCount == 2) -- called second in leave handler list
+
+        unit.exit()
         ---------------
-        -- copy to here to slot1.leave(*)
+        -- copy to here to slot1.leave(id) *
         ---------------
     end
     zone:mockRegisterLeave(leaveHandler1)
@@ -248,7 +252,45 @@ function _G.TestDetectionZoneUnit.testGameBehavior()
     ---------------
     -- copy from here to unit.start()
     ---------------
+    -- verify expected functions
+    local expectedFunctions = {"getSignalOut",
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+    local unexpectedFunctions = {}
+    for key, value in pairs(slot1) do
+        if type(value) == "function" then
+            for index, funcName in pairs(expectedFunctions) do
+                if key == funcName then
+                    table.remove(expectedFunctions, index)
+                    goto continueOuter
+                end
+            end
+
+            table.insert(unexpectedFunctions, key)
+        end
+
+        ::continueOuter::
+    end
+    local message = ""
+    if #expectedFunctions > 0 then
+        message = message .. "Missing expected functions: " .. table.concat(expectedFunctions, ", ") .. "\n"
+    end
+    if #unexpectedFunctions > 0 then
+        message = message .. "Found unexpected functions: " .. table.concat(unexpectedFunctions, ", ") .. "\n"
+    end
+    assert(message:len() == 0, message)
+
+    -- test element class and inherited methods
     assert(slot1.getElementClass() == "DetectionZoneUnit")
+    assert(slot1.getData() == "{}")
+    assert(slot1.getDataId() == "")
+    assert(slot1.getWidgetType() == "")
+    slot1.show()
+    slot1.hide()
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() == 50.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() == 7.79)
 
     -- ensure initial state, set up globals
     enterCount = 0
@@ -262,6 +304,7 @@ function _G.TestDetectionZoneUnit.testGameBehavior()
     ---------------
 
     zone:mockDoEnter(10)
+    zone.plugOut = 0.0
     zone:mockDoLeave(10)
 
     ---------------

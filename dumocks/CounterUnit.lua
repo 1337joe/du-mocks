@@ -115,7 +115,7 @@ function M:getSignalOut(plug)
             return 0.0
         end
     end
-    return MockElement.getSignalOut(self)
+    return MockElement.getSignalOut(self, plug)
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
@@ -126,6 +126,8 @@ function M:mockGetClosure()
     closure.getCounterState = function() return self:getCounterState() end
     closure.next = function() return self:next() end
 
+    closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
+    closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
     closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
     return closure
 end

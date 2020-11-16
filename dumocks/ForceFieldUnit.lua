@@ -94,6 +94,9 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElementWithToggle.mockGetClosure(self)
+
+    closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
+    closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
     return closure
 end
 

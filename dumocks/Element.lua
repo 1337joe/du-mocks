@@ -176,10 +176,10 @@ function M:mockGetClosure()
     closure.getId = function() return self:getId() end
     closure.getMass = function() return self:getMass() end
     closure.getElementClass = function() return self:getElementClass() end
-    closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
-    closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
 
     -- not applicable to all elements, add in individual element definitions where appropriate
+    -- closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
+    -- closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
     -- closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
 
     -- unknown use, but present in all elements
