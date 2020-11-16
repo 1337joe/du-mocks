@@ -94,7 +94,7 @@ function M:getSignalIn(plug)
             return value
         end
     end
-    return -1
+    return MockElement.getSignalIn(self)
 end
 
 local OUT_SIGNAL_PATTERN = "OUT%-signal%-(%d+)"
@@ -115,7 +115,7 @@ function M:getSignalOut(plug)
             return 0.0
         end
     end
-    return -1.0
+    return MockElement.getSignalOut(self)
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".

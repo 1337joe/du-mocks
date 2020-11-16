@@ -1,9 +1,16 @@
 --- Emits a source of light
+--
+-- Element class: LightUnit
+--
+-- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
 -- @see Element
+-- @see ElementWithState
+-- @see ElementWithToggle
 -- @module LightUnit
 -- @alias M
 
 local MockElement = require "dumocks.Element"
+local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
 elementDefinitions["square light xs"] = {mass = 70.05, maxHitPoints = 50.0}
@@ -21,13 +28,13 @@ elementDefinitions["vertical light l"] = {mass = 371.80, maxHitPoints = 499.0}
 elementDefinitions["headlight"] = {mass = 79.34, maxHitPoints = 50.0}
 local DEFAULT_ELEMENT = "square light xs"
 
-local M = MockElement:new()
+local M = MockElementWithToggle:new()
 M.elementClass = "LightUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
 
-    o = o or MockElement:new(o, id, elementDefinition)
+    o = o or MockElementWithToggle:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
 
@@ -36,30 +43,6 @@ function M:new(o, id, elementName)
     o.plugIn = 0.0
 
     return o
-end
-
---- Switches the light on.
-function M:activate()
-    self.state = true
-end
-
---- Switches the light off.
-function M:deactivate()
-    self.state = false
-end
-
---- Toggle the state of the light.
-function M:toggle()
-    self.state = not self.state
-end
-
---- Returns the activation state of the light.
--- @return 1 when the light is on, 0 otherwise.
-function M:getState()
-    if self.state then
-        return 1
-    end
-    return 0
 end
 
 --- Set the value of a signal in the specified IN plug of the element.
@@ -116,18 +99,14 @@ function M:getSignalIn(plug)
             return value
         end
     end
-    return -1
+    return MockElement.getSignalIn(self)
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
-    local closure = MockElement.mockGetClosure(self)
-    closure.activate = function() return self:activate() end
-    closure.deactivate = function() return self:deactivate() end
-    closure.toggle = function() return self:toggle() end
-    closure.getState = function() return self:getState() end
+    local closure = MockElementWithToggle.mockGetClosure(self)
     return closure
 end
 

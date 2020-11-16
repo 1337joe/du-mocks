@@ -11,7 +11,6 @@ local mlu = require("dumocks.LightUnit")
 
 _G.TestLightUnit = {}
 
-
 --- Verify constructor arguments properly handled and independent between instances.
 function _G.TestLightUnit.testConstructor()
 
@@ -41,73 +40,13 @@ function _G.TestLightUnit.testConstructor()
     lu.assertNotEquals(lightClosure3.getMass(), defaultMass)
 end
 
---- Verify element class is correct.
-function _G.TestLightUnit.testGetElementClass()
-    local element = mlu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "LightUnit")
-end
-
---- Verify that activate leaves the light on.
-function _G.TestLightUnit.testActivate()
-    local mock = mlu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    closure.activate()
-    lu.assertTrue(mock.state)
-
-    mock.state = true
-    closure.activate()
-    lu.assertTrue(mock.state)
-end
-
---- Verify that deactivate leaves the light off.
-function _G.TestLightUnit.testDeactivate()
-    local mock = mlu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    closure.deactivate()
-    lu.assertFalse(mock.state)
-
-    mock.state = true
-    closure.deactivate()
-    lu.assertFalse(mock.state)
-end
-
---- Verify that toggle changes the state.
-function _G.TestLightUnit.testToggle()
-    local mock = mlu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    closure.toggle()
-    lu.assertTrue(mock.state)
-
-    mock.state = true
-    closure.toggle()
-    lu.assertFalse(mock.state)
-end
-
---- Verify that get state retrieves the state properly.
-function _G.TestLightUnit.testGetState()
-    local mock = mlu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    lu.assertEquals(closure.getState(), 0)
-
-    mock.state = true
-    lu.assertEquals(closure.getState(), 1)
-end
-
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --
 -- Test setup:
 -- 1. 1x Long Light Light L, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState
+-- Exercises: getElementClass, deactivate, activate, toggle, getState, setSignalIn, getSignalIn
 function _G.TestLightUnit.testGameBehavior()
     local mock = mlu:new(nil, 1, "long light m")
     local slot1 = mock:mockGetClosure()
@@ -123,7 +62,7 @@ function _G.TestLightUnit.testGameBehavior()
     ---------------
     -- copy from here to unit.start
     ---------------
-    -- test element class and expected functions
+    -- verify expected functions
     local expectedFunctions = {"activate", "deactivate", "toggle", "getState", 
                                "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
                                "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
@@ -157,12 +96,14 @@ function _G.TestLightUnit.testGameBehavior()
     assert(slot1.getData() == "{}")
     assert(slot1.getDataId() == "")
     assert(slot1.getWidgetType() == "")
+    slot1.show()
+    slot1.hide()
     assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 79.34)
 
-    -- play with set signal, has no actual effect on light state when set programmatically
+    -- play with set signal, has no actual effect on state when set programmatically
     local initialState = slot1.getState()
     slot1.setSignalIn("in", 0.0)
     assert(slot1.getSignalIn("in") == 0.0)

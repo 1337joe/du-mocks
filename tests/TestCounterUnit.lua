@@ -40,12 +40,6 @@ function _G.TestCounterUnit.testConstructor()
     lu.assertNotEquals(counter3.maxCount, defaultCount)
 end
 
---- Verify element class is correct.
-function _G.TestCounterUnit.testGetElementClass()
-    local element = mcu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "CounterUnit")
-end
-
 --- Verify get counter state returns a value in range.
 function _G.TestCounterUnit.testGetCounterState()
     local mock = mcu:new()
@@ -260,9 +254,10 @@ function _G.TestCounterUnit.testGameBehavior()
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getCounterState", "next", "setSignalIn", "getSignalIn","getSignalOut", 
+    local expectedFunctions = {"getCounterState", "next", "getSignalOut",
                                "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
+                               "load"}
     local unexpectedFunctions = {}
     for key, value in pairs(slot1) do
         if type(value) == "function" then
@@ -292,6 +287,8 @@ function _G.TestCounterUnit.testGameBehavior()
     assert(slot1.getData() == "{}")
     assert(slot1.getDataId() == "")
     assert(slot1.getWidgetType() == "")
+    slot1.show()
+    slot1.hide()
     assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)

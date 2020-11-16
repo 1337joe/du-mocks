@@ -1,4 +1,10 @@
 --- Base type for all mock DU elements.
+--
+-- Extended by:
+-- <ul>
+--   <li>ElementWithState</li>
+-- </ul>
+-- @see ElementWithState
 -- @module Element
 -- @alias M
 
