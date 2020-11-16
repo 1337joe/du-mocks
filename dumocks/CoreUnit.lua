@@ -37,7 +37,7 @@ function M:new(o, id, elementName)
     o.constructId = 0
     o.worldAirFrictionAngularAcceleration = {0, 0, 0} -- vec3
     o.worldAirFrictionAcceleration = {0, 0, 0} -- vec3
-    o.elements = {} -- map: UID => {name="", type="", position={0,0,0}, hp=0.0, maxHp=0.0, mass=0.0}
+    o.elements = {} -- map: UID => {name="", type="", position={0,0,0}, rotation={0,0,0,0}, tags="", hp=0.0, maxHp=0.0, mass=0.0}
     o.altitude = 0 -- m
     o.g = 0 -- m/s2
     o.worldGravity = 0 -- m/s2
@@ -205,10 +205,30 @@ end
 
 --- Position of the element, identified by its UID.
 -- @tparam int uid The UID of the element.
--- @treturn vec3 The position of the element.
+-- @treturn vec3 Position of the element in local coordinates.
 function M:getElementPositionById(uid)
     if self.elements[uid] and self.elements[uid].position then
         return self.elements[uid].position
+    end
+    return {}
+end
+
+--- Rotation of the element, identified by its UID.
+-- @tparam int uid The UID of the element.
+-- @treturn quat Rotation of the element as a quaternion (x,y,z,w).
+function M:getElementRotationById(uid)
+    if self.elements[uid] and self.elements[uid].position then
+        return self.elements[uid].rotation
+    end
+    return {}
+end
+
+--- List of tags associated to the element, identified by its UID.
+-- @tparam int uid The UID of the element.
+-- @treturn string Tags as JSON list.
+function M:getElementTagsById(uid)
+    if self.elements[uid] and self.elements[uid].tags then
+        return self.elements[uid].tags
     end
     return {}
 end
@@ -388,10 +408,12 @@ function M:mockGetClosure()
     closure.getElementIdList = function() return self:getElementIdList() end
     closure.getElementNameById = function(uid) return self:getElementNameById(uid) end
     closure.getElementTypeById = function(uid) return self:getElementTypeById(uid) end
-    closure.getElementPositionById = function(uid) return self:getElementPositionById(uid) end
     closure.getElementHitPointsById = function(uid) return self:getElementHitPointsById(uid) end
     closure.getElementMaxHitPointsById = function(uid) return self:getElementMaxHitPointsById(uid) end
     closure.getElementMassById = function(uid) return self:getElementMassById(uid) end
+    closure.getElementPositionById = function(uid) return self:getElementPositionById(uid) end
+    closure.getElementRotationById = function(uid) return self:getElementRotationById(uid) end
+    closure.getElementTagsById = function(uid) return self:getElementTagsById(uid) end
     closure.getAltitude = function() return self:getAltitude() end
     closure.g = function() return self:g() end
     closure.getWorldGravity = function() return self:getWorldGravity() end
