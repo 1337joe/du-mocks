@@ -61,7 +61,7 @@ function _G.TestDoorUnit.testGameBehavior()
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"activate", "deactivate", "toggle", "getState", 
+    local expectedFunctions = {"activate", "deactivate", "toggle", "getState",
                                "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
                                "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
                                "load"}

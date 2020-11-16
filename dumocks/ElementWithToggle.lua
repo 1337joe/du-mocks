@@ -4,6 +4,7 @@
 --
 -- Extended by:
 -- <ul>
+--   <li>AntiGravityGeneratorUnit</li>
 --   <li>DoorUnit</li>
 --   <li>ForceFieldUnit</li>
 --   <li>LandingGearUnit</li>
@@ -12,6 +13,7 @@
 -- </ul>
 -- @see Element
 -- @see ElementWithState
+-- @see AntiGravityGeneratorUnit
 -- @see DoorUnit
 -- @see ForceFieldUnit
 -- @see LandingGearUnit
