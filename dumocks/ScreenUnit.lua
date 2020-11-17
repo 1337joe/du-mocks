@@ -1,32 +1,47 @@
 --- Screen units can display any HTML code or text message, and you can use them to create visually interactive feedback
 -- for your running Lua script by connecting one or more of them to your control unit.
+--
+-- Element class: ScreenUnit (basic and transparent screens), ScreenSignUnit (signs)
+--
+-- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
+-- @see Element
+-- @see ElementWithState
+-- @see ElementWithToggle
 -- @module ScreenUnit
 -- @alias M
 
 local MockElement = require "dumocks.Element"
+local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
-elementDefinitions["screen xs"] = {mass = 18.67, maxHitPoints = 50.0}
-elementDefinitions["screen s"] = {mass = 18.67, maxHitPoints = 50.0}
-elementDefinitions["screen m"] = {mass = 18.67, maxHitPoints = 50.0}
-elementDefinitions["screen xl"] = {mass = 12810.88, maxHitPoints = 28116.0}
-elementDefinitions["transparent screen xs"] = {mass = 18.67, maxHitPoints = 50.0}
-elementDefinitions["transparent screen s"] = {mass = 18.67, maxHitPoints = 50.0}
-elementDefinitions["transparent screen m"] = {mass = 18.67, maxHitPoints = 50.0}
-elementDefinitions["transparent screen l"] = {mass = 18.67, maxHitPoints = 50.0}
+elementDefinitions["screen xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
+elementDefinitions["screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
+elementDefinitions["screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
+elementDefinitions["screen xl"] = {mass = 12810.88, maxHitPoints = 28116.0, class = "ScreenUnit"}
+elementDefinitions["transparent screen xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
+elementDefinitions["transparent screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
+elementDefinitions["transparent screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
+elementDefinitions["transparent screen l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
+elementDefinitions["sign xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
+elementDefinitions["sign s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
+elementDefinitions["sign m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
+elementDefinitions["sign l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
+elementDefinitions["vertical sign xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
+elementDefinitions["vertical sign m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
+elementDefinitions["vertical sign l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
 local DEFAULT_ELEMENT = "screen xs"
 
-local M = MockElement:new()
-M.elementClass = "ScreenUnit"
+local M = MockElementWithToggle:new()
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
 
-    o = o or MockElement:new(o, id, elementDefinition)
+    o = o or MockElementWithToggle:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
 
-    o.state = false
+    o.elementClass = elementDefinition.class
+
     o.html = "" -- this is the displayed content, for use in checking what's on the screen
 
     o.directHtml = ""
@@ -37,11 +52,13 @@ function M:new(o, id, elementName)
     o.mouseY = -1
     o.mouseState = false
 
-    self.propagateHtmlErrors = false -- if errors in callbacks should throw exceptions
-    self.htmlCallbacks = {}
+    o.plugIn = 0.0
 
-    self.mouseDownCallbacks = {}
-    self.mouseUpCallbacks = {}
+    o.propagateHtmlErrors = false -- if errors in callbacks should throw exceptions
+    o.htmlCallbacks = {}
+
+    o.mouseDownCallbacks = {}
+    o.mouseUpCallbacks = {}
 
     return o
 end
@@ -99,6 +116,25 @@ local function validateFloat(value)
     return value
 end
 
+--- Displays the given text at the given coordinates in the screen, and returns an ID to move it later.
+--
+-- This method is deprecated: addText should be used instead.
+-- @see addText
+-- @tparam 0..100 x Horizontal position, as a percentage of the screen width.
+-- @tparam 0..100 y Vertical position, as a percentage of the screen height.
+-- @tparam 0..100 fontSize Text font size, as a percentage of the screen width.
+-- @tparam string text The text to display.
+-- @return An integer ID that can be used later to update/remove the added element.
+function M:setText(x, y, fontSize, text)
+    local message = "Warning: method setText is deprecated, use addText instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
+    self:addText(x, y, fontSize, text)
+end
+
 local ADD_TEXT_TEMPLATE = '<div style="font-size:%.6fvw">%s</div>'
 --- Displays the given text at the given coordinates in the screen, and returns an ID to move it later.
 -- @tparam 0..100 x Horizontal position, as a percentage of the screen width.
@@ -132,12 +168,45 @@ function M:setCenteredText(text)
 end
 
 --- Set the whole screen HTML content (overrides anything already set).
+--
+-- This method is deprecated: setHTML should be used instead.
+-- @see setHTML
+-- @tparam html html The HTML content to display.
+function M:setRawHTML(html)
+    local message = "Warning: method setRawHTML is deprecated, use setHTML instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
+    self:setHTML(html)
+end
+
+--- Set the whole screen HTML content (overrides anything already set).
 -- @tparam html html The HTML content to display.
 function M:setHTML(html)
     self.contentList = {}
     self.directHtml = validateText(html)
 
     generateHtml(self)
+end
+
+--- Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
+--
+-- This method is deprecated: addContent should be used instead.
+-- @see addContent
+-- @tparam 0..100 x Horizontal position, as a percentage of the screen width.
+-- @tparam 0..100 y Vertical position, as a percentage of the screen height.
+-- @tparam html html The HTML content to display, which can contain SVG elements to make drawings.
+-- @return An integer ID that can be used later to update/remove the added element.
+function M:setContent(x, y, html)
+    local message = "Warning: method setContent is deprecated, use addContent instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
+    self:addContent(x, y, html)
 end
 
 --- Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
@@ -274,36 +343,61 @@ function M:clear()
     generateHtml(self)
 end
 
---- Turn on the screen.
+--- Set the value of a signal in the specified IN plug of the element.
 --
--- Note: This is not documented in the codex.
-function M:activate()
-    self.state = true
-end
+-- Valid plug names are:
+-- <ul>
+-- <li>"in" for the in signal (has no actual effect on screen state when modified this way).</li>
+-- </ul>
+-- @param plug A valid plug name to set.
+-- @tparam 0/1 state The plug signal state
+function M:setSignalIn(plug, state)
+    if plug == "in" then
+        local value = tonumber(state)
+        if type(value) ~= "number" then
+            value = 0.0
+        end
 
---- Turn off the screen.
---
--- Note: This is not documented in the codex.
-function M:deactivate()
-    self.state = false
-end
+        -- expected behavior, but in fact nothing happens in-game
+        if value > 0.0 then
+            -- self:activate()
+        else
+            -- self:deactivate()
+        end
 
---- Toggle the state of the screen.
---
--- Note: This is not documented in the codex.
-function M:toggle()
-    self.state = not self.state
-end
-
---- Returns the activation state of the screen.
---
--- Note: This is not documented in the codex.
--- @return 1 when the screen is on, 0 otherwise.
-function M:getState()
-    if self.state then
-        return 1
+        if value <= 0 then
+            self.plugIn = 0
+        elseif value >= 1.0 then
+            self.plugIn = 1.0
+        else
+            self.plugIn = value
+        end
     end
-    return 0
+end
+
+--- Return the value of a signal in the specified IN plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"in" for the in signal.</li>
+-- </ul>
+-- @param plug A valid plug name to query.
+-- @treturn 0/1 The plug signal state
+function M:getSignalIn(plug)
+    if plug == "in" then
+        -- clamp to valid values
+        local value = tonumber(self.plugIn)
+        if type(value) ~= "number" then
+            return 0.0
+        elseif value >= 1.0 then
+            return 1.0
+        elseif value <= 0.0 then
+            return 0.0
+        else
+            return value
+        end
+    end
+    return MockElement.getSignalIn(self)
 end
 
 --- Event: Emitted when the player starts a click on the screen unit.
@@ -421,7 +515,7 @@ end
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
-    local closure = MockElement.mockGetClosure(self)
+    local closure = MockElementWithToggle.mockGetClosure(self)
     -- codex-documented methods
     closure.addText = function(x, y, fontSize, text) return self:addText(x, y, fontSize, text) end
     closure.setCenteredText = function(text) return self:setCenteredText(text) end
@@ -436,13 +530,13 @@ function M:mockGetClosure()
     closure.getMouseY = function() return self:getMouseY() end
     closure.getMouseState = function() return self:getMouseState() end
     closure.clear = function() return self:clear() end
+    -- undocumented (deprecated) methods
+    closure.setText = function(x, y, fontSize, text) return self:setText(x, y, fontSize, text) end
+    closure.setRawHTML = function(html) return self:setRawHTML(html) end
+    closure.setContent = function(x, y, html) return self:setContent(x, y, html) end
 
-    -- undocumented methods
-    closure.activate = function() return self:activate() end
-    closure.deactivate = function() return self:deactivate() end
-    closure.toggle = function() return self:toggle() end
-    closure.getState = function() return self:getState() end
-
+    closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
+    closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
     return closure
 end
 

@@ -1,24 +1,32 @@
 --- A general kinematic unit to obtain information about the ship orientation, velocity, and acceleration.
+--
+-- Element class: GyroUnit
+--
+-- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
+-- @see Element
+-- @see ElementWithState
+-- @see ElementWithToggle
 -- @module GyroUnit
 -- @alias M
 
 local MockElement = require "dumocks.Element"
+local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
 elementDefinitions["gyroscope"] = {mass = 104.41, maxHitPoints = 50}
 local DEFAULT_ELEMENT = "gyroscope"
 
-local M = MockElement:new()
+local M = MockElementWithToggle:new()
 M.elementClass = "GyroUnit"
+M.widgetType = "gyro"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
 
-    o = o or MockElement:new(o, id, elementDefinition)
+    o = o or MockElementWithToggle:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
 
-    o.state = false
     o.localUp = {0, 0, 0}
     o.localForward = {0, 0, 0}
     o.localRight = {0, 0, 0}
@@ -27,32 +35,37 @@ function M:new(o, id, elementName)
     o.worldRight = {0, 0, 0}
     o.pitch = 0 -- deg
     o.roll = 0 -- deg
+    o.yaw = 0 -- deg
+    o.yawWorldReference = {0, 0, 0}
+
+    -- only activateable when on a dynamic core, this allows for testing on a static core if needed for some reason
+    o.dynamicCore = true
 
     return o
 end
 
---- Selects this gyro as the main gyro used for ship orientation.
+--- Switches the element on/open.
+--
+-- Note: Has no effect when called on a static core.
 function M:activate()
-    self.state = true
+    self.state = self.dynamicCore == true
 end
 
---- Deselects this gyro as the main gyro used for ship orientation, using the core unit instead.
-function M:deactivate()
-    self.state = false
-end
-
---- Toggle the activation state of the gyro.
+--- Toggle the state of the element.
+--
+-- Note: Has no effect when called on a static core.
 function M:toggle()
-    self.state = not self.state
+    self.state = self.dynamicCore == true and not self.state
 end
 
---- Returns the activation state of the gyro.
--- @return 1 when the gyro is used for ship orientation, 0 otherwise.
-function M:getState()
-    if self.state then
-        return 1
-    end
-    return 0
+local DATA_TEMPLATE = '{\"helperId\":\"gyro\",\"name\":\"%s [%d]\","pitch":%.17f,"roll":%.16f,\"type\":\"%s\"}'
+function M:getData()
+    return string.format(DATA_TEMPLATE, self.name, self.pitch, self.roll, self:getId(), self:getWidgetType())
+end
+
+-- Override default with realistic patten to id.
+function M:getDataId()
+    return "e123456"
 end
 
 --- The up vector of the gyro unit, in construct local coordinates.
@@ -103,15 +116,23 @@ function M:getRoll()
     return self.roll
 end
 
+--- The yaw value relative to the gyro orientation and the world reference.
+-- @treturn deg The yaw angle in degrees, relative to the gyro orientation and the local gravity.
+function M:getYaw()
+    return self.yaw
+end
+
+--- Set the world reference vector to calculate yaw from.
+-- @param Reference vector of the gyro unit, in world coordinates.
+function M:setYawWorldReference(direction)
+    self.yawWorldReference = direction
+end
+
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
-    local closure = MockElement.mockGetClosure(self)
-    closure.activate = function() return self:activate() end
-    closure.deactivate = function() return self:deactivate() end
-    closure.toggle = function() return self:toggle() end
-    closure.getState = function() return self:getState() end
+    local closure = MockElementWithToggle.mockGetClosure(self)
     closure.localUp = function() return self:localUp() end
     closure.localForward = function() return self:localForward() end
     closure.localRight = function() return self:localRight() end
@@ -120,6 +141,8 @@ function M:mockGetClosure()
     closure.worldRight = function() return self:worldRight() end
     closure.getPitch = function() return self:getPitch() end
     closure.getRoll = function() return self:getRoll() end
+    closure.getYaw = function() return self:getYaw() end
+    closure.setYawWorldReference = function(direction) return self:setYawWorldReference(direction) end
     return closure
 end
 

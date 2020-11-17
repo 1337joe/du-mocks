@@ -7,18 +7,22 @@
 --   <li>AntiGravityGeneratorUnit</li>
 --   <li>DoorUnit</li>
 --   <li>ForceFieldUnit</li>
+--   <li>GyroUnit</li>
 --   <li>LandingGearUnit</li>
 --   <li>LightUnit</li>
 --   <li>ManualSwitchUnit</li>
+--   <li>ScreenUnit</li>
 -- </ul>
 -- @see Element
 -- @see ElementWithState
 -- @see AntiGravityGeneratorUnit
 -- @see DoorUnit
 -- @see ForceFieldUnit
+-- @see GyroUnit
 -- @see LandingGearUnit
 -- @see LightUnit
 -- @see ManualSwitchUnit
+-- @see ScreenUnit
 -- @module ElementWithToggle
 -- @alias M
 

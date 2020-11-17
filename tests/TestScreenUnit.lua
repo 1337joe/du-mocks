@@ -21,11 +21,13 @@ function _G.TestScreenUnit.testConstructor()
     local screen1 = msu:new(nil, 1, "Screen XS")
     local screen2 = msu:new(nil, 2, "invalid")
     local screen3 = msu:new(nil, 3, "Screen XL")
+    local screen4 = msu:new(nil, 3, "Sign L")
 
     local screenClosure0 = screen0:mockGetClosure()
     local screenClosure1 = screen1:mockGetClosure()
     local screenClosure2 = screen2:mockGetClosure()
     local screenClosure3 = screen3:mockGetClosure()
+    local screenClosure4 = screen4:mockGetClosure()
 
     lu.assertEquals(screenClosure0.getId(), 0)
     lu.assertEquals(screenClosure1.getId(), 1)
@@ -38,66 +40,9 @@ function _G.TestScreenUnit.testConstructor()
     lu.assertEquals(screenClosure1.getMass(), defaultMass)
     lu.assertEquals(screenClosure2.getMass(), defaultMass)
     lu.assertNotEquals(screenClosure3.getMass(), defaultMass)
-end
 
---- Verify element class is correct.
-function _G.TestScreenUnit.testGetElementClass()
-    local element = msu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "ScreenUnit")
-end
-
---- Verify that activate leaves the screen on.
-function _G.TestScreenUnit.testActivate()
-    local mock = msu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    closure.activate()
-    lu.assertTrue(mock.state)
-
-    mock.state = true
-    closure.activate()
-    lu.assertTrue(mock.state)
-end
-
---- Verify that deactivate leaves the screen off.
-function _G.TestScreenUnit.testDeactivate()
-    local mock = msu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    closure.deactivate()
-    lu.assertFalse(mock.state)
-
-    mock.state = true
-    closure.deactivate()
-    lu.assertFalse(mock.state)
-end
-
---- Verify that toggle changes the state.
-function _G.TestScreenUnit.testToggle()
-    local mock = msu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    closure.toggle()
-    lu.assertTrue(mock.state)
-
-    mock.state = true
-    closure.toggle()
-    lu.assertFalse(mock.state)
-end
-
---- Verify that get state retrieves the state properly.
-function _G.TestScreenUnit.testGetState()
-    local mock = msu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    lu.assertEquals(closure.getState(), 0)
-
-    mock.state = true
-    lu.assertEquals(closure.getState(), 1)
+    -- verify different classes for different types
+    lu.assertNotEquals(screenClosure3.getElementClass(), screenClosure4.getElementClass())
 end
 
 --- Verify listener is registered and notified on non-error updates.
@@ -765,16 +710,136 @@ function _G.TestScreenUnit.testMouseUp()
     lu.assertEquals(actualY, expectedY)
 end
 
---- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function _G.TestScreenUnit.skipTestGameBehavior()
-    local mock = msu:new()
+--- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
+-- in-game.
+--
+-- Test setup:
+-- 1. 1x Screen or Sign (not XL), connected to Programming Board on slot1
+--
+-- Exercises: getElementClass, deactivate, activate, toggle, getState
+function _G.TestScreenUnit.testGameBehavior()
+    local mock = msu:new(nil, 1)
     local slot1 = mock:mockGetClosure()
 
-    -- copy from here to unit.start
-    assert(slot1.getElementClass() == "ScreenUnit")
+    -- stub this in directly to supress print in the unit test
+    local unit = {}
+    unit.exit = function() end
+    local system = {}
+    system.print = function() end
 
-    assert(false, "Not Yet Implemented")
-    -- copy to here to unit.start
+    ---------------
+    -- copy from here to unit.start()
+    ---------------
+    -- verify expected functions
+    local expectedFunctions = {"activate", "deactivate", "toggle", "getState", "addText", "setCenteredText", "setHTML",
+                               "addContent", "setSVG", "resetContent", "deleteContent", "showContent", "moveContent",
+                               "getMouseX", "getMouseY", "getMouseState", "clear", "setText", "setRawHTML", "setContent",
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "getSignalIn", "setSignalIn",
+                               "load"}
+    local unexpectedFunctions = {}
+    for key, value in pairs(slot1) do
+        if type(value) == "function" then
+            for index, funcName in pairs(expectedFunctions) do
+                if key == funcName then
+                    table.remove(expectedFunctions, index)
+                    goto continueOuter
+                end
+            end
+
+            local functionDescription = key
+
+            -- unknown function, try to get parameters
+            -- taken from hdparm's global dump script posted on forum
+            local dump_success, dump_result = pcall(string.dump, value)
+            if dump_success then
+                local params = string.match(dump_result, "function%s+[^%s)]*" .. key .. "%s*%(([^)]*)%)")
+                if params then
+                    params = params:gsub(",%s+", ",") -- remove whitespace after function parameter names
+                    functionDescription = string.format("%s(%s)", functionDescription, params)
+                end
+            end
+
+            table.insert(unexpectedFunctions, functionDescription)
+        end
+
+        ::continueOuter::
+    end
+    local message = ""
+    if #expectedFunctions > 0 then
+        message = message .. "Missing expected functions: " .. table.concat(expectedFunctions, ", ") .. "\n"
+    end
+    if #unexpectedFunctions > 0 then
+        message = message .. "Found unexpected functions: " .. table.concat(unexpectedFunctions, ", ") .. "\n"
+    end
+    assert(message:len() == 0, message)
+
+    -- test element class and inherited methods
+    local class = slot1.getElementClass()
+    local isScreen
+    if class == "ScreenUnit" then
+        isScreen = true
+    elseif class == "ScreenSignUnit" then
+        isScreen = false
+    else
+        assert(false, "Unexpected class: " .. class)
+    end
+    assert(slot1.getData() == "{}")
+    assert(slot1.getDataId() == "")
+    assert(slot1.getWidgetType() == "")
+    slot1.show()
+    slot1.hide()
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() == 50.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() == 18.67)
+
+    -- play with set signal, has no actual effect on state when set programmatically
+    local initialState = slot1.getState()
+    slot1.setSignalIn("in", 0.0)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", 1.0)
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(slot1.getState() == initialState)
+    -- fractions within [0,1] work, and string numbers are cast
+    slot1.setSignalIn("in", 0.7)
+    assert(slot1.getSignalIn("in") == 0.7)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", "0.5")
+    assert(slot1.getSignalIn("in") == 0.5)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", "0.0")
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", "7.0")
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(slot1.getState() == initialState)
+    -- invalid sets to 0
+    slot1.setSignalIn("in", "text")
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", nil)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+
+    -- ensure initial state
+    slot1.deactivate()
+    assert(slot1.getState() == 0)
+
+    -- validate methods
+    slot1.activate()
+    assert(slot1.getState() == 1)
+    slot1.deactivate()
+    assert(slot1.getState() == 0)
+    slot1.toggle()
+    assert(slot1.getState() == 1)
+
+    system.print("Success")
+    unit.exit()
+    ---------------
+    -- copy to here to unit.start()
+    ---------------
 end
 
 os.exit(lu.LuaUnit.run())

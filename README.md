@@ -74,7 +74,7 @@ Format notes:
 2. Implementation to allow each method to be used for testing.
 3. Unit testing for each method.
 4. A characterization (game-behavior) test that can be run in-game and using the mock to validate behavior matches.
-  a. Test verifies only expected methods exist and calls them.
+  a. Test verifies only expected methods exist and calls element-inherited methods.
 5. Element definitions for the in-game elements that the mock applies to.
 
 ### Current State
@@ -101,7 +101,7 @@ Format notes:
 | EngineUnit | :heavy_check_mark: | P | P | | P |
 | FireworksUnit | :heavy_check_mark: | P | P | | |
 | ForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| GyroUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
+| GyroUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
 | IndustryUnit | :heavy_check_mark: | P | P | P | :heavy_check_mark: |
 | LandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | LaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: |
@@ -112,7 +112,6 @@ Format notes:
 | PressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | RadarUnit | :heavy_check_mark: | :heavy_check_mark: | P | | |
 | ReceiverUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | P |
-| ScreenUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| | :heavy_check_mark: |
-| SignUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark: |
+| ScreenUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| P :heavy_check_mark: | :heavy_check_mark: |
 | TelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |

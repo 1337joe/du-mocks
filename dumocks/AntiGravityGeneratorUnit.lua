@@ -65,7 +65,7 @@ end
 --
 -- Note: This is the altitude that the anti-gravity generator is currently trying to hold at. It will adjust slowly
 -- to match the altitude provided to setBaseAltitude but will not instantly reflect the value set.
--- @tparam m The base altitude.
+-- @treturn m The base altitude.
 function M:getBaseAltitude()
     return self.baseAltitude
 end
