@@ -2,6 +2,13 @@
 --
 -- Element class: AntiGravityGeneratorUnit
 --
+-- Displayed widget fields:
+-- <ul>
+--   <li>antiGPower</li>
+--   <li>antiGravityField</li>
+--   <li>baseAltitude</li>
+-- </ul>
+--
 -- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
 -- @see Element
 -- @see ElementWithState

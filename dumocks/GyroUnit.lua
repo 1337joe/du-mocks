@@ -2,6 +2,12 @@
 --
 -- Element class: GyroUnit
 --
+-- Displayed widget fields:
+-- <ul>
+--   <li>pitch</li>
+--   <li>roll</li>
+-- </ul>
+--
 -- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
 -- @see Element
 -- @see ElementWithState

@@ -8,6 +8,7 @@ package.path = package.path..";../?.lua"
 local lu = require("luaunit")
 
 local mcu = require("dumocks.ContainerUnit")
+require("tests.Utilities")
 
 _G.TestContainerUnit = {}
 
@@ -83,6 +84,96 @@ function _G.TestContainerUnit.testGetMass()
     expected = 30
     actual = container:getMass()
     lu.assertEquals(actual, expected)
+end
+
+
+--- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
+-- in-game.
+--
+-- Test setup:
+-- 1. 1x item container or fuel tank, connected to Programming Board on slot1
+--
+-- Exercises: getElementClass, deactivate, activate, toggle, getState
+function _G.TestContainerUnit.testGameBehavior()
+    local mock, closure
+    local result, message
+    for _,element in pairs({"container xs", "atmospheric fuel tank xs", "space fuel tank s", "rocket fuel tank xs"}) do
+        mock = mcu:new(nil, 1, element)
+        closure = mock:mockGetClosure()
+
+        result, message = pcall(_G.TestContainerUnit.gameBehaviorHelper, mock, closure)
+        if not result then
+            lu.fail("Element: " .. element .. ", Error: " .. message)
+        end
+    end
+end
+
+--- Runs characterization tests on the provided element.
+function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
+
+    -- stub this in directly to supress print in the unit test
+    local unit = {}
+    unit.exit = function() end
+    local system = {}
+    system.print = function() end
+
+    ---------------
+    -- copy from here to unit.start()
+    ---------------
+    -- verify expected functions
+    local expectedFunctions = {"getSelfMass", "getItemsMass",
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+    _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
+
+    -- test element class and inherited methods
+    local class = slot1.getElementClass()
+    local isItem, isAtmo, isSpace, isRocket
+    if class == "ItemContainer" then
+        isItem = true
+    elseif class == "AtmoFuelContainer" then
+        isAtmo = true
+    elseif class == "SpaceFuelContainer" then
+        isSpace = true
+    elseif class == "RocketFuelContainer" then
+        isRocket = true
+    else
+        assert(false, "Unexpected class: " .. class)
+    end
+    local data = slot1.getData()
+    if isItem then
+        assert(slot1.getData() == "{}")
+        assert(slot1.getDataId() == "")
+        assert(slot1.getWidgetType() == "")
+    else
+        local expectedFields = {"percentage", "timeLeft", "helperId", "name", "type"}
+        local unexpectedFields = {}
+        local expectedValues = {}
+        if isAtmo then
+            expectedValues["helperId"] = '"fuel_container_atmo_fuel"'
+        elseif isSpace then
+            expectedValues["helperId"] = '"fuel_container_space_fuel"'
+        elseif isRocket then
+            expectedValues["helperId"] = '"fuel_container_rocket_fuel"'
+        end
+        expectedValues["type"] = '"fuel_container"'
+        _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
+
+        assert(string.match(slot1.getDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. slot1.getDataId())
+        assert(slot1.getWidgetType() == "fuel_container")
+    end
+    slot1.show()
+    slot1.hide()
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() >= 50.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() > 35.0)
+
+    system.print("Success")
+    unit.exit()
+    ---------------
+    -- copy to here to unit.start()
+    ---------------
 end
 
 os.exit(lu.LuaUnit.run())
