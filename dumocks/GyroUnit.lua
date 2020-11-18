@@ -60,7 +60,7 @@ end
 
 local DATA_TEMPLATE = '{\"helperId\":\"gyro\",\"name\":\"%s [%d]\","pitch":%.17f,"roll":%.16f,\"type\":\"%s\"}'
 function M:getData()
-    return string.format(DATA_TEMPLATE, self.name, self.pitch, self.roll, self:getId(), self:getWidgetType())
+    return string.format(DATA_TEMPLATE, self.name, self:getId(), self.pitch, self.roll, self:getWidgetType())
 end
 
 -- Override default with realistic patten to id.

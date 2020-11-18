@@ -8,6 +8,7 @@ package.path = package.path..";../?.lua"
 local lu = require("luaunit")
 
 local mgu = require("dumocks.GyroUnit")
+require("tests.Utilities")
 
 _G.TestGyroUnit = {}
 
@@ -87,56 +88,18 @@ function _G.TestGyroUnit.testGameBehavior()
                                "localUp",
                                "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
                                "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
-    local unexpectedFunctions = {}
-    for key, value in pairs(slot1) do
-        if type(value) == "function" then
-            for index, funcName in pairs(expectedFunctions) do
-                if key == funcName then
-                    table.remove(expectedFunctions, index)
-                    goto continueOuter
-                end
-            end
-
-            table.insert(unexpectedFunctions, key)
-        end
-
-        ::continueOuter::
-    end
-    local message = ""
-    if #expectedFunctions > 0 then
-        message = message .. "Missing expected functions: " .. table.concat(expectedFunctions, ", ") .. "\n"
-    end
-    if #unexpectedFunctions > 0 then
-        message = message .. "Found unexpected functions: " .. table.concat(unexpectedFunctions, ", ") .. "\n"
-    end
-    assert(message:len() == 0, message)
+    _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
     assert(slot1.getElementClass() == "GyroUnit")
+
     local data = slot1.getData()
     local expectedFields = {"pitch", "roll", "helperId", "name", "type"}
-    local unexpectedFields = {}
     local expectedValues = {}
     expectedValues["helperId"] = '"gyro"'
     expectedValues["type"] = '"gyro"'
-    for key, value in string.gmatch(data, "\"(.-)\":(.-)[},]") do
-        if expectedValues[key] then
-            assert(expectedValues[key] == value, "Unexpected value for " .. key .. ", expected " .. expectedValues[key] .. " but was " .. value)
-        end
+    _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
 
-        for index, field in pairs(expectedFields) do
-            if key == field then
-                table.remove(expectedFields, index)
-                goto continueOuter
-            end
-        end
-
-        table.insert(unexpectedFields, key)
-
-        ::continueOuter::
-    end
-    assert(#expectedFields == 0, "Missing expected data fields: " .. table.concat(expectedFields, ", "))
-    assert(#unexpectedFields == 0, "Found unexpected data fields: " .. table.concat(expectedFields, ", "))
     assert(string.match(slot1.getDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. slot1.getDataId())
     assert(slot1.getWidgetType() == "gyro")
     slot1.show()

@@ -8,6 +8,7 @@ package.path = package.path..";../dumocks/?.lua"
 local lu = require("luaunit")
 
 local msu = require("dumocks.ScreenUnit")
+require("tests.Utilities")
 
 _G.TestScreenUnit = {}
 
@@ -737,42 +738,7 @@ function _G.TestScreenUnit.testGameBehavior()
                                "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
                                "getMaxHitPoints", "getId", "getMass", "getElementClass", "getSignalIn", "setSignalIn",
                                "load"}
-    local unexpectedFunctions = {}
-    for key, value in pairs(slot1) do
-        if type(value) == "function" then
-            for index, funcName in pairs(expectedFunctions) do
-                if key == funcName then
-                    table.remove(expectedFunctions, index)
-                    goto continueOuter
-                end
-            end
-
-            local functionDescription = key
-
-            -- unknown function, try to get parameters
-            -- taken from hdparm's global dump script posted on forum
-            local dump_success, dump_result = pcall(string.dump, value)
-            if dump_success then
-                local params = string.match(dump_result, "function%s+[^%s)]*" .. key .. "%s*%(([^)]*)%)")
-                if params then
-                    params = params:gsub(",%s+", ",") -- remove whitespace after function parameter names
-                    functionDescription = string.format("%s(%s)", functionDescription, params)
-                end
-            end
-
-            table.insert(unexpectedFunctions, functionDescription)
-        end
-
-        ::continueOuter::
-    end
-    local message = ""
-    if #expectedFunctions > 0 then
-        message = message .. "Missing expected functions: " .. table.concat(expectedFunctions, ", ") .. "\n"
-    end
-    if #unexpectedFunctions > 0 then
-        message = message .. "Found unexpected functions: " .. table.concat(unexpectedFunctions, ", ") .. "\n"
-    end
-    assert(message:len() == 0, message)
+    _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
     local class = slot1.getElementClass()

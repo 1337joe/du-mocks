@@ -8,6 +8,7 @@ package.path = package.path..";../?.lua"
 local lu = require("luaunit")
 
 local mlgu = require("dumocks.LandingGearUnit")
+require("tests.Utilities")
 
 _G.TestLandingGearUnit = {}
 
@@ -65,29 +66,7 @@ function _G.TestLandingGearUnit.testGameBehavior()
                                "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
                                "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
                                "load"}
-    local unexpectedFunctions = {}
-    for key, value in pairs(slot1) do
-        if type(value) == "function" then
-            for index, funcName in pairs(expectedFunctions) do
-                if key == funcName then
-                    table.remove(expectedFunctions, index)
-                    goto continueOuter
-                end
-            end
-
-            table.insert(unexpectedFunctions, key)
-        end
-
-        ::continueOuter::
-    end
-    local message = ""
-    if #expectedFunctions > 0 then
-        message = message .. "Missing expected functions: " .. table.concat(expectedFunctions, ", ") .. "\n"
-    end
-    if #unexpectedFunctions > 0 then
-        message = message .. "Found unexpected functions: " .. table.concat(unexpectedFunctions, ", ") .. "\n"
-    end
-    assert(message:len() == 0, message)
+    _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
     assert(slot1.getElementClass() == "LandingGearUnit")

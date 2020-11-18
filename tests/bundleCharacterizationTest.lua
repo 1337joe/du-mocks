@@ -13,36 +13,44 @@ end
 local testDirPath = string.match(arg[0], "(.*[/\\])%a+%.lua")
 local inputFile = arg[1]
 
+local blocks = {}
+
 -- look for inputFile in current working directory and in directory containing script
 local function fileExists(file)
     local f = io.open(file, "rb")
     if f then f:close() end
     return f ~= nil
 end
-if not fileExists(inputFile) then
-    if fileExists(testDirPath..inputFile) then
-        inputFile = testDirPath..inputFile
-    else
-        error("File not found: "..inputFile)
-    end
-end
 
--- read content
-local inputHandle = io.open(inputFile, "rb")
-local fileContents = io.input(inputHandle):read("*all")
-inputHandle:close()
-
--- parse content into blocks
 local SKIP_LINE_PATTERN = "[ -]+%c"
 local BLOCK_PATTERN = "--- copy from here to (.-)%c(.-)%c%s--- copy to here to (.-)%c"
-fileContents = string.gsub(fileContents, SKIP_LINE_PATTERN, "")
-local blocks = {}
-for target,code,target2 in string.gmatch(fileContents, BLOCK_PATTERN) do
-    if target ~= target2 then
-        print("WARNING: Non-matching labels: "..target.." ~= "..target2)
+
+local function loadFileToBlocks(file)
+    if not fileExists(file) then
+        if fileExists(testDirPath..file) then
+            file = testDirPath..file
+        else
+            error("File not found: "..file)
+        end
     end
-    table.insert(blocks, {target=target, code=code})
+
+    -- read content
+    local inputHandle = io.open(file, "rb")
+    local fileContents = io.input(inputHandle):read("*all")
+    inputHandle:close()
+
+    -- parse content into blocks
+    fileContents = string.gsub(fileContents, SKIP_LINE_PATTERN, "")
+    for target,code,target2 in string.gmatch(fileContents, BLOCK_PATTERN) do
+        if target ~= target2 then
+            print("WARNING: Non-matching labels: "..target.." ~= "..target2)
+        end
+        table.insert(blocks, {target=target, code=code})
+    end
 end
+
+loadFileToBlocks(inputFile)
+loadFileToBlocks("Utilities.lua")
 
 -- bail early if no code blocks
 if #blocks == 0 then
@@ -130,7 +138,6 @@ end
 output = output..BOILERPLATE_END
 
 -- output to file if specified, stdout otherwise
--- TODO clipboard (requires winapi module?)
 if arg[2] and arg[2] ~= "" then
     local outputHandle = io.open(arg[2], "w")
     io.output(outputHandle):write(output)
