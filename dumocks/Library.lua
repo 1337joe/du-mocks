@@ -64,6 +64,8 @@ function M:mockGetClosure()
     closure.systemResolution2 = function(vec_c1, vec_c2, vec_c0)
         return self:systemResolution2(vec_c1, vec_c2, vec_c0)
     end
+    -- unknown use, but present in all elements
+    closure.load = function() end
     return closure
 end
 

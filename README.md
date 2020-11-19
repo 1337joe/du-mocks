@@ -86,9 +86,9 @@ Format notes:
 
 | Unit | 1 | 2 | 3 | 4 | 5 |
 | ---- | - | - | - | - | - |
-| Library | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | - | - |
-| System | :heavy_check_mark: | P | P | | - |
-| Element | :heavy_check_mark: | P | P | - | - |
+| Library | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | - :heavy_check_mark: | - |
+| System | :heavy_check_mark: | P | P | P :heavy_check_mark: | - |
+| Element | :heavy_check_mark: | P | P | - - | - |
 | AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
 | ContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | P :heavy_check_mark: | :heavy_check_mark: |
 | ControlUnit | :heavy_check_mark: | | P | | P |

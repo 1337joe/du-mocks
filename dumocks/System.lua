@@ -234,8 +234,49 @@ function M:print(msg)
 end
 
 --- Print a message to the game log file at `INFO` level. Log file is located in `<user>/AppData/Local/NQ/DualUniverse/log/`.
+--
+-- Note: This method is not documented in the codex.
 -- @tparam string msg The message to print.
 function M:logInfo(msg)
+end
+
+--- Print a message to the game log file at `WARNING` level. Log file is located in `<user>/AppData/Local/NQ/DualUniverse/log/`.
+--
+-- Note: This method is not documented in the codex.
+-- @tparam string msg The message to print.
+function M:logWarning(msg)
+end
+
+--- Print a message to the game log file at `ERROR` level. Log file is located in `<user>/AppData/Local/NQ/DualUniverse/log/`.
+--
+-- Note: This method is not documented in the codex.
+-- @tparam string msg The message to print.
+function M:logError(msg)
+end
+
+--- Unknown use.
+--
+-- Note: This method is not documented in the codex.
+-- @param filter
+-- @param name
+function M:addMarker(filter, name)
+end
+
+--- Unknown use.
+--
+-- Note: This method is not documented in the codex.
+-- @param filter
+-- @param sectionName
+-- @param varName
+-- @param value
+function M:addMarker(filter, sectionName, varName, value)
+end
+
+--- Unknown use.
+--
+-- Note: This method is not documented in the codex.
+-- @param result
+function M:__NQ_returnFromRunPlayerLUA(result)
 end
 
 --- Event: Emitted when an action starts.
@@ -316,6 +357,15 @@ function M:mockGetClosure()
     closure.getPlayerName = function(id) return self:getPlayerName(id) end
     closure.getPlayerWorldPos = function(id) return self:getPlayerWorldPos(id) end
     closure.print = function(msg) return self:print(msg) end
+
+    closure.logInfo = function(msg) return self:logInfo(msg) end
+    closure.logWarning = function(msg) return self:logWarning(msg) end
+    closure.logError = function(msg) return self:logError(msg) end
+    closure.addMarker = function(filter, name) return self:addMarker(filter, name) end
+    closure.addMeasure = function(filter, sectionName, varName, value) return self:addMeasure(filter, sectionName, varName, value) end
+    closure.__NQ_returnFromRunPlayerLUA = function(result) return self:__NQ_returnFromRunPlayerLUA(result) end
+    -- unknown use, but present in all elements
+    closure.load = function() end
     return closure
 end
 
