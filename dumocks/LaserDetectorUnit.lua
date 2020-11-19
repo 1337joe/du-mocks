@@ -1,38 +1,54 @@
 --- Detect the hit of a laser.
+--
+-- Element class: LaserDetectorUnit
+--
+-- Extends: Element &gt; ElementWithState
+-- @see Element
+-- @see ElementWithState
 -- @module LaserDetectorUnit
 -- @alias M
 
 local MockElement = require "dumocks.Element"
+local MockElementWithState = require "dumocks.ElementWithState"
 
 local elementDefinitions = {}
 elementDefinitions["laser receiver"] = {mass = 9.93, maxHitPoints = 50.0}
 elementDefinitions["infrared laser receiver"] = {mass = 9.93, maxHitPoints = 50.0}
 local DEFAULT_ELEMENT = "laser receiver"
 
-local M = MockElement:new()
+local M = MockElementWithState:new()
 M.elementClass = "LaserDetectorUnit"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
 
-    o = o or MockElement:new(o, id, elementDefinition)
+    o = o or MockElementWithState:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
 
-    o.state = false
     o.hitCallbacks = {}
     o.releaseCallbacks = {}
 
     return o
 end
 
---- Returns the activation state of the laser detector.
--- @return 0 if the detector has no laser pointed to it, 1 otherwise.
-function M:getState()
-    if self.state then
-        return 1
+--- Return the value of a signal in the specified OUT plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"out" for the out signal.</li>
+-- </ul>
+-- @param plug A valid plug name to query.
+-- @treturn 0/1 The plug signal state
+function M:getSignalOut(plug)
+    if plug == "out" then
+        if self.state then
+            return 1.0
+        else
+            return 0.0
+        end
     end
-    return 0
+    return MockElement.getSignalOut(self, plug)
 end
 
 --- Event: A laser has just hit the detector.
@@ -62,8 +78,7 @@ end
 --- Mock only, not in-game: Simulates the laser hitting the detector. Calling this while the detector is already
 -- deactivated is invalid and will have no effect.
 --
--- Note: the state updates to true <em>before</em> the event handlers are called, which is different behavior to
--- releasing the laser.
+-- Note: currently fires three times when a laser activates it. Release does not.
 function M:mockDoLaserHit()
     -- bail if already activated
     if self.state then
@@ -73,13 +88,19 @@ function M:mockDoLaserHit()
     -- state changes before calling handlers
     self.state = true
 
-    -- call callbacks in order, saving exceptions until end
     local errors = ""
-    for i,callback in pairs(self.hitCallbacks) do
-        local status,err = pcall(callback)
-        if not status then
-            errors = errors.."\nError while running callback "..i..": "..err
+
+    -- for some reason in-game it triple reports
+    for i = 1,3 do
+
+        -- call callbacks in order, saving exceptions until end
+        for i,callback in pairs(self.hitCallbacks) do
+            local status,err = pcall(callback)
+            if not status then
+                errors = errors.."\nError while running callback "..i..": "..err
+            end
         end
+
     end
 
     -- propagate errors
@@ -100,14 +121,14 @@ end
 
 --- Mock only, not in-game: Simulates the laser stopping hitting the detector. Calling this while the detector is
 -- already deactivated is invalid and will have no effect.
---
--- Note: the state updates to true <em>after</em> the event handlers are called, which is different behavior to
--- a laser hitting.
 function M:mockDoLaserRelease()
     -- bail if already deactivated
     if not self.state then
         return
     end
+
+    -- state changes before calling handlers
+    self.state = false
 
     -- call callbacks in order, saving exceptions until end
     local errors = ""
@@ -117,9 +138,6 @@ function M:mockDoLaserRelease()
             errors = errors.."\nError while running callback "..i..": "..err
         end
     end
-
-    -- state changes after calling handlers
-    self.state = false
 
     -- propagate errors
     if string.len(errors) > 0 then
@@ -131,8 +149,9 @@ end
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
-    local closure = MockElement.mockGetClosure(self)
-    closure.getState = function() return self:getState() end
+    local closure = MockElementWithState.mockGetClosure(self)
+
+    closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
     return closure
 end
 

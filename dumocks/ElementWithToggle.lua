@@ -9,6 +9,7 @@
 --   <li>ForceFieldUnit</li>
 --   <li>GyroUnit</li>
 --   <li>LandingGearUnit</li>
+--   <li>LaserEmitterUnit</li>
 --   <li>LightUnit</li>
 --   <li>ManualSwitchUnit</li>
 --   <li>ScreenUnit</li>
@@ -20,6 +21,7 @@
 -- @see ForceFieldUnit
 -- @see GyroUnit
 -- @see LandingGearUnit
+-- @see LaserEmitterUnit
 -- @see LightUnit
 -- @see ManualSwitchUnit
 -- @see ScreenUnit

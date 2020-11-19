@@ -8,6 +8,7 @@ package.path = package.path..";../?.lua"
 local lu = require("luaunit")
 
 local mleu = require("dumocks.LaserEmitterUnit")
+require("tests.Utilities")
 
 _G.TestLaserEmitterUnit = {}
 
@@ -40,76 +41,96 @@ function _G.TestLaserEmitterUnit.testConstructor()
     lu.assertNotEquals(emitterClosure3.getMass(), defaultMass)
 end
 
---- Verify element class is correct.
-function _G.TestLaserEmitterUnit.testGetElementClass()
-    local element = mleu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "LaserEmitterUnit")
-end
-
---- Verify that activate leaves the laser off.
-function _G.TestLaserEmitterUnit.testActivate()
-    local mock = mleu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    closure.activate()
-    lu.assertTrue(mock.state)
-
-    mock.state = true
-    closure.activate()
-    lu.assertTrue(mock.state)
-end
-
---- Verify that deactivate leaves the laser on.
-function _G.TestLaserEmitterUnit.testDeactivate()
-    local mock = mleu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    closure.deactivate()
-    lu.assertFalse(mock.state)
-
-    mock.state = true
-    closure.deactivate()
-    lu.assertFalse(mock.state)
-end
-
---- Verify that toggle changes the state.
-function _G.TestLaserEmitterUnit.testToggle()
-    local mock = mleu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    closure.toggle()
-    lu.assertTrue(mock.state)
-
-    mock.state = true
-    closure.toggle()
-    lu.assertFalse(mock.state)
-end
-
---- Verify that get state retrieves the state properly.
-function _G.TestLaserEmitterUnit.testGetState()
-    local mock = mleu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    lu.assertEquals(closure.getState(), 0)
-
-    mock.state = true
-    lu.assertEquals(closure.getState(), 1)
-end
-
---- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function _G.TestLaserEmitterUnit.skipTestGameBehavior()
-    local mock = mleu:new()
+--- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
+-- in-game.
+--
+-- Test setup:
+-- 1. 1x Laser Emitter, connected to Programming Board on slot1
+--
+-- Exercises: getElementClass, deactivate, activate, toggle, getState, setSignalIn, getSignalIn
+function _G.TestLaserEmitterUnit.testGameBehavior()
+    local mock = mleu:new(nil, 1)
     local slot1 = mock:mockGetClosure()
 
-    -- copy from here to unit.start
-    assert(slot1.getElementClass() == "LaserEmitterUnit")
+    -- stub this in directly to supress print in the unit test
+    local unit = {}
+    unit.exit = function()
+    end
+    local system = {}
+    system.print = function()
+    end
 
-    assert(false, "Not Yet Implemented")
+    ---------------
+    -- copy from here to unit.start
+    ---------------
+    -- verify expected functions
+    local expectedFunctions = {"activate", "deactivate", "toggle", "getState", 
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
+                               "load"}
+    _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
+
+    -- test element class and inherited methods
+    assert(slot1.getElementClass() == "LaserEmitterUnit")
+    assert(slot1.getData() == "{}")
+    assert(slot1.getDataId() == "")
+    assert(slot1.getWidgetType() == "")
+    slot1.show()
+    slot1.hide()
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() == 50.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() == 7.47 or slot1.getMass() == 9.93)
+
+    -- play with set signal
+    slot1.setSignalIn("in", 0.0)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == 0)
+    slot1.setSignalIn("in", 1.0)
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(slot1.getState() == 1)
+    -- fractions within [0,1] work, and string numbers are cast
+    slot1.setSignalIn("in", 0.7)
+    assert(slot1.getSignalIn("in") == 0.7)
+    assert(slot1.getState() == 1)
+    slot1.setSignalIn("in", "0.5")
+    assert(slot1.getSignalIn("in") == 0.5)
+    assert(slot1.getState() == 1)
+    slot1.setSignalIn("in", "0.0")
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == 0)
+    slot1.setSignalIn("in", "7.0")
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(slot1.getState() == 1)
+    -- invalid sets to 0
+    slot1.setSignalIn("in", "text")
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == 0)
+    slot1.setSignalIn("in", nil)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == 0)
+
+    -- ensure initial state
+    slot1.deactivate()
+    assert(slot1.getState() == 0)
+
+    -- validate methods
+    slot1.activate()
+    assert(slot1.getState() == 1)
+    slot1.deactivate()
+    assert(slot1.getState() == 0)
+    slot1.toggle()
+    assert(slot1.getState() == 1)
+
+    -- ensure final state
+    slot1.deactivate()
+    assert(slot1.getState() == 0)
+
+    system.print("Success")
+    unit.exit()
+    ---------------
     -- copy to here to unit.start
+    ---------------
 end
 
 os.exit(lu.LuaUnit.run())
