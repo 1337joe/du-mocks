@@ -93,7 +93,7 @@ end
 -- Test setup:
 -- 1. 1x item container or fuel tank, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState
+-- Exercises: getElementClass, getData, deactivate, activate, toggle, getState
 function _G.TestContainerUnit.testGameBehavior()
     local mock, closure
     local result, message

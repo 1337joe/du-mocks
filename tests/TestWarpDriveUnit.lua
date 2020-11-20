@@ -8,26 +8,61 @@ package.path = package.path..";../?.lua"
 local lu = require("luaunit")
 
 local mwdu = require("dumocks.WarpDriveUnit")
+require("tests.Utilities")
 
 TestWarpDriveUnit = {}
 
---- Verify element class is correct.
-function TestWarpDriveUnit.testGetElementClass()
-    local element = mwdu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "WarpDriveUnit")
-end
-
---- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function TestWarpDriveUnit.skipTestGameBehavior()
-    local mock = mwdu:new()
+--- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
+-- in-game.
+--
+-- Test setup:
+-- 1. 1x Warp Drive, connected to Programming Board on slot1
+--
+-- Exercises: getElementClass, getData
+function _G.TestWarpDriveUnit.testGameBehavior()
+    local mock = mwdu:new(nil, 1)
     local slot1 = mock:mockGetClosure()
 
-    -- copy from here to unit.start
-    assert(false, "Not Yet Implemented")
+    -- stub this in directly to supress print in the unit test
+    local unit = {}
+    unit.exit = function() end
+    local system = {}
+    system.print = function() end
 
+    ---------------
+    -- copy from here to unit.start()
+    ---------------
+    -- verify expected functions
+    local expectedFunctions = {"activateWarp",
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+    _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
+
+    -- test element class and inherited methods
     assert(slot1.getElementClass() == "WarpDriveUnit")
 
-    -- copy to here to unit.start
+    local data = slot1.getData()
+    local expectedFields = {"buttonMsg", "cellCount", "destination", "distance", "elementId", "errorMsg", "showError",
+                            "helperId", "name", "type"}
+    local expectedValues = {}
+    expectedValues["helperId"] = '"warpdrive"'
+    expectedValues["type"] = '"warpdrive"'
+    _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
+
+    assert(string.match(slot1.getDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. slot1.getDataId())
+    assert(slot1.getWidgetType() == "warpdrive")
+    slot1.show()
+    slot1.hide()
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() == 43117.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() == 31360.0)
+
+    system.print("Success")
+    unit.exit()
+    ---------------
+    -- copy to here to unit.start()
+    ---------------
 end
 
 os.exit(lu.LuaUnit.run())

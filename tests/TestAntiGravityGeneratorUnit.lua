@@ -112,8 +112,8 @@ end
 -- Test setup:
 -- 1. 1x Anti-Gravity Generator S, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState, setSignalIn, getSignalIn, setBaseAltitude,
--- getBaseAltitude
+-- Exercises: getElementClass, getData, deactivate, activate, toggle, getState, setSignalIn, getSignalIn,
+-- setBaseAltitude, getBaseAltitude
 function _G.TestAntiGravityGeneratorUnit.testGameBehavior()
     local mock = maggu:new(nil, 1)
     local slot1 = mock:mockGetClosure()

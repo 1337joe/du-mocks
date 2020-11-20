@@ -68,7 +68,7 @@ end
 --
 -- Note: Must be run on a dynamic core.
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState
+-- Exercises: getElementClass, getData, deactivate, activate, toggle, getState
 function _G.TestGyroUnit.testGameBehavior()
     local mock = mgu:new(nil, 1)
     local slot1 = mock:mockGetClosure()

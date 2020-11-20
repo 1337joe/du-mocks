@@ -6,11 +6,13 @@
 --   <li>DatabankUnit</li>
 --   <li>DetectionZoneUnit</li>
 --   <li>ElementWithState</li>
+--   <li>WarpDriveUnit</li>
 -- </ul>
 -- @see CounterUnit
 -- @see DatabankUnit
 -- @see DetectionZoneUnit
 -- @see ElementWithState
+-- @see WarpDriveUnit
 -- @module Element
 -- @alias M
 

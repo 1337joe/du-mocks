@@ -114,4 +114,4 @@ Format notes:
 | ReceiverUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | P |
 | ScreenUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| P :heavy_check_mark: | :heavy_check_mark: |
 | TelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | | :heavy_check_mark: |
+| WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | P :heavy_check_mark: | :heavy_check_mark: |
