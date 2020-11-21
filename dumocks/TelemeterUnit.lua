@@ -1,11 +1,16 @@
 --- Measures the distance to an obstacle in front of it.
+--
+-- Element class: TelemeterUnit
+--
+-- Extends: Element
+-- @see Element
 -- @module TelemeterUnit
 -- @alias M
 
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-elementDefinitions["telemeter"] = {mass = 49.79, maxHitPoints = 50.0}
+elementDefinitions["telemeter"] = {mass = 40.79, maxHitPoints = 50.0}
 local DEFAULT_ELEMENT = "telemeter"
 
 local M = MockElement:new()

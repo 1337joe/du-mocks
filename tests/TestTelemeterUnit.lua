@@ -8,6 +8,7 @@ package.path = package.path..";../?.lua"
 local lu = require("luaunit")
 
 local mtu = require("dumocks.TelemeterUnit")
+require("tests.Utilities")
 
 _G.TestTelemeterUnit = {}
 
@@ -29,17 +30,12 @@ function _G.TestTelemeterUnit.testConstructor()
     lu.assertEquals(telemeterClosure1.getId(), 1)
     lu.assertEquals(telemeterClosure2.getId(), 2)
 
-    local defaultMass = 49.79
+    local defaultMass = 40.79
     lu.assertEquals(telemeterClosure0.getMass(), defaultMass)
     lu.assertEquals(telemeterClosure1.getMass(), defaultMass)
     lu.assertEquals(telemeterClosure2.getMass(), defaultMass)
 end
 
---- Verify element class is correct.
-function _G.TestTelemeterUnit.testGetElementClass()
-    local element = mtu:new():mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "TelemeterUnit")
-end
 
 -- Verify get distance works and respects max range.
 function _G.TestTelemeterUnit.testGetDistance()
@@ -85,9 +81,9 @@ end
 -- 3. slot2 telemeter is pointed at the floor mounted on the third voxel above it
 -- 4. slot3 telemeter is pointed at an industry unit as close as it can be mounted pointing at it
 --
--- Exercises: getDistance, getMaxDistance
+-- Exercises: getElementClass, getDistance, getMaxDistance
 function _G.TestTelemeterUnit.testGameBehavior()
-    local mock1 = mtu:new()
+    local mock1 = mtu:new(nil, 1)
     local slot1 = mock1:mockGetClosure()
     local mock2 = mtu:new()
     local slot2 = mock2:mockGetClosure()
@@ -108,20 +104,36 @@ function _G.TestTelemeterUnit.testGameBehavior()
     ---------------
     -- copy from here to unit.start()
     ---------------
+    -- verify expected functions
+    local expectedFunctions = {"getMaxDistance", "getDistance",
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+    _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
+
+    -- test element class and inherited methods
     assert(slot1.getElementClass() == "TelemeterUnit")
     assert(slot2.getElementClass() == "TelemeterUnit")
     assert(slot3.getElementClass() == "TelemeterUnit")
+    assert(slot1.getData() == "{}")
+    assert(slot1.getDataId() == "")
+    assert(slot1.getWidgetType() == "")
+    slot1.show()
+    slot1.hide()
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() == 50.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() == 40.79)
 
-    assert(slot1.getMaxDistance() == 100, "Telemeter 1 max distance: "..slot1.getMaxDistance())
+    assert(slot1.getMaxDistance() == 100, "Telemeter 1 max distance: " .. slot1.getMaxDistance())
 
     local UNDEF_DISTANCE = -1
 
     local slot1Distance = slot1.getDistance()
-    assert(slot1Distance == UNDEF_DISTANCE, "Telemeter 1 distance: "..slot1Distance)
+    assert(slot1Distance == UNDEF_DISTANCE, "Telemeter 1 distance: " .. slot1Distance)
     local slot2Distance = slot2.getDistance()
-    assert(slot2Distance > 0.5 and slot2Distance < 1.0, "Telemeter 2 distance: "..slot2Distance)
+    assert(slot2Distance > 0.5 and slot2Distance < 1.0, "Telemeter 2 distance: " .. slot2Distance)
     local slot3Distance = slot3.getDistance()
-    assert(slot3Distance > 0 and slot3Distance < 0.5, "Telemeter 3 distance: "..slot3Distance)
+    assert(slot3Distance > 0 and slot3Distance < 0.5, "Telemeter 3 distance: " .. slot3Distance)
 
     system.print("Success")
     unit.exit()
