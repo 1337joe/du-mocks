@@ -6,6 +6,7 @@
 --   <li>DatabankUnit</li>
 --   <li>DetectionZoneUnit</li>
 --   <li>ElementWithState</li>
+--   <li>EmitterUnit</li>
 --   <li>TelemeterUnit</li>
 --   <li>WarpDriveUnit</li>
 -- </ul>
@@ -14,6 +15,7 @@
 -- @see DetectionZoneUnit
 -- @see ElementWithState
 -- @see TelemeterUnit
+-- @see EmitterUnit
 -- @see WarpDriveUnit
 -- @module Element
 -- @alias M

@@ -58,7 +58,7 @@ if #blocks == 0 then
 end
 
 -- prepare output
-local TARGET_PATTERN = "([a-zA-Z0-9]+)%.([a-zA-Z()*]+)(.*)"
+local TARGET_PATTERN = "([a-zA-Z0-9]+)%.([a-zA-Z()*,]+)(.*)"
 local ARGS_PATTERN = "([a-zA-Z_*]+)"
 local BOILERPLATE_START = [[
 {
@@ -93,6 +93,8 @@ local function sanitize(code)
     sanitized = string.gsub(sanitized, "\\", "\\\\")
     sanitized = string.gsub(sanitized, "\"", "\\\"")
     sanitized = string.gsub(sanitized, "%c", "\\n")
+    sanitized = string.gsub(sanitized, "^    ", "") -- collapse initial indent
+    sanitized = string.gsub(sanitized, "\\n    ", "\\n") -- collapse each line first indent
     return sanitized
 end
 
