@@ -2,6 +2,8 @@
 --
 -- Extended by:
 -- <ul>
+--   <li>ContainerUnit</li>
+--   <li>ControlUnit</li>
 --   <li>CounterUnit</li>
 --   <li>DatabankUnit</li>
 --   <li>DetectionZoneUnit</li>
@@ -11,6 +13,8 @@
 --   <li>TelemeterUnit</li>
 --   <li>WarpDriveUnit</li>
 -- </ul>
+-- @see ContainerUnit
+-- @see ControlUnit
 -- @see CounterUnit
 -- @see DatabankUnit
 -- @see DetectionZoneUnit

@@ -2,16 +2,64 @@
 -- stores a set of Lua scripts that can be used to control the elements that are plugged in on its CONTROL plugs.
 -- Kinematics control units like cockpit or commander seats are also capable of controlling the ship's engines via the
 -- update ICC method.
+--
+-- Note: Not all methods are available on on control units.
+--
+-- Element class:
+-- <ul>
+--   <li>Generic: Programming Board</li>
+--   <li>RemoteControlUnit: Remote Controller</li>
+--   <li>CockpitHovercraftUnit: Hovercraft Seat</li>
+--   <li>CockpitFighterUnit: Cockpit</li>
+--   <li>CockpitCommandmentUnit: Command Seat</li>
+--   <li>PVPSeatUnit: Gunner Modules</li>
+--   <li>ECU: Emergency Controller</li>
+-- </ul>
+--
+-- Displayed widget fields for Generic, ECU, and PVPSeatUnit element classes:
+-- <ul>
+--   <li>showScriptError</li>
+--   <li>elementId</li>
+--   <li>controlMasterModeId</li>
+-- </ul>
+--
+-- Additional widget fields for Cockpit and Remote classes:
+-- <ul>
+--   <li>showHasBrokenFuelTank</li>
+--   <li>showOutOfFuel</li>
+--   <li>showOverload</li>
+--   <li>showSlowDown</li>
+--   <li>speed</li>
+--   <li>acceleration</li>
+--   <li>airDensity</li>
+--   <li>airResistance</li>
+--   <li>atmoThrust</li>
+--   <li>spaceThrust</li>
+--   <li>controlData</li>
+-- </ul>
+--
+-- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
+-- @see Element
 -- @module ControlUnit
 -- @alias M
 
 local MockElement = require "dumocks.Element"
 
+local CLASS_GENERIC = "Generic"
+local CLASS_PVP = "PVPSeatUnit"
+local CLASS_REMOTE = "RemoteControlUnit"
+local CLASS_ECU = "ECU"
+
 local elementDefinitions = {}
-elementDefinitions["programming board"] = {mass = 27.74, maxHitPoints = 50.0, class = "Generic"}
+elementDefinitions["programming board"] = {mass = 27.74, maxHitPoints = 50.0, class = CLASS_GENERIC}
+elementDefinitions["remote controller"] = {mass = 7.79, maxHitPoints = 50.0, class = CLASS_REMOTE}
 elementDefinitions["hovercraft seat"] = {mass = 110.33, maxHitPoints = 187.0, class = "CockpitHovercraftUnit"}
+elementDefinitions["cockpit controller"] = {mass = 1208.13, maxHitPoints = 1125.0, class = "CockpitFighterUnit"}
 elementDefinitions["command seat controller"] = {mass = 158.45, maxHitPoints = 250.0, class = "CockpitCommandmentUnit"}
--- TODO others
+elementDefinitions["gunner module s"] = {mass = 427.9, maxHitPoints = 250.0, class = CLASS_PVP}
+elementDefinitions["gunner module m"] = {mass = 2170, maxHitPoints = 250.0, class = CLASS_PVP} -- TODO get exact mass
+elementDefinitions["gunner module l"] = {mass = 11320, maxHitPoints = 250.0, class = CLASS_PVP} -- TODO get exact mass
+elementDefinitions["emergency controller"] = {mass = 9.35, maxHitPoints = 50.0, class = CLASS_ECU}
 local DEFAULT_ELEMENT = "programming board"
 
 local M = MockElement:new()
@@ -24,17 +72,73 @@ function M:new(o, id, elementName)
     self.__index = self
 
     o.elementClass = elementDefinition.class
+    if o.elementClass == CLASS_GENERIC or o.elementClass == CLASS_PVP or o.elementClass == CLASS_ECU then
+        o.widgetType = "basic_control_unit"
+    else
+        o.widgetType = "cockpit"
+    end
 
     o.errorOnExit = false -- use to abort execution when exit is called
     o.exitCalled = false
     o.timers = {} -- map: "timer name"=>timerDurationSeconds
     o.tickCallbacks = {}
     o.masterPlayerId = nil
-    o.remoteControlled = false
+    o.remoteControlled = o.elementClass == CLASS_REMOTE
 
     o.linkedElements = {}
 
     return o
+end
+
+local GENERIC_DATA_TEMPLATE =
+    '{"helperId":"generic","type":"%s","name":"%s [%d]","elementId":"%d","showScriptError":%s,"controlMasterModeId":%d'
+local COCKPIT_DATA_TEMPLATE = ',"acceleration":%f,"airDensity":%f,"airResistance":%f,"atmoThrust":%f,' ..
+                                 '"controlData":%s,"showHasBrokenFuelTank":%s,"showOutOfFuel":%s,"showOverload":%s,' ..
+                                 '"showSlowDown":%s,"spaceThrust":%f,"speed":%f}'
+local CONTROL_DATA_TEMPLATE = '{"axisData":[{"commandType":%d,"commandValue":%f,"speed":%f},' ..
+                                '{"commandType":%d,"commandValue":%f,"speed":%f},' ..
+                                '{"commandType":%d,"commandValue":%f,"speed":%f}],' ..
+                                '"currentMasterMode":%d,"masterModeData":[{"name":""},{"name":""}]}'
+function M:getData()
+    local formatString = GENERIC_DATA_TEMPLATE
+    local controllerId = 123456789
+    local type = self:getWidgetType()
+    local showError = false
+    local masterModeId = 0
+    if self.elementClass == CLASS_GENERIC or self.elementClass == CLASS_PVP or self.elementClass == CLASS_ECU then
+        formatString = formatString .. "}"
+        return string.format(formatString, type, self.name, self:getId(), controllerId, showError, masterModeId)
+    else
+        formatString = formatString .. COCKPIT_DATA_TEMPLATE
+        local speed = 0.0
+        local acceleration = 0.0
+        local airDensity = 0.0
+        local airResistance = 0.0
+        local atmoThrust = 0.0
+        local spaceThrust = 0.0
+        local controlData = "{}"
+        local showHasBrokenFuelTank = false
+        local showOutOfFuel = false
+        local showOverload = false
+        local showSlowDown = false
+
+        if self.elementClass == CLASS_REMOTE then
+            formatString = formatString .. "}"
+            return string.format(formatString, type, self.name, self:getId(), controllerId, showError, masterModeId,
+                       acceleration, airDensity, airResistance, atmoThrust, controlData, showHasBrokenFuelTank,
+                       showOutOfFuel, showOverload, showSlowDown, spaceThrust, speed)
+        else
+            controlData = string.format(CONTROL_DATA_TEMPLATE, 3, 0, 0, 3, 0, 0, 3, 0, 0, 0)
+            return string.format(formatString, type, self.name, self:getId(), controllerId, showError, masterModeId,
+                       acceleration, airDensity, airResistance, atmoThrust, controlData, showHasBrokenFuelTank,
+                       showOutOfFuel, showOverload, showSlowDown, spaceThrust, speed)
+        end
+    end
+end
+
+-- Override default with realistic patten to id.
+function M:getDataId()
+    return "e123456"
 end
 
 --- Stops the control unit's Lua code and exits. Warning: calling this might cause your ship to fall from the sky, use
@@ -78,6 +182,15 @@ function M:getClosestPlanetInfluence()
 end
 
 --- Return the relative position (in world coordinates) of the player currently running the control unit.
+--
+-- This method is deprecated: getMasterPlayerRelativePosition should be used instead.
+-- @see getMasterPlayerRelativePosition
+-- @treturn vec3 Relative position in world coordinates.
+function M:getOwnerRelativePosition()
+    return self:getMasterPlayerRelativePosition()
+end
+
+--- Return the relative position (in world coordinates) of the player currently running the control unit.
 -- @treturn vec3 Relative position in world coordinates.
 function M:getMasterPlayerRelativePosition()
 end
@@ -107,16 +220,8 @@ end
 -- included engines to use as priority 3.
 -- @tparam 0,1 toleranceRatioToStopCommand When going through with priorities, if we reach a command that is achieved
 -- within this tolerance, we will stop there.
-function M:setEngineCommand(
-    taglist,
-    acceleration,
-    angularAcceleration,
-    keepForceCollinearity,
-    keepTorqueCollinearity,
-    priority1SubTags,
-    priority2SubTags,
-    priority3SubTags,
-    toleranceRatioToStopCommand)
+function M:setEngineCommand(taglist, acceleration, angularAcceleration, keepForceCollinearity, keepTorqueCollinearity,
+    priority1SubTags, priority2SubTags, priority3SubTags, toleranceRatioToStopCommand)
 end
 
 --- Force the thrust values for all the engines within the tag list.
@@ -231,6 +336,62 @@ end
 function M:getThrottle()
 end
 
+--- Set the value of a signal in the specified IN plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"in" for the in signal (has no actual effect on controller state when modified this way).</li>
+-- </ul>
+--
+-- Note: Only defined for Programming Board.
+-- @param plug A valid plug name to set.
+-- @tparam 0/1 state The plug signal state
+function M:setSignalIn(plug, state)
+    if plug == "in" then
+        local value = tonumber(state)
+        if type(value) ~= "number" then
+            value = 0.0
+        end
+
+        -- has no impact on state when set programmatically
+
+        if value <= 0 then
+            self.plugIn = 0
+        elseif value >= 1.0 then
+            self.plugIn = 1.0
+        else
+            self.plugIn = value
+        end
+    end
+end
+
+--- Return the value of a signal in the specified IN plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"in" for the in signal.</li>
+-- </ul>
+--
+-- Note: Only defined for Programming Board.
+-- @param plug A valid plug name to query.
+-- @treturn 0/1 The plug signal state
+function M:getSignalIn(plug)
+    if plug == "in" then
+        -- clamp to valid values
+        local value = tonumber(self.plugIn)
+        if type(value) ~= "number" then
+            return 0.0
+        elseif value >= 1.0 then
+            return 1.0
+        elseif value <= 0.0 then
+            return 0.0
+        else
+            return value
+        end
+    end
+    return MockElement.getSignalIn(self)
+end
+
 --- Event: Emitted when the timer with id 'timerId' is ticking.
 --
 -- Note: This is documentation on an event handler, not a callable method.
@@ -248,7 +409,10 @@ function M:mockRegisterTimer(callback, filter)
     filter = filter or "*"
 
     local index = #self.tickCallbacks + 1
-    self.tickCallbacks[index] = {callback = callback, filter = filter}
+    self.tickCallbacks[index] = {
+        callback = callback,
+        filter = filter
+    }
     return index
 end
 
@@ -257,18 +421,18 @@ end
 function M:mockDoTick(timerId)
     -- call callbacks in order, saving exceptions until end
     local errors = ""
-    for i,callback in pairs(self.tickCallbacks) do
+    for i, callback in pairs(self.tickCallbacks) do
         if callback.filter == "*" or callback.filter == timerId then
             local status, err = pcall(callback.callback, timerId)
             if not status then
-                errors = errors.."\nError while running callback "..i..": "..err
+                errors = errors .. "\nError while running callback " .. i .. ": " .. err
             end
         end
     end
 
     -- propagate errors
     if string.len(errors) > 0 then
-        error("Errors raised in callbacks:"..errors)
+        error("Errors raised in callbacks:" .. errors)
     end
 end
 
@@ -282,19 +446,15 @@ function M:mockGetClosure()
     closure.stopTimer = function(timerTagId) return self:stopTimer(timerTagId) end
     closure.getAtmosphereDensity = function() return self:getAtmosphereDensity() end
     closure.getClosestPlanetInfluence = function() return self:getClosestPlanetInfluence() end
+    closure.getOwnerRelativePosition = function() return self:getOwnerRelativePosition() end
     closure.getMasterPlayerRelativePosition = function() return self:getMasterPlayerRelativePosition() end
     closure.getMasterPlayerId = function() return self:getMasterPlayerId() end
-    closure.setEngineCommand = function(
-        taglist,
-        acceleration,
-        angularAcceleration,
-        keepForceCollinearity,
-        keepTorqueCollinearity,
-        priority1SubTags,
-        priority2SubTags,
-        priority3SubTags,
-        toleranceRatioToStopCommand)
-        return self:setEngineCommand(
+
+    if self.elementClass == CLASS_GENERIC then
+        closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
+        closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
+    elseif self.elementClass ~= CLASS_PVP then
+        closure.setEngineCommand = function(
             taglist,
             acceleration,
             angularAcceleration,
@@ -303,38 +463,53 @@ function M:mockGetClosure()
             priority1SubTags,
             priority2SubTags,
             priority3SubTags,
-            toleranceRatioToStopCommand
-        )
+            toleranceRatioToStopCommand)
+            return self:setEngineCommand(
+                taglist,
+                acceleration,
+                angularAcceleration,
+                keepForceCollinearity,
+                keepTorqueCollinearity,
+                priority1SubTags,
+                priority2SubTags,
+                priority3SubTags,
+                toleranceRatioToStopCommand
+            )
+        end
+        closure.setEngineThrust = function(tagList, thrust) return self:setEngineThrust(tagList, thrust) end
+        closure.setAxisCommandValue = function(axis, commandValue) return self:setAxisCommandValue(axis, commandValue) end
+        closure.getAxisCommandValue = function(axis) return self:getAxisCommandValue(axis) end
+        closure.setupAxisCommandProperties = function(axis, commandType)
+            return self:setupAxisCommandProperties(axis, commandType)
+        end
+        closure.getControlMasterModeId = function() return self:getControlMasterModeId() end
+        closure.cancelCurrentControlMasterMode = function() return self:cancelCurrentControlMasterMode() end
+        closure.isAnyLandingGearExtended = function() return self:isAnyLandingGearExtended() end
+        closure.extendLandingGears = function() return self:extendLandingGears() end
+        closure.retractLandingGears = function() return self:retractLandingGears() end
+        closure.isMouseControlActivated = function() return self:isMouseControlActivated() end
+        closure.isMouseDirectControlActivated = function() return self:isMouseDirectControlActivated() end
+        closure.isMouseVirtualJoystickActivated = function() return self:isMouseVirtualJoystickActivated() end
+        closure.isAnyHeadlightSwitchedOn = function() return self:isAnyHeadlightSwitchedOn() end
+        closure.switchOnHeadlights = function() return self:switchOnHeadlights() end
+        closure.switchOffHeadlights = function() return self:switchOffHeadlights() end
+        closure.isRemoteControlled = function() return self:isRemoteControlled() end
+        closure.activateGroundEngineAltitudeStabilization = function(targetAltitude)
+            return self:activateGroundEngineAltitudeStabilization(targetAltitude)
+        end
+        closure.getSurfaceEngineAltitudeStabilization = function() return self:getSurfaceEngineAltitudeStabilization() end
+        closure.deactivateGroundEngineAltitudeStabilization = function()
+            return self:deactivateGroundEngineAltitudeStabilization()
+        end
+        closure.computeGroundEngineAltitudeStabilizationCapabilities = function()
+            return self:computeGroundEngineAltitudeStabilizationCapabilities()
+        end
+        closure.getThrottle = function() return self:getThrottle() end
+        if self.elementClass == CLASS_ECU then
+            closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
+            closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
+        end
     end
-    closure.setEngineThrust = function(tagList, thrust) return self:setEngineThrust(tagList, thrust) end
-    closure.setAxisCommandValue = function(axis, commandValue) return self:setAxisCommandValue(axis, commandValue) end
-    closure.getAxisCommandValue = function(axis) return self:getAxisCommandValue(axis) end
-    closure.setupAxisCommandProperties = function(axis, commandType)
-        return self:setupAxisCommandProperties(axis, commandType)
-    end
-    closure.getControlMasterModeId = function() return self:getControlMasterModeId() end
-    closure.cancelCurrentControlMasterMode = function() return self:cancelCurrentControlMasterMode() end
-    closure.isAnyLandingGearExtended = function() return self:isAnyLandingGearExtended() end
-    closure.extendLandingGears = function() return self:extendLandingGears() end
-    closure.retractLandingGears = function() return self:retractLandingGears() end
-    closure.isMouseControlActivated = function() return self:isMouseControlActivated() end
-    closure.isMouseDirectControlActivated = function() return self:isMouseDirectControlActivated() end
-    closure.isMouseVirtualJoystickActivated = function() return self:isMouseVirtualJoystickActivated() end
-    closure.isAnyHeadlightSwitchedOn = function() return self:isAnyHeadlightSwitchedOn() end
-    closure.switchOnHeadlights = function() return self:switchOnHeadlights() end
-    closure.switchOffHeadlights = function() return self:switchOffHeadlights() end
-    closure.isRemoteControlled = function() return self:isRemoteControlled() end
-    closure.activateGroundEngineAltitudeStabilization = function(targetAltitude)
-        return self:activateGroundEngineAltitudeStabilization(targetAltitude)
-    end
-    closure.getSurfaceEngineAltitudeStabilization = function() return self:getSurfaceEngineAltitudeStabilization() end
-    closure.deactivateGroundEngineAltitudeStabilization = function()
-        return self:deactivateGroundEngineAltitudeStabilization()
-    end
-    closure.computeGroundEngineAltitudeStabilizationCapabilities = function()
-        return self:computeGroundEngineAltitudeStabilizationCapabilities()
-    end
-    closure.getThrottle = function() return self:getThrottle() end
 
     -- add in fields to match the game
 

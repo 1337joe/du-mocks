@@ -8,6 +8,7 @@ package.path = package.path..";../?.lua"
 local lu = require("luaunit")
 
 local mcu = require("dumocks.ControlUnit")
+require("tests.Utilities")
 
 _G.TestControlUnit = {}
 
@@ -40,19 +41,6 @@ function _G.TestControlUnit.testConstructor()
     lu.assertNotEquals(controlClosure3.getMass(), defaultMass)
 end
 
---- Verify element class is correct.
-function _G.TestControlUnit.testGetElementClass()
-    local element
-
-    element = mcu:new(nil, 1, "programming board"):mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "Generic")
-
-    element = mcu:new(nil, 1, "hovercraft seat"):mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "CockpitHovercraftUnit")
-
-    element = mcu:new(nil, 1, "command seat controller"):mockGetClosure()
-    lu.assertEquals(element.getElementClass(), "CockpitCommandmentUnit")
-end
 
 --- Verify timers can be started.
 function _G.TestControlUnit.testStartTimer()
@@ -77,7 +65,7 @@ end
 
 --- Verify isRemoteControlled translates to numbers.
 function _G.TestControlUnit.testIsRemoteControlled()
-    local mock = mcu:new()
+    local mock = mcu:new(nil, 1, "remote controller")
     local closure = mock:mockGetClosure()
 
     mock.remoteControlled = false
@@ -154,16 +142,175 @@ function _G.TestControlUnit.testTickFilter()
     lu.assertNil(actual)
 end
 
---- Sample block to test in-game behavior, can run on mock and uses assert instead of luaunit to run in-game.
-function _G.TestControlUnit.skipTestGameBehavior()
-    local mock = mcu:new()
-    local slot1 = mock:mockGetClosure()
+--- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
+-- in-game.
+--
+-- Test setup:
+-- 1. control unit of any type, cockpit/remote controller must be on a dynamic construct
+--
+-- Exercises: getElementClass, getData, isRemoteControlled
+function _G.TestControlUnit.testGameBehavior()
+    local mock, closure
+    local result, message
+    for _,element in pairs({"programming board", "remote controller", "hovercraft seat", "cockpit controller",
+                            "command seat controller", "gunner module s", "emergency controller"}) do
+        mock = mcu:new(nil, 1, element)
+        closure = mock:mockGetClosure()
 
-    -- copy from here to unit.start
-    assert(slot1.getElementClass() == "Generic")
+        result, message = pcall(_G.TestControlUnit.gameBehaviorHelper, mock, closure)
+        if not result then
+            lu.fail("Element: " .. element .. ", Error: " .. message)
+        end
+    end
+end
 
-    assert(false, "Not Yet Implemented")
-    -- copy to here to unit.start
+--- Runs characterization tests on the provided element.
+function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
+
+    -- stub this in directly to supress print in the unit test
+    local system = {}
+    system.print = function() end
+
+    ---------------
+    -- copy from here to unit.start()
+    ---------------
+    local class = unit.getElementClass()
+    local isGeneric, isRemote, isCockpit, isPvp, isEcu
+    if class == "Generic" then
+        isGeneric = true
+    elseif class == "RemoteControlUnit" then
+        isRemote = true
+    elseif class == "CockpitHovercraftUnit" or class == "CockpitFighterUnit" or class == "CockpitCommandmentUnit" then
+        isCockpit = true
+    elseif class == "PVPSeatUnit" then
+        isPvp = true
+    elseif class == "ECU" then
+        isEcu = true
+    else
+        assert(false, "Unexpected class: " .. class)
+    end
+
+    -- verify expected functions
+    local expectedFunctions = {}
+    if isGeneric then
+        expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
+                             "getMasterPlayerRelativePosition", "getMasterPlayerId", "getOwnerRelativePosition",
+                             "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                             "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
+                             "load"}
+    elseif isPvp then
+        expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
+                             "getMasterPlayerRelativePosition", "getMasterPlayerId", "getOwnerRelativePosition",
+                             "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                             "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+    else
+        expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
+                             "getMasterPlayerRelativePosition", "getMasterPlayerId", "setEngineCommand",
+                             "setEngineThrust", "setAxisCommandValue", "getAxisCommandValue",
+                             "setupAxisCommandProperties", "getControlMasterModeId","cancelCurrentControlMasterMode",
+                             "isAnyLandingGearExtended", "extendLandingGears", "retractLandingGears",
+                             "isMouseControlActivated", "isMouseDirectControlActivated", "getOwnerRelativePosition",
+                             "isMouseVirtualJoystickActivated", "isAnyHeadlightSwitchedOn", "switchOnHeadlights",
+                             "switchOffHeadlights", "isRemoteControlled", "activateGroundEngineAltitudeStabilization",
+                             "getSurfaceEngineAltitudeStabilization", "deactivateGroundEngineAltitudeStabilization",
+                             "computeGroundEngineAltitudeStabilizationCapabilities", "getThrottle",
+                             "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                             "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+        if isEcu then
+            table.insert(expectedFunctions, "setSignalIn")
+            table.insert(expectedFunctions, "getSignalIn")
+        end
+    end
+    _G.Utilities.verifyExpectedFunctions(unit, expectedFunctions)
+
+    -- test inherited methods
+    local data = unit.getData()
+    local expectedFields = {"helperId", "name", "type", "showScriptError", "elementId", "controlMasterModeId"}
+    local unexpectedFields = {}
+    local expectedValues = {}
+    expectedValues["showScriptError"] = 'false'
+    if isGeneric or isPvp or isEcu then
+        assert(unit.getWidgetType() == "basic_control_unit")
+        expectedValues["type"] = '"basic_control_unit"'
+        expectedValues["helper"] = '"generic"'
+    else
+        assert(unit.getWidgetType() == "cockpit")
+        expectedValues["type"] = '"cockpit"'
+        table.insert(expectedFields, "controlData")
+        table.insert(expectedFields, "showHasBrokenFuelTank")
+        table.insert(expectedFields, "showOutOfFuel")
+        table.insert(expectedFields, "showOverload")
+        table.insert(expectedFields, "showSlowDown")
+        table.insert(expectedFields, "atmoThrust")
+        table.insert(expectedFields, "spaceThrust")
+        table.insert(expectedFields, "speed")
+        table.insert(expectedFields, "acceleration")
+        table.insert(expectedFields, "airDensity")
+        table.insert(expectedFields, "airResistance")
+        if not isRemote then
+            -- all of this is within the controlData value
+            -- TODO use real json parsing to detect this in a sensible way
+            table.insert(expectedFields, "speed")
+            table.insert(expectedFields, "speed")
+            table.insert(expectedFields, "speed")
+            table.insert(expectedFields, "currentMasterMode")
+            table.insert(expectedFields, "masterModeData")
+            table.insert(expectedFields, "name")
+            table.insert(expectedFields, "commandType")
+            table.insert(expectedFields, "commandType")
+            table.insert(expectedFields, "commandValue")
+            table.insert(expectedFields, "commandValue")
+            table.insert(expectedFields, "commandValue")
+        end
+    end
+    _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
+
+    assert(string.match(unit.getDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. unit.getDataId())
+
+    unit.show()
+    unit.hide()
+    assert(unit.getIntegrity() == 100.0 * unit.getHitPoints() / unit.getMaxHitPoints())
+    assert(unit.getMaxHitPoints() >= 50.0)
+    assert(unit.getId() > 0)
+    assert(unit.getMass() > 7.0)
+
+    if isGeneric then
+        -- play with set signal, has no actual effect on state when set programmatically
+        unit.setSignalIn("in", 0.0)
+        assert(unit.getSignalIn("in") == 0.0)
+        unit.setSignalIn("in", 1.0)
+        assert(unit.getSignalIn("in") == 1.0)
+        -- fractions within [0,1] work, and string numbers are cast
+        unit.setSignalIn("in", 0.7)
+        assert(unit.getSignalIn("in") == 0.7)
+        unit.setSignalIn("in", "0.5")
+        assert(unit.getSignalIn("in") == 0.5)
+        unit.setSignalIn("in", "0.0")
+        assert(unit.getSignalIn("in") == 0.0)
+        unit.setSignalIn("in", "7.0")
+        assert(unit.getSignalIn("in") == 1.0)
+        -- invalid sets to 0
+        unit.setSignalIn("in", "text")
+        assert(unit.getSignalIn("in") == 0.0)
+        unit.setSignalIn("in", nil)
+        assert(unit.getSignalIn("in") == 0.0)
+    end
+
+    if not (isGeneric or isPvp) then
+        if isRemote then
+            assert(unit.isRemoteControlled() == 1)
+        else
+            assert(unit.isRemoteControlled() == 0)
+        end
+    end
+
+    system.print("Success")
+    if isGeneric or isRemote then
+        unit.exit()
+    end
+    ---------------
+    -- copy to here to unit.start()
+    ---------------
 end
 
 os.exit(lu.LuaUnit.run())

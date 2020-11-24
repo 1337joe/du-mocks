@@ -14,7 +14,9 @@ _G.Utilities = {}
 function _G.Utilities.verifyExpectedFunctions(element, expectedFunctions)
     local unexpectedFunctions = {}
     for key, value in pairs(element) do
-        if type(value) == "function" then
+        if key:match("library_.+") or key:match("system_.+") or key:match("unit_.+") then
+            -- skip - function is a slot filter
+        elseif type(value) == "function" then
             for index, funcName in pairs(expectedFunctions) do
                 if key == funcName then
                     table.remove(expectedFunctions, index)

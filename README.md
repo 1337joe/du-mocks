@@ -91,7 +91,7 @@ Format notes:
 | Element | :heavy_check_mark: | P | P | - - | - |
 | AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
 | ContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | P :heavy_check_mark: | :heavy_check_mark: |
-| ControlUnit | :heavy_check_mark: | | P | | P |
+| ControlUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | P |
 | CoreUnit | :heavy_check_mark: | P | P | | P |
 | CounterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |

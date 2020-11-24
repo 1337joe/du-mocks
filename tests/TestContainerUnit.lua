@@ -86,7 +86,6 @@ function _G.TestContainerUnit.testGetMass()
     lu.assertEquals(actual, expected)
 end
 
-
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --
