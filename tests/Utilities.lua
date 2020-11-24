@@ -61,11 +61,20 @@ end
 -- @tparam string data The widget data to test.
 -- @tparam table expectedFields The list of fields to look for.
 -- @tparam table expectedValues A mapping from field to value for any specific values that should be found.
-function _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
+-- @tparam table ignoreFields Optional list of fields which may or may not be present.
+function _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ignoreFields)
+    ignoreFields = ignoreFields or {}
     local unexpectedFields = {}
     for key, value in string.gmatch(data, "\"(.-)\":(.-)[},]") do
         if expectedValues[key] then
             assert(expectedValues[key] == value, "Unexpected value for " .. key .. ", expected " .. expectedValues[key] .. " but was " .. value)
+        end
+
+        -- skip ignored fields, don't add to list, don't remove
+        for index, field in pairs(ignoreFields) do
+            if key == field then
+                goto continueOuter
+            end
         end
 
         for index, field in pairs(expectedFields) do

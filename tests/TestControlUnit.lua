@@ -228,11 +228,12 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
     local expectedFields = {"helperId", "name", "type", "showScriptError", "elementId", "controlMasterModeId"}
     local unexpectedFields = {}
     local expectedValues = {}
+    local ignoreFields = {}
     expectedValues["showScriptError"] = 'false'
     if isGeneric or isPvp or isEcu then
         assert(unit.getWidgetType() == "basic_control_unit")
         expectedValues["type"] = '"basic_control_unit"'
-        expectedValues["helperId"] = '"generic"'
+        expectedValues["helperId"] = '"basic_control_unit"'
     else
         assert(unit.getWidgetType() == "cockpit")
         expectedValues["type"] = '"cockpit"'
@@ -248,6 +249,7 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
         table.insert(expectedFields, "acceleration")
         table.insert(expectedFields, "airDensity")
         table.insert(expectedFields, "airResistance")
+        ignoreFields = {"currentBrake", "maxBrake"}
         if not isRemote then
             -- all of this is within the controlData value
             -- TODO use real json parsing to detect this in a sensible way
@@ -264,7 +266,7 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
             table.insert(expectedFields, "commandValue")
         end
     end
-    _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
+    _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ignoreFields)
 
     assert(string.match(unit.getDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. unit.getDataId())
 
