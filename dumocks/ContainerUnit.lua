@@ -96,7 +96,6 @@ function M:getSelfMass()
     return self.selfMass
 end
 
-
 local DATA_TEMPLATE = '{\"name\":\"%s [%d]\","percentage":%.16f,"timeLeft":%s,\"helperId\":\"%s\",\"type\":\"%s\"}'
 function M:getData()
     if self.elementClass == CLASS_ITEM then

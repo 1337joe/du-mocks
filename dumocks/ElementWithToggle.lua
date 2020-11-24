@@ -6,6 +6,7 @@
 -- <ul>
 --   <li>AntiGravityGeneratorUnit</li>
 --   <li>DoorUnit</li>
+--   <li>EngineUnit</li>
 --   <li>ForceFieldUnit</li>
 --   <li>GyroUnit</li>
 --   <li>LandingGearUnit</li>
@@ -18,6 +19,7 @@
 -- @see ElementWithState
 -- @see AntiGravityGeneratorUnit
 -- @see DoorUnit
+-- @see EngineUnit
 -- @see ForceFieldUnit
 -- @see GyroUnit
 -- @see LandingGearUnit

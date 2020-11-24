@@ -343,7 +343,7 @@ end
 -- <li>"in" for the in signal (has no actual effect on controller state when modified this way).</li>
 -- </ul>
 --
--- Note: Only defined for Programming Board.
+-- Note: Only defined for Programming Board and ECU.
 -- @param plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
@@ -372,7 +372,7 @@ end
 -- <li>"in" for the in signal.</li>
 -- </ul>
 --
--- Note: Only defined for Programming Board.
+-- Note: Only defined for Programming Board and ECU.
 -- @param plug A valid plug name to query.
 -- @treturn 0/1 The plug signal state
 function M:getSignalIn(plug)

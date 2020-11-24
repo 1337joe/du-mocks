@@ -232,10 +232,11 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
     if isGeneric or isPvp or isEcu then
         assert(unit.getWidgetType() == "basic_control_unit")
         expectedValues["type"] = '"basic_control_unit"'
-        expectedValues["helper"] = '"generic"'
+        expectedValues["helperId"] = '"generic"'
     else
         assert(unit.getWidgetType() == "cockpit")
         expectedValues["type"] = '"cockpit"'
+        expectedValues["helperId"] = '"cockpit"'
         table.insert(expectedFields, "controlData")
         table.insert(expectedFields, "showHasBrokenFuelTank")
         table.insert(expectedFields, "showOutOfFuel")

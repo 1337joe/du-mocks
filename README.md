@@ -98,7 +98,7 @@ Format notes:
 | DetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DoorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
 | EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
-| EngineUnit | :heavy_check_mark: | P | P | | P |
+| EngineUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | P |
 | FireworksUnit | :heavy_check_mark: | P | P | | |
 | ForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | GyroUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
