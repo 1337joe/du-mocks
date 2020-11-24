@@ -1,4 +1,9 @@
 --- Receives messages on given channels.
+--
+-- Element class: ReceiverUnit
+--
+-- Extends: Element
+-- @see Element
 -- @module ReceiverUnit
 -- @alias M
 
@@ -19,19 +24,41 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
+    o.defaultChannel = ""
     o.range = elementDefinition.range
     o.receiveCallbacks = {}
 
     return o
 end
 
---- Returns the emitter range.
+--- Returns the receiver range.
 -- @treturn meter The range.
 function M:getRange()
     return self.range
 end
 
+--- Return the value of a signal in the specified OUT plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"out" for the out signal.</li>
+-- </ul>
+-- @param plug A valid plug name to query.
+-- @treturn 0/1 The plug signal state
+function M:getSignalOut(plug)
+    if plug == "out" then
+        if self.plugOut then
+            return 1.0
+        else
+            return 0.0
+        end
+    end
+    return MockElement.getSignalOut(self, plug)
+end
+
 --- Event: Emitted when a message is received on any channel.
+--
+-- Note: Max channel and message string length is currently 512 characters each, any additional text will be truncated.
 --
 -- Note: This is documentation on an event handler, not a callable method.
 -- @tparam string channel The channel; can be used as a filter.
@@ -60,6 +87,9 @@ end
 -- @tparam string channel The channel; can be used as a filter.
 -- @tparam string message The message received.
 function M:mockDoReceive(channel, message)
+    -- enable out signal for as long as it takes to process receive handlers
+    self.plugOut = self.defaultChannel and channel == self.defaultChannel
+
     -- call callbacks in order, saving exceptions until end
     local errors = ""
     for i,callback in pairs(self.receiveCallbacks) do
@@ -73,6 +103,8 @@ function M:mockDoReceive(channel, message)
         end
     end
 
+    self.plugOut = false
+
     -- propagate errors
     if string.len(errors) > 0 then
         error("Errors raised in callbacks:"..errors)
@@ -84,8 +116,9 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
-    closure.send = function(channel, message) return self:send(channel, message) end
     closure.getRange = function() return self:getRange() end
+
+    closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
     return closure
 end
 

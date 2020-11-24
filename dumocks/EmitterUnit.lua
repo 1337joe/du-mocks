@@ -100,7 +100,7 @@ end
 
 --- Send a message on the given channel.
 --
--- Note: Max channel and message string length is currently 512 characters each.
+-- Note: Max channel and message string length is currently 512 characters each, any additional text will be truncated.
 -- @tparam string channel The channel name.
 -- @tparam string message The message to transmit.
 function M:send(channel, message)

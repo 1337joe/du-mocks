@@ -7,6 +7,7 @@
 --   <li>DetectionZoneUnit</li>
 --   <li>ElementWithState</li>
 --   <li>EmitterUnit</li>
+--   <li>ReceiverUnit</li>
 --   <li>TelemeterUnit</li>
 --   <li>WarpDriveUnit</li>
 -- </ul>
@@ -16,6 +17,7 @@
 -- @see ElementWithState
 -- @see TelemeterUnit
 -- @see EmitterUnit
+-- @see ReceiverUnit
 -- @see WarpDriveUnit
 -- @module Element
 -- @alias M
