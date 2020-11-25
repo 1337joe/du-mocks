@@ -4,6 +4,7 @@
 -- <ul>
 --   <li>ContainerUnit</li>
 --   <li>ControlUnit</li>
+--   <li>CoreUnit</li>
 --   <li>CounterUnit</li>
 --   <li>DatabankUnit</li>
 --   <li>DetectionZoneUnit</li>
@@ -15,6 +16,7 @@
 -- </ul>
 -- @see ContainerUnit
 -- @see ControlUnit
+-- @see CoreUnit
 -- @see CounterUnit
 -- @see DatabankUnit
 -- @see DetectionZoneUnit
@@ -179,6 +181,10 @@ function M:getSignalOut(plug)
     return -1
 end
 
+---Unknown use, but present in all elements.
+function M:load()
+end
+
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
 -- @treturn table A table encompasing the api calls of object.
 function M:mockGetClosure()
@@ -200,8 +206,7 @@ function M:mockGetClosure()
     -- closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
     -- closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
 
-    -- unknown use, but present in all elements
-    closure.load = function() end
+    closure.load = function() return self:load() end
     return closure
 end
 

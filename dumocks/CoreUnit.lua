@@ -1,25 +1,40 @@
 --- This is the heart of your construct. It represents the construct and gives access to all construct-related
 -- information.
+--
+-- Element class:
+-- <ul>
+--   <li>CoreUnitDynamic</li>
+--   <li>CoreUnitStatic</li>
+--   <li>CoreUnitSpace</li>
+-- </ul>
+--
+-- Extends: Element
+-- @see Element
 -- @module CoreUnit
 -- @alias M
 
 local MockElement = require "dumocks.Element"
 
+local CLASS_DYNAMIC = "CoreUnitDynamic"
+local CLASS_STATIC = "CoreUnitStatic"
+local CLASS_SPACE = "CoreUnitSpace"
+
 local elementDefinitions = {}
-elementDefinitions["dynamic core unit xs"] = {mass = 70.89, maxHitPoints = 50.0, class = "CoreUnitDynamic"}
-elementDefinitions["dynamic core unit s"] = {mass = 375.97, maxHitPoints = 183.0, class = "CoreUnitDynamic"}
-elementDefinitions["dynamic core unit m"] = {mass = 1984.6, maxHitPoints = 1288.0, class = "CoreUnitDynamic"}
-elementDefinitions["dynamic core unit l"] = {mass = 12141.47, maxHitPoints = 11541.0, class = "CoreUnitDynamic"}
-elementDefinitions["space core unit xs"] = {mass = 38.99, maxHitPoints = 50.0, class = "CoreUnitSpace"}
-elementDefinitions["static core unit xs"] = {mass = 70.89, maxHitPoints = 50.0, class = "CoreUnitStatic"}
-elementDefinitions["static core unit s"] = {mass = 360.18, maxHitPoints = 167.0, class = "CoreUnitStatic"}
-elementDefinitions["static core unit m"] = {mass = 1926.91, maxHitPoints = 1184.0, class = "CoreUnitStatic"}
-elementDefinitions["static core unit l"] = {mass = 10066.3, maxHitPoints = 10710.0, class = "CoreUnitStatic"}
+elementDefinitions["dynamic core unit xs"] = {mass = 70.89, maxHitPoints = 50.0, class = CLASS_DYNAMIC}
+elementDefinitions["dynamic core unit s"] = {mass = 375.97, maxHitPoints = 183.0, class = CLASS_DYNAMIC}
+elementDefinitions["dynamic core unit m"] = {mass = 1984.6, maxHitPoints = 1288.0, class = CLASS_DYNAMIC}
+elementDefinitions["dynamic core unit l"] = {mass = 12141.47, maxHitPoints = 11541.0, class = CLASS_DYNAMIC}
+elementDefinitions["space core unit xs"] = {mass = 38.99, maxHitPoints = 50.0, class = CLASS_SPACE}
+elementDefinitions["static core unit xs"] = {mass = 70.89, maxHitPoints = 50.0, class = CLASS_STATIC}
+elementDefinitions["static core unit s"] = {mass = 360.18, maxHitPoints = 167.0, class = CLASS_STATIC}
+elementDefinitions["static core unit m"] = {mass = 1926.91, maxHitPoints = 1184.0, class = CLASS_STATIC}
+elementDefinitions["static core unit l"] = {mass = 10066.3, maxHitPoints = 10710.0, class = CLASS_STATIC}
 -- TODO others
 local DEFAULT_ELEMENT = "dynamic core unit xs"
 
 local M = MockElement:new()
 M.widgetType = "core"
+M.helperId = "core"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
@@ -39,7 +54,7 @@ function M:new(o, id, elementName)
     o.worldAirFrictionAcceleration = {0, 0, 0} -- vec3
     o.elements = {} -- map: UID => {name="", type="", position={0,0,0}, rotation={0,0,0,0}, tags="", hp=0.0, maxHp=0.0, mass=0.0}
     o.altitude = 0 -- m
-    o.g = 0 -- m/s2
+    o.gValue = 0 -- m/s2
     o.worldGravity = 0 -- m/s2
     o.worldVertical = 0 -- m/s2
     o.angularVelocity = 0 -- rad/s
@@ -60,19 +75,46 @@ function M:new(o, id, elementName)
     return o
 end
 
+local DATA_TEMPLATE = '{"helperId":"%s","type":"%s","name":"%s [%d]","altitude":%f,"gravity":%s}'
+function M:getData()
+    local gString
+    if self:g() == 0 then
+        gString = "0.0"
+    else
+        gString = string.format("%.15f", self:g())
+    end
+    return string.format(DATA_TEMPLATE, self.helperId, self:getWidgetType(), self.name, self:getId(),
+                            self:getAltitude(), gString)
+end
+
+
+-- Override default with realistic patten to id.
+function M:getDataId()
+    if self.elementClass == CLASS_ITEM then
+        return MockElement:getDataId()
+    end
+    return "e123456"
+end
+
 --- Returns the mass of the construct.
+--
+-- Note: Only defined for dynamic cores.
 -- @treturn kg The mass of the construct.
 function M:getConstructMass()
     return self.constructMass
 end
 
 --- Returns the inertial mass of the construct, calculated as 1/3 of the trace of the inertial tensor.
+--
+-- Note: Only defined for dynamic cores.
 -- @treturn kg*m2 The inertial mass of the construct.
 function M:getConstructIMass()
     return self.constructIMass
 end
 
 --- Returns the construct's cross sectional surface in the current direction of movement.
+--
+-- Note: Only defined for dynamic cores.
 -- @treturn m2 The construct's surface exposed in the current direction of movement.
 function M:getConstructCrossSection()
     return self.constructCrossSection
@@ -86,6 +128,8 @@ end
 -- might not reflect the accurate current max thrust capacity of your ship, which depends on various local conditions
 -- (atmospheric density, orientation, obstruction, engine damage, etc). This is typically used in conjunction with the
 -- control unit throttle to setup the desired forward acceleration.
+--
+-- Note: Only defined for dynamic cores.
 -- @tparam csv taglist Comma (for union) or space (for intersection) separated list of tags. You can set tags directly
 -- on the engines in the right-click menu.
 -- @tparam vec3 CRefAxis Axis along which to compute the max force (in construct reference).
@@ -174,6 +218,21 @@ function M:rotateSticker(index, angle_x, angle_y, angle_z)
 end
 
 --- List of all the UIDs of the elements of this construct.
+--
+-- This method is deprecated: getElementIdList should be used instead.
+-- @see getElementIdList
+-- @treturn list List of element UIDs.
+function M:getElementList()
+    local message = "Warning: method getElementList is deprecated, use getElementIdList instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
+    return self:getElementIdList()
+end
+
+--- List of all the UIDs of the elements of this construct.
 -- @treturn list List of element UIDs.
 function M:getElementIdList()
     local ids = {}
@@ -181,6 +240,22 @@ function M:getElementIdList()
         table.insert(ids, id)
     end
     return ids
+end
+
+--- Name of the element, identified by its UID.
+--
+-- This method is deprecated: getElementNameById should be used instead.
+-- @see getElementNameById
+-- @tparam int uid The UID of the element.
+-- @treturn string Name of the element.
+function M:getElementName(uid)
+    local message = "Warning: method getElementName is deprecated, use getElementNameById instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
+    return self:getElementNameById()
 end
 
 --- Name of the element, identified by its UID.
@@ -194,6 +269,22 @@ function M:getElementNameById(uid)
 end
 
 --- Type of the element, identified by its UID.
+--
+-- This method is deprecated: getElementTypeById should be used instead.
+-- @see getElementTypeById
+-- @tparam int uid The UID of the element.
+-- @treturn string The type of the element.
+function M:getElementType(uid)
+    local message = "Warning: method getElementType is deprecated, use getElementTypeById instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
+    return self:getElementNameById()
+end
+
+    --- Type of the element, identified by its UID.
 -- @tparam int uid The UID of the element.
 -- @treturn string The type of the element.
 function M:getElementTypeById(uid)
@@ -234,6 +325,22 @@ function M:getElementTagsById(uid)
 end
 
 --- Current level of hit points of the element, identified by its UID.
+--
+-- This method is deprecated: getElementHitPointsById should be used instead.
+-- @see getElementHitPointsById
+-- @tparam int uid The UID of the element.
+-- @treturn float Current level of hit points of the element.
+function M:getElementHitPoints(uid)
+    local message = "Warning: method getElementHitPoints is deprecated, use getElementHitPointsById instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
+    return self:getElementHitPointsById()
+end
+
+--- Current level of hit points of the element, identified by its UID.
 -- @tparam int uid The UID of the element.
 -- @treturn float Current level of hit points of the element.
 function M:getElementHitPointsById(uid)
@@ -244,6 +351,22 @@ function M:getElementHitPointsById(uid)
 end
 
 --- Max level of hit points of the element, identified by its UID.
+--
+-- This method is deprecated: getElementMaxHitPointsById should be used instead.
+-- @see getElementMaxHitPointsById
+-- @tparam int uid The UID of the element.
+-- @treturn float Max level of hit points of the element.
+function M:getElementMaxHitPoints(uid)
+    local message = "Warning: method getElementMaxHitPoints is deprecated, use getElementMaxHitPointsById instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
+    return self:getElementMaxHitPointsById()
+end
+
+--- Max level of hit points of the element, identified by its UID.
 -- @tparam int uid The UID of the element.
 -- @treturn float Max level of hit points of the element.
 function M:getElementMaxHitPointsById(uid)
@@ -251,6 +374,22 @@ function M:getElementMaxHitPointsById(uid)
         return self.elements[uid].maxHp
     end
     return 0.0
+end
+
+--- Mass of the element, identified by its UID.
+--
+-- This method is deprecated: getElementMassById should be used instead.
+-- @see getElementMassById
+-- @tparam int uid The UID of the element.
+-- @treturn float Mass of the element.
+function M:getElementMass(uid)
+    local message = "Warning: method getElementMass is deprecated, use getElementMassById instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
+    return self:getElementMassById()
 end
 
 --- Mass of the element, identified by its UID.
@@ -266,21 +405,30 @@ end
 --- Altitude above sea level, with respect to the closest planet (0 in space).
 -- @treturn m The sea level altitude.
 function M:getAltitude()
-    -- TODO returns 0.0 for space construct
+    if self.elementClass == CLASS_SPACE then
+        -- returns 0.0 for space construct
+        return 0.0
+    end
     return self.altitude
 end
 
 --- Local gravity intensity.
 -- @treturn m/s2 The gravitation acceleration where the construct is located.
 function M:g()
-    -- TODO returns 0.0 for static and space construct
-    return self.g
+    if self.elementClass ~= CLASS_DYNAMIC then
+        -- returns 0.0 for static and space construct
+        return 0.0
+    end
+    return self.gValue
 end
 
 --- Local gravity vector in world coordinates.
 -- @treturn m/s2 The local gravity field vector in world coordinates.
 function M:getWorldGravity()
-    -- TODO returns {0.0, 0.0, 0.0} for static and space construct
+    if self.elementClass ~= CLASS_DYNAMIC then
+        -- returns {0.0, 0.0, 0.0} for static and space construct
+        return {0.0, 0.0, 0.0}
+    end
     -- sample dynamic value: {1.5739563655308,-9.33176430249,-2.8107843460705}
     return self.worldGravity
 end
@@ -288,7 +436,10 @@ end
 --- Vertical unit vector along gravity, in world coordinates (0 in space).
 -- @treturn m/s2 The local vertical vector in world coordinates.
 function M:getWorldVertical()
-    -- TODO returns {0.0, 0.0, 0.0} for static and space construct
+    if self.elementClass ~= CLASS_DYNAMIC then
+        -- returns {0.0, 0.0, 0.0} for static and space construct
+        return {0.0, 0.0, 0.0}
+    end
     -- sample dynamic value: {0.15943373305866,-0.94526001568521, -0.28471808426895}
     return self.worldVertical
 end
@@ -296,28 +447,40 @@ end
 --- The construct's angular velocity, in construct local coordinates.
 -- @treturn rad/s Angular velocity vector, in construct local coordinates.
 function M:getAngularVelocity()
-    -- TODO returns {0.0, 0.0, 0.0} for static and space construct
+    if self.elementClass ~= CLASS_DYNAMIC then
+        -- returns {0.0, 0.0, 0.0} for static and space construct
+        return {0.0, 0.0, 0.0}
+    end
     return self.angularVelocity
 end
 
 --- The constructs angular velocity, in world coordinates.
 -- @treturn rad/s Angular velocity vector, in world coordinates.
 function M:getWorldAngularVelocity()
-    -- TODO returns {0.0, 0.0, 0.0} for static and space construct
+    if self.elementClass ~= CLASS_DYNAMIC then
+        -- returns {0.0, 0.0, 0.0} for static and space construct
+        return {0.0, 0.0, 0.0}
+    end
     return self.worldAngularVelocity
 end
 
 --- The construct's angular acceleration, in construct local coordinates.
 -- @treturn rad/s2 Angular acceleration vector, in construct local coordinates.
 function M:getAngularAcceleration()
-    -- TODO returns {0.0, 0.0, 0.0} for static and space construct
+    if self.elementClass ~= CLASS_DYNAMIC then
+        -- returns {0.0, 0.0, 0.0} for static and space construct
+        return {0.0, 0.0, 0.0}
+    end
     return self.angularAcceleration
 end
 
 --- The construct's angular acceleration, in world coordinates.
 -- @treturn rad/s2 Angular acceleration vector, in world coordinates.
 function M:getWorldAngularAcceleration()
-    -- TODO returns {0.0, 0.0, 0.0} for static and space construct
+    if self.elementClass ~= CLASS_DYNAMIC then
+        -- returns {0.0, 0.0, 0.0} for static and space construct
+        return {0.0, 0.0, 0.0}
+    end
     return self.worldAngularAcceleration
 end
 
@@ -386,11 +549,13 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
-    closure.getConstructMass = function() return self:getConstructMass() end
-    closure.getConstructIMass = function() return self:getConstructIMass() end
-    closure.getConstructCrossSection = function() return self:getConstructCrossSection() end
-    closure.getMaxKinematicsParametersAlongAxis = function(taglist, CRefAxis)
-        return self:getMaxKinematicsParametersAlongAxis(taglist, CRefAxis)
+    if self.elementClass == CLASS_DYNAMIC then
+        closure.getConstructMass = function() return self:getConstructMass() end
+        closure.getConstructIMass = function() return self:getConstructIMass() end
+        closure.getConstructCrossSection = function() return self:getConstructCrossSection() end
+        closure.getMaxKinematicsParametersAlongAxis = function(taglist, CRefAxis)
+            return self:getMaxKinematicsParametersAlongAxis(taglist, CRefAxis)
+        end
     end
     closure.getConstructWorldPos = function() return self:getConstructWorldPos() end
     closure.getConstructId = function() return self:getConstructId() end
@@ -405,11 +570,17 @@ function M:mockGetClosure()
     closure.rotateSticker = function(index, angle_x, angle_y, angle_z)
         return self:rotateSticker(index, angle_x, angle_y, angle_z)
     end
+    closure.getElementList = function() return self:getElementList() end
     closure.getElementIdList = function() return self:getElementIdList() end
+    closure.getElementName = function(uid) return self:getElementName(uid) end
     closure.getElementNameById = function(uid) return self:getElementNameById(uid) end
+    closure.getElementType = function(uid) return self:getElementType(uid) end
     closure.getElementTypeById = function(uid) return self:getElementTypeById(uid) end
+    closure.getElementHitPoints = function(uid) return self:getElementHitPoints(uid) end
     closure.getElementHitPointsById = function(uid) return self:getElementHitPointsById(uid) end
+    closure.getElementMaxHitPoints = function(uid) return self:getElementMaxHitPoints(uid) end
     closure.getElementMaxHitPointsById = function(uid) return self:getElementMaxHitPointsById(uid) end
+    closure.getElementMass = function(uid) return self:getElementMass(uid) end
     closure.getElementMassById = function(uid) return self:getElementMassById(uid) end
     closure.getElementPositionById = function(uid) return self:getElementPositionById(uid) end
     closure.getElementRotationById = function(uid) return self:getElementRotationById(uid) end

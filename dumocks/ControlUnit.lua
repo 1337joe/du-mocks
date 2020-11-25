@@ -189,6 +189,12 @@ end
 -- @see getMasterPlayerRelativePosition
 -- @treturn vec3 Relative position in world coordinates.
 function M:getOwnerRelativePosition()
+    local message = "Warning: method getOwnerRelativePosition is deprecated, use getMasterPlayerRelativePosition instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
     return self:getMasterPlayerRelativePosition()
 end
 

@@ -166,6 +166,13 @@ end
 -- @see getCurrentFuelRate
 -- @treturn m3/(N.s) How many litres of fuel per newton per second.
 function M:getFuelRate()
+    local message = "Warning: method getFuelRate is deprecated, use getCurrentFuelRate instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
+    return self:getCurrentFuelRate()
 end
 
 --- The engine rate of fuel consumption per newton delivered per second.
