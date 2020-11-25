@@ -8,6 +8,12 @@
 --   <li>CoreUnitSpace</li>
 -- </ul>
 --
+-- Displayed widget fields:
+-- <ul>
+--   <li>altitude</li>
+--   <li>gravity</li>
+-- </ul>
+--
 -- Extends: Element
 -- @see Element
 -- @module CoreUnit
@@ -86,7 +92,6 @@ function M:getData()
     return string.format(DATA_TEMPLATE, self.helperId, self:getWidgetType(), self.name, self:getId(),
                             self:getAltitude(), gString)
 end
-
 
 -- Override default with realistic patten to id.
 function M:getDataId()

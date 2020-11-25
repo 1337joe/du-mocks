@@ -10,6 +10,7 @@
 --   <li>DetectionZoneUnit</li>
 --   <li>ElementWithState</li>
 --   <li>EmitterUnit</li>
+--   <li>RadarUnit</li>
 --   <li>ReceiverUnit</li>
 --   <li>TelemeterUnit</li>
 --   <li>WarpDriveUnit</li>
@@ -23,6 +24,7 @@
 -- @see ElementWithState
 -- @see TelemeterUnit
 -- @see EmitterUnit
+-- @see RadarUnit
 -- @see ReceiverUnit
 -- @see WarpDriveUnit
 -- @module Element

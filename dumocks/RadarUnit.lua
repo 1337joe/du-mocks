@@ -1,15 +1,38 @@
 --- List local constructs and access their ID.
+--
+-- Element class:
+-- <ul>
+--   <li>RadarPvPAtmospheric</li>
+--   <li>RadarPvPSpace</li>
+-- </ul>
+--
+-- Displayed widget fields:
+-- <ul>
+--   <li>constructsList</li>
+--   <li>elementId</li>
+--   <li>properties</li>
+--   <li>staticProperties</li>
+-- </ul>
+--
+-- Extends: Element
+-- @see Element
 -- @module RadarUnit
 -- @alias M
 
 local MockElement = require "dumocks.Element"
 
+local CLASS_ATMO = "RadarPvPAtmospheric"
+local CLASS_SPACE = "RadarPvPSpace"
+
 local elementDefinitions = {}
+elementDefinitions["atmospheric radar s"] = {mass = 486.72, maxHitPoints = 88.0, class = CLASS_ATMO}
+elementDefinitions["space radar s"] = {mass = 486.72, maxHitPoints = 88.0, class = CLASS_SPACE}
 -- TODO
 local DEFAULT_ELEMENT = ""
 
 local M = MockElement:new()
-M.elementClass = "???Unit"
+M.widgetType = "radar"
+M.helperId = "radar"
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
@@ -17,6 +40,8 @@ function M:new(o, id, elementName)
     o = o or MockElement:new(o, id, elementDefinition)
     setmetatable(o, self)
     self.__index = self
+
+    o.elementClass = elementDefinition.class
 
     o.range = 0 -- meters
     -- map: id => {
@@ -38,6 +63,47 @@ function M:new(o, id, elementName)
     return o
 end
 
+
+local DATA_TEMPLATE = '{"helperId":"%s","type":"%s","name":"%s [%d]",'..
+[["constructsList":[],"elementId":"%d",
+"properties":{
+    "broken":false,
+    "errorMessage":"Jammed by atmosphere",
+    "identifiedConstructs":[],
+    "identifyConstructs":{},
+    "radarStatus":1,
+    "selectedConstruct":"0",
+    "worksInEnvironment":false
+},
+"staticProperties":{
+    "maxIdentifiedTargets":2,
+    "ranges":{
+        "identify128m":80000,
+        "identify16m":10000,
+        "identify32m":20000,
+        "identify64m":40000,
+        "scan":400000
+    },
+    "worksInAtmosphere":%s,
+    "worksInSpace":%s
+}
+}]]
+function M:getData()
+    local radarId = 123456789
+    local worksInAtmosphere = self.elementClass == CLASS_ATMO
+    local worksInSpace = self.elementClass == CLASS_SPACE
+    return string.format(DATA_TEMPLATE, self.helperId, self:getWidgetType(), self.name, self:getId(),
+                            radarId, worksInAtmosphere, worksInSpace)
+end
+
+-- Override default with realistic patten to id.
+function M:getDataId()
+    if self.elementClass == CLASS_ITEM then
+        return MockElement:getDataId()
+    end
+    return "e123456"
+end
+
 --- Returns the current range of the radar.
 -- @treturn meter The range.
 function M:getRange()
@@ -45,7 +111,7 @@ function M:getRange()
 end
 
 --- Returns the list of construct IDs currently detection in the range.
--- @treturn list The list of construct IDs, can be used with database.getConstruct to retrieve info about each
+-- @treturn list The list of construct IDs.
 -- construct.
 function M:getEntries()
     local entries = {}
@@ -55,14 +121,10 @@ function M:getEntries()
     return entries
 end
 
---- Return the player id of the owner of the given construct, if in range.
--- @tparam int id The ID of the construct.
--- @treturn int The player ID of the owner. Use database.getPlayer(ID) to retrieve info about it.
-function M:getConstructOwner(id)
-    if self.entries[id] then
-        return self.entries[id].ownerId
-    end
-    return nil
+--- Returns whether the target has an active transponder with matching tags.
+-- @treturn bool 1 if our construct and the target have active transponders with matching tags and 0 otherwise.
+function M:hasMatchingTransponder(id)
+    return false
 end
 
 --- Return the size of the bounding box of the given construct, if in range.
@@ -77,7 +139,7 @@ end
 
 --- Return the type of the given construct.
 -- @tparam int id The ID of the construct.
--- @treturn string The type of the construct,; can be 'static' or 'dynamic'.
+-- @treturn string The type of the construct,: can be 'static' or 'dynamic'.
 function M:getConstructType(id)
     if self.entries[id] then
         return self.entries[id].type
@@ -85,37 +147,7 @@ function M:getConstructType(id)
     return nil
 end
 
---- Return the world coordinates of the given construct, if in range.
--- @tparam int id The ID of the construct.
--- @treturn vec3 The xyz world coordinates of the construct.
-function M:getConstructWorldPos(id)
-    if self.entries[id] then
-        return self.entries[id].worldPos
-    end
-    return nil
-end
-
---- Return the world coordinates of the given construct's speed, if in range.
--- @tparam int id The ID of the construct.
--- @treturn vec3 The xyz world coordinates of the construct's velocity relative to absolute space.
-function M:getConstructWorldVelocity(id)
-    if self.entries[id] then
-        return self.entries[id].worldVel
-    end
-    return nil
-end
-
---- Return the world coordinates of the given construct's acceleration, if in range.
--- @tparam int id The ID of the construct.
--- @treturn vec3 The xyz world coordinates of the construct's acceleration relative to absolute space.
-function M:getConstructWorldAcceleration(id)
-    if self.entries[id] then
-        return self.entries[id].worldAccel
-    end
-    return nil
-end
-
---- Return the radar local coordinates of the given construct, if in range.
+--- Return the radar local coordinates of the given construct, if in range and if active transponder tags match.
 -- @tparam int id The ID of the construct.
 -- @treturn vec3 The xyz radar local coordinates of the construct.
 function M:getConstructPos(id)
@@ -125,30 +157,10 @@ function M:getConstructPos(id)
     return nil
 end
 
---- Return the radar local coordinates of the given construct's speed, if in range.
+--- Return the name of the given construct, if in range.
 -- @tparam int id The ID of the construct.
--- @treturn vec3 The xyz radar local coordinates of the construct's velocity relative to absolute space.
-function M:getConstructVelocity(id)
-    if self.entries[id] then
-        return self.entries[id].vel
-    end
-    return nil
-end
-
---- Return the radar local coordinates of the acceleration of the given construct, if in range.
--- @tparam int id The ID of the construct.
--- @treturn vec3 The xyz radar local coordinates of the construct's acceleration relative to absolute space.
-function M:getConstructAcceleration(id)
-    if self.entries[id] then
-        return self.entries[id].accel
-    end
-    return nil
-end
-
---- Return the name of the given construct, if defined.
--- @tparam int id the ID of the construct.
 -- @treturn string The name of the construct.
-function M:getConstructAcceleration(id)
+function M:getConstructName(id)
     if self.entries[id] then
         return self.entries[id].name
     end
@@ -233,17 +245,12 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
-    closure.range = function() return self:getRange() end
+    closure.getRange = function() return self:getRange() end
     closure.getEntries = function() return self:getEntries() end
-    closure.getConstructOwner = function(id) return self:getConstructOwner(id) end
+    closure.hasMatchingTransponder = function() return self:hasMatchingTransponder() end
     closure.getConstructSize = function(id) return self:getConstructSize(id) end
     closure.getConstructType = function(id) return self:getConstructType(id) end
-    closure.getConstructWorldPos = function(id) return self:getConstructWorldPos(id) end
-    closure.getConstructWorldVelocity = function(id) return self:getConstructWorldVelocity(id) end
-    closure.getConstructWorldAcceleration = function(id) return self:getConstructWorldAcceleration(id) end
     closure.getConstructPos = function(id) return self:getConstructPos(id) end
-    closure.getConstructVelocity = function(id) return self:getConstructVelocity(id) end
-    closure.getConstructAcceleration = function(id) return self:getConstructAcceleration(id) end
     closure.getConstructName = function(id) return self:getConstructName(id) end
     return closure
 end
