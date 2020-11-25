@@ -10,6 +10,7 @@
 --   <li>DetectionZoneUnit</li>
 --   <li>ElementWithState</li>
 --   <li>EmitterUnit</li>
+--   <li>IndustryUnit</li>
 --   <li>RadarUnit</li>
 --   <li>ReceiverUnit</li>
 --   <li>TelemeterUnit</li>
@@ -22,10 +23,11 @@
 -- @see DatabankUnit
 -- @see DetectionZoneUnit
 -- @see ElementWithState
--- @see TelemeterUnit
 -- @see EmitterUnit
+-- @see IndustryUnit
 -- @see RadarUnit
 -- @see ReceiverUnit
+-- @see TelemeterUnit
 -- @see WarpDriveUnit
 -- @module Element
 -- @alias M

@@ -1,4 +1,9 @@
 --- Can mass-produce produce any item/element.
+--
+-- Element class: IndustryUnit
+--
+-- Extends: Element
+-- @see Element
 -- @module IndustryUnit
 -- @alias M
 

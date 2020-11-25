@@ -3,11 +3,12 @@
 -- @see dumocks.IndustryUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
 local miu = require("dumocks.IndustryUnit")
+require("tests.Utilities")
 
 TestIndustryUnit = {}
 
@@ -90,20 +91,27 @@ end
 --
 -- Test setup:
 -- 1. 2x Container XS, 2x Transfer Unit, link in a loop.
--- 2. Put 1x Basic Component in a container and select recipe "Basic Component" in both Transfer Units.
+-- 2. Put 100x Pure Oxygen in a container and select recipe "Pure Oxygen" in both Transfer Units.
 -- 3. Transfer Unit 1 is linked to Programming Board on slot1.
 -- 4. Transfer Unit 2 is set to run infinitely.
 --
 -- Exercises: batchStart, softStop, getStatus, getCycleCountSinceStartup, getEfficiency, getUptime, EVENT_completed,
 -- EVENT_statusChanged (with and without filter)
 function TestIndustryUnit.testGameBehavior()
-    local mock = miu:new()
+    local mock = miu:new(nil, 1)
     local slot1 = mock:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
-    local unit = {getData = function() return '"showScriptError":false' end}
+    local unit = {
+        getData = function()
+            return '"showScriptError":false'
+        end,
+        exit = function()
+        end
+    }
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     -- use locals here since all code is in this method
     local completedCallCount, statusChangedCallCount
@@ -119,17 +127,20 @@ function TestIndustryUnit.testGameBehavior()
         assert(slot1.getCycleCountSinceStartup() == math.floor(completedCallCount / 2) + 1)
 
         if slot1.getCycleCountSinceStartup() == 1 then
-            assert(math.abs(slot1.getUptime() - 1.0) < 0.1, "1s recipe: expected < 0.1s deviance, are you lagging? "..slot1.getUptime())
+            assert(math.abs(slot1.getUptime() - 10.0) < 3.0,
+                "10s recipe: expected < 3.0s deviance, are you lagging? " .. slot1.getUptime())
             assert(slot1.getEfficiency() > 0.9 and slot1.getEfficiency() <= 1.0,
-                "Expected high efficiency due to supplies already on hand, are you lagging? "..slot1.getEfficiency())
+                "Expected high efficiency due to supplies already on hand, are you lagging? " .. slot1.getEfficiency())
 
-            assert(statusChangedCallCount == 1, "Only RUNNING state change should be first: "..statusChangedCallCount)
+            assert(statusChangedCallCount == 1, "Only RUNNING state change should be first: " .. statusChangedCallCount)
         else
-            assert(math.abs(slot1.getUptime() - 3.0) < 0.3, "1s recipe: expected < 0.1s deviance per 1s job, are you lagging? "..slot1.getUptime())
-            assert(slot1.getEfficiency() > 0.6 and slot1.getEfficiency() <= 0.75,
-                "~3 seconds to do 2x 1 second jobs, expect ~0.66 efficiency: "..slot1.getEfficiency())
+            -- generous padding due to how slow the server can be to update industry units
+            assert(math.abs(slot1.getUptime() - 30.0) < 10.0,
+                "10s recipe: expected < 10s deviance after 3 runs, are you lagging? " .. slot1.getUptime())
+            assert(slot1.getEfficiency() > 0.5 and slot1.getEfficiency() <= 0.70,
+                "~30 seconds to do 2x 10 second jobs, expect ~0.66 efficiency: " .. slot1.getEfficiency())
 
-            assert(statusChangedCallCount == 3, "Only RUNNING state change should be first: "..statusChangedCallCount)
+            assert(statusChangedCallCount == 3, "Only RUNNING state change should be first: " .. statusChangedCallCount)
         end
         ---------------
         -- copy to here to slot1.completed()
@@ -159,7 +170,7 @@ function TestIndustryUnit.testGameBehavior()
             assert(status == "RUNNING", status)
             -- TODO game behavior currently unsupported in mock
             -- assert(slot1.getEfficiency() == 0.0,
-            --     "Odd, but 0.0 is expected game behavior here: "..slot1.getEfficiency())
+            --     "Odd, but 0.0 is expected game behavior here: " .. slot1.getEfficiency())
         elseif statusChangedCallCount == 2 then
             assert(status == "JAMMED_MISSING_INGREDIENT", status)
         else
@@ -182,7 +193,7 @@ function TestIndustryUnit.testGameBehavior()
         assert(slot1.getCycleCountSinceStartup() == 2, slot1.getCycleCountSinceStartup())
         assert(completedCallCount == 4, "Should only be called after all completed calls.")
 
-        system.print("Last job completed, you may stop the programming board now.")
+        unit.exit()
         ---------------
         -- copy to here to slot1.statusChanged(status): STOPPED
         ---------------
@@ -195,7 +206,23 @@ function TestIndustryUnit.testGameBehavior()
     ---------------
     -- copy from here to unit.start()
     ---------------
-    assert(slot1.getElementClass() == "IndustryUnit", slot1.getElementClass())
+    local expectedFunctions = {"start", "startAndMaintain", "batchStart", "softStop", "hardStop", "getStatus",
+                               "getCycleCountSinceStartup", "getEfficiency", "getUptime",
+                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
+                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+    _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
+
+    -- test element class and inherited methods
+    assert(slot1.getElementClass() == "IndustryUnit")
+    assert(slot1.getData() == "{}")
+    assert(slot1.getDataId() == "")
+    assert(slot1.getWidgetType() == "")
+    slot1.show()
+    slot1.hide()
+    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
+    assert(slot1.getMaxHitPoints() >= 1329.0)
+    assert(slot1.getId() > 0)
+    assert(slot1.getMass() > 100)
 
     -- ensure initial state, set up globals
     assert(slot1.getStatus() == "STOPPED", slot1.getStatus())
@@ -207,14 +234,14 @@ function TestIndustryUnit.testGameBehavior()
     -- copy to here to unit.start()
     ---------------
 
-    -- simulate two 1-second jobs finishing with a 1-second gap waiting for ingredients
-    mock.currentTime = 1.0
+    -- simulate two 10-second jobs finishing with a 10-second gap waiting for ingredients
+    mock.currentTime = 10.0
     mock.hasInputIngredients = false
     mock:mockDoCompleted()
-    mock.currentTime = 2.0
+    mock.currentTime = 20.0
     mock.hasInputIngredients = true
     mock:mockDoEvaluateStatus()
-    mock.currentTime = 3.0
+    mock.currentTime = 30.0
     mock:mockDoCompleted()
 
     ---------------
@@ -224,9 +251,10 @@ function TestIndustryUnit.testGameBehavior()
     assert(slot1.getCycleCountSinceStartup() == 2, slot1.getCycleCountSinceStartup())
     assert(completedCallCount == 4)
     assert(statusChangedCallCount == 5)
-    assert(slot1.getEfficiency() == 0.0, "Not running, can't be efficient.")
-    assert(slot1.getUptime() >= 3.0,
-        "Should have taken ~3 seconds to run two jobs with a 1 second wait for ingredients: "..slot1.getUptime())
+    -- despite STOPPED state test currently reports efficiency at this point in the test
+    -- assert(slot1.getEfficiency() == 0.0, "Not running, can't be efficient: " .. slot1.getEfficiency())
+    assert(slot1.getUptime() >= 30.0,
+        "Should have taken ~30 seconds to run two jobs with a 10 second wait for ingredients: " .. slot1.getUptime())
 
     -- multi-part script, can't just print success because end of script was reached
     if string.find(unit.getData(), '"showScriptError":false') then

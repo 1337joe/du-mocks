@@ -102,7 +102,7 @@ Format notes:
 | FireworksUnit | :heavy_check_mark: | P | P | | |
 | ForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | GyroUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
-| IndustryUnit | :heavy_check_mark: | P | P | P | :heavy_check_mark: |
+| IndustryUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
 | LandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | LaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | LaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
@@ -115,3 +115,13 @@ Format notes:
 | ScreenUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| P :heavy_check_mark: | :heavy_check_mark: |
 | TelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | P :heavy_check_mark: | :heavy_check_mark: |
+
+## Support
+
+Many mocks are incomplete (until I code something that needs them for testing), but documentation should be up to date. If you encounter a function that's not documented here (or where my documentation doesn't match the function) either send me a message or file a GitHub Issue (or fork the project, fix it, and send me a pull request).
+
+Discord: 1337joe#6186
+
+In-Game: W3asel
+
+My game/coding time is often limited so I can't promise a quick response.
