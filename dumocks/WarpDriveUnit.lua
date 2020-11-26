@@ -5,7 +5,7 @@
 --
 -- Displayed widget fields:
 -- <ul>
---   <li>elementId (large number, not id of element within construct</li>
+--   <li>elementId</li>
 --   <li>buttonMsg</li>
 --   <li>errorMsg</li>
 --   <li>showError</li>

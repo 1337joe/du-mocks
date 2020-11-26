@@ -91,7 +91,7 @@ Format notes:
 | Element | :heavy_check_mark: | P | P | - - | - |
 | AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
 | ContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | P :heavy_check_mark: | :heavy_check_mark: |
-| ControlUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | P |
+| ControlUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
 | CoreUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | P |
 | CounterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
@@ -110,7 +110,7 @@ Format notes:
 | ManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | ManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | PressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| RadarUnit | :heavy_check_mark: | :heavy_check_mark: | P | P :heavy_check_mark: | P |
+| RadarUnit | :heavy_check_mark: | :heavy_check_mark: | P | P :heavy_check_mark: | :heavy_check_mark: |
 | ReceiverUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
 | ScreenUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| P :heavy_check_mark: | :heavy_check_mark: |
 | TelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |

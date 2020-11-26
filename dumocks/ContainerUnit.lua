@@ -1,7 +1,12 @@
 --- Stores items.
 --
--- Element class: ItemContainer (item containers), AtmoFuelContainer (atmospheric fuel tanks),
---   SpaceFuelContainer (space fuel tanks), RocketFuelTank (rocket fuel tanks)
+-- Element class:
+-- <ul>
+--   <li>ItemContainer</li>
+--   <li>AtmoFuelContainer</li>
+--   <li>SpaceFuelContainer</li>
+--   <li>RocketFuelTank</li>
+-- </ul>
 --
 -- Displayed widget fields (fuel tanks only):
 -- <ul>

@@ -59,8 +59,8 @@ elementDefinitions["hovercraft seat"] = {mass = 110.33, maxHitPoints = 187.0, cl
 elementDefinitions["cockpit controller"] = {mass = 1208.13, maxHitPoints = 1125.0, class = "CockpitFighterUnit"}
 elementDefinitions["command seat controller"] = {mass = 158.45, maxHitPoints = 250.0, class = "CockpitCommandmentUnit"}
 elementDefinitions["gunner module s"] = {mass = 427.9, maxHitPoints = 250.0, class = CLASS_PVP}
-elementDefinitions["gunner module m"] = {mass = 2170, maxHitPoints = 250.0, class = CLASS_PVP} -- TODO get exact mass
-elementDefinitions["gunner module l"] = {mass = 11320, maxHitPoints = 250.0, class = CLASS_PVP} -- TODO get exact mass
+elementDefinitions["gunner module m"] = {mass = 2174.12, maxHitPoints = 250.0, class = CLASS_PVP}
+elementDefinitions["gunner module l"] = {mass = 11324.61, maxHitPoints = 250.0, class = CLASS_PVP}
 elementDefinitions["emergency controller"] = {mass = 9.35, maxHitPoints = 50.0, class = CLASS_ECU}
 local DEFAULT_ELEMENT = "programming board"
 

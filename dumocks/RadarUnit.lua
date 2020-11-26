@@ -26,9 +26,12 @@ local CLASS_SPACE = "RadarPvPSpace"
 
 local elementDefinitions = {}
 elementDefinitions["atmospheric radar s"] = {mass = 486.72, maxHitPoints = 88.0, class = CLASS_ATMO}
+elementDefinitions["atmospheric radar m"] = {mass = 11324.61, maxHitPoints = 698.0, class = CLASS_ATMO}
+elementDefinitions["atmospheric radar l"] = {mass = 6636.8985, maxHitPoints = 12887.0, class = CLASS_ATMO}
 elementDefinitions["space radar s"] = {mass = 486.72, maxHitPoints = 88.0, class = CLASS_SPACE}
--- TODO
-local DEFAULT_ELEMENT = ""
+elementDefinitions["space radar m"] = {mass = 2348.45, maxHitPoints = 698.0, class = CLASS_SPACE}
+elementDefinitions["space radar l"] = {mass = 12492.16, maxHitPoints = 12887.0, class = CLASS_SPACE}
+local DEFAULT_ELEMENT = "atmospheric radar s"
 
 local M = MockElement:new()
 M.widgetType = "radar"

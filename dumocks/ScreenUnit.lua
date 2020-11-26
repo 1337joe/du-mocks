@@ -1,7 +1,11 @@
 --- Screen units can display any HTML code or text message, and you can use them to create visually interactive feedback
 -- for your running Lua script by connecting one or more of them to your control unit.
 --
--- Element class: ScreenUnit (basic and transparent screens), ScreenSignUnit (signs)
+-- Element class:
+-- <ul>
+--   <li>ScreenUnit: Basic and transparent screens</li>
+--   <li>ScreenSignUnit: Signs</li>
+-- </ul>
 --
 -- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
 -- @see Element
