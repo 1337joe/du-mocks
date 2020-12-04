@@ -129,7 +129,7 @@ function M:getYaw()
 end
 
 --- Set the world reference vector to calculate yaw from.
--- @param Reference vector of the gyro unit, in world coordinates.
+-- @param direction Reference vector of the gyro unit, in world coordinates.
 function M:setYawWorldReference(direction)
     self.yawWorldReference = direction
 end

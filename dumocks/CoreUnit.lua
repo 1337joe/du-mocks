@@ -222,7 +222,7 @@ function M:rotateSticker(index, angle_x, angle_y, angle_z)
     return 0
 end
 
---- List of all the UIDs of the elements of this construct.
+--- <b>Deprecated:</b> List of all the UIDs of the elements of this construct.
 --
 -- This method is deprecated: getElementIdList should be used instead.
 -- @see getElementIdList
@@ -247,7 +247,7 @@ function M:getElementIdList()
     return ids
 end
 
---- Name of the element, identified by its UID.
+--- <b>Deprecated:</b> Name of the element, identified by its UID.
 --
 -- This method is deprecated: getElementNameById should be used instead.
 -- @see getElementNameById
@@ -273,7 +273,7 @@ function M:getElementNameById(uid)
     return ""
 end
 
---- Type of the element, identified by its UID.
+--- <b>Deprecated:</b> Type of the element, identified by its UID.
 --
 -- This method is deprecated: getElementTypeById should be used instead.
 -- @see getElementTypeById
@@ -329,7 +329,7 @@ function M:getElementTagsById(uid)
     return {}
 end
 
---- Current level of hit points of the element, identified by its UID.
+--- <b>Deprecated:</b> Current level of hit points of the element, identified by its UID.
 --
 -- This method is deprecated: getElementHitPointsById should be used instead.
 -- @see getElementHitPointsById
@@ -355,7 +355,7 @@ function M:getElementHitPointsById(uid)
     return 0.0
 end
 
---- Max level of hit points of the element, identified by its UID.
+--- <b>Deprecated:</b> Max level of hit points of the element, identified by its UID.
 --
 -- This method is deprecated: getElementMaxHitPointsById should be used instead.
 -- @see getElementMaxHitPointsById
@@ -381,7 +381,7 @@ function M:getElementMaxHitPointsById(uid)
     return 0.0
 end
 
---- Mass of the element, identified by its UID.
+--- <b>Deprecated:</b> Mass of the element, identified by its UID.
 --
 -- This method is deprecated: getElementMassById should be used instead.
 -- @see getElementMassById

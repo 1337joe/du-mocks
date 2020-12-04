@@ -86,6 +86,7 @@ function M:new(o, id, elementName)
     o.tickCallbacks = {}
     o.masterPlayerId = nil
     o.remoteControlled = o.elementClass == CLASS_REMOTE
+    o.planetInfluence = 1.0
 
     o.linkedElements = {}
 
@@ -181,9 +182,10 @@ end
 --- Returns the closest planet influence, between 0 and 1.
 -- @treturn 0..1 The closest planet influence. 0 = in space, 1 = on the ground.
 function M:getClosestPlanetInfluence()
+    return self.planetInfluence
 end
 
---- Return the relative position (in world coordinates) of the player currently running the control unit.
+--- <b>Deprecated:</b> Return the relative position (in world coordinates) of the player currently running the control unit.
 --
 -- This method is deprecated: getMasterPlayerRelativePosition should be used instead.
 -- @see getMasterPlayerRelativePosition

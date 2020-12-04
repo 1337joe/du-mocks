@@ -120,7 +120,7 @@ local function validateFloat(value)
     return value
 end
 
---- Displays the given text at the given coordinates in the screen, and returns an ID to move it later.
+--- <b>Deprecated:</b> Displays the given text at the given coordinates in the screen, and returns an ID to move it later.
 --
 -- This method is deprecated: addText should be used instead.
 -- @see addText
@@ -171,7 +171,7 @@ function M:setCenteredText(text)
     self:setHTML(string.format(CENTERED_TEXT_TEMPLATE, fontSize, text))
 end
 
---- Set the whole screen HTML content (overrides anything already set).
+--- <b>Deprecated:</b> Set the whole screen HTML content (overrides anything already set).
 --
 -- This method is deprecated: setHTML should be used instead.
 -- @see setHTML
@@ -195,7 +195,7 @@ function M:setHTML(html)
     generateHtml(self)
 end
 
---- Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
+--- <b>Deprecated:</b> Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
 --
 -- This method is deprecated: addContent should be used instead.
 -- @see addContent

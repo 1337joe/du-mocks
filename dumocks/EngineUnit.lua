@@ -160,7 +160,7 @@ end
 function M:hasBrokenFuelTank()
 end
 
---- The engine rate of fuel consumption per newton delivered per second.
+--- <b>Deprecated:</b> The engine rate of fuel consumption per newton delivered per second.
 --
 -- This method is deprecated: getCurrentFuelRate should be used instead.
 -- @see getCurrentFuelRate
