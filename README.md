@@ -92,7 +92,7 @@ Format notes:
 | AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
 | ContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | P :heavy_check_mark: | :heavy_check_mark: |
 | ControlUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
-| CoreUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | P |
+| CoreUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
 | CounterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |

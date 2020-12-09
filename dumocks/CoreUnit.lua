@@ -31,18 +31,25 @@ elementDefinitions["dynamic core unit s"] = {mass = 375.97, maxHitPoints = 183.0
 elementDefinitions["dynamic core unit m"] = {mass = 1984.6, maxHitPoints = 1288.0, class = CLASS_DYNAMIC}
 elementDefinitions["dynamic core unit l"] = {mass = 12141.47, maxHitPoints = 11541.0, class = CLASS_DYNAMIC}
 elementDefinitions["space core unit xs"] = {mass = 38.99, maxHitPoints = 50.0, class = CLASS_SPACE}
+elementDefinitions["space core unit s"] = {mass = 459.57, maxHitPoints = 183.0, class = CLASS_SPACE}
+elementDefinitions["space core unit m"] = {mass = 3037.5395, maxHitPoints = 1288.0, class = CLASS_SPACE}
+elementDefinitions["space core unit l"] = {mass = 7684.51425, maxHitPoints = 11541.0, class = CLASS_SPACE}
 elementDefinitions["static core unit xs"] = {mass = 70.89, maxHitPoints = 50.0, class = CLASS_STATIC}
 elementDefinitions["static core unit s"] = {mass = 360.18, maxHitPoints = 167.0, class = CLASS_STATIC}
 elementDefinitions["static core unit m"] = {mass = 1926.91, maxHitPoints = 1184.0, class = CLASS_STATIC}
 elementDefinitions["static core unit l"] = {mass = 10066.3, maxHitPoints = 10710.0, class = CLASS_STATIC}
--- TODO others
 local DEFAULT_ELEMENT = "dynamic core unit xs"
+
+local MAX_STICKERS = 10
+local FIRST_ARROW_STICKER_INDEX = 19
+local FIRST_NUMBER_STICKER_INDEX = 9
 
 local M = MockElement:new()
 M.widgetType = "core"
 M.helperId = "core"
 
 function M:new(o, id, elementName)
+    id = id or 1
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
 
     o = o or MockElement:new(o, id, elementDefinition)
@@ -58,7 +65,14 @@ function M:new(o, id, elementName)
     o.constructId = 0
     o.worldAirFrictionAngularAcceleration = {0, 0, 0} -- vec3
     o.worldAirFrictionAcceleration = {0, 0, 0} -- vec3
-    o.elements = {} -- map: UID => {name="", type="", position={0,0,0}, rotation={0,0,0,0}, tags="", hp=0.0, maxHp=0.0, mass=0.0}
+    -- map: UID => {name="", type="", position={0,0,0}, rotation={0,0,0,0}, tags="", hp=0.0, maxHp=0.0, mass=0.0}
+    o.elements = {}
+    o.elements[id] = {
+        name = o.name,
+        -- type = string.match("%w+ %w+", elementDefinition), -- first two words of definition ("dynamic core")
+        hp = o.hitPoints,
+        position = {0, 0, 0},
+    }
     o.altitude = 0 -- m
     o.gValue = 0 -- m/s2
     o.worldGravity = 0 -- m/s2
@@ -77,6 +91,8 @@ function M:new(o, id, elementName)
     o.constructWorldOrientationUp = {0, 0, 0} -- vec3
     o.constructWorldOrientationRight = {0, 0, 0} -- vec3
     o.constructWorldOrientationForward = {0, 0, 0} -- vec3
+
+    o.stickers = {}
 
     return o
 end
@@ -174,30 +190,64 @@ end
 -- @tparam meter y The y-coordinate in the construct. 0 = center.
 -- @tparam meter z The z-coordinate in the construct. 0 = center.
 -- @tparam string orientation Orientation of the number. Possible values are "front", "side".
--- @treturn int An index that can be used later to delete or move the item. -1 if error or maxnumber reached.
+-- @treturn int An index that can be used later to delete or move the item. -1 if error or maxnumber (10) reached.
 function M:spawnNumberSticker(nb, x, y, z, orientation)
-    -- TODO implement something to mock this method
-    return -1
+    nb = tonumber(nb)
+    if type(nb) ~= "number" or nb < 0 then
+        nb = 0
+    elseif nb > 9 then
+        nb = 9
+    end
+
+    local nextIndex = -1
+    for i = FIRST_NUMBER_STICKER_INDEX, 0, -1 do
+        if not self.stickers[i] then
+            nextIndex = i
+            break
+        end
+    end
+
+    if nextIndex ~= -1 then
+        self.stickers[nextIndex] = {type = "number", x = x, y = y, z = z, value = nb, facing = orientation}
+    end
+
+    return nextIndex
 end
 
 --- Spawns an arrow sticker in the 3D world, with coordinates relative to the construct.
 -- @tparam meter x The x-coordinate in the construct. 0 = center.
 -- @tparam meter y The y-coordinate in the construct. 0 = center.
 -- @tparam meter z The z-coordinate in the construct. 0 = center.
--- @tparam string orientation Orientation of the number. Possible values are "up", "down", "north", "south", "east",
--- "west".
--- @treturn int An index that can be used later to delete or move the item. -1 if error or maxnumber reached.
+-- @tparam string orientation Orientation of the number. Possible values are "up" (+z), "down" (-z), "north" (-x), "south" (+x), "east" (+y), "west" (-y).
+-- @treturn int An index that can be used later to delete or move the item. -1 if error or maxnumber (10) reached.
 function M:spawnArrowSticker(x, y, z, orientation)
-    -- TODO implement something to mock this method
-    return -1
+    local nextIndex = -1
+    for i = FIRST_ARROW_STICKER_INDEX, 10, -1 do
+        if not self.stickers[i] then
+            nextIndex = i
+            break
+        end
+    end
+
+    if nextIndex ~= -1 then
+        self.stickers[nextIndex] = {type = "arrow", x = x, y = y, z = z, value = orientation}
+    end
+
+    return nextIndex
 end
 
 --- Delete the referenced sticker.
 -- @tparam int index Index of the sticker to delete.
--- @treturn int 1 in case of success, 0 otherwise.
+-- @treturn int 0 in case of success, -1 otherwise.
 function M:deleteSticker(index)
-    -- TODO implement something to mock this method
-    return 0
+    local success = self.stickers[index] ~= nil
+
+    self.stickers[index] = nil
+
+    if success then
+        return 0
+    end
+    return -1
 end
 
 --- Move the referenced sticker.
@@ -205,9 +255,15 @@ end
 -- @tparam meter x The x-coordinate in the construct. 0 = center.
 -- @tparam meter y The y-coordinate in the construct. 0 = center.
 -- @tparam meter z The z-coordinate in the construct. 0 = center.
--- @treturn int 1 in case of success, 0 otherwise
+-- @treturn int 0 in case of success, -1 otherwise.
 function M:moveSticker(index, x, y, z)
-    -- TODO implement something to mock this method
+    if self.stickers[index] == nil then
+        return -1
+    end
+
+    self.stickers[index].x = x
+    self.stickers[index].y = y
+    self.stickers[index].z = z
     return 0
 end
 
@@ -300,6 +356,14 @@ function M:getElementTypeById(uid)
 end
 
 --- Position of the element, identified by its UID.
+--
+-- Position is relative to the negative-most corner of the build volume, not the center. To get center-relative positions subtract:
+-- <ul>
+--   <li>Core XS: 16</li>
+--   <li>Core S: 32</li>
+--   <li>Core M: 64</li>
+--   <li>Core L: 128</li>
+-- </ul>
 -- @tparam int uid The UID of the element.
 -- @treturn vec3 Position of the element in local coordinates.
 function M:getElementPositionById(uid)

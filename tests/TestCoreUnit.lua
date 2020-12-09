@@ -28,7 +28,7 @@ function _G.TestCoreUnit.testConstructor()
     local controlClosure2 = control2:mockGetClosure()
     local controlClosure3 = control3:mockGetClosure()
 
-    lu.assertEquals(controlClosure0.getId(), 0)
+    lu.assertEquals(controlClosure0.getId(), 1)
     lu.assertEquals(controlClosure1.getId(), 1)
     lu.assertEquals(controlClosure2.getId(), 2)
     lu.assertEquals(controlClosure3.getId(), 3)
@@ -46,7 +46,7 @@ end
 -- Test setup:
 -- 1. core unit of any type, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, g
+-- Exercises: getElementClass, g, spawnNumberSticker, spawnArrowSticker, deleteSticker, moveSticker
 function _G.TestCoreUnit.testGameBehavior()
     local mock, closure
     local result, message
@@ -138,6 +138,34 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
     else
         assert(slot1.g() == 0.0)
     end
+
+    local stickerIds = {}
+    repeat
+        local offset = #stickerIds
+        table.insert(stickerIds, slot1.spawnArrowSticker(offset, offset, offset, "down"))
+    until stickerIds[#stickerIds] < 0
+    assert(#stickerIds - 1 == 10, string.format("Created %d arrow stickers.", #stickerIds - 1))
+    local firstSticker = stickerIds[1]
+    assert(firstSticker == 19, string.format("Started with: %d", firstSticker))
+    assert(slot1.deleteSticker(firstSticker) == 0) -- success
+    assert(slot1.deleteSticker(firstSticker) == -1) -- second try fails
+    assert(slot1.spawnArrowSticker(0, 0, 2, "up") == firstSticker) -- recreating fills emptied index
+
+    -- max number sticker independent of arrows
+    local stickerIds = {}
+    repeat
+        local offset = #stickerIds
+        table.insert(stickerIds, slot1.spawnNumberSticker(offset, offset, offset, offset, "side"))
+    until stickerIds[#stickerIds] < 0
+    assert(#stickerIds - 1 == 10, string.format("Created %d number stickers.", #stickerIds - 1))
+    local firstSticker = stickerIds[1]
+    assert(firstSticker == 9, string.format("Started with: %d", firstSticker))
+    assert(slot1.deleteSticker(firstSticker) == 0) -- success
+    assert(slot1.deleteSticker(firstSticker) == -1) -- second try fails
+    assert(slot1.spawnNumberSticker(-1, 0, 0, 1, "front") == firstSticker) -- recreating fills emptied index, out of range nb doesn't fail
+
+    assert(slot1.moveSticker(firstSticker, 1, 2, 3) == 0) -- success
+    assert(slot1.moveSticker(-1, 1, 2, 3) == -1) -- failure
 
     system.print("Success")
     unit.exit()
