@@ -3,7 +3,7 @@
 -- @see dumocks.AntiGravityGeneratorUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -120,20 +120,28 @@ function _G.TestAntiGravityGeneratorUnit.testGameBehavior()
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.setTimer = function() end
-    unit.getData = function() return '"showScriptError":false' end
-    unit.exit = function() end
+    unit.setTimer = function()
+    end
+    unit.getData = function()
+        return '"showScriptError":false'
+    end
+    unit.exit = function()
+    end
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     ---------------
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"activate", "deactivate", "toggle", "getState", "getBaseAltitude", "setBaseAltitude",
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
-                               "load"}
+    local expectedFunctions = {"getBaseAltitude", "setBaseAltitude", "setSignalIn", "getSignalIn"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
+    for _, v in pairs(_G.Utilities.toggleFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -154,6 +162,7 @@ function _G.TestAntiGravityGeneratorUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 43117.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 27134.86)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     _G.initialState = slot1.getState()
     _G.initialBase = slot1.getBaseAltitude()
@@ -236,7 +245,7 @@ function _G.TestAntiGravityGeneratorUnit.testGameBehavior()
     else
         system.print("Failed")
     end
-    
+
     -- restore initial state
     if initialState == 1.0 then
         slot1.activate()

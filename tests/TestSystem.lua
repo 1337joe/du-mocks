@@ -18,7 +18,7 @@ _G.TestSystem = {}
 -- Test setup:
 -- 1. 1x Programming Board, no connections
 --
--- Exercises:
+-- Exercises: getScreenHeight, getScreenWidth, getFov
 function _G.TestSystem.testGameBehavior()
     local mock = ms:new()
     local system = mock:mockGetClosure()
@@ -39,9 +39,15 @@ function _G.TestSystem.testGameBehavior()
                                "getControlDeviceForwardInput", "getControlDeviceYawInput",
                                "getControlDeviceLeftRightInput", "lockView", "isViewLocked", "freeze", "isFrozen",
                                "getTime", "getActionUpdateDeltaTime", "getPlayerName", "getPlayerWorldPos", "print",
+                               "getWaypointFromPlayerPos", "setWaypoint", "getFov", "getScreenWidth", "getScreenHeight",
                                "load", "logInfo", "logWarning", "logError", "addMarker", "addMeasure",
                                "__NQ_returnFromRunPlayerLUA"}
     _G.Utilities.verifyExpectedFunctions(system, expectedFunctions)
+
+    assert(system.getScreenHeight() > 0, "Screen height: " .. system.getScreenHeight())
+    assert(system.getScreenWidth() > 0, "Screen width: " .. system.getScreenWidth())
+    local fov = system.getFov()
+    assert(fov >= 60 and fov <= 120, "Fov: " .. fov)
 
     system.print("Success")
     unit.exit()

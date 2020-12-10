@@ -3,7 +3,7 @@
 -- @see dumocks.DatabankUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -51,11 +51,16 @@ function _G.TestDatabankUnit.testClear()
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
 
-    databank.data = {key = 1}
+    databank.data = {
+        key = 1
+    }
     closure.clear()
     lu.assertEquals(databank.data, {})
 
-    databank.data = {key = 1, key2 = "string"}
+    databank.data = {
+        key = 1,
+        key2 = "string"
+    }
     closure.clear()
     lu.assertEquals(databank.data, {})
 end
@@ -88,12 +93,17 @@ function _G.TestDatabankUnit.testGetKeys()
     actual = closure.getKeys()
     lu.assertEquals(actual, expected)
 
-    databank.data = {key="value"}
+    databank.data = {
+        key = "value"
+    }
     expected = '["key"]'
     actual = closure.getKeys()
     lu.assertEquals(actual, expected)
 
-    databank.data = {key1 = "value1", key2 = 8}
+    databank.data = {
+        key1 = "value1",
+        key2 = 8
+    }
     actual = closure.getKeys()
     -- order of iterating table keys not deterministic
     lu.assertStrContains(actual, '"key1"')
@@ -443,19 +453,21 @@ function _G.TestDatabankUnit.testGameBehavior()
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.exit = function() end
+    unit.exit = function()
+    end
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     ---------------
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
     local expectedFunctions = {"hasKey", "getKeys", "getNbKeys", "clear", "setStringValue", "getStringValue",
-                               "setIntValue", "getIntValue", "setFloatValue", "getFloatValue",
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass",
-                               "load"}
+                               "setIntValue", "getIntValue", "setFloatValue", "getFloatValue"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -469,6 +481,7 @@ function _G.TestDatabankUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 17.09)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     slot1.clear()
 
@@ -482,7 +495,7 @@ function _G.TestDatabankUnit.testGameBehavior()
     assert(slot1.getFloatValue(key) == 0.0)
 
     assert(slot1.getKeys() == '["key1"]')
-    assert(slot1.getNbKeys() == 1, "Number of keys: "..slot1.getNbKeys())
+    assert(slot1.getNbKeys() == 1, "Number of keys: " .. slot1.getNbKeys())
     slot1.clear()
     assert(slot1.getNbKeys() == 0)
 

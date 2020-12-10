@@ -47,6 +47,8 @@ local FIRST_NUMBER_STICKER_INDEX = 9
 local M = MockElement:new()
 M.widgetType = "core"
 M.helperId = "core"
+M.remainingRestorations = 0
+M.maxRestorations = 0
 
 function M:new(o, id, elementName)
     id = id or 1
@@ -471,6 +473,14 @@ function M:getElementMassById(uid)
     return 0.0
 end
 
+--- Status of the industry unit element, identified by its UID.
+-- @tparam int uid The UID of the element.
+-- @treturn json If the element is an industry unit, this returns a json (to be parsed with json.decode) with: state,
+-- schematicId, stopRequested, unitsProduced, remainingTime, batchesRequested, batchesRemaining, maintainProductAmount,
+-- currentProductAmount.
+function M:getElementIndustryStatus(uid)
+end
+
 --- Altitude above sea level, with respect to the closest planet (0 in space).
 -- @treturn m The sea level altitude.
 function M:getAltitude()
@@ -613,6 +623,13 @@ function M:getConstructWorldOrientationForward()
     return self.constructWorldOrientationForward
 end
 
+--- Retrieves schematic details for the id provided as json.
+-- @tparam int schematicId The id of the schematic to query, example: 1199082577 for Pure Aluminium refining.
+-- @treturn jsonstr The schematic defails as a json object with fields: id, time, level, ingredients, products; where
+-- ingredients and products are lists of json objects with fields: name, quantity, type
+function M:getSchematicInfo(schematicId)
+end
+
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
@@ -654,6 +671,7 @@ function M:mockGetClosure()
     closure.getElementPositionById = function(uid) return self:getElementPositionById(uid) end
     closure.getElementRotationById = function(uid) return self:getElementRotationById(uid) end
     closure.getElementTagsById = function(uid) return self:getElementTagsById(uid) end
+    closure.getElementIndustryStatus = function(localId) return self:getElementIndustryStatus(localId) end
     closure.getAltitude = function() return self:getAltitude() end
     closure.g = function() return self:g() end
     closure.getWorldGravity = function() return self:getWorldGravity() end
@@ -672,6 +690,7 @@ function M:mockGetClosure()
     closure.getConstructWorldOrientationUp = function() return self:getConstructWorldOrientationUp() end
     closure.getConstructWorldOrientationRight = function() return self:getConstructWorldOrientationRight() end
     closure.getConstructWorldOrientationForward = function() return self:getConstructWorldOrientationForward() end
+    closure.getSchematicInfo = function(schematicId) return self:getSchematicInfo(scematicId) end
     return closure
 end
 

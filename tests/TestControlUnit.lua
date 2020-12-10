@@ -3,7 +3,7 @@
 -- @see dumocks.ControlUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -41,7 +41,6 @@ function _G.TestControlUnit.testConstructor()
     lu.assertNotEquals(controlClosure3.getMass(), defaultMass)
 end
 
-
 --- Verify timers can be started.
 function _G.TestControlUnit.testStartTimer()
     local mock = mcu:new()
@@ -49,8 +48,8 @@ function _G.TestControlUnit.testStartTimer()
 
     -- non-string timerId
     -- negative duration
-    --TODO
-    --lu.fail("NYI")
+    -- TODO
+    -- lu.fail("NYI")
 end
 
 --- Verify getMasterPlayerId.
@@ -152,8 +151,8 @@ end
 function _G.TestControlUnit.testGameBehavior()
     local mock, closure
     local result, message
-    for _,element in pairs({"programming board", "remote controller", "hovercraft seat", "cockpit controller",
-                            "command seat controller", "gunner module s", "emergency controller"}) do
+    for _, element in pairs({"programming board", "remote controller", "hovercraft seat", "cockpit controller",
+                             "command seat controller", "gunner module s", "emergency controller"}) do
         mock = mcu:new(nil, 1, element)
         closure = mock:mockGetClosure()
 
@@ -169,7 +168,8 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
 
     -- stub this in directly to supress print in the unit test
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     ---------------
     -- copy from here to unit.start()
@@ -194,32 +194,32 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
     local expectedFunctions = {}
     if isGeneric then
         expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
-                             "getMasterPlayerRelativePosition", "getMasterPlayerId", "getOwnerRelativePosition",
-                             "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                             "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
-                             "load"}
+                             "getMasterPlayerRelativePosition", "getMasterPlayerRelativeOrientation",
+                             "getMasterPlayerId", "getOwnerRelativePosition", "setSignalIn", "getSignalIn"}
     elseif isPvp then
         expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
-                             "getMasterPlayerRelativePosition", "getMasterPlayerId", "getOwnerRelativePosition",
-                             "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                             "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+                             "getMasterPlayerRelativePosition", "getMasterPlayerRelativeOrientation",
+                             "getMasterPlayerId", "getOwnerRelativePosition"}
     else
         expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
-                             "getMasterPlayerRelativePosition", "getMasterPlayerId", "setEngineCommand",
-                             "setEngineThrust", "setAxisCommandValue", "getAxisCommandValue",
-                             "setupAxisCommandProperties", "getControlMasterModeId","cancelCurrentControlMasterMode",
-                             "isAnyLandingGearExtended", "extendLandingGears", "retractLandingGears",
-                             "isMouseControlActivated", "isMouseDirectControlActivated", "getOwnerRelativePosition",
-                             "isMouseVirtualJoystickActivated", "isAnyHeadlightSwitchedOn", "switchOnHeadlights",
-                             "switchOffHeadlights", "isRemoteControlled", "activateGroundEngineAltitudeStabilization",
-                             "getSurfaceEngineAltitudeStabilization", "deactivateGroundEngineAltitudeStabilization",
+                             "getMasterPlayerRelativePosition", "getMasterPlayerRelativeOrientation",
+                             "getMasterPlayerId", "setEngineCommand", "setEngineThrust", "setAxisCommandValue",
+                             "getAxisCommandValue", "setupAxisCommandProperties", "getControlMasterModeId",
+                             "cancelCurrentControlMasterMode", "isAnyLandingGearExtended", "extendLandingGears",
+                             "retractLandingGears", "isMouseControlActivated", "isMouseDirectControlActivated",
+                             "getOwnerRelativePosition", "isMouseVirtualJoystickActivated", "isAnyHeadlightSwitchedOn",
+                             "switchOnHeadlights", "switchOffHeadlights", "isRemoteControlled",
+                             "activateGroundEngineAltitudeStabilization", "getSurfaceEngineAltitudeStabilization",
+                             "deactivateGroundEngineAltitudeStabilization",
                              "computeGroundEngineAltitudeStabilizationCapabilities", "getThrottle",
-                             "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                             "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+                             "setupControlMasterModeProperties"}
         if isEcu then
             table.insert(expectedFunctions, "setSignalIn")
             table.insert(expectedFunctions, "getSignalIn")
         end
+    end
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
     end
     _G.Utilities.verifyExpectedFunctions(unit, expectedFunctions)
 
@@ -276,6 +276,7 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
     assert(unit.getMaxHitPoints() >= 50.0)
     assert(unit.getId() > 0)
     assert(unit.getMass() > 7.0)
+    _G.Utilities.verifyBasicElementFunctions(unit, 3)
 
     if isGeneric then
         -- play with set signal, has no actual effect on state when set programmatically

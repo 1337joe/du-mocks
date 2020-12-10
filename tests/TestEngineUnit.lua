@@ -3,7 +3,7 @@
 -- @see dumocks.EngineUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -22,10 +22,10 @@ TestEngineUnit = {}
 function _G.TestEngineUnit.testGameBehavior()
     local mock, closure
     local result, message
-    for _,element in pairs({"hover engine s", "vertical booster s", "retro-rocket brake s", "atmospheric airbrake s",
-                            "atmospheric airbrake l", "wing xs", "compact aileron xs", "aileron xs", "stabilizer xs",
-                            "adjustor xs", "basic atmospheric engine xs", "basic space engine xs",
-                            "basic space engine s", "rocket engine s"}) do
+    for _, element in pairs({"hover engine s", "vertical booster s", "retro-rocket brake s", "atmospheric airbrake s",
+                             "atmospheric airbrake l", "wing xs", "compact aileron xs", "aileron xs", "stabilizer xs",
+                             "adjustor xs", "basic atmospheric engine xs", "basic space engine xs",
+                             "basic space engine s", "rocket engine s"}) do
         mock = meu:new(nil, 1, element)
         closure = mock:mockGetClosure()
 
@@ -41,16 +41,18 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.exit = function() end
+    unit.exit = function()
+    end
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     ---------------
     -- copy from here to unit.start()
     ---------------
     local class = slot1.getElementClass()
     local validClasses = {"Hovercraft", "VerticalBooster", "Spacebrake", "Airbrake", "Wing2", "Aileron2", "Stabilizer",
-                            "Adjustor", "AtmosphericEngine.+Group", "SpaceEngine.+Group", "RocketEngine"}
+                          "Adjustor", "AtmosphericEngine.+Group", "SpaceEngine.+Group", "RocketEngine"}
     local valid = false
     for _, vClass in pairs(validClasses) do
         if string.match(class, vClass) then
@@ -62,13 +64,16 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
 
     -- verify expected functions
     local expectedFunctions = {"setThrust", "getMaxThrustBase", "getMaxThrust", "getMinThrust", "getFuelRate",
-                             "getMaxThrustEfficiency", "getThrust", "torqueAxis", "thrustAxis",
-                             "distance", "isOutOfFuel", "hasBrokenFuelTank", "getCurrentFuelRate",
-                             "getFuelRateEfficiency", "getT50", "isObstructed", "getObstructionFactor", "getTags",
-                             "setTags", "getFuelConsumption", "activate", "deactivate", "getState", "toggle",
-                             "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                             "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
-                             "load"}
+                               "getMaxThrustEfficiency", "getThrust", "torqueAxis", "thrustAxis", "distance",
+                               "isOutOfFuel", "hasBrokenFuelTank", "getCurrentFuelRate", "getFuelRateEfficiency",
+                               "getT50", "isObstructed", "getObstructionFactor", "getTags", "setTags",
+                               "getFuelConsumption", "setSignalIn", "getSignalIn"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
+    for _, v in pairs(_G.Utilities.toggleFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test inherited methods
@@ -89,6 +94,7 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
     assert(slot1.getMaxHitPoints() >= 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() > 7.0)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     system.print("Success")
     unit.exit()

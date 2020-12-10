@@ -3,7 +3,7 @@
 -- @see dumocks.ManualSwitchUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -51,7 +51,9 @@ function _G.TestManualSwitchUnit.testDoPressedValid()
     local switch = mmsu:new()
 
     local pressed1Result = nil
-    local pressed1Index = switch:mockRegisterPressed(function() pressed1Result = switch:getState() end)
+    local pressed1Index = switch:mockRegisterPressed(function()
+        pressed1Result = switch:getState()
+    end)
     lu.assertNotNil(pressed1Index)
 
     switch.state = false -- ensure not pressed
@@ -66,7 +68,9 @@ function _G.TestManualSwitchUnit.testDoPressedInvalid()
     local switch = mmsu:new()
 
     local pressed1Result = nil
-    local pressed1Index = switch:mockRegisterPressed(function() pressed1Result = switch:getState() end)
+    local pressed1Index = switch:mockRegisterPressed(function()
+        pressed1Result = switch:getState()
+    end)
     lu.assertNotNil(pressed1Index)
 
     switch.state = true -- invalid state, should do nothing
@@ -103,14 +107,16 @@ function _G.TestManualSwitchUnit.testDoPressedError()
     lu.assertNotNil(pressed2Index)
 
     switch.state = false -- ensure valid state
-    local status,err = pcall(function() switch:mockDoPressed() end)
+    local status, err = pcall(function()
+        switch:mockDoPressed()
+    end)
 
     -- threw error
     lu.assertFalse(status, "Should have thrown error.")
     -- verify error message from first callback propagated up
     lu.assertStrContains(err, pressed1Message)
 
-     -- still turned on switch
+    -- still turned on switch
     lu.assertTrue(switch.state)
 
     -- verify order and that second callback was reached
@@ -123,7 +129,9 @@ function _G.TestManualSwitchUnit.testDoReleasedValid()
     local switch = mmsu:new()
 
     local released1Result = nil
-    local released1Index = switch:mockRegisterReleased(function() released1Result = switch:getState() end)
+    local released1Index = switch:mockRegisterReleased(function()
+        released1Result = switch:getState()
+    end)
     lu.assertNotNil(released1Index)
 
     switch.state = true -- ensure pressed
@@ -138,7 +146,9 @@ function _G.TestManualSwitchUnit.testDoReleasedInvalid()
     local switch = mmsu:new()
 
     local released1Result = nil
-    local released1Index = switch:mockRegisterReleased(function() released1Result = switch:getState() end)
+    local released1Index = switch:mockRegisterReleased(function()
+        released1Result = switch:getState()
+    end)
     lu.assertNotNil(released1Index)
 
     switch.state = false -- invalid state, should do nothing
@@ -175,14 +185,16 @@ function _G.TestManualSwitchUnit.testDoReleasedError()
     lu.assertNotNil(released2Index)
 
     switch.state = true -- ensure valid state
-    local status,err = pcall(function() switch:mockDoReleased() end)
+    local status, err = pcall(function()
+        switch:mockDoReleased()
+    end)
 
     -- threw error
     lu.assertFalse(status, "Should have thrown error.")
     -- verify error message from first callback propagated up
     lu.assertStrContains(err, released1Message)
 
-     -- still turned off switch
+    -- still turned off switch
     lu.assertFalse(switch.state)
 
     -- verify order and that second callback was reached
@@ -203,10 +215,14 @@ function _G.TestManualSwitchUnit.testGameBehavior()
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.getData = function() return '"showScriptError":false' end
-    unit.exit = function() end
+    unit.getData = function()
+        return '"showScriptError":false'
+    end
+    unit.exit = function()
+    end
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     -- use locals here since all code is in this method
     local pressedCount = 0
@@ -270,10 +286,13 @@ function _G.TestManualSwitchUnit.testGameBehavior()
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"activate", "deactivate", "toggle", "getState", "getSignalOut",
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
-                               "load"}
+    local expectedFunctions = {"getSignalOut", "setSignalIn", "getSignalIn"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
+    for _, v in pairs(_G.Utilities.toggleFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -287,6 +306,7 @@ function _G.TestManualSwitchUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 13.27)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     slot1.deactivate()
 
@@ -337,8 +357,6 @@ function _G.TestManualSwitchUnit.testGameBehavior()
     pressedCount = 0
     releasedCount = 0
 
--- channels: on, out
-
     -- validate methods
     slot1.activate()
     assert(slot1.getState() == 1)
@@ -366,7 +384,7 @@ function _G.TestManualSwitchUnit.testGameBehavior()
     -- copy from here to unit.stop()
     ---------------
     assert(slot1.getState() == 0)
-    assert(pressedCount == 2, "Pressed count should be 2: "..pressedCount)
+    assert(pressedCount == 2, "Pressed count should be 2: " .. pressedCount)
     assert(releasedCount == 2)
 
     -- multi-part script, can't just print success because end of script was reached

@@ -3,7 +3,7 @@
 -- @see dumocks.ScreenUnit
 
 -- set search path to include root of project
-package.path = package.path..";../dumocks/?.lua"
+package.path = package.path .. ";../dumocks/?.lua"
 
 local lu = require("luaunit")
 
@@ -99,7 +99,7 @@ function _G.TestScreenUnit.testRegisterHtmlCallback()
     lu.assertEquals(providedHtml, mock.html)
     lu.assertTrue(called)
 
-    --move hidden content
+    -- move hidden content
     called = false
     closure.moveContent(id, 75, 50)
     lu.assertTrue(called)
@@ -146,7 +146,7 @@ function _G.TestScreenUnit.testRegisterHtmlCallbackSuppressError()
 
     lu.assertNil(providedHtml)
 
-    --just need to set something to trigger the callbacks
+    -- just need to set something to trigger the callbacks
     closure.setCenteredText("1")
 
     lu.assertNotNil(call1Order, "Callback 1 not called.")
@@ -188,7 +188,7 @@ function _G.TestScreenUnit.testRegisterHtmlCallbackPropagateError()
 
     lu.assertNil(providedHtml)
 
-    --just need to set something to trigger the callbacks
+    -- just need to set something to trigger the callbacks
     lu.assertError(closure.setCenteredText, "1")
 
     lu.assertNotNil(call1Order, "Callback 1 not called.")
@@ -230,7 +230,12 @@ function _G.TestScreenUnit.testSetCenteredText()
     lu.assertEquals(mock.html, '<div class="bootstrap" style="font-size:10.415037vw; ">1.0</div>')
 
     -- verify clears content
-    table.insert(mock.contentList, {x=0, y=0, html="<div>text</div>", visible=true})
+    table.insert(mock.contentList, {
+        x = 0,
+        y = 0,
+        html = "<div>text</div>",
+        visible = true
+    })
     closure.setCenteredText("1234")
     lu.assertEquals(mock.html, '<div class="bootstrap" style="font-size:10.000000vw; ">1234</div>')
     lu.assertEquals(#mock.contentList, 0)
@@ -255,7 +260,12 @@ function _G.TestScreenUnit.testSetHTML()
     lu.assertEquals(mock.html, "1.0")
 
     -- verify clears content
-    table.insert(mock.contentList, {x=0, y=0, html="<div>text</div>", visible=true})
+    table.insert(mock.contentList, {
+        x = 0,
+        y = 0,
+        html = "<div>text</div>",
+        visible = true
+    })
     html = "<div>test</div>"
     closure.setHTML(html)
     lu.assertEquals(mock.html, html)
@@ -282,7 +292,12 @@ function _G.TestScreenUnit.testSetSVG()
         '<svg class="bootstrap" viewBox="0 0 1920 1080" style="width:100%; height:100%">1.0</svg>')
 
     -- verify clears content
-    table.insert(mock.contentList, {x=0, y=0, html="<div>text</div>", visible=true})
+    table.insert(mock.contentList, {
+        x = 0,
+        y = 0,
+        html = "<div>text</div>",
+        visible = true
+    })
     closure.setSVG('<rect width="100" height="100" />')
     lu.assertEquals(mock.html, '<svg class="bootstrap" viewBox="0 0 1920 1080" style="width:100%; height:100%">' ..
         '<rect width="100" height="100" /></svg>')
@@ -308,7 +323,7 @@ function _G.TestScreenUnit.testAddContent()
     id = closure.addContent(x, y, content)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;"></div>' ..
-        '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>test</div></div>')
+            '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>test</div></div>')
     lu.assertEquals(2, id)
 
     -- depends on clear working
@@ -332,8 +347,7 @@ function _G.TestScreenUnit.testAddText()
     x, y, size = 50, 75, 10
     content = nil
     id = closure.addText(x, y, size, content)
-    lu.assertEquals(mock.html,
-        '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;">' ..
+    lu.assertEquals(mock.html, '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;">' ..
         '<div style="font-size:10.000000vw"></div></div>')
     lu.assertEquals(id, 1)
 
@@ -341,8 +355,7 @@ function _G.TestScreenUnit.testAddText()
     x, y, size = 25, 50, 20
     content = "test"
     id = closure.addText(x, y, size, content)
-    lu.assertEquals(mock.html,
-        '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;">' ..
+    lu.assertEquals(mock.html, '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;">' ..
         '<div style="font-size:10.000000vw"></div></div>' ..
         '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;">' ..
         '<div style="font-size:20.000000vw">test</div></div>')
@@ -355,8 +368,7 @@ function _G.TestScreenUnit.testAddText()
     x, y = 75, 25
     content = "test"
     id = closure.addText(x, y, size, content)
-    lu.assertEquals(mock.html,
-        '<div style="position:absolute; left:75.000000vw; top:25.000000vh; display: block;">' ..
+    lu.assertEquals(mock.html, '<div style="position:absolute; left:75.000000vw; top:25.000000vh; display: block;">' ..
         '<div style="font-size:20.000000vw">test</div></div>')
     lu.assertEquals(3, id)
 end
@@ -399,7 +411,7 @@ function _G.TestScreenUnit.testDeleteContent()
     local id2 = closure.addContent(x, y, content)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
+            '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
     lu.assertEquals(2, id2)
 
     -- delete visible content
@@ -444,38 +456,38 @@ function _G.TestScreenUnit.testShowContent()
     local id2 = closure.addContent(x, y, content)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
+            '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
     lu.assertEquals(2, id2)
 
     -- hide content
     closure.showContent(id1, 0)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: none;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
+            '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
 
     -- second hide makes no difference
     closure.showContent(id1, 0)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: none;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
+            '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
 
     -- set back to visible
     closure.showContent(id1, 1)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
+            '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
 
     -- second set visible true doesn't change result
     closure.showContent(id1, 1)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
+            '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
 
     -- doesn't exist, nothing changes
     closure.showContent(0, 1)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
+            '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
 end
 
 function _G.TestScreenUnit.testMoveContent()
@@ -496,32 +508,32 @@ function _G.TestScreenUnit.testMoveContent()
     local id2 = closure.addContent(x, y, content)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
+            '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
     lu.assertEquals(2, id2)
 
     -- move visible content
     closure.moveContent(id1, 75, "50")
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:75.000000vw; top:50.000000vh; display: block;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
+            '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
 
     -- depends on showContent working: hide content
     closure.showContent(id2, 0)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:75.000000vw; top:50.000000vh; display: block;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: none;"><div>2</div></div>')
+            '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: none;"><div>2</div></div>')
 
     -- move non-visible content
     closure.moveContent(id2, "string", nil)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:75.000000vw; top:50.000000vh; display: block;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:0.000000vw; top:0.000000vh; display: none;"><div>2</div></div>')
+            '<div style="position:absolute; left:0.000000vw; top:0.000000vh; display: none;"><div>2</div></div>')
 
     -- move non-existent content
     closure.moveContent(0)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:75.000000vw; top:50.000000vh; display: block;"><div>1</div></div>' ..
-        '<div style="position:absolute; left:0.000000vw; top:0.000000vh; display: none;"><div>2</div></div>')
+            '<div style="position:absolute; left:0.000000vw; top:0.000000vh; display: none;"><div>2</div></div>')
 end
 
 --- Verify clear blanks the screen.
@@ -533,7 +545,7 @@ function _G.TestScreenUnit.testClear()
     closure.clear()
     lu.assertEquals(mock.html, "")
 
-    mock.directHtml="<div>text</div>"
+    mock.directHtml = "<div>text</div>"
     -- this should not normally be directly set but trying not to rely on setters as those aren't being tested here
     mock.html = mock.directHtml
     lu.assertNotEquals(mock.html, "")
@@ -541,7 +553,12 @@ function _G.TestScreenUnit.testClear()
     lu.assertEquals(mock.html, "")
 
     -- verify clears content
-    table.insert(mock.contentList, {x=0, y=0, html="<div>text</div>", visible=true})
+    table.insert(mock.contentList, {
+        x = 0,
+        y = 0,
+        html = "<div>text</div>",
+        visible = true
+    })
     closure.clear()
     lu.assertEquals(mock.html, "")
     lu.assertEquals(#mock.contentList, 0)
@@ -724,20 +741,25 @@ function _G.TestScreenUnit.testGameBehavior()
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.exit = function() end
+    unit.exit = function()
+    end
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     ---------------
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"activate", "deactivate", "toggle", "getState", "addText", "setCenteredText", "setHTML",
-                               "addContent", "setSVG", "resetContent", "deleteContent", "showContent", "moveContent",
-                               "getMouseX", "getMouseY", "getMouseState", "clear", "setText", "setRawHTML", "setContent",
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "getSignalIn", "setSignalIn",
-                               "load"}
+    local expectedFunctions = {"addText", "setCenteredText", "setHTML", "addContent", "setSVG", "resetContent",
+                               "deleteContent", "showContent", "moveContent", "getMouseX", "getMouseY", "getMouseState",
+                               "clear", "setText", "setRawHTML", "setContent", "getSignalIn", "setSignalIn"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
+    for _, v in pairs(_G.Utilities.toggleFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -759,6 +781,7 @@ function _G.TestScreenUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 18.67)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     -- play with set signal, has no actual effect on state when set programmatically
     local initialState = slot1.getState()

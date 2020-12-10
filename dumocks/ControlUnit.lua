@@ -205,6 +205,11 @@ end
 function M:getMasterPlayerRelativePosition()
 end
 
+--- Return the relative orientation with respect to the ctonrol unit (in world coordinates) of the player currently running the control unit.
+-- @treturn quat Relative orientation in world coordinates, as a quaternion.
+function M:getMasterPlayerRelativeOrientation()
+end
+
 --- Return the ID of the player currently running the control unit.
 -- @treturn int ID of the player running the control unit.
 function M:getMasterPlayerId()
@@ -261,6 +266,12 @@ end
 -- @tparam list targetSpeedRanges This is to specify the cruise control target speed ranges (for now, only for the
 -- longitudinal axis).
 function M:setupAxisCommandProperties(axis, commandType, targetSpeedRanges)
+end
+
+--- Set the display name of a master mode as shown in the UI.
+-- @tparam int controlMasterModeId The master mode, 0=Travel Mode, 1=Cruise Control.
+-- @tparam string displayName The name of the master mode.
+function M:setupControlMasterModeProperties(controlMasterModeId, displayName)
 end
 
 --- Get the current master mode in use. The mode is set by clicking the UI button or using the associated keybinding.
@@ -458,6 +469,7 @@ function M:mockGetClosure()
     closure.getClosestPlanetInfluence = function() return self:getClosestPlanetInfluence() end
     closure.getOwnerRelativePosition = function() return self:getOwnerRelativePosition() end
     closure.getMasterPlayerRelativePosition = function() return self:getMasterPlayerRelativePosition() end
+    closure.getMasterPlayerRelativeOrientation = function() return self:getMasterPlayerRelativeOrientation() end
     closure.getMasterPlayerId = function() return self:getMasterPlayerId() end
 
     if self.elementClass == CLASS_GENERIC then
@@ -491,6 +503,9 @@ function M:mockGetClosure()
         closure.getAxisCommandValue = function(axis) return self:getAxisCommandValue(axis) end
         closure.setupAxisCommandProperties = function(axis, commandType)
             return self:setupAxisCommandProperties(axis, commandType)
+        end
+        closure.setupControlMasterModeProperties = function(controlMasterModeId, displayName)
+            return self:setupControlMasterModeProperties(controlMasterModeId, displayName)
         end
         closure.getControlMasterModeId = function() return self:getControlMasterModeId() end
         closure.cancelCurrentControlMasterMode = function() return self:cancelCurrentControlMasterMode() end

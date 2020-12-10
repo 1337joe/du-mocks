@@ -101,8 +101,10 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
                              "getConstructOrientationUp", "getConstructOrientationRight",
                              "getConstructOrientationForward", "getConstructWorldOrientationUp",
                              "getConstructWorldOrientationRight", "getConstructWorldOrientationForward",
-                             "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                             "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+                             "getSchematicInfo", "getElementIndustryStatus"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     if isDynamic then
         table.insert(expectedFunctions, "getConstructMass")
         table.insert(expectedFunctions, "getConstructIMass")
@@ -132,6 +134,7 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
     assert(slot1.getMaxHitPoints() >= 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() > 38.0)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 0)
 
     if isDynamic then
         assert(slot1.g() > 0)

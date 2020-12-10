@@ -39,8 +39,39 @@ function M:new(o, id, elementName)
     self.__index = self
 
     o.plugIn = 0.0
+    o.color = {
+        r = 255,
+        g = 255,
+        b = 255
+    }
 
     return o
+end
+
+local function handleColorValue(val)
+    val = tonumber(val)
+    -- game light values not snapped to [0, 255] range
+    if not val then
+        val = 0
+    end
+    val = math.floor(val + 0.5)
+    return val
+end
+
+--- Set the light color in RGB.
+-- @tparam 0..255 r The red component, between 0 and 255.
+-- @tparam 0..255 g The green component, between 0 and 255.
+-- @tparam 0..255 b The blue component, between 0 and 255.
+function M:setRGBColor(r, g, b)
+    self.color.r = handleColorValue(r)
+    self.color.g = handleColorValue(g)
+    self.color.b = handleColorValue(b)
+end
+
+--- Get the light color in RGB.
+-- @treturn vec3 A vec3 for the red, blue and green components of the light, with values between 0 and 255.
+function M:getRGBColor()
+    return {self.color.r, self.color.g, self.color.b}
 end
 
 --- Set the value of a signal in the specified IN plug of the element.
@@ -105,6 +136,8 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElementWithToggle.mockGetClosure(self)
+    closure.setRGBColor = function(r, g, b) return self:setRGBColor(r, g, b) end
+    closure.getRGBColor = function() return self:getRGBColor() end
 
     closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
     closure.getSignalIn = function(plug) return self:getSignalIn(plug) end

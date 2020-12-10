@@ -10,7 +10,7 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-elementDefinitions["emitter xs"] = {mass = 69.31, maxHitPoints = 50.0, range = 100.0}
+elementDefinitions["emitter xs"] = {mass = 69.31, maxHitPoints = 50.0}
 -- TODO others
 local DEFAULT_ELEMENT = "emitter xs"
 
@@ -25,7 +25,7 @@ function M:new(o, id, elementName)
     self.__index = self
 
     o.defaultChannel = ""
-    o.range = elementDefinition.range -- meters
+    o.range = 1000 -- meters
     o.propagateSendErrors = false -- in-game module gets no feedback, make optional for testing purposes
     o.receiverCallbacks = {}
 

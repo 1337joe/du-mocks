@@ -51,6 +51,45 @@ function _G.TestUtilities.testVerifyExpectedFunctions()
     _G.Utilities.verifyExpectedFunctions(actual, expected)
 end
 
+--- Verify verifyBasicElementFunctions finds problems.
+function _G.TestUtilities.testVerifyBasicElementFunctions()
+    local element
+    local result, message
+
+    local function createSampleElement()
+        return {
+            getMaxRestorations = function()
+                return 3
+            end,
+            getRemainingRestorations = function()
+                return 3
+            end
+        }
+    end
+
+    -- max is different
+    element = createSampleElement()
+    element.getMaxRestorations = function()
+        return 4
+    end
+    local result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3)
+    lu.assertFalse(result)
+    lu.assertStrIContains(message, "max restorations")
+
+    -- remaining is different
+    element = createSampleElement()
+    element.getRemainingRestorations = function()
+        return 2
+    end
+    local result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3)
+    lu.assertFalse(result)
+    lu.assertStrIContains(message, "remaining restorations")
+
+    -- no error
+    element = createSampleElement()
+    _G.Utilities.verifyBasicElementFunctions(element, 3)
+end
+
 --- Verify verifyWidgetData finds problems.
 function _G.TestUtilities.testVerifyWidgetData()
     local data, expectedFields, expectedValues

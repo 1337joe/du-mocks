@@ -3,7 +3,7 @@
 -- @see dumocks.EmitterUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -210,7 +210,8 @@ function _G.TestEmitterUnit.testGameBehavior()
             assert(message:len() <= 512, string.format("Message longer than expected max: %d", message:len()))
         elseif _G.signals then
             local actualSignal = slot1.getSignalIn("in")
-            assert(actualSignal == _G.expectedSignal, string.format("Did not match expected signal (%s): %s", _G.expectedSignal, actualSignal))
+            assert(actualSignal == _G.expectedSignal,
+                string.format("Did not match expected signal (%s): %s", _G.expectedSignal, actualSignal))
             assert(channel == "duMocks", string.format("Default channel was: %s", channel))
             assert(message == "*", string.format("Message was: %s", message))
 
@@ -244,10 +245,10 @@ function _G.TestEmitterUnit.testGameBehavior()
     -- copy from here to unit.start
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"send", "getRange",
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
-                               "load"}
+    local expectedFunctions = {"send", "getRange", "setSignalIn", "getSignalIn"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -261,8 +262,9 @@ function _G.TestEmitterUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 69.31)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
-    assert(slot1.getRange() == 100.0)
+    assert(slot1.getRange() == 1000.0, "Range: " .. slot1.getRange())
 
     -- set flag to indicate expected, wait for receiver to reactivate coroutine
     local function awaitReceive()
@@ -276,7 +278,8 @@ function _G.TestEmitterUnit.testGameBehavior()
         _G.expectedCall = true
         slot1.setSignalIn("in", signal)
         local actualSignal = slot1.getSignalIn("in")
-        assert(actualSignal == expected, string.format("Set %s and expected %s but got %s", signal, expected, actualSignal))
+        assert(actualSignal == expected,
+            string.format("Set %s and expected %s but got %s", signal, expected, actualSignal))
         awaitReceive()
     end
 

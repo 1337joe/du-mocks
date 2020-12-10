@@ -22,6 +22,10 @@ function M:new(o)
     o.lockView = false
     o.freezeCharacter = false
 
+    o.screenHeight = 1080
+    o.screenWidth = 1920
+    o.fov = 90
+
     return o
 end
 
@@ -227,6 +231,34 @@ end
 function M:getPlayerWorldPos(id)
 end
 
+--- Return the player world position as a waypoint string, starting with ::pos (only in explicit runs).
+-- @treturn string The waypoint as a string.
+function M:getWaypointFromPlayerPos()
+end
+
+--- Set a waypoint at the destination described by the waypoint string, of the form ::pos{...}
+-- @tparam string waypointStr The waypoint as a string.
+function M:setWaypoint(waypointStr)
+end
+
+--- Return the current value of the screen height.
+-- @treturn int The current value of the screen height.
+function M:getScreenHeight()
+    return self.screenHeight
+end
+
+--- Return the current value of the screen width.
+-- @treturn int The current value of the screen width.
+function M:getScreenWidth()
+    return self.screenWidth
+end
+
+--- Return the current value of the player field of view.
+-- @treturn float The current value of the player field of view.
+function M:getFov()
+    return self.fov
+end
+
 --- Print a message in the Lua console.
 -- @tparam string msg The message to print.
 function M:print(msg)
@@ -323,6 +355,13 @@ function M.EVENT_flush()
     assert(false, "This is implemented for documentation purposes only.")
 end
 
+--- Event: Console input event.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+function M.EVENT_inputText(text)
+    assert(false, "This is implemented for documentation purposes only.")
+end
+
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
 -- @treturn table A table encompasing the api calls of object.
 function M:mockGetClosure()
@@ -344,6 +383,9 @@ function M:mockGetClosure()
     closure.getMouseDeltaY = function() return self:getMouseDeltaY() end
     closure.getMousePosX = function() return self:getMousePosX() end
     closure.getMousePosY = function() return self:getMousePosY() end
+    closure.getScreenHeight = function() return self:getScreenHeight() end
+    closure.getScreenWidth = function() return self:getScreenWidth() end
+    closure.getFov = function() return self:getFov() end
     closure.getThrottleInputFromMouseWheel = function() return self:getThrottleInputFromMouseWheel() end
     closure.getControlDeviceForwardInput = function() return self:getControlDeviceForwardInput() end
     closure.getControlDeviceYawInput = function() return self:getControlDeviceYawInput() end
@@ -356,6 +398,8 @@ function M:mockGetClosure()
     closure.getActionUpdateDeltaTime = function() return self:getActionUpdateDeltaTime() end
     closure.getPlayerName = function(id) return self:getPlayerName(id) end
     closure.getPlayerWorldPos = function(id) return self:getPlayerWorldPos(id) end
+    closure.getWaypointFromPlayerPos = function() return self:getWaypointFromPlayerPos() end
+    closure.setWaypoint = function(waypoint) return self:setWaypoint(waypoint) end
     closure.print = function(msg) return self:print(msg) end
 
     closure.logInfo = function(msg) return self:logInfo(msg) end

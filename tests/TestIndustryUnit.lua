@@ -207,9 +207,11 @@ function TestIndustryUnit.testGameBehavior()
     -- copy from here to unit.start()
     ---------------
     local expectedFunctions = {"start", "startAndMaintain", "batchStart", "softStop", "hardStop", "getStatus",
-                               "getCycleCountSinceStartup", "getEfficiency", "getUptime",
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+                               "getCycleCountSinceStartup", "getEfficiency", "getUptime", "getCurrentSchematic",
+                               "setCurrentSchematic"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -223,6 +225,7 @@ function TestIndustryUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() >= 1329.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() > 100)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     -- ensure initial state, set up globals
     assert(slot1.getStatus() == "STOPPED", slot1.getStatus())

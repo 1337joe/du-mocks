@@ -2,8 +2,11 @@
 --
 -- Element class:
 -- <ul>
---   <li>RadarPvPAtmospheric</li>
---   <li>RadarPvPSpace</li>
+--   <li>RadarPvPAtmosphericSmallGroup</li>
+--   <li>RadarPVPSpaceSmallGroup</li>
+--   <li>RadarPvPAtmospheric: Medium and Large</li>
+--   <li>RadarPVPSpaceMediumGroup</li>
+--   <li>RadarPVPSpaceLargeGroup</li>
 -- </ul>
 --
 -- Displayed widget fields:
@@ -22,15 +25,18 @@
 local MockElement = require "dumocks.Element"
 
 local CLASS_ATMO = "RadarPvPAtmospheric"
-local CLASS_SPACE = "RadarPvPSpace"
+local CLASS_SPACE = "RadarPVPSpace"
+local SMALL_GROUP = "SmallGroup"
+local MEDIUM_GROUP = "MediumGroup"
+local LARGE_GROUP = "LargeGroup"
 
 local elementDefinitions = {}
-elementDefinitions["atmospheric radar s"] = {mass = 486.72, maxHitPoints = 88.0, class = CLASS_ATMO}
+elementDefinitions["atmospheric radar s"] = {mass = 486.72, maxHitPoints = 88.0, class = CLASS_ATMO .. SMALL_GROUP}
 elementDefinitions["atmospheric radar m"] = {mass = 11324.61, maxHitPoints = 698.0, class = CLASS_ATMO}
 elementDefinitions["atmospheric radar l"] = {mass = 6636.8985, maxHitPoints = 12887.0, class = CLASS_ATMO}
-elementDefinitions["space radar s"] = {mass = 486.72, maxHitPoints = 88.0, class = CLASS_SPACE}
-elementDefinitions["space radar m"] = {mass = 2348.45, maxHitPoints = 698.0, class = CLASS_SPACE}
-elementDefinitions["space radar l"] = {mass = 12492.16, maxHitPoints = 12887.0, class = CLASS_SPACE}
+elementDefinitions["space radar s"] = {mass = 486.72, maxHitPoints = 88.0, class = CLASS_SPACE .. SMALL_GROUP}
+elementDefinitions["space radar m"] = {mass = 2348.45, maxHitPoints = 698.0, class = CLASS_SPACE .. MEDIUM_GROUP}
+elementDefinitions["space radar l"] = {mass = 12492.16, maxHitPoints = 12887.0, class = CLASS_SPACE .. LARGE_GROUP}
 local DEFAULT_ELEMENT = "atmospheric radar s"
 
 local M = MockElement:new()

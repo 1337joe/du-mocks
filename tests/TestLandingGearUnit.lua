@@ -3,7 +3,7 @@
 -- @see dumocks.LandingGearUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -54,18 +54,23 @@ function _G.TestLandingGearUnit.testGameBehavior()
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.exit = function() end
+    unit.exit = function()
+    end
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     ---------------
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"activate", "deactivate", "toggle", "getState", 
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
-                               "load"}
+    local expectedFunctions = {"setSignalIn", "getSignalIn"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
+    for _, v in pairs(_G.Utilities.toggleFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -79,6 +84,7 @@ function _G.TestLandingGearUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 63.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 49.88)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     -- play with set signal, has no actual effect on state when set programmatically
     local initialState = slot1.getState()

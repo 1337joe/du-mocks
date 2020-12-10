@@ -36,6 +36,8 @@
 local M = {
     elementClass = "",
     widgetType = "",
+    remainingRestorations = 3,
+    maxRestorations = 3,
 }
 
 -- Helper function, looks up an element definition by name, defaulting to defaultName if not found.
@@ -147,6 +149,18 @@ function M:getElementClass()
     return self.elementClass
 end
 
+--- The element's remaining number of restorations.
+-- @treturn int The number of restorations before the element is ultimately destroyed.
+function M:getRemainingRestorations()
+    return self.remainingRestorations
+end
+
+--- The element's maximal number of restorations when it was new.
+-- @treturn int The max number of restorations of the element.
+function M:getMaxRestorations()
+    return self.maxRestorations
+end
+
 --- Set the value of a signal in the specified IN plug of the element.
 -- Standard plug names are composed with the following syntax => direction-type-index where 'direction' can be IN or
 -- OUT, 'type' is one of the following => ITEM, FUEL, ELECTRICITY, SIGNAL, HEAT, FLUID, CONTROL, and 'index' is a number
@@ -204,6 +218,8 @@ function M:mockGetClosure()
     closure.getId = function() return self:getId() end
     closure.getMass = function() return self:getMass() end
     closure.getElementClass = function() return self:getElementClass() end
+    closure.getRemainingRestorations = function() return self:getRemainingRestorations() end
+    closure.getMaxRestorations = function() return self:getMaxRestorations() end
 
     -- not applicable to all elements, add in individual element definitions where appropriate
     -- closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end

@@ -3,7 +3,7 @@
 -- @see dumocks.LaserEmitterUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -64,10 +64,13 @@ function _G.TestLaserEmitterUnit.testGameBehavior()
     -- copy from here to unit.start
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"activate", "deactivate", "toggle", "getState", 
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
-                               "load"}
+    local expectedFunctions = {"setSignalIn", "getSignalIn"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
+    for _, v in pairs(_G.Utilities.toggleFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -81,6 +84,7 @@ function _G.TestLaserEmitterUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 7.47 or slot1.getMass() == 9.93)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     -- play with set signal
     slot1.setSignalIn("in", 0.0)

@@ -47,7 +47,8 @@ end
 -- Test setup:
 -- 1. 1x Long Light Light L, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState, setSignalIn, getSignalIn
+-- Exercises: getElementClass, deactivate, activate, toggle, getState, setSignalIn, getSignalIn, setRGBColor,
+-- getRGBColor
 function _G.TestLightUnit.testGameBehavior()
     local mock = mlu:new(nil, 1, "long light m")
     local slot1 = mock:mockGetClosure()
@@ -64,10 +65,13 @@ function _G.TestLightUnit.testGameBehavior()
     -- copy from here to unit.start
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"activate", "deactivate", "toggle", "getState", 
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
-                               "load"}
+    local expectedFunctions = {"setRGBColor", "getRGBColor", "setSignalIn", "getSignalIn"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
+    for _, v in pairs(_G.Utilities.toggleFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -81,6 +85,8 @@ function _G.TestLightUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 79.34)
+    assert(slot1.getMaxRestorations() == 3, string.format("Max restorations: %d", slot1.getMaxRestorations()))
+    assert(slot1.getRemainingRestorations() == 3, string.format("Remaining restorations: %d", slot1.getRemainingRestorations()))
 
     -- play with set signal, has no actual effect on state when set programmatically
     local initialState = slot1.getState()
@@ -122,6 +128,20 @@ function _G.TestLightUnit.testGameBehavior()
     assert(slot1.getState() == 0)
     slot1.toggle()
     assert(slot1.getState() == 1)
+
+    -- rounds to nearest number but leaves small decimal value
+    local epsilon = 0.0001
+    local colorVec
+    slot1.setRGBColor(-1, "bad", nil)
+    colorVec = slot1.getRGBColor()
+    assert(math.abs(-1 - colorVec[1]) < epsilon, "r: " ..colorVec[1]) -- unexpected, light ranges aren't validated
+    assert(colorVec[2] == 0, "g: " ..colorVec[2])
+    assert(colorVec[3] == 0, "b: " ..colorVec[3])
+    slot1.setRGBColor(1.123, 128.512, 600)
+    colorVec = slot1.getRGBColor()
+    assert(math.abs(1 - colorVec[1]) < epsilon, "r: " ..colorVec[1])
+    assert(math.abs(129 - colorVec[2]) < epsilon, "g: " ..colorVec[2])
+    assert(math.abs(600 - colorVec[3]) < epsilon, "b: " ..colorVec[3]) -- unexpected, light ranges aren't validated
 
     system.print("Success")
     unit.exit()

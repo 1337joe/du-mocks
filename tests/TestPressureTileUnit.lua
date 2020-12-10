@@ -3,7 +3,7 @@
 -- @see dumocks.PressureTileUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -169,10 +169,14 @@ function _G.TestPressureTileUnit.testGameBehavior()
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.getData = function() return '"showScriptError":false' end
-    unit.exit = function() end
+    unit.getData = function()
+        return '"showScriptError":false'
+    end
+    unit.exit = function()
+    end
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     -- use locals here since all code is in this method
     local pressedCount = 0
@@ -236,9 +240,10 @@ function _G.TestPressureTileUnit.testGameBehavior()
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getState", "getSignalOut",
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+    local expectedFunctions = {"getState", "getSignalOut"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -252,6 +257,7 @@ function _G.TestPressureTileUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 50.63)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     -- ensure initial state, set up globals
     pressedCount = 0
@@ -272,7 +278,7 @@ function _G.TestPressureTileUnit.testGameBehavior()
     -- copy from here to unit.stop()
     ---------------
     assert(slot1.getState() == 0)
-    assert(pressedCount == 2, "Pressed count should be 2: "..pressedCount)
+    assert(pressedCount == 2, "Pressed count should be 2: " .. pressedCount)
     assert(releasedCount == 2)
 
     -- multi-part script, can't just print success because end of script was reached

@@ -3,7 +3,7 @@
 -- @see dumocks.CounterUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -247,18 +247,20 @@ function _G.TestCounterUnit.testGameBehavior()
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.exit = function() end
+    unit.exit = function()
+    end
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     ---------------
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getCounterState", "next", "getSignalOut",
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "setSignalIn", "getSignalIn",
-                               "load"}
+    local expectedFunctions = {"getCounterState", "next", "getSignalOut", "setSignalIn", "getSignalIn"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -272,6 +274,7 @@ function _G.TestCounterUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 9.93)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     -- advance counter using in signal, needs to not actually be linked to set value
     slot1.setSignalIn("in", 0.0)
@@ -331,7 +334,7 @@ function _G.TestCounterUnit.testGameBehavior()
         slot1.next()
     end
 
-    assert(slot1.getCounterState() == 0, "Active out: "..slot1.getCounterState())
+    assert(slot1.getCounterState() == 0, "Active out: " .. slot1.getCounterState())
 
     assert(slot1.getSignalOut("OUT-signal-0") == 1.0)
     assert(slot1.getSignalOut("OUT-signal-1") == 0.0)
@@ -340,13 +343,13 @@ function _G.TestCounterUnit.testGameBehavior()
     assert(slot1.getSignalOut("OUT-signal-4") == 0.0)
 
     slot1.next()
-    assert(slot1.getCounterState() == 1, "Active out: "..slot1.getCounterState())
+    assert(slot1.getCounterState() == 1, "Active out: " .. slot1.getCounterState())
 
     slot1.next()
-    assert(slot1.getCounterState() == 2, "Active out: "..slot1.getCounterState())
+    assert(slot1.getCounterState() == 2, "Active out: " .. slot1.getCounterState())
 
     slot1.next()
-    assert(slot1.getCounterState() == 3, "Active out: "..slot1.getCounterState())
+    assert(slot1.getCounterState() == 3, "Active out: " .. slot1.getCounterState())
 
     assert(slot1.getSignalOut("OUT-signal-0") == 0.0)
     assert(slot1.getSignalOut("OUT-signal-1") == 0.0)
@@ -355,10 +358,10 @@ function _G.TestCounterUnit.testGameBehavior()
     assert(slot1.getSignalOut("OUT-signal-4") == 0.0)
 
     slot1.next()
-    assert(slot1.getCounterState() == 4, "Active out: "..slot1.getCounterState())
+    assert(slot1.getCounterState() == 4, "Active out: " .. slot1.getCounterState())
 
     slot1.next()
-    assert(slot1.getCounterState() == 0, "Active out: "..slot1.getCounterState())
+    assert(slot1.getCounterState() == 0, "Active out: " .. slot1.getCounterState())
 
     system.print("Success")
     unit.exit()

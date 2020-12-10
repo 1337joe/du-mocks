@@ -3,7 +3,7 @@
 -- @see dumocks.TelemeterUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -35,7 +35,6 @@ function _G.TestTelemeterUnit.testConstructor()
     lu.assertEquals(telemeterClosure1.getMass(), defaultMass)
     lu.assertEquals(telemeterClosure2.getMass(), defaultMass)
 end
-
 
 -- Verify get distance works and respects max range.
 function _G.TestTelemeterUnit.testGetDistance()
@@ -92,9 +91,11 @@ function _G.TestTelemeterUnit.testGameBehavior()
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.exit = function() end
+    unit.exit = function()
+    end
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     -- set ranges measured in test setup
     mock1.distance = -1
@@ -105,9 +106,10 @@ function _G.TestTelemeterUnit.testGameBehavior()
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getMaxDistance", "getDistance",
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+    local expectedFunctions = {"getMaxDistance", "getDistance"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -123,6 +125,7 @@ function _G.TestTelemeterUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 40.79)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     assert(slot1.getMaxDistance() == 100, "Telemeter 1 max distance: " .. slot1.getMaxDistance())
 

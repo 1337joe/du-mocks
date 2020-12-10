@@ -3,7 +3,7 @@
 -- @see dumocks.ReceiverUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -301,7 +301,6 @@ function _G.TestReceiverUnit.testGameBehavior()
     end
     mock:mockRegisterReceive(receiveChannelListener, "duMocks", "*")
 
-
     local receiveMessageListener = function(channel, message)
         ---------------
         -- copy from here to slot1.receive(channel,message) * message
@@ -318,9 +317,10 @@ function _G.TestReceiverUnit.testGameBehavior()
     -- copy from here to unit.start
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getRange", "getSignalOut",
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+    local expectedFunctions = {"getRange", "getSignalOut"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -334,8 +334,9 @@ function _G.TestReceiverUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 13.27)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
-    assert(slot1.getRange() == 100.0)
+    assert(slot1.getRange() == 1000.0)
 
     allCount = 0
     messageFilterCount = 0

@@ -1,6 +1,13 @@
 --- Can mass-produce produce any item/element.
 --
 -- Element class: IndustryUnit
+-- <ul>
+--   <li>IndustryUnit: Transfer Unit</li>
+--   <li>Industry1: Basic Industry Units</li>
+--   <li>Industry2: Uncommon Industry Units</li>
+--   <li>Industry3: Advanced Industry Units</li>
+--   <li>Industry4: Rare Industry Units</li>
+-- </ul>
 --
 -- Extends: Element
 -- @see Element
@@ -201,6 +208,17 @@ function M:getUptime()
     return getTime(self.currentTime) - self.startedTime
 end
 
+--- Sets the schematic identified to be the active schematic for the industry unit. Does not work while the industry
+-- unit is running.
+-- @tparam int id The id of the schematic to use.
+function M:setCurrentSchematic(id)
+end
+
+--- Retrieves the id of the currently set schematic.
+-- @treturn int The id of the current schematic.
+function M:getCurrentSchematic()
+end
+
 --- Event: Emitted when the industry unit has completed a run.
 --
 -- Note: This is documentation on an event handler, not a callable method.
@@ -371,6 +389,8 @@ function M:mockGetClosure()
     closure.getCycleCountSinceStartup = function() return self:getCycleCountSinceStartup() end
     closure.getEfficiency = function() return self:getEfficiency() end
     closure.getUptime = function() return self:getUptime() end
+    closure.setCurrentSchematic = function(id) return self:setCurrentSchematic(id) end
+    closure.getCurrentSchematic = function() return self:getCurrentSchematic() end
     return closure
 end
 

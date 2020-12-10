@@ -8,6 +8,11 @@ local lu = require("luaunit")
 ---------------
 _G.Utilities = {}
 
+_G.Utilities.elementFunctions = {"show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity",
+                                 "getHitPoints", "getMaxHitPoints", "getId", "getMass", "getElementClass",
+                                 "load", "getRemainingRestorations", "getMaxRestorations"}
+_G.Utilities.toggleFunctions = {"activate", "deactivate", "toggle", "getState"}
+
 --- Verifies that exactly the expected functions are found in the target element.
 -- @param element The element to test.
 -- @tparam table expectedFunctions A list of the functions expected to be found in the element.
@@ -57,6 +62,15 @@ function _G.Utilities.verifyExpectedFunctions(element, expectedFunctions)
     end
 end
 
+--- Verify basic element functions.
+-- @tparameter Element slot The element to test.
+-- @tparameter int expectedRestorations The expected max (and remaining) restorations for the element.
+function _G.Utilities.verifyBasicElementFunctions(slot, expectedRestorations)
+    assert(slot.getMaxRestorations() == expectedRestorations, string.format("Max restorations: %d", slot.getMaxRestorations()))
+    assert(slot.getRemainingRestorations() == expectedRestorations,
+        string.format("Remaining restorations: %d", slot.getRemainingRestorations()))
+end
+
 --- Verifies exactly the expected fields and values are found within the widget data.
 -- @tparam string data The widget data to test.
 -- @tparam table expectedFields The list of fields to look for.
@@ -67,7 +81,8 @@ function _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ign
     local unexpectedFields = {}
     for key, value in string.gmatch(data, "\"(.-)\":(.-)[},]") do
         if expectedValues[key] then
-            assert(expectedValues[key] == value, "Unexpected value for " .. key .. ", expected " .. expectedValues[key] .. " but was " .. value)
+            assert(expectedValues[key] == value,
+                "Unexpected value for " .. key .. ", expected " .. expectedValues[key] .. " but was " .. value)
         end
 
         -- skip ignored fields, don't add to list, don't remove

@@ -3,7 +3,7 @@
 -- @see dumocks.DetectionZoneUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -254,9 +254,10 @@ function _G.TestDetectionZoneUnit.testGameBehavior()
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getSignalOut",
-                               "show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity", "getHitPoints",
-                               "getMaxHitPoints", "getId", "getMass", "getElementClass", "load"}
+    local expectedFunctions = {"getSignalOut"}
+    for _, v in pairs(_G.Utilities.elementFunctions) do
+        table.insert(expectedFunctions, v)
+    end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
@@ -270,6 +271,7 @@ function _G.TestDetectionZoneUnit.testGameBehavior()
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getId() > 0)
     assert(slot1.getMass() == 7.79)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     -- ensure initial state, set up globals
     enterCount = 0
@@ -289,7 +291,7 @@ function _G.TestDetectionZoneUnit.testGameBehavior()
     ---------------
     -- copy from here to unit.stop()
     ---------------
-    assert(enterCount == 2, "Enter count should be 2: "..enterCount)
+    assert(enterCount == 2, "Enter count should be 2: " .. enterCount)
     assert(leaveCount == 2)
     assert(enterPlayer == leavePlayer)
 

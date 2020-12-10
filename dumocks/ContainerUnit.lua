@@ -46,10 +46,11 @@ elementDefinitions["rocket fuel tank s"] = {mass = 886.72, maxHitPoints = 736.0,
 elementDefinitions["rocket fuel tank m"] = {mass = 4724.43, maxHitPoints = 6231.0, class = CLASS_ROCKET}
 elementDefinitions["rocket fuel tank l"] = {mass = 25741.76, maxHitPoints = 68824.0, class = CLASS_ROCKET}
 
-
 local DEFAULT_ELEMENT = "container s"
 
 local M = MockElement:new()
+M.remainingRestorations = 5
+M.maxRestorations = 5
 
 function M:new(o, id, elementName)
     local elementDefinition = MockElement.findElement(elementDefinitions, elementName, DEFAULT_ELEMENT)
@@ -101,6 +102,29 @@ function M:getSelfMass()
     return self.selfMass
 end
 
+--- Returns volume occupied by items currently inside the container.
+-- @treturn L The volume in liters.
+function M:getItemsVolume()
+end
+
+--- Returns the container max volume
+-- @treturn L The volume in liters.
+function M:getMaxVolume()
+end
+
+--- Initiate the acquisition of the storage in the container, required before calls to getItemsList. Simply wait for the
+-- event 'storageAcquired' to be emitted by the container, and you can then use the storage related functions.
+-- @see getItemsList
+-- @see EVENT_storageAcquired
+function M:acquireStorage()
+end
+
+--- Returns the list of items in the container, as a json string you need to parse with json.decode.
+-- @treturn jsonstr The container content as a json list of json objects with fields: itemName, quality, unitVolume, unitMass, type, class
+function M:getItemsList()
+    return {}
+end
+
 local DATA_TEMPLATE = '{\"name\":\"%s [%d]\","percentage":%.16f,"timeLeft":%s,\"helperId\":\"%s\",\"type\":\"%s\"}'
 function M:getData()
     if self.elementClass == CLASS_ITEM then
@@ -117,6 +141,14 @@ function M:getDataId()
     return "e123456"
 end
 
+--- Event: The access to the container storage is granted. Required before using getItemsList, for example.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @see acquireStorage
+function M.EVENT_storageAcquired()
+    assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterStatusChanged")
+end
+
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
@@ -125,6 +157,10 @@ function M:mockGetClosure()
     closure.getMass = function() return self:getMass() end
     closure.getItemsMass = function() return self:getItemsMass() end
     closure.getSelfMass = function() return self:getSelfMass() end
+    closure.getItemsVolume = function() return self:getItemsVolume() end
+    closure.getMaxVolume = function() return self:getMaxVolume() end
+    closure.acquireStorage = function() return self:acquireStorage() end
+    closure.getItemsList = function() return self:getItemsList() end
     return closure
 end
 
