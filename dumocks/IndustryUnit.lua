@@ -208,14 +208,15 @@ function M:getUptime()
     return getTime(self.currentTime) - self.startedTime
 end
 
---- Sets the schematic identified to be the active schematic for the industry unit. Does not work while the industry
--- unit is running.
--- @tparam int id The id of the schematic to use.
+--- Set the loaded schematic, based on its id. Use getCurrentSchematic to learn about your schematic id. Does not work
+-- while the industry unit is running.
+-- @tparam int id The schematic id to be loaded.
+-- @see getCurrentSchematic
 function M:setCurrentSchematic(id)
 end
 
---- Retrieves the id of the currently set schematic.
--- @treturn int The id of the current schematic.
+--- Get the id of the currently loaded schematic.
+-- @treturn int The schematic id or 0 if no valid schematic is loaded.
 function M:getCurrentSchematic()
 end
 
