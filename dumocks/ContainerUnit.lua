@@ -120,7 +120,7 @@ function M:acquireStorage()
 end
 
 --- Returns the list of items in the container, as a json string you need to parse with json.decode.
--- @treturn jsonstr The container content as a json list of json objects with fields: itemName, quality, unitVolume, unitMass, type, class
+-- @treturn jsonstr The container content as a json list of json objects with fields: itemName, quantity, unitVolume, unitMass, type, class
 function M:getItemsList()
     return {}
 end
