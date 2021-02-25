@@ -27,24 +27,26 @@ local CLASS_SPACE = "SpaceFuelContainer"
 local CLASS_ROCKET = "RocketFuelContainer"
 
 local elementDefinitions = {}
-elementDefinitions["container xs"] = {mass = 229.09, maxHitPoints = 124.0, class = CLASS_ITEM}
-elementDefinitions["container s"] = {mass = 1281.31, maxHitPoints = 999.0, class = CLASS_ITEM}
-elementDefinitions["container m"] = {mass = 7421.35, maxHitPoints = 7997.0, class = CLASS_ITEM}
-elementDefinitions["container l"] = {mass = 14842.7, maxHitPoints = 17316.0, class = CLASS_ITEM}
+elementDefinitions["container xs"] = {mass = 229.09, maxHitPoints = 124.0, class = CLASS_ITEM, maxVolume = 1000}
+elementDefinitions["container s"] = {mass = 1281.31, maxHitPoints = 999.0, class = CLASS_ITEM, maxVolume = 8000}
+elementDefinitions["container m"] = {mass = 7421.35, maxHitPoints = 7997.0, class = CLASS_ITEM, maxVolume = 64000}
+elementDefinitions["container l"] = {mass = 14842.7, maxHitPoints = 17316.0, class = CLASS_ITEM, maxVolume = 128000}
+elementDefinitions["container xl"] = {mass = 44206.0, maxHitPoints = 34633.0, class = CLASS_ITEM, maxVolume = 256000}
+elementDefinitions["expanded container xl"] = {mass = 88413.0, maxHitPoints = 69267.0, class = CLASS_ITEM, maxVolume = 512000}
 
-elementDefinitions["atmospheric fuel tank xs"] = {mass = 35.03, maxHitPoints = 50.0, class = CLASS_ATMO}
-elementDefinitions["atmospheric fuel tank s"] = {mass = 182.67, maxHitPoints = 163.0, class = CLASS_ATMO}
-elementDefinitions["atmospheric fuel tank m"] = {mass = 988.67, maxHitPoints = 1315.0, class = CLASS_ATMO}
-elementDefinitions["atmospheric fuel tank l"] = {mass = 5481.27, maxHitPoints = 10461.0, class = CLASS_ATMO}
+elementDefinitions["atmospheric fuel tank xs"] = {mass = 35.03, maxHitPoints = 50.0, class = CLASS_ATMO, maxVolume = 100}
+elementDefinitions["atmospheric fuel tank s"] = {mass = 182.67, maxHitPoints = 163.0, class = CLASS_ATMO, maxVolume = 400}
+elementDefinitions["atmospheric fuel tank m"] = {mass = 988.67, maxHitPoints = 1315.0, class = CLASS_ATMO, maxVolume = 1600}
+elementDefinitions["atmospheric fuel tank l"] = {mass = 5481.27, maxHitPoints = 10461.0, class = CLASS_ATMO, maxVolume = 12800}
 
-elementDefinitions["space fuel tank s"] = {mass = 182.67, maxHitPoints = 187.0, class = CLASS_SPACE}
-elementDefinitions["space fuel tank m"] = {mass = 988.67, maxHitPoints = 1496.0, class = CLASS_SPACE}
-elementDefinitions["space fuel tank l"] = {mass = 5481.27, maxHitPoints = 15933.0, class = CLASS_SPACE}
+elementDefinitions["space fuel tank s"] = {mass = 182.67, maxHitPoints = 187.0, class = CLASS_SPACE, maxVolume = 400}
+elementDefinitions["space fuel tank m"] = {mass = 988.67, maxHitPoints = 1496.0, class = CLASS_SPACE, maxVolume = 1600}
+elementDefinitions["space fuel tank l"] = {mass = 5481.27, maxHitPoints = 15933.0, class = CLASS_SPACE, maxVolume = 12800}
 
-elementDefinitions["rocket fuel tank xs"] = {mass = 173.42, maxHitPoints = 366.0, class = CLASS_ROCKET}
-elementDefinitions["rocket fuel tank s"] = {mass = 886.72, maxHitPoints = 736.0, class = CLASS_ROCKET}
-elementDefinitions["rocket fuel tank m"] = {mass = 4724.43, maxHitPoints = 6231.0, class = CLASS_ROCKET}
-elementDefinitions["rocket fuel tank l"] = {mass = 25741.76, maxHitPoints = 68824.0, class = CLASS_ROCKET}
+elementDefinitions["rocket fuel tank xs"] = {mass = 173.42, maxHitPoints = 366.0, class = CLASS_ROCKET, maxVolume = 400}
+elementDefinitions["rocket fuel tank s"] = {mass = 886.72, maxHitPoints = 736.0, class = CLASS_ROCKET, maxVolume = 800}
+elementDefinitions["rocket fuel tank m"] = {mass = 4724.43, maxHitPoints = 6231.0, class = CLASS_ROCKET, maxVolume = 6400}
+elementDefinitions["rocket fuel tank l"] = {mass = 25741.76, maxHitPoints = 68824.0, class = CLASS_ROCKET, maxVolume = 50000}
 
 local DEFAULT_ELEMENT = "container s"
 
@@ -77,10 +79,18 @@ function M:new(o, id, elementName)
     o.selfMass = o.mass
     o.mass = nil
     o.itemsMass = 0
+    o.itemsVolume = 0
+    o.maxVolume = elementDefinition.maxVolume
 
     -- for fuel tanks
     o.percentage = 0.0
     o.timeLeft = "n/a"
+
+    self.storageRequested = false
+    self.storageCallbacks = {}
+    self.storageAvailable = false
+    self.storageJson = ""
+    self.requestsExceeded = false
 
     return o
 end
@@ -105,26 +115,45 @@ end
 --- Returns volume occupied by items currently inside the container.
 -- @treturn L The volume in liters.
 function M:getItemsVolume()
+    return self.itemsVolume
 end
 
 --- Returns the container max volume
 -- @treturn L The volume in liters.
 function M:getMaxVolume()
+    return self.maxVolume
 end
 
 --- Initiate the acquisition of the storage in the container, required before calls to getItemsList. Simply wait for the
 -- event 'storageAcquired' to be emitted by the container, and you can then use the storage related functions.
+--
+-- Note: This is rate-limited to 10 queries / 5 minutes. Attempting to call more frequently will result in console error messages.
 -- @see getItemsList
 -- @see EVENT_storageAcquired
 function M:acquireStorage()
+    if self.requestsExceeded then
+        local message =
+            "You have reached the maximum of 10 requests to 'acquireStorage' before entering a period of 5 min of cooldown, retry later"
+        if system and type(system.print) == "function" then
+            system.print(message)
+        else
+            print(message)
+        end
+    else
+        self.storageRequested = true
+    end
 end
 
+M.JSON_ITEM_TEMPLATE =
+    [[{ "class" : "%s", "name" : "%s", "quantity" : %f, "type" : "%s", "unitMass" : %f, "unitVolume" : %f}]]
+
 --- Returns the list of items in the container, as a json string you need to parse with json.decode.
---
--- Note: This is rate-limited to 10 queries / 5 minutes. Attempting to call more frequently will result in console error messages.
--- @treturn jsonstr The container content as a json list of json objects with fields: itemName, quantity, unitVolume, unitMass, type, class
+-- @treturn jsonstr The container content as a json list of json objects with fields: name, quantity, unitVolume, unitMass, type, class
 function M:getItemsList()
-    return {}
+    if not self.storageAvailable then
+        return ""
+    end
+    return self.storageJson
 end
 
 local DATA_TEMPLATE = '{\"name\":\"%s [%d]\","percentage":%.16f,"timeLeft":%s,\"helperId\":\"%s\",\"type\":\"%s\"}'
@@ -132,7 +161,8 @@ function M:getData()
     if self.elementClass == CLASS_ITEM then
         return MockElement:getData()
     end
-    return string.format(DATA_TEMPLATE, self.name, self:getId(), self.percentage, self.timeLeft, self.helperId, self:getWidgetType())
+    return string.format(DATA_TEMPLATE, self.name, self:getId(), self.percentage, self.timeLeft, self.helperId,
+               self:getWidgetType())
 end
 
 -- Override default with realistic patten to id.
@@ -149,6 +179,36 @@ end
 -- @see acquireStorage
 function M.EVENT_storageAcquired()
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterStatusChanged")
+end
+
+--- Mock only, not in-game: Register a handler for the in-game `storageAcquired()` event.
+-- @tparam function callback The function to call when the storage data is available.
+-- @treturn int The index of the callback.
+-- @see EVENT_storageAcquired
+function M:mockRegisterStorageAcquired(callback)
+    local index = #self.storageCallbacks + 1
+    self.storageCallbacks[index] = callback
+    return index
+end
+
+--- Mock only, not in-game: Simulates the storage data becoming available, calling all registered callbacks.
+function M:mockDoStorageAcquired()
+    -- state changes before calling handlers
+    self.storageAvailable = true
+
+    -- call callbacks in order, saving exceptions until end
+    local errors = ""
+    for i, callback in pairs(self.storageCallbacks) do
+        local status, err = pcall(callback)
+        if not status then
+            errors = errors .. "\nError while running callback " .. i .. ": " .. err
+        end
+    end
+
+    -- propagate errors
+    if string.len(errors) > 0 then
+        error("Errors raised in callbacks:" .. errors)
+    end
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".

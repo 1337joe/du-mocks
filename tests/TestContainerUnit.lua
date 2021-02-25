@@ -3,7 +3,7 @@
 -- @see dumocks.ContainerUnit
 
 -- set search path to include root of project
-package.path = package.path..";../?.lua"
+package.path = package.path .. ";../?.lua"
 
 local lu = require("luaunit")
 
@@ -86,18 +86,147 @@ function _G.TestContainerUnit.testGetMass()
     lu.assertEquals(actual, expected)
 end
 
+--- Verify behavior when storage not available and when it is.
+function _G.TestContainerUnit.testGetItemsList()
+    local mock = mcu:new()
+    local closure = mock:mockGetClosure()
+
+    local actual, expected
+
+    expected = "{" .. string.format(mcu.JSON_ITEM_TEMPLATE, "OxygenPure", "Pure Oxygen", 20, "material", 1.0, 1.0) ..
+                   "}"
+    mock.storageJson = expected
+
+    mock.storageAvailable = false
+    actual = closure.getItemsList()
+    lu.assertEquals(actual, "")
+
+    mock.storageAvailable = true
+    actual = closure.getItemsList()
+    lu.assertEquals(actual, expected)
+end
+
+--- Verify normal and error behavior of acquiring storage.
+function _G.TestContainerUnit.testAcquireStorage()
+    local mock = mcu:new()
+    local closure = mock:mockGetClosure()
+
+    local actual, expected
+
+    local systemPrint = ""
+    system = {}
+    function system.print(msg)
+        systemPrint = systemPrint .. msg .. "\n"
+    end
+
+    -- success case
+    mock.requestsExceeded = false
+    mock.storageRequested = false
+    closure.acquireStorage()
+    lu.assertTrue(mock.storageRequested)
+    lu.assertEquals(systemPrint, "")
+
+    -- error case
+    mock.requestsExceeded = true
+    mock.storageRequested = false
+    closure.acquireStorage()
+    lu.assertFalse(mock.storageRequested)
+    lu.assertStrContains(systemPrint, "You have reached the maximum of 10 requests")
+end
+
+--- Verify storage callback works without errors.
+function _G.TestContainerUnit.testStorageAcquired()
+    local mock = mcu:new()
+    local closure = mock:mockGetClosure()
+
+    local called, available
+    local callback = function()
+        called = true
+        available = mock.storageAvailable -- examining internal state
+       
+    end
+    mock:mockRegisterStorageAcquired(callback)
+
+    lu.assertFalse(mock.storageAvailable)
+
+    called = false
+    mock:mockDoStorageAcquired()
+    lu.assertTrue(called)
+    lu.assertTrue(available) -- changes before callback
+
+    lu.assertTrue(mock.storageAvailable)
+end
+
+--- Verify storage callback works with and propagates errors.
+function _G.TestContainerUnit.testStorageAcquiredError()
+    local mock = mcu:new()
+
+    local calls = 0
+    local callback1Order, callback2Order
+    local callbackError = function()
+        calls = calls + 1
+        callback1Order = calls
+        error("I'm a bad callback.")
+    end
+    mock:mockRegisterStorageAcquired(callbackError)
+
+    local callback2 = function()
+        calls = calls + 1
+        callback2Order = calls
+        error("I'm a bad callback, too.")
+    end
+    mock:mockRegisterStorageAcquired(callback2)
+
+    lu.assertFalse(mock.storageAvailable)
+
+    -- both called, proper order, errors thrown
+    lu.assertErrorMsgContains("bad callback", mock.mockDoStorageAcquired, mock)
+    lu.assertEquals(calls, 2)
+    lu.assertEquals(callback1Order, 1)
+    lu.assertEquals(callback2Order, 2)
+
+    lu.assertTrue(mock.storageAvailable)
+end
+
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --
 -- Test setup:
 -- 1. 1x item container or fuel tank, connected to Programming Board on slot1
+--   a. Add 20L of oxygen or appropriate fuel to container
 --
--- Exercises: getElementClass, getData, deactivate, activate, toggle, getState
+-- Exercises: getElementClass, getData, getMaxVolume, getItemsVolume, getItemsMass, getSelfMass, acquireStorage, getItemsList
 function _G.TestContainerUnit.testGameBehavior()
+    local containers = {
+        ["container xs"] = {
+            name = "Pure Oxygen",
+            density = 1,
+            class = "OxygenPure"
+        },
+        ["atmospheric fuel tank xs"] = {
+            density = 4
+        },
+        ["space fuel tank s"] = {
+            density = 6
+        },
+        ["rocket fuel tank xs"] = {
+            name = "Xeron Fuel",
+            density = 0.8,
+            class = "Xeron"
+        }
+    }
+
     local mock, closure
     local result, message
-    for _,element in pairs({"container xs", "atmospheric fuel tank xs", "space fuel tank s", "rocket fuel tank xs"}) do
+    for element, contents in pairs(containers) do
         mock = mcu:new(nil, 1, element)
+
+        mock.itemsVolume = 20
+        mock.itemsMass = mock.itemsVolume * contents.density
+        mock.storageJson = "{" ..
+                               string.format(mcu.JSON_ITEM_TEMPLATE, contents.class, contents.name, mock.itemsVolume,
+                                   "material", contents.density, 1.0) .. "}"
+
         closure = mock:mockGetClosure()
 
         result, message = pcall(_G.TestContainerUnit.gameBehaviorHelper, mock, closure)
@@ -112,15 +241,38 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.exit = function() end
+    unit.getData = function()
+        return '"showScriptError":false'
+    end
+    unit.exit = function()
+    end
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
+
+    -- use locals here since all code is in this method
+    local isItem, isAtmo, isSpace, isRocket
+    local storageAcquired
+
+    -- storageAcquired handlers
+    local storageAcquiredHandler = function(id)
+        ---------------
+        -- copy from here to slot1.storageAcquired()
+        ---------------
+        storageAcquired = true
+        unit.exit()
+        ---------------
+        -- copy to here to slot1.storageAcquired()
+        ---------------
+    end
+    mock:mockRegisterStorageAcquired(storageAcquiredHandler)
 
     ---------------
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getSelfMass", "getItemsMass", "getItemsVolume", "getMaxVolume", "acquireStorage", "getItemsList"}
+    local expectedFunctions = {"getSelfMass", "getItemsMass", "getItemsVolume", "getMaxVolume", "acquireStorage",
+                               "getItemsList"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
@@ -128,7 +280,6 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
 
     -- test element class and inherited methods
     local class = slot1.getElementClass()
-    local isItem, isAtmo, isSpace, isRocket
     if class == "ItemContainer" then
         isItem = true
     elseif class == "AtmoFuelContainer" then
@@ -170,10 +321,67 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
     assert(slot1.getMass() > 35.0)
     _G.Utilities.verifyBasicElementFunctions(slot1, 5)
 
-    system.print("Success")
-    unit.exit()
+    local volumeBase, volumeMaxMultiplier
+    if isItem then
+        volumeBase = 1000
+        volumeMaxMultiplier = 1.5
+    elseif isAtmo then
+        volumeBase = 100
+        volumeMaxMultiplier = 2.0
+    elseif isSpace then
+        volumeBase = 400
+        volumeMaxMultiplier = 2.0
+    elseif isRocket then
+        volumeBase = 400
+        volumeMaxMultiplier = 1.5
+    end
+    local maxVolume = slot1.getMaxVolume()
+    assert(maxVolume >= volumeBase and maxVolume <= volumeBase * volumeMaxMultiplier,
+        string.format("Expected volume to be in range [%f, %f] but was %f", volumeBase,
+            volumeBase * volumeMaxMultiplier, maxVolume))
+
+    -- ensure initial state, set up globals
+    storageAcquired = false
+
+    slot1.acquireStorage()
     ---------------
     -- copy to here to unit.start()
+    ---------------
+
+    mock:mockDoStorageAcquired()
+
+    ---------------
+    -- copy from here to unit.stop()
+    ---------------
+
+    assert(storageAcquired)
+    local itemsJson = slot1.getItemsList()
+    assert(itemsJson ~= "", "itemsJson is empty, does the container have contents?")
+
+    -- local class = string.match(itemsJson, [["class" : "(.-)"]])
+    -- local name = string.match(itemsJson, [["name" : "(.-)"]])
+    local quantity = tonumber(string.match(itemsJson, [["quantity" : ([0-9.]+)]]))
+    local density = tonumber(string.match(itemsJson, [["unitMass" : ([0-9.]+)]]))
+
+    local expectedVolume = 20
+    assert(quantity == expectedVolume, string.format("Expected %f L but was %f", expectedVolume, quantity))
+    local itemsVolume = slot1.getItemsVolume()
+    assert(itemsVolume == expectedVolume, string.format("Expected %f L but was %f", expectedVolume, itemsVolume))
+
+    local expectedMass = expectedVolume * density
+    local itemsMass = slot1.getItemsMass()
+    assert(itemsMass == expectedMass, string.format("Expected %f kg but was %f", expectedMass, itemsMass))
+
+    assert(slot1.getSelfMass() + slot1.getItemsMass() == slot1.getMass())
+
+    -- multi-part script, can't just print success because end of script was reached
+    if string.find(unit.getData(), '"showScriptError":false') then
+        system.print("Success")
+    else
+        system.print("Failed")
+    end
+    ---------------
+    -- copy to here to unit.stop()
     ---------------
 end
 
