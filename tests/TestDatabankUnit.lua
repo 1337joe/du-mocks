@@ -513,6 +513,9 @@ function _G.TestDatabankUnit.testGameBehavior()
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
 
+    assert(slot1.getKeys() == '["key1.5","key2"]')
+    assert(slot1.getNbKeys() == 2, "Number of keys: " .. slot1.getNbKeys())
+
     key = "key3"
     slot1.setStringValue(key, true)
     assert(slot1.hasKey(key) == 1)

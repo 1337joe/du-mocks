@@ -48,16 +48,11 @@ end
 --- Returns all the keys in the data bank.
 -- @treturn json The key list, as JSON sequence.
 function M:getKeys()
-    local keys = "["
+    local keysList = {}
     for key,_ in pairs(self.data) do
-        keys = keys..'"'..key..'",'
+        keysList[#keysList + 1] = string.format([["%s"]], key)
     end
-    if string.len(keys) == 1 then
-        keys = keys.."]"
-    else
-        keys = string.sub(keys, 0, string.len(keys) - 1).."]"
-    end
-    return keys
+    return "[" .. table.concat(keysList, ",") .. "]"
 end
 
 --- Returns 1 if the key is present in the databank, 0 otherwise.
