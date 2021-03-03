@@ -86,11 +86,11 @@ function M:new(o, id, elementName)
     o.percentage = 0.0
     o.timeLeft = "n/a"
 
-    self.storageRequested = false
-    self.storageCallbacks = {}
-    self.storageAvailable = false
-    self.storageJson = ""
-    self.requestsExceeded = false
+    o.storageRequested = false
+    o.storageCallbacks = {}
+    o.storageAvailable = false
+    o.storageJson = ""
+    o.requestsExceeded = false
 
     return o
 end
