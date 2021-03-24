@@ -7,6 +7,9 @@
 --   <li>ScreenSignUnit: Signs</li>
 -- </ul>
 --
+-- Note: The max size of screen content is 50,000 characters. Any calls to set or add content that result in the screen
+-- exceeding this will silently fail.
+--
 -- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
 -- @see Element
 -- @see ElementWithState
@@ -48,7 +51,7 @@ function M:new(o, id, elementName)
 
     o.html = "" -- this is the displayed content, for use in checking what's on the screen
 
-    o.directHtml = ""
+    o.directHtml = "" -- this is html set through setHTML, used as the foundation for building self.html
     o.contentList = {}
     o.contentNextIndex = 1
 
