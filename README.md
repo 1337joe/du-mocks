@@ -21,26 +21,39 @@ ldoc .
 
 Output can be found at `doc/index.html`. Note that the documentation won't show the package prefix (`dumocks.`) in file names, but it's still needed to load modules.
 
-An already compiled and uploaded copy of the documentation can be found at: https://du.w3asel.com/du-mocks/mock-codex
+An already compiled and uploaded copy of the documentation can be found on my website with and without documentation for mock methods:
+
+ * https://du.w3asel.com/du-mocks/mock-codex
+ * https://du.w3asel.com/du-mocks/web-codex
+
+## Developer Dependencies
+
+Luarocks can be used to install all dependencies: `luarocks install --only-deps du-mocks-scm-0.rockspec`
+
+* [ldoc](https://github.com/lunarmodules/LDoc): For producing nice to read documentation.
+
+* [luaunit](https://github.com/bluebird75/luaunit): For automated testing.
+
+* [luacov](https://keplerproject.github.io/luacov/): For tracking code coverage when running all tests. Can be removed from `runTests.sh` if not desired. To view results using luacov-html (which is a separate package) simply run `luacov -r html` after running tests and open `luacov-html/index.html`.
 
 ## Testing
 
 Unit tests are provided to validate the funcionality and demonstrate usage of the mocks. The tests depend on lua modules `luaunit` and `luacov` for the unit test framework and code coverage, respectively. To run all tests run the following script from the repository base directory:
 
 ```sh
-./tests/runTests.sh
+./test/runTests.sh
 ```
 
-Luaunit arguments may be passed in, such as `-o junit` to produce junit-style xml result files (though the junit file path is hardcoded to output to `tests/`).
+Luaunit arguments may be passed in, such as `-o junit` to produce junit-style xml result files (though the junit file path is hardcoded to output to `test/`).
 
-Individual test files are executable and may be run directly from within the tests directory.
+Individual test files are executable and can be run the project root.
 
 ### Characterization Tests
 
 Many, eventually all, unit tests include characterization tests that can be run in-game to validate expected behavior as well as on the relevant mock object to verify the mock behaves as the game does. These are aided by an extraction tool that can parse out the code blocks and build a document that can be pasted in-game to a control module. To run this tool, execute (replacing `TestFile` with the appropriate test file path/name):
 
 ```sh
-./tests/bundleCharacterizationTest.lua TestFile
+./test/bundleCharacterizationTest.lua TestFile
 ```
 
 This will print the result out in the console (for piping to `xclip -selection c` or `clip.exe`, depending on your platform), or an output file can be specified as a second argument to the program.

@@ -1,4 +1,6 @@
 doc/
 results/
 configExports/
-luacov.*
+
+luacov*
+cobertura.xml
