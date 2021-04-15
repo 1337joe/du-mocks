@@ -93,9 +93,6 @@ end
 
 -- Override default with realistic patten to id.
 function M:getDataId()
-    if self.elementClass == CLASS_ITEM then
-        return MockElement:getDataId()
-    end
     return "e123456"
 end
 

@@ -301,7 +301,7 @@ end
 -- @param sectionName
 -- @param varName
 -- @param value
-function M:addMarker(filter, sectionName, varName, value)
+function M:addMeasure(filter, sectionName, varName, value)
 end
 
 --- Unknown use.

@@ -113,9 +113,6 @@ end
 
 -- Override default with realistic patten to id.
 function M:getDataId()
-    if self.elementClass == CLASS_ITEM then
-        return MockElement:getDataId()
-    end
     return "e123456"
 end
 
@@ -690,7 +687,7 @@ function M:mockGetClosure()
     closure.getConstructWorldOrientationUp = function() return self:getConstructWorldOrientationUp() end
     closure.getConstructWorldOrientationRight = function() return self:getConstructWorldOrientationRight() end
     closure.getConstructWorldOrientationForward = function() return self:getConstructWorldOrientationForward() end
-    closure.getSchematicInfo = function(schematicId) return self:getSchematicInfo(scematicId) end
+    closure.getSchematicInfo = function(schematicId) return self:getSchematicInfo(schematicId) end
     return closure
 end
 
