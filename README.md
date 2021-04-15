@@ -2,14 +2,34 @@
 
 Mock objects for generating a more useful codex and for use testing Dual Universe scripts offline.
 
-To use this project simply place the project root directory on your lua package path and load modules with the `dumocks.` prefix, like so:
+## Installing
+
+### Luarocks
+
+The easiest way to install this project is using luarocks:
+
+```sh
+luarocks install du-mocks
+```
+
+This will install all dependencies and place the `dumocks` modules on your lua path, allowing you to import modules like this:
 
 ```lua
-package.path = package.path..";../du-mocks/?.lua"
 local mockWarpDrive = require("dumocks.WarpDriveUnit")
 ```
 
-Note: If you get a `module 'dumocks.Element' not found` on loading a module besides Element, your path is probably pointing to the inside of the `dumocks` package instead of one level above it like the path should be.
+Version numbers will follow the game version for major/minor numbers (**0**.**24**.x), while the patch number (x.x.**1**) will represent the du-mocks revision number for the Dual Universe minor release, not the Dual Universe patch number. If DU is patched without changing the Lua api a new du-mocks version may not be pushed immediately.
+
+### Clone the Repository
+
+Alternately, you can clone the repository and simply place the project src directory on your lua package path and load modules with the `dumocks.` prefix, like so:
+
+```lua
+package.path = package.path .. ";../du-mocks/src/?.lua"
+local mockWarpDrive = require("dumocks.WarpDriveUnit")
+```
+
+Note: If you get an error similar to `module 'dumocks.Element' not found` on loading a module besides Element, your path is probably pointing to the inside of the `dumocks` package instead of one level above it.
 
 ## Documentation
 
@@ -44,13 +64,13 @@ Unit tests are provided to validate the funcionality and demonstrate usage of th
 ./test/runTests.sh
 ```
 
-Luaunit arguments may be passed in, such as `-o junit` to produce junit-style xml result files (though the junit file path is hardcoded to output to `test/`).
+Luaunit arguments may be passed in, such as `-o junit` to produce junit-style xml result files (though the junit file path is hardcoded to output to `test/results/`).
 
 Individual test files are executable and can be run the project root.
 
 ### Characterization Tests
 
-Many, eventually all, unit tests include characterization tests that can be run in-game to validate expected behavior as well as on the relevant mock object to verify the mock behaves as the game does. These are aided by an extraction tool that can parse out the code blocks and build a document that can be pasted in-game to a control module. To run this tool, execute (replacing `TestFile` with the appropriate test file path/name):
+All unit tests include characterization tests that can be run in-game to validate expected behavior as well as on the relevant mock object to verify the mock behaves as the game does. These are aided by an extraction tool that can parse out the code blocks and build a document that can be pasted in-game to a control module. To run this tool, execute (replacing `TestFile` with the appropriate test file path/name):
 
 ```sh
 ./test/bundleCharacterizationTest.lua TestFile
@@ -72,7 +92,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 ---------------
 ```
 
-Format notes:
+#### Format notes:
 
 * The start and end blocks should match on method signatures. 
 * `slot1` indicates what slot should receive the code (other options besides a numbered slot are `library`, `system`, and `unit`).
@@ -87,7 +107,7 @@ Format notes:
 2. Implementation to allow each method to be used for testing.
 3. Unit testing for each method.
 4. A characterization (game-behavior) test that can be run in-game and using the mock to validate behavior matches.
-  a. Test verifies only expected methods exist and calls element-inherited methods.
+   1. Test verifies only expected methods exist and calls element-inherited methods.
 5. Element definitions for the in-game elements that the mock applies to.
 
 ### Current State
