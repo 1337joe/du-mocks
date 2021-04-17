@@ -1,10 +1,16 @@
 #!/bin/sh
 
+# stop for error if test returns non-0 exit code
+# set -e
+
 # set return code for final result
 exitCode=0
 
 # code coverage display on jenkins expects files to be referenced from project root
 cd "$(dirname "$0")/.."
+
+# set lua path to include src directory
+export LUA_PATH="src/?.lua;;"
 
 # clear out old results
 rm -rf test/results
