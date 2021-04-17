@@ -1,11 +1,11 @@
 package = "du-mocks"
-version = "0.24.0-1"
+version = "0.24.0-2"
 source = {
-   url = "https://github.com/1337joe/du-mocks",
-   tag = "0.24.0",
+   url = "git://github.com/1337joe/du-mocks",
+   tag = "v0.24.0",
 }
 description = {
-   summary = "Mock objects to simulate the in-game lua environment.",
+   summary = "Mock objects to simulate the Dual Universe lua environment.",
    detailed = "Mock objects for generating a more useful codex and for use testing Dual Universe scripts offline.",
    homepage = "https://github.com/1337joe/du-mocks",
    license = "MIT",
@@ -54,6 +54,5 @@ build = {
       ["dumocks.WarpDriveUnit"] = "src/dumocks/WarpDriveUnit.lua",
    },
    copy_directories = {
-      "doc",
    }
 }

@@ -1,11 +1,11 @@
 package = "du-mocks"
 version = "scm-0"
 source = {
-   url = "https://github.com/1337joe/du-mocks",
+   url = "git://github.com/1337joe/du-mocks",
    branch = "main",
 }
 description = {
-   summary = "Mock objects to simulate the in-game lua environment.",
+   summary = "Mock objects to simulate the Dual Universe lua environment.",
    detailed = "Mock objects for generating a more useful codex and for use testing Dual Universe scripts offline.",
    homepage = "https://github.com/1337joe/du-mocks",
    license = "MIT",
