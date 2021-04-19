@@ -267,9 +267,9 @@ function _G.TestEmitterUnit.testGameBehavior()
     assert(slot1.getRange() == 1000.0, "Range: " .. slot1.getRange())
 
     -- set flag to indicate expected, wait for receiver to reactivate coroutine
-    local function awaitReceive()
+    local function awaitReceive(message)
         coroutine.yield()
-        assert(not _G.expectedCall)
+        assert(not _G.expectedCall, string.format("Failed to process message: %s", message))
     end
 
     local function setSignalAndWait(signal, expected)
@@ -280,7 +280,7 @@ function _G.TestEmitterUnit.testGameBehavior()
         local actualSignal = slot1.getSignalIn("in")
         assert(actualSignal == expected,
             string.format("Set %s and expected %s but got %s", signal, expected, actualSignal))
-        awaitReceive()
+        awaitReceive(expected)
     end
 
     local function messagingTest()
@@ -293,13 +293,21 @@ function _G.TestEmitterUnit.testGameBehavior()
         slot1.send("channel", "message")
         awaitReceive()
 
+        local message
+
         -- test max message length
         local tenChars = "1234567890"
-        local message = string.rep(tenChars, 100)
+        message = string.rep(tenChars, 100)
         assert(message:len() > 512)
         _G.expectedCall = true
         slot1.send(message, message)
-        awaitReceive()
+        awaitReceive(message)
+
+        -- -- test sending json
+        -- message = [[{"key":"value"}]]
+        -- _G.expectedCall = true
+        -- slot1.send(message, message)
+        -- awaitReceive(message)
 
         _G.send = false
 
@@ -380,6 +388,7 @@ function _G.TestEmitterUnit.testGameBehavior()
     tickResume()
     tickResume()
     tickResume()
+    -- tickResume()
 
     lu.assertTrue(finished)
 end
