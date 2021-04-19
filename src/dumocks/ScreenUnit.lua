@@ -198,6 +198,11 @@ function M:setHTML(html)
     generateHtml(self)
 end
 
+--- Set the screen to draw using a script (overrides anything already set).
+-- @tparam string script The Lua script that will define what is drawn.
+function M:setRenderScript(script)
+end
+
 --- <b>Deprecated:</b> Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
 --
 -- This method is deprecated: addContent should be used instead.
@@ -527,6 +532,7 @@ function M:mockGetClosure()
     closure.addText = function(x, y, fontSize, text) return self:addText(x, y, fontSize, text) end
     closure.setCenteredText = function(text) return self:setCenteredText(text) end
     closure.setHTML = function(html) return self:setHTML(html) end
+    closure.setRenderScript = function(script) return self:setRenderScript(script) end
     closure.addContent = function(x, y, html) return self:addContent(x, y, html) end
     closure.setSVG = function(svg) return self:setSVG(svg) end
     closure.resetContent = function(id, html) return self:resetContent(id, html) end

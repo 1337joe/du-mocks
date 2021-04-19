@@ -753,7 +753,8 @@ function _G.TestScreenUnit.testGameBehavior()
     -- verify expected functions
     local expectedFunctions = {"addText", "setCenteredText", "setHTML", "addContent", "setSVG", "resetContent",
                                "deleteContent", "showContent", "moveContent", "getMouseX", "getMouseY", "getMouseState",
-                               "clear", "setText", "setRawHTML", "setContent", "getSignalIn", "setSignalIn"}
+                               "clear", "setText", "setRawHTML", "setContent", "setRenderScript", "getSignalIn",
+                               "setSignalIn"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
