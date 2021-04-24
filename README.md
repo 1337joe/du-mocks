@@ -145,7 +145,8 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | PressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | RadarUnit | :heavy_check_mark: | :heavy_check_mark: | P | P :heavy_check_mark: | :heavy_check_mark: |
 | ReceiverUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
-| ScreenUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| P :heavy_check_mark: | :heavy_check_mark: |
+| ScreenUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | P :heavy_check_mark: | :heavy_check_mark: |
+| ScreenRenderer | :heavy_check_mark: | P | | P :heavy_check_mark: | - |
 | TelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | P :heavy_check_mark: | :heavy_check_mark: |
 
