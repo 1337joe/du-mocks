@@ -157,6 +157,22 @@ function M:getItemsList()
 end
 
 local DATA_TEMPLATE = '{\"name\":\"%s [%d]\","percentage":%.16f,"timeLeft":%s,\"helperId\":\"%s\",\"type\":\"%s\"}'
+--- Get element data as JSON.
+--
+-- Fuel containers (element classes <code>AtmoFuelContainer</code>, <code>SpaceFuelContainer</code>, and
+-- <code>RocketFuelTank</code>) have a <code>fuel_container</code> widget, which contains the following fields (bold
+-- fields are visible when making custom use of the widget):
+-- <ul>
+--   <li><b><span class="parameter">percentage</span></b> (<span class="type">float</span>) The percent full.</li>
+--   <li><b><span class="parameter">timeLeft</span></b> (<span class="type">float</span>) Time in seconds, pass "" to
+--     leave blank.</li>
+--   <li><span class="parameter">name</span> (<span class="type">string</span>) The name of the element.</li>
+--   <li><span class="parameter">helperId</span> (<span class="type">string</span>)
+--     <code>fuel_container_atmo_fuel</code> | <code>fuel_container_space_fuel</code> |
+--     <code>fuel_container_rocket_fuel</code></li>
+--   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>fuel_container</code></li>
+-- </ul>
+-- @treturn string Data as JSON.
 function M:getData()
     if self.elementClass == CLASS_ITEM then
         return MockElement:getData()

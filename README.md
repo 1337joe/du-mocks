@@ -104,6 +104,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 ### Steps Required for Each Mock to be Complete
 
 1. Full documentation matching or exceeding the Codex.
+   1. Document widget data format/contents.
 2. Implementation to allow each method to be used for testing.
 3. Unit testing for each method.
 4. A characterization (game-behavior) test that can be run in-game and using the mock to validate behavior matches.
@@ -119,34 +120,34 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 
 | Unit | 1 | 2 | 3 | 4 | 5 |
 | ---- | - | - | - | - | - |
-| Library | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | - :heavy_check_mark: | - |
-| System | :heavy_check_mark: | P | P | P :heavy_check_mark: | - |
-| Element | :heavy_check_mark: | P | P | - - | - |
-| AntiGravityGeneratorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
-| ContainerUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| Library | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | - :heavy_check_mark: | - |
+| System | :heavy_check_mark: :heavy_check_mark: | P | P | P :heavy_check_mark: | - |
+| Element | :heavy_check_mark: - | P | P | - - | - |
+| AntiGravityGeneratorUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
+| ContainerUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | ControlUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
-| CoreUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
-| CounterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| DatabankUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| DetectionZoneUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| DoorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
-| EmitterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
-| EngineUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | P |
+| CoreUnit | :heavy_check_mark: :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
+| CounterUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| DatabankUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| DetectionZoneUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| DoorUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
+| EmitterUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
+| EngineUnit | :heavy_check_mark: :heavy_check_mark: | P | P | P :heavy_check_mark: | P |
 | FireworksUnit | :heavy_check_mark: | P | P | | |
-| ForceFieldUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| GyroUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
-| IndustryUnit | :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
-| LandingGearUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| LaserDetectorUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| LaserEmitterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| LightUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| ManualButtonUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| ManualSwitchUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| PressureTileUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| ForceFieldUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| GyroUnit | :heavy_check_mark: :heavy_check_mark: | P | P | P :heavy_check_mark: | :heavy_check_mark: |
+| IndustryUnit | :heavy_check_mark: - | P | P | P :heavy_check_mark: | :heavy_check_mark: |
+| LandingGearUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| LaserDetectorUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| LaserEmitterUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| LightUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| ManualButtonUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| ManualSwitchUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| PressureTileUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | RadarUnit | :heavy_check_mark: | :heavy_check_mark: | P | P :heavy_check_mark: | :heavy_check_mark: |
-| ReceiverUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
-| ScreenUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:| P :heavy_check_mark: | :heavy_check_mark: |
-| TelemeterUnit | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| ReceiverUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | P |
+| ScreenUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark:| P :heavy_check_mark: | :heavy_check_mark: |
+| TelemeterUnit | :heavy_check_mark: - | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | WarpDriveUnit | :heavy_check_mark: | :heavy_check_mark: | P | P :heavy_check_mark: | :heavy_check_mark: |
 
 ## Support

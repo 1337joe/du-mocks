@@ -100,6 +100,18 @@ function M:new(o, id, elementName)
 end
 
 local DATA_TEMPLATE = '{"helperId":"%s","type":"%s","name":"%s [%d]","altitude":%f,"gravity":%s}'
+--- Get element data as JSON.
+--
+-- Core units have a <code>core</code> widget, which contains the following fields (bold fields are visible when making
+-- custom use of the widget):
+-- <ul>
+--   <li><b><span class="parameter">altitude</span></b> (<span class="type">float</span>) Altitude in meters.</li>
+--   <li><b><span class="parameter">gravity</span></b> (<span class="type">float</span>) Gravity in m/s<sup>2</sup>.</li>
+--   <li><span class="parameter">name</span> (<span class="type">string</span>) The name of the element.</li>
+--   <li><span class="parameter">helperId</span> (<span class="type">string</span>) <code>core</code></li>
+--   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>core</code></li>
+-- </ul>
+-- @treturn string Data as JSON.
 function M:getData()
     local gString
     if self:g() == 0 then

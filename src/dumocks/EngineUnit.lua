@@ -83,6 +83,22 @@ end
 
 local DATA_TEMPLATE =
     '{"helperId":"%s","type":"%s","name":"%s [%d]","currentMaxThrust":%f,"currentThrust":%f,"maxThrustBase":%f}'
+--- Get element data as JSON.
+--
+-- Engines have an <code>engine_unit</code> widget, which contains the following fields (bold fields are visible when
+-- making custom use of the widget):
+-- <ul>
+--   <li><b><span class="parameter">currentThrust</span></b> (<span class="type">float</span>) Current thrust in
+--     newtons.</li>
+--   <li><b><span class="parameter">currentMaxThrust</span></b> (<span class="type">float</span>) Current max thrust in
+--     newtons.</li>
+--   <li><b><span class="parameter">maxThrustBase</span></b> (<span class="type">float</span>) Max thrust under ideal
+--     conditions in newtons.</li>
+--   <li><span class="parameter">name</span> (<span class="type">string</span>) The name of the element.</li>
+--   <li><span class="parameter">helperId</span> (<span class="type">string</span>) <code>engine_unit</code></li>
+--   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>engine_unit</code></li>
+-- </ul>
+-- @treturn string Data as JSON.
 function M:getData()
     local currentMaxThrust = 0
     local currentThrust = 0

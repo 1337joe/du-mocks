@@ -79,7 +79,6 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
     -- test inherited methods
     local data = slot1.getData()
     local expectedFields = {"helperId", "name", "type", "currentMaxThrust", "currentThrust", "maxThrustBase"}
-    local unexpectedFields = {}
     local expectedValues = {}
     expectedValues["type"] = '"engine_unit"'
     expectedValues["helperId"] = '"engine_unit"'
