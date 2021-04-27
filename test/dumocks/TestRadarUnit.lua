@@ -16,7 +16,7 @@ TestRadarUnit = {}
 -- in-game.
 --
 -- Test setup:
--- 1. 1x Radar S (atmo or space), connected to Hovercraft Seat Controller on slot1
+-- 1. 1x Radar S (atmo or space), connected to Hovercraft Seat Controller on slot21
 --
 -- Note: Must be run on a dynamic core.
 --
@@ -77,15 +77,9 @@ function _G.TestRadarUnit.gameBehaviorHelper(mock, slot21)
     expectedValues["type"] = '"radar"'
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ignoreFields)
 
-    assert(string.match(slot21.getDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. slot21.getDataId())
-    assert(slot21.getWidgetType() == "radar")
-    slot21.show()
-    slot21.hide()
-    assert(slot21.getIntegrity() == 100.0 * slot21.getHitPoints() / slot21.getMaxHitPoints())
     assert(slot21.getMaxHitPoints() >= 88)
-    assert(slot21.getId() > 0)
     assert(slot21.getMass() == 486.72)
-    _G.Utilities.verifyBasicElementFunctions(slot21, 3)
+    _G.Utilities.verifyBasicElementFunctions(slot21, 3, "radar")
 
     system.print("Success")
     ---------------

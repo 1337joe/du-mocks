@@ -83,17 +83,10 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
     expectedValues["type"] = '"engine_unit"'
     expectedValues["helperId"] = '"engine_unit"'
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
-    assert(slot1.getWidgetType() == "engine_unit")
 
-    assert(string.match(slot1.getDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. slot1.getDataId())
-
-    slot1.show()
-    slot1.hide()
-    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
     assert(slot1.getMaxHitPoints() >= 50.0)
-    assert(slot1.getId() > 0)
     assert(slot1.getMass() > 7.0)
-    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3, "engine_unit")
 
     system.print("Success")
     unit.exit()

@@ -154,15 +154,9 @@ function _G.TestAntiGravityGeneratorUnit.testGameBehavior()
     expectedValues["type"] = '"antigravity_generator"'
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
 
-    assert(string.match(slot1.getDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. slot1.getDataId())
-    assert(slot1.getWidgetType() == "antigravity_generator")
-    slot1.show()
-    slot1.hide()
-    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
     assert(slot1.getMaxHitPoints() == 43117.0)
-    assert(slot1.getId() > 0)
     assert(slot1.getMass() == 27134.86)
-    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3, "antigravity_generator")
 
     _G.initialState = slot1.getState()
     _G.initialBase = slot1.getBaseAltitude()

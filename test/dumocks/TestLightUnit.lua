@@ -76,17 +76,9 @@ function _G.TestLightUnit.testGameBehavior()
 
     -- test element class and inherited methods
     assert(slot1.getElementClass() == "LightUnit")
-    assert(slot1.getData() == "{}")
-    assert(slot1.getDataId() == "")
-    assert(slot1.getWidgetType() == "")
-    slot1.show()
-    slot1.hide()
-    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
     assert(slot1.getMaxHitPoints() == 50.0)
-    assert(slot1.getId() > 0)
     assert(slot1.getMass() == 79.34)
-    assert(slot1.getMaxRestorations() == 3, string.format("Max restorations: %d", slot1.getMaxRestorations()))
-    assert(slot1.getRemainingRestorations() == 3, string.format("Remaining restorations: %d", slot1.getRemainingRestorations()))
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     -- play with set signal, has no actual effect on state when set programmatically
     local initialState = slot1.getState()

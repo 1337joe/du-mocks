@@ -57,37 +57,146 @@ function _G.TestUtilities.testVerifyBasicElementFunctions()
     local result, message
 
     local function createSampleElement()
-        return {
-            getMaxRestorations = function()
-                return 3
-            end,
-            getRemainingRestorations = function()
-                return 3
-            end
-        }
+        local sample = {}
+        sample.id = 1
+        sample.integrity = 50
+        sample.hitPoints = 75
+        sample.maxHitPoints = 150
+        sample.maxRestorations = 3
+        sample.remainingRestorations = 3
+        sample.widgetType = ""
+        sample.dataId = ""
+        sample.data = "{}"
+
+        sample.getId = function()
+            return sample.id
+        end
+        sample.getIntegrity = function()
+            return sample.integrity
+        end
+        sample.getHitPoints = function()
+            return sample.hitPoints
+        end
+        sample.getMaxHitPoints = function()
+            return sample.maxHitPoints
+        end
+        sample.getMaxRestorations = function()
+            return sample.maxRestorations
+        end
+        sample.getRemainingRestorations = function()
+            return sample.remainingRestorations
+        end
+        sample.getWidgetType = function()
+            return sample.widgetType
+        end
+        sample.getDataId = function()
+            return sample.dataId
+        end
+        sample.getData = function()
+            return sample.data
+        end
+        sample.show = function()
+        end
+        sample.hide = function()
+        end
+        return sample
     end
 
-    -- max is different
+    -- id not set
     element = createSampleElement()
-    element.getMaxRestorations = function()
-        return 4
-    end
-    local result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3)
+    element.id = nil
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
+    lu.assertFalse(result)
+    lu.assertStrIContains(message, "invalid id")
+
+    -- integrity/hp/max hp relationship broken
+    element = createSampleElement()
+    element.integrity = 100
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
+    lu.assertFalse(result)
+    element = createSampleElement()
+    element.hitPoints = 100
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
+    lu.assertFalse(result)
+    element = createSampleElement()
+    element.maxHitPoints = 100
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
+    lu.assertFalse(result)
+
+    -- max restorations is different
+    element = createSampleElement()
+    element.maxRestorations = 4
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
     lu.assertFalse(result)
     lu.assertStrIContains(message, "max restorations")
 
-    -- remaining is different
+    -- remaining restorations is different
     element = createSampleElement()
-    element.getRemainingRestorations = function()
-        return 2
-    end
-    local result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3)
+    element.remainingRestorations = 2
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
     lu.assertFalse(result)
     lu.assertStrIContains(message, "remaining restorations")
 
+    -- widget not set but expected
+    element = createSampleElement()
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, "unknown_widget")
+    lu.assertFalse(result)
+    lu.assertStrIContains(message, "expected widget type unknown_widget")
+
+    -- widget set but not expected
+    element = createSampleElement()
+    element.widgetType = "unexpected_widget"
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
+    lu.assertFalse(result)
+    lu.assertStrIContains(message, "unexpected widget type")
+    -- widget set but mismatched
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, "unknown_widget")
+    lu.assertFalse(result)
+    lu.assertStrIContains(message, "expected widget type unknown_widget")
+
+    -- data id missing/wrong
+    element = createSampleElement()
+    element.widgetType = "expected_widget"
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, "expected_widget")
+    lu.assertFalse(result)
+    lu.assertStrIContains(message, "expected dataid to match")
+    element.dataId = 5
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, "expected_widget")
+    lu.assertFalse(result)
+    lu.assertStrIContains(message, "expected dataid to match")
+    -- data id unexpected
+    element.widgetType = ""
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
+    lu.assertFalse(result)
+    lu.assertStrIContains(message, "unexpected data id")
+
+    -- unexpected data
+    element = createSampleElement()
+    element.data = [[{"text":"blah"}]]
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, "")
+    lu.assertFalse(result)
+    lu.assertStrIContains(message, "unexpected data:")
+
+    -- show fails
+    element = createSampleElement()
+    element.show = function()
+        error("bad show")
+    end
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
+    lu.assertFalse(result)
+
+    -- hide fails
+    element = createSampleElement()
+    element.hide = function()
+        error("bad hide")
+    end
+    result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
+    lu.assertFalse(result)
+
     -- no error
     element = createSampleElement()
-    _G.Utilities.verifyBasicElementFunctions(element, 3)
+    _G.Utilities.verifyBasicElementFunctions(element, 3, nil)
+    _G.Utilities.verifyBasicElementFunctions(element, 3, "")
 end
 
 --- Verify verifyWidgetData finds problems.

@@ -292,14 +292,11 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
         assert(false, "Unexpected class: " .. class)
     end
     local data = slot1.getData()
-    if isItem then
-        assert(slot1.getData() == "{}")
-        assert(slot1.getDataId() == "")
-        assert(slot1.getWidgetType() == "")
-    else
-        local expectedFields = {"percentage", "timeLeft", "helperId", "name", "type"}
-        local unexpectedFields = {}
+    local widgetType = ""
+    if not isItem then
+        local expectedFields = {"timeLeft", "helperId", "name", "type"}
         local expectedValues = {}
+        local ignoreFields = {"percentage"} -- doesn't always show up on initial load
         if isAtmo then
             expectedValues["helperId"] = '"fuel_container_atmo_fuel"'
         elseif isSpace then
@@ -308,18 +305,13 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
             expectedValues["helperId"] = '"fuel_container_rocket_fuel"'
         end
         expectedValues["type"] = '"fuel_container"'
-        _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
+        _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ignoreFields)
 
-        assert(string.match(slot1.getDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. slot1.getDataId())
-        assert(slot1.getWidgetType() == "fuel_container")
+        widgetType = "fuel_container"
     end
-    slot1.show()
-    slot1.hide()
-    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
     assert(slot1.getMaxHitPoints() >= 50.0)
-    assert(slot1.getId() > 0)
     assert(slot1.getMass() > 35.0)
-    _G.Utilities.verifyBasicElementFunctions(slot1, 5)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 5, widgetType)
 
     local volumeBase, volumeMaxMultiplier
     if isItem then

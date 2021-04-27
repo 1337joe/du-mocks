@@ -772,14 +772,7 @@ function _G.TestScreenUnit.testGameBehavior()
     else
         assert(false, "Unexpected class: " .. class)
     end
-    assert(slot1.getData() == "{}")
-    assert(slot1.getDataId() == "")
-    assert(slot1.getWidgetType() == "")
-    slot1.show()
-    slot1.hide()
-    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
     assert(slot1.getMaxHitPoints() == 50.0)
-    assert(slot1.getId() > 0)
     assert(slot1.getMass() == 18.67)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
