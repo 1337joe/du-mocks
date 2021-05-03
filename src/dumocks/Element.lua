@@ -15,6 +15,7 @@
 --   <li>ReceiverUnit</li>
 --   <li>TelemeterUnit</li>
 --   <li>WarpDriveUnit</li>
+--   <li>WeaponUnit</li>
 -- </ul>
 -- @see ContainerUnit
 -- @see ControlUnit
@@ -29,6 +30,7 @@
 -- @see ReceiverUnit
 -- @see TelemeterUnit
 -- @see WarpDriveUnit
+-- @see WeaponUnit
 -- @module Element
 -- @alias M
 
