@@ -3,6 +3,7 @@
 -- Element class:
 -- <ul>
 --   <li>ItemContainer</li>
+--   <li>MissionContainer</li>
 --   <li>AtmoFuelContainer</li>
 --   <li>SpaceFuelContainer</li>
 --   <li>RocketFuelTank</li>
@@ -16,6 +17,7 @@
 local MockElement = require "dumocks.Element"
 
 local CLASS_ITEM = "ItemContainer"
+local CLASS_PARCEL = "MissionContainer"
 local CLASS_ATMO = "AtmoFuelContainer"
 local CLASS_SPACE = "SpaceFuelContainer"
 local CLASS_ROCKET = "RocketFuelContainer"
@@ -27,6 +29,13 @@ elementDefinitions["container m"] = {mass = 7421.35, maxHitPoints = 7997.0, clas
 elementDefinitions["container l"] = {mass = 14842.7, maxHitPoints = 17316.0, class = CLASS_ITEM, maxVolume = 128000}
 elementDefinitions["container xl"] = {mass = 44206.0, maxHitPoints = 34633.0, class = CLASS_ITEM, maxVolume = 256000}
 elementDefinitions["expanded container xl"] = {mass = 88413.0, maxHitPoints = 69267.0, class = CLASS_ITEM, maxVolume = 512000}
+
+elementDefinitions["parcel container xs"] = {mass = 224.68, maxHitPoints = 124.0, class = CLASS_PARCEL, maxVolume = 1000}
+elementDefinitions["parcel container s"] = {mass = 1256.17, maxHitPoints = 999.0, class = CLASS_PARCEL, maxVolume = 8000}
+elementDefinitions["parcel container m"] = {mass = 7273.75, maxHitPoints = 7997.0, class = CLASS_PARCEL, maxVolume = 64000}
+elementDefinitions["parcel container l"] = {mass = 14550, maxHitPoints = 17316.0, class = CLASS_PARCEL, maxVolume = 128000} -- TODO check exact mass
+elementDefinitions["parcel container xl"] = {mass = 43310, maxHitPoints = 34633.0, class = CLASS_PARCEL, maxVolume = 256000} -- TODO check exact mass
+elementDefinitions["parcel expanded container xl"] = {mass = 86630, maxHitPoints = 69267.0, class = CLASS_PARCEL, maxVolume = 512000} -- TODO check exact mass
 
 elementDefinitions["atmospheric fuel tank xs"] = {mass = 35.03, maxHitPoints = 50.0, class = CLASS_ATMO, maxVolume = 100}
 elementDefinitions["atmospheric fuel tank s"] = {mass = 182.67, maxHitPoints = 163.0, class = CLASS_ATMO, maxVolume = 400}
@@ -57,7 +66,7 @@ function M:new(o, id, elementName)
 
     o.elementClass = elementDefinition.class
 
-    if o.elementClass == CLASS_ITEM then
+    if o.elementClass == CLASS_ITEM or o.elementClass == CLASS_PARCEL then
     else
         o.widgetType = "fuel_container"
         if o.elementClass == CLASS_ATMO then
@@ -83,7 +92,7 @@ function M:new(o, id, elementName)
     o.storageRequested = false
     o.storageCallbacks = {}
     o.storageAvailable = false
-    o.storageJson = ""
+    o.storageJson = string.char(91, 93, 10)
     o.requestsExceeded = false
 
     return o
@@ -168,7 +177,7 @@ local DATA_TEMPLATE = '{\"name\":\"%s [%d]\","percentage":%.16f,"timeLeft":%s,\"
 -- </ul>
 -- @treturn string Data as JSON.
 function M:getData()
-    if self.elementClass == CLASS_ITEM then
+    if self.elementClass == CLASS_ITEM or self.elementClass == CLASS_PARCEL then
         return MockElement:getData()
     end
     return string.format(DATA_TEMPLATE, self.name, self:getId(), self.percentage, self.timeLeft, self.helperId,
@@ -177,7 +186,7 @@ end
 
 -- Override default with realistic patten to id.
 function M:getDataId()
-    if self.elementClass == CLASS_ITEM then
+    if self.elementClass == CLASS_ITEM or self.elementClass == CLASS_PARCEL then
         return MockElement:getDataId()
     end
     return "e123456"
