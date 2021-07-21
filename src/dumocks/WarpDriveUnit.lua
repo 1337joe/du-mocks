@@ -39,12 +39,13 @@ function M:new(o, id, elementName)
 end
 
 local DATA_TEMPLATE = '{\"helperId\":\"warpdrive\",\"type\":\"%s\",\"name\":\"%s [%d]\",\"elementId\":\"%d\",\"' ..
-                      'buttonMsg\":\"%s\",\"errorMsg\":\"%s\",\"cellCount\":\"%s\",' ..
+                      'buttonMsg\":\"%s\",\"errorMsg\":\"%s\",\"cellCount\":\"%s\",\"showError\":%s,' ..
                       '\"destination\":\"%s\",\"distance\":%d}'
 function M:getData()
     local warpDriveId = 123456789
     local buttonMsg = "CANNOT WARP"
     local errorMsg = "PLANET TOO CLOSE"
+    local showError = true
     local totalCells = 0
     local requiredCells = 0
     local cellCount = string.format("%d / %d", totalCells, requiredCells)
@@ -52,7 +53,7 @@ function M:getData()
     local distance = 0
 
     return string.format(DATA_TEMPLATE, self:getWidgetType(), self.name, self:getId(), warpDriveId, buttonMsg, errorMsg,
-               cellCount, destination, distance)
+               cellCount, showError, destination, distance)
 end
 
 -- Override default with realistic patten to id.

@@ -45,8 +45,8 @@ function _G.TestWarpDriveUnit.testGameBehavior()
     assert(slot1.getElementClass() == "WarpDriveUnit")
 
     local data = slot1.getData()
-    local expectedFields = {"buttonMsg", "cellCount", "destination", "distance", "elementId", "errorMsg", "helperId",
-                            "name", "type"}
+    local expectedFields = {"buttonMsg", "cellCount", "destination", "distance", "elementId", "errorMsg", "showError",
+                            "helperId", "name", "type"}
     local expectedValues = {}
     expectedValues["helperId"] = '"warpdrive"'
     expectedValues["type"] = '"warpdrive"'
