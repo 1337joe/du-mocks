@@ -136,6 +136,7 @@ function _G.TestLightUnit.testGameBehavior()
     assert(math.abs(600 - colorVec[3]) < epsilon, "b: " ..colorVec[3]) -- unexpected, light ranges aren't validated
 
     system.print("Success")
+    slot1.deactivate();
     unit.exit()
     ---------------
     -- copy to here to unit.start

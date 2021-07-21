@@ -105,6 +105,8 @@ local DATA_TEMPLATE = [[
 --       <li><span class="parameter">constructId</span> (<span class="type">int</span>) Id of target.</li>
 --     </ul></li>
 --   <li><b><span class="parameter">name</span></b> (<span class="type">string</span>) The name of the element.</li>
+--   <li><span class="parameter">elementId</span> (<span class="type">int</span>) The (globally unique?) id of the 
+--     weapon element, may be related to linking the commands to the element.</li>
 --   <li><span class="parameter">helperId</span> (<span class="type">string</span>) <code>weapon</code></li>
 --   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>weapon</code></li>
 -- </ul>
