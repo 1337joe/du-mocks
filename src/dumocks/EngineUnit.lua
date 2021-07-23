@@ -127,7 +127,7 @@ end
 -- various conditions like atmospheric density, obstruction, orientation, etc. Most of the time, this will be 0 but it
 -- can be greater than 0, particularly for ailerons, in which case the actual thrust will be at least equal to
 -- minThrust.
--- @treturn Newton THe current min thrust.
+-- @treturn Newton The current min thrust.
 function M:getMinThrust()
 end
 

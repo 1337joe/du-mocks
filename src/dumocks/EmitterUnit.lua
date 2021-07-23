@@ -11,7 +11,8 @@ local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
 elementDefinitions["emitter xs"] = {mass = 69.31, maxHitPoints = 50.0}
--- TODO others
+elementDefinitions["emitter s"] = {mass = 427.72, maxHitPoints = 133.0}
+elementDefinitions["emitter m"] = {mass = 2035.73, maxHitPoints = 13686.0}
 local DEFAULT_ELEMENT = "emitter xs"
 
 local M = MockElement:new()

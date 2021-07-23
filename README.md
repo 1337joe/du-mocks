@@ -132,7 +132,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | DatabankUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DetectionZoneUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DoorUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :soon: |
-| EmitterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :soon: |
+| EmitterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | EngineUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :heavy_check_mark: | :soon: |
 | FireworksUnit | :heavy_check_mark: :white_large_square: | :soon: | :soon: | :white_large_square: :white_large_square: | :white_large_square: |
 | ForceFieldUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
@@ -146,7 +146,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | ManualSwitchUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | PressureTileUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | RadarUnit | :heavy_check_mark: :white_large_square: | :heavy_check_mark: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
-| ReceiverUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :soon: |
+| ReceiverUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | ScreenUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark:| :soon: :heavy_check_mark: | :heavy_check_mark: |
 | TelemeterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | WarpDriveUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
