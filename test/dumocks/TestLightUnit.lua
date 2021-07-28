@@ -126,14 +126,14 @@ function _G.TestLightUnit.testGameBehavior()
     local colorVec
     slot1.setRGBColor(-1, "bad", nil)
     colorVec = slot1.getRGBColor()
-    assert(math.abs(-1 - colorVec[1]) < epsilon, "r: " ..colorVec[1]) -- unexpected, light ranges aren't validated
+    assert(colorVec[1] == 0, "r: " ..colorVec[1])
     assert(colorVec[2] == 0, "g: " ..colorVec[2])
     assert(colorVec[3] == 0, "b: " ..colorVec[3])
     slot1.setRGBColor(1.123, 128.512, 600)
     colorVec = slot1.getRGBColor()
     assert(math.abs(1 - colorVec[1]) < epsilon, "r: " ..colorVec[1])
     assert(math.abs(129 - colorVec[2]) < epsilon, "g: " ..colorVec[2])
-    assert(math.abs(600 - colorVec[3]) < epsilon, "b: " ..colorVec[3]) -- unexpected, light ranges aren't validated
+    assert(math.abs(255 - colorVec[3]) < epsilon, "b: " ..colorVec[3])
 
     system.print("Success")
     slot1.deactivate();
