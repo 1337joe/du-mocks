@@ -50,9 +50,12 @@ end
 
 local function handleColorValue(val)
     val = tonumber(val)
-    -- game light values not snapped to [0, 255] range
     if not val then
         val = 0
+    elseif val < 0 then
+        val = 0
+    elseif val > 255 then
+        val = 255
     end
     val = math.floor(val + 0.5)
     return val
