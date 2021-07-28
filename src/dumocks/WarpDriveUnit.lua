@@ -3,16 +3,6 @@
 --
 -- Element class: WarpDriveUnit
 --
--- Displayed widget fields:
--- <ul>
---   <li>elementId</li>
---   <li>buttonMsg</li>
---   <li>errorMsg</li>
---   <li>cellCount</li>
---   <li>destination</li>
---   <li>distance</li>
--- </ul>
---
 -- Extends: Element
 -- @see Element
 -- @module WarpDriveUnit
@@ -39,12 +29,37 @@ function M:new(o, id, elementName)
 end
 
 local DATA_TEMPLATE = '{\"helperId\":\"warpdrive\",\"type\":\"%s\",\"name\":\"%s [%d]\",\"elementId\":\"%d\",\"' ..
-                      'buttonMsg\":\"%s\",\"errorMsg\":\"%s\",\"cellCount\":\"%s\",' ..
+                      'buttonMsg\":\"%s\",\"errorMsg\":\"%s\",\"cellCount\":\"%s\",\"showError\":%s,' ..
                       '\"destination\":\"%s\",\"distance\":%d}'
+--- Get element data as JSON.
+--
+-- Warp drives have a <code>warpdrive</code> widget, which contains the following fields (bold fields are visible when
+-- making custom use of the widget):
+-- <ul>
+--   <li><b><span class="parameter">errorMsg</span></b> (<span class="type">string</span>) The error message to
+--     display, if applicable.
+--   <li><b><span class="parameter">showError</span></b> (<span class="type">boolean</span>) True if the error banner
+--     should be shown, false otherwise.</li>
+--   <li><b><span class="parameter">destination</span></b> (<span class="type">string</span>) The name of the current
+--     warp destination.</li>
+--   <li><b><span class="parameter">distance</span></b> (<span class="type">float</span>) The distance (in meters) to
+--     the current warp target.</li>
+--   <li><b><span class="parameter">cellCount</span></b> (<span class="type">string</span>) The number of warp cells
+--     available over the number that will be consumed during travel to the current destination.</li>
+--   <li><b><span class="parameter">buttonMsg</span></b> (<span class="type">string</span>) The button message to
+--     display, defaults to "Activate Warp".
+--   <li><span class="parameter">name</span> (<span class="type">string</span>) The name of the element.</li>
+--   <li><span class="parameter">elementId</span> (<span class="type">int</span>) The (globally unique?) id of the 
+--     warp drive element, may be related to linking the commands to the element.</li>
+--   <li><span class="parameter">helperId</span> (<span class="type">string</span>) <code>warpdrive</code></li>
+--   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>warpdrive</code></li>
+-- </ul>
+-- @treturn string Data as JSON.
 function M:getData()
     local warpDriveId = 123456789
     local buttonMsg = "CANNOT WARP"
     local errorMsg = "PLANET TOO CLOSE"
+    local showError = true
     local totalCells = 0
     local requiredCells = 0
     local cellCount = string.format("%d / %d", totalCells, requiredCells)
@@ -52,7 +67,7 @@ function M:getData()
     local distance = 0
 
     return string.format(DATA_TEMPLATE, self:getWidgetType(), self.name, self:getId(), warpDriveId, buttonMsg, errorMsg,
-               cellCount, destination, distance)
+               cellCount, showError, destination, distance)
 end
 
 -- Override default with realistic patten to id.

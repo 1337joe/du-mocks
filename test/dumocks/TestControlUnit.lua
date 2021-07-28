@@ -226,16 +226,18 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
     -- test inherited methods
     local data = unit.getData()
     local expectedFields = {"helperId", "name", "type", "showScriptError", "elementId", "controlMasterModeId"}
-    local unexpectedFields = {}
     local expectedValues = {}
     local ignoreFields = {}
     expectedValues["showScriptError"] = 'false'
+    local widgetType
     if isGeneric or isPvp or isEcu then
-        assert(unit.getWidgetType() == "basic_control_unit")
+        widgetType = "basic_control_unit"
+
         expectedValues["type"] = '"basic_control_unit"'
         expectedValues["helperId"] = '"basic_control_unit"'
     else
-        assert(unit.getWidgetType() == "cockpit")
+        widgetType = "cockpit"
+
         expectedValues["type"] = '"cockpit"'
         expectedValues["helperId"] = '"cockpit"'
         table.insert(expectedFields, "controlData")
@@ -268,15 +270,9 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
     end
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ignoreFields)
 
-    assert(string.match(unit.getDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. unit.getDataId())
-
-    unit.show()
-    unit.hide()
-    assert(unit.getIntegrity() == 100.0 * unit.getHitPoints() / unit.getMaxHitPoints())
     assert(unit.getMaxHitPoints() >= 50.0)
-    assert(unit.getId() > 0)
     assert(unit.getMass() > 7.0)
-    _G.Utilities.verifyBasicElementFunctions(unit, 3)
+    _G.Utilities.verifyBasicElementFunctions(unit, 3, widgetType)
 
     if isGeneric then
         -- play with set signal, has no actual effect on state when set programmatically

@@ -36,21 +36,27 @@ function M:getActionKeyName(actionName)
 end
 
 --- Control the display of the control unit custom screen, where you can define customized display information in HTML.
--- Note that this function is disabled if the player is not running the script explicitly (pressing F on the control
--- unit, vs. via a plug signal).
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
 -- @tparam boolean bool 1 show the screen, 0 hide the screen.
 function M:showScreen(bool)
 end
 
---- Set the content of the control unit custom screen with some HTML code. Note that this function is disabled if the
--- player is not running the script explicitly (pressing F on the control unit, vs. via a plug signal).
+--- Set the content of the control unit custom screen with some HTML code.
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
 -- @tparam html content THe HTML content you want to display on the screen widget. You can also use SVG here to make
 -- drawings.
 function M:setScreen(content)
 end
 
---- Create an empty panel. Note that this function is disabled if the player is not running the script explicitly
--- (pressing F on the Control unit, vs. via a plug signal).
+--- Create an empty panel. The original/official widget documentation is posted on the
+-- <a href="https://board.dualthegame.com/index.php?/topic/16527-alpha-2-lua-changes-and-novelties/">forum</a>.
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
 -- @tparam string label The title of the panel.
 -- @treturn string The panel ID, or "" on failure.
 function M:createWidgetPanel(label)
@@ -63,8 +69,10 @@ function M:createWidgetPanel(label)
     return tostring(nextIndex)
 end
 
---- Destroy the panel. Note that this function is disabled if the player is not running the script explicitly (pressing
--- F on the Control unit, vs. via a plug signal).
+--- Destroy the panel.
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
 -- @tparam string panelId The panel ID.
 -- @treturn boolean 1 on success, 0 on failure
 function M:destroyWidgetPanel(panelId)
@@ -75,53 +83,114 @@ function M:destroyWidgetPanel(panelId)
     return 0
 end
 
---- Create an empty widget and add it to a panel. Note that this function is disabled if the player is not running the
--- script explicitly (pressing F on the control unit, vs. via a plug signal).
+--- Create an empty widget and add it to a panel.
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
+--
+-- <h3>Available types:</h3>
+-- Format: <span class="parameter">type</span> Description and contents (if type isn't a link to the relevent element
+-- page for contents).
+-- <ul>
+--   <li><span class="parameter">text</span> Simple text display.
+--     <ul>
+--       <li><span class="parameter">text</span> (<span class="type">string</span>) The text to show.</li>
+--     </ul>
+--   </li>
+--   <li><span class="parameter">title</span> Displays a bar like the panel title within the panel.
+--     <ul>
+--       <li><span class="parameter">text</span> (<span class="type">string</span>) The title to show.</li>
+--     </ul>
+--   </li>
+--   <li><span class="parameter">gauge</span> Shows a bar filled up to the specified percentage.
+--     <ul>
+--       <li><span class="parameter">percentage</span> (<span class="type">float</span>) The percent full.</li>
+--     </ul>
+--   </li>
+--   <li><span class="parameter">value</span> Shows a value, complete with label and units formatting.
+--     <ul>
+--       <li><span class="parameter">label</span> (<span class="type">string</span>) The label to show.</li>
+--       <li><span class="parameter">value</span> (<span class="type">float</span>) The current value.</li>
+--       <li><span class="parameter">unit</span> (<span class="type">string</span>) The unit label.</li>
+--     </ul>
+--   </li>
+--   <li><span class="parameter">@{AntiGravityGeneratorUnit:getData|antigravity_generator}</span> The widget created by
+--     the Anti-Gravity Generator element.</li>
+--   <li><span class="parameter">@{ContainerUnit:getData|fuel_container}</span> The widget created by fuel tanks.</li>
+--   <li><span class="parameter">@{CoreUnit:getData|core}</span> The widget created by core units.</li>
+--   <li><span class="parameter">@{EngineUnit:getData|engine_unit}</span> The widget created by engines.</li>
+--   <li><span class="parameter">@{GyroUnit:getData|gyro}</span> The widget created by gyroscopes.</li>
+--   <li><span class="parameter">@{WarpDriveUnit:getData|warpdrive}</span> The widget created by warp drives.</li>
+--   <li><span class="parameter">@{WeaponUnit:getData|weapon}</span> The widget created by weapons.</li>
+-- </ul>
 -- @tparam string panelId The panel ID.
 -- @tparam string type Widget type, determining how it will display data attached to ID.
 -- @treturn string The widget ID, or "" on failure.
 function M:createWidget(panelId, type)
 end
 
---- Destroy the widget. Note that this function is disabled if the player is not running the script explicitly (pressing
--- F on the control unit, vs. via a plug signal).
+--- Destroy the widget.
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
 -- @tparam string widgetId The widget ID.
 -- @treturn boolean 1 on success, 0 on failure.
 function M:destroyWidget(widgetId)
 end
 
---- Create data. Note that this function is disabled if the player is not running the script explicitly (pressing F on
--- the control unit, vs. via a plug signal).
--- @tparam string dataJson THe data fields as JSON.
+--- Create data. See @{createWidget} for links to the format expected for the different widget types.
+--
+-- The string passed in must be valid JSON, the following samples are valid data strings for various widgets:
+-- <ul>
+--   <li>Single string value for text widget: <code>{"text":"displayed text"}</code></li>
+--   <li>Single numerical value for gague widget: <code>{"percentage":60}</code></li>
+--   <li>Multiple numerical values and a boolean:
+--     <code>{"antiGPower":0.5,"antiGravityField":10,"baseAltitude":2000,"showError":false}</code></li>
+-- </ul>
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
+-- @tparam string dataJson The data fields as JSON.
 -- @treturn string The data ID, or "" on failure.
+-- @see updateData
 function M:createData(dataJson)
 end
 
---- Destroy the data. Note that this function is disabled if the player is not running the script explicitly (pressing F
--- on the control unit, vs. via a plug signal).
+--- Destroy the data.
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
 -- @tparam string dataId The data ID.
 -- @treturn boolean 1 on success, 0 on failure.
 function M:destroyData(dataId)
 end
 
---- Update JSON associated to data. Note that this function is disabled if the player is not running the script
--- explicitly (pressing F on the control unit, vs. via a plug signal).
+--- Update JSON associated to data. The string passed in must be valid JSON. See @{createWidget} for links to the
+-- format expected for the different widget types.
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
 -- @tparam string dataId The data ID.
 -- @tparam string dataJson The data fields as JSON.
 -- @treturn boolean 1 on success, 0 on failure.
+-- @see createData
 function M:updateData(dataId, dataJson)
 end
 
---- Add data to widget. Note that this function is disabled if the player is not running the script explicitly (pressing
--- F on the control unit, vs. via a plug signal).
+--- Add data to widget.
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
 -- @tparam string dataId The data ID.
 -- @tparam string widgetId The widget ID.
 -- @treturn boolean 1 on success, 0 on failure.
 function M:addDataToWidget(dataId, widgetId)
 end
 
---- Remove data from widget. Note that this function is disabled if the player is not running the script explicitly
--- (pressing F on the control unit, vs. via a plug signal).
+--- Remove data from widget.
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
 -- @tparam string dataId The data ID.
 -- @tparam string widgetId The widget ID.
 -- @treturn boolean 1 on success, 0 on failure.
@@ -173,8 +242,10 @@ end
 function M:getControlDeviceLeftRightInput()
 end
 
---- Lock or unlock the mouse free look. Note that this function is disabled if the player is not running the script
--- explicitly (pressing F on the Control unit, vs. via a plug signal).
+--- Lock or unlock the mouse free look.
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
 -- @tparam boolean state 1 to lock and 0 to unlock.
 function M:lockView(state)
     self.lockView = state == 1
@@ -189,8 +260,10 @@ function M:isViewLocked()
     return 0
 end
 
---- Freezes the character, liberating the associated movement keys to be used by the script. Note that this function is
--- disabled if the player is not running the script explicitly (pressing F on the Control unit, vs. via a plug signal).
+--- Freezes the character, liberating the associated movement keys to be used by the script.
+--
+-- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+-- vs. via a plug signal).
 -- @tparam boolean bool 1 freeze the character, 0 unfreeze the character.
 function M:freeze(bool)
     self.freezeCharacter = bool == 1

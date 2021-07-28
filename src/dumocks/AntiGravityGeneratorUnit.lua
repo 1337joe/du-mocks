@@ -2,13 +2,6 @@
 --
 -- Element class: AntiGravityGeneratorUnit
 --
--- Displayed widget fields:
--- <ul>
---   <li>antiGPower</li>
---   <li>antiGravityField</li>
---   <li>baseAltitude</li>
--- </ul>
---
 -- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
 -- @see Element
 -- @see ElementWithState
@@ -52,6 +45,24 @@ end
 
 local DATA_TEMPLATE = '{"antiGPower":%.17f,"antiGravityField":%.16f,"baseAltitude\":%f,\"helperId\":\"antigravity_generator'..
     '\",\"name\":\"%s [%d]\",\"showError\":false,\"type\":\"%s\"}'
+--- Get element data as JSON.
+--
+-- Anti-gravity generators have an <code>antigravity_generator</code> widget, which contains the following fields (bold
+-- fields are visible when making custom use of the widget):
+-- <ul>
+--   <li><b><span class="parameter">antiGravityField</span></b> (<span class="type">float</span>) Field strength.</li>
+--   <li><b><span class="parameter">antiGPower</span></b> (<span class="type">float</span>) Power as a fraction of
+--     1.0.</li>
+--   <li><b><span class="parameter">baseAltitude</span></b> (<span class="type">float</span>) Base altitude in
+--     meters.</li>
+--   <li><b><span class="parameter">showError</span></b> (<span class="type">boolean</span>) True if the error banner
+--     should be shown, false otherwise.</li>
+--   <li><span class="parameter">name</span> (<span class="type">string</span>) The name of the element.</li>
+--   <li><span class="parameter">helperId</span> (<span class="type">string</span>)
+--     <code>antigravity_generator</code></li>
+--   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>antigravity_generator</code></li>
+-- </ul>
+-- @treturn string Data as JSON.
 function M:getData()
     return string.format(DATA_TEMPLATE, self.antiGravityPower, self.antiGravityField, self.baseAltitude, self.name, self:getId(), self:getWidgetType())
 end

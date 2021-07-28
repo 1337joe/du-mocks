@@ -2,12 +2,6 @@
 --
 -- Element class: GyroUnit
 --
--- Displayed widget fields:
--- <ul>
---   <li>pitch</li>
---   <li>roll</li>
--- </ul>
---
 -- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
 -- @see Element
 -- @see ElementWithState
@@ -65,6 +59,18 @@ function M:toggle()
 end
 
 local DATA_TEMPLATE = '{\"helperId\":\"gyro\",\"name\":\"%s [%d]\","pitch":%.17f,"roll":%.16f,\"type\":\"%s\"}'
+--- Get element data as JSON.
+--
+-- Gyroscopes have a <code>gyro</code> widget, which contains the following fields (bold fields are visible when making
+-- custom use of the widget):
+-- <ul>
+--   <li><b><span class="parameter">pitch</span></b> (<span class="type">float</span>) Pitch angle in degrees.</li>
+--   <li><b><span class="parameter">roll</span></b> (<span class="type">float</span>) Roll angle in degrees.</li>
+--   <li><span class="parameter">name</span> (<span class="type">string</span>) The name of the element.</li>
+--   <li><span class="parameter">helperId</span> (<span class="type">string</span>) <code>gyro</code></li>
+--   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>gyro</code></li>
+-- </ul>
+-- @treturn string Data as JSON.
 function M:getData()
     return string.format(DATA_TEMPLATE, self.name, self:getId(), self.pitch, self.roll, self:getWidgetType())
 end

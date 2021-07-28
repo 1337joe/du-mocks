@@ -15,6 +15,7 @@
 --   <li>ReceiverUnit</li>
 --   <li>TelemeterUnit</li>
 --   <li>WarpDriveUnit</li>
+--   <li>WeaponUnit</li>
 -- </ul>
 -- @see ContainerUnit
 -- @see ControlUnit
@@ -29,6 +30,7 @@
 -- @see ReceiverUnit
 -- @see TelemeterUnit
 -- @see WarpDriveUnit
+-- @see WeaponUnit
 -- @module Element
 -- @alias M
 
@@ -81,6 +83,8 @@ function M:new(o, id, elementDefinition)
         o.maxHitPoints = elementDefinition.maxHitPoints or 100
         o.hitPoints = elementDefinition.maxHitPoints or 100
     end
+
+    o.loaded = 1
 
     return o
 end
@@ -199,8 +203,12 @@ function M:getSignalOut(plug)
     return -1
 end
 
----Unknown use, but present in all elements.
+--- Returns 1 if element is loaded and 0 otherwise. Elements may unload if the player gets too far away from them, at
+-- which point calls to their api will stop responding as expected. This state can only be recovered from by restarting
+-- the script.
+-- @treturn 0/1 The element load state.
 function M:load()
+    return self.loaded
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".

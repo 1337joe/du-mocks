@@ -63,12 +63,30 @@ function _G.Utilities.verifyExpectedFunctions(element, expectedFunctions)
 end
 
 --- Verify basic element functions.
--- @tparameter Element slot The element to test.
--- @tparameter int expectedRestorations The expected max (and remaining) restorations for the element.
-function _G.Utilities.verifyBasicElementFunctions(slot, expectedRestorations)
-    assert(slot.getMaxRestorations() == expectedRestorations, string.format("Max restorations: %d", slot.getMaxRestorations()))
+-- @tparam Element slot The element to test.
+-- @tparam int expectedRestorations The expected max (and remaining) restorations for the element.
+-- @tparam string expectedWidgetType The name of the widget type expected, or nil/false if there is no widget.
+function _G.Utilities.verifyBasicElementFunctions(slot, expectedRestorations, expectedWidgetType)
+    local id = slot.getId()
+    assert(id and id > 0, string.format("Invalid ID: %s", id))
+    assert(slot.getIntegrity() == 100.0 * slot.getHitPoints() / slot.getMaxHitPoints())
+    assert(slot.getMaxRestorations() == expectedRestorations,
+        string.format("Max restorations: %d", slot.getMaxRestorations()))
     assert(slot.getRemainingRestorations() == expectedRestorations,
         string.format("Remaining restorations: %d", slot.getRemainingRestorations()))
+
+    local widgetType = slot.getWidgetType()
+    local dataId = slot.getDataId()
+    if expectedWidgetType and expectedWidgetType ~= "" then
+        assert(widgetType == expectedWidgetType, string.format("Expected widget type %s: %s", expectedWidgetType, widgetType))
+        assert(string.match(dataId, "e%d+"), string.format("Expected dataId to match e%%d pattern: %s", dataId))
+    else
+        assert(widgetType == "", string.format("Unexpected widget type: %s", widgetType))
+        assert(dataId == "", string.format("Unexpected data id: %s", dataId))
+        assert(slot.getData() == "{}", string.format("Unexpected data: %s", slot.getData()))
+    end
+    slot.show()
+    slot.hide()
 end
 
 --- Verifies exactly the expected fields and values are found within the widget data.

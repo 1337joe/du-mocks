@@ -75,14 +75,7 @@ function _G.TestDoorUnit.testGameBehavior()
 
     -- test element class and inherited methods
     assert(slot1.getElementClass() == "DoorUnit")
-    assert(slot1.getData() == "{}")
-    assert(slot1.getDataId() == "")
-    assert(slot1.getWidgetType() == "")
-    slot1.show()
-    slot1.hide()
-    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
     assert(slot1.getMaxHitPoints() == 56.0)
-    assert(slot1.getId() > 0)
     assert(slot1.getMass() == 749.15)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 

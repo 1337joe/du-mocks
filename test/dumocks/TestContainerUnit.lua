@@ -203,6 +203,11 @@ function _G.TestContainerUnit.testGameBehavior()
             density = 1,
             class = "OxygenPure"
         },
+        ["parcel container xs"] = {
+            name = "Pure Oxygen",
+            density = 1,
+            class = "OxygenPure"
+        },
         ["atmospheric fuel tank xs"] = {
             density = 4
         },
@@ -251,7 +256,7 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
     end
 
     -- use locals here since all code is in this method
-    local isItem, isAtmo, isSpace, isRocket
+    local isItem, isParcel, isAtmo, isSpace, isRocket
     local storageAcquired
 
     -- storageAcquired handlers
@@ -282,6 +287,8 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
     local class = slot1.getElementClass()
     if class == "ItemContainer" then
         isItem = true
+    elseif class == "MissionContainer" then
+        isParcel = true
     elseif class == "AtmoFuelContainer" then
         isAtmo = true
     elseif class == "SpaceFuelContainer" then
@@ -292,14 +299,11 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
         assert(false, "Unexpected class: " .. class)
     end
     local data = slot1.getData()
-    if isItem then
-        assert(slot1.getData() == "{}")
-        assert(slot1.getDataId() == "")
-        assert(slot1.getWidgetType() == "")
-    else
-        local expectedFields = {"percentage", "timeLeft", "helperId", "name", "type"}
-        local unexpectedFields = {}
+    local widgetType = ""
+    if not (isItem or isParcel) then
+        local expectedFields = {"timeLeft", "helperId", "name", "type"}
         local expectedValues = {}
+        local ignoreFields = {"percentage"} -- doesn't always show up on initial load
         if isAtmo then
             expectedValues["helperId"] = '"fuel_container_atmo_fuel"'
         elseif isSpace then
@@ -308,23 +312,21 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
             expectedValues["helperId"] = '"fuel_container_rocket_fuel"'
         end
         expectedValues["type"] = '"fuel_container"'
-        _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
+        _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ignoreFields)
 
-        assert(string.match(slot1.getDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. slot1.getDataId())
-        assert(slot1.getWidgetType() == "fuel_container")
+        widgetType = "fuel_container"
     end
-    slot1.show()
-    slot1.hide()
-    assert(slot1.getIntegrity() == 100.0 * slot1.getHitPoints() / slot1.getMaxHitPoints())
     assert(slot1.getMaxHitPoints() >= 50.0)
-    assert(slot1.getId() > 0)
     assert(slot1.getMass() > 35.0)
-    _G.Utilities.verifyBasicElementFunctions(slot1, 5)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 5, widgetType)
 
     local volumeBase, volumeMaxMultiplier
     if isItem then
         volumeBase = 1000
         volumeMaxMultiplier = 1.5
+    elseif isParcel then
+        volumeBase = 1000
+        volumeMaxMultiplier = 1
     elseif isAtmo then
         volumeBase = 100
         volumeMaxMultiplier = 2.0
@@ -356,7 +358,7 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
 
     assert(storageAcquired)
     local itemsJson = slot1.getItemsList()
-    assert(itemsJson ~= "", "itemsJson is empty, does the container have contents?")
+    assert(itemsJson ~= "" and not itemsJson:match("%[%]"), "itemsJson is empty, does the container have contents?")
 
     -- local class = string.match(itemsJson, [["class" : "(.-)"]])
     -- local name = string.match(itemsJson, [["name" : "(.-)"]])
