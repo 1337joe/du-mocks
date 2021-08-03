@@ -38,13 +38,13 @@ function _G.TestEmitterUnit.testConstructor()
     lu.assertEquals(emitterClosure0.getMass(), defaultMass)
     lu.assertEquals(emitterClosure1.getMass(), defaultMass)
     lu.assertEquals(emitterClosure2.getMass(), defaultMass)
-    -- TODO uncomment when Emitter S definition is in place
-    -- lu.assertNotEquals(emitterClosure3.getMass(), defaultMass)
+    lu.assertNotEquals(emitterClosure3.getMass(), defaultMass)
 end
 
---- Verify send works properly in optimal (non-error) conditions.
-function _G.TestEmitterUnit.testSend()
+--- Verify broadcast works properly in optimal (non-error) conditions.
+function _G.TestEmitterUnit.testBroadcast()
     local mock = meu:new()
+    mock.defaultChannel = "channel"
     local closure = mock:mockGetClosure()
 
     local calledChannel = nil
@@ -60,14 +60,15 @@ function _G.TestEmitterUnit.testSend()
 
     local expectedChannel = "channel"
     local expectedMessage = "message"
-    closure.send(expectedChannel, expectedMessage)
+    closure.broadcast(expectedMessage)
     lu.assertEquals(calledChannel, expectedChannel)
     lu.assertEquals(calledMessage, expectedMessage)
 end
 
---- Verify send hits all callbacks in error conditions (suppressing errors received).
-function _G.TestEmitterUnit.testSendErrorSuppress()
+--- Verify broadcast hits all callbacks in error conditions (suppressing errors received).
+function _G.TestEmitterUnit.testBroadcastErrorSuppress()
     local mock = meu:new()
+    mock.defaultChannel = "channel"
     local closure = mock:mockGetClosure()
 
     local called1 = false
@@ -83,18 +84,19 @@ function _G.TestEmitterUnit.testSendErrorSuppress()
     end
     mock:mockRegisterReceiver(callback2)
 
-    mock.propagateSendErrors = false
+    mock.propagateBroadcastErrors = false
 
     lu.assertFalse(called1)
     lu.assertFalse(called2)
-    closure.send("channel", "message")
+    closure.broadcast("message")
     lu.assertTrue(called1)
     lu.assertTrue(called2)
 end
 
---- Verify send hits all callbacks in error conditions (propagating errors received).
-function _G.TestEmitterUnit.testSendErrorPropagate()
+--- Verify broadcast hits all callbacks in error conditions (propagating errors received).
+function _G.TestEmitterUnit.testBroadcastErrorPropagate()
     local mock = meu:new()
+    mock.defaultChannel = "channel"
     local closure = mock:mockGetClosure()
 
     local called1 = false
@@ -110,11 +112,11 @@ function _G.TestEmitterUnit.testSendErrorPropagate()
     end
     mock:mockRegisterReceiver(callback2)
 
-    mock.propagateSendErrors = true
+    mock.propagateBroadcastErrors = true
 
     lu.assertFalse(called1)
     lu.assertFalse(called2)
-    lu.assertError(closure.send, "channel", "message")
+    lu.assertError(closure.broadcast, "message")
     lu.assertTrue(called1)
     lu.assertTrue(called2)
 end
@@ -138,7 +140,7 @@ end
 -- 1. 1x Emitter XS, connected to Programming Board on slot1, default channel set to duMocks
 -- 2. 1x Receiver XS, connected to Programming Board on slot2
 --
--- Exercises: getElementClass, send, getRange, setSignalIn, getSignalIn
+-- Exercises: getElementClass, broadcast, getRange, setSignalIn, getSignalIn
 function _G.TestEmitterUnit.testGameBehavior()
     local mock = meu:new(nil, 1)
     local slot1 = mock:mockGetClosure()
@@ -239,13 +241,13 @@ function _G.TestEmitterUnit.testGameBehavior()
         ---------------
     end
     mock:mockRegisterReceiver(receiveListener)
-    mock.propagateSendErrors = true
+    mock.propagateBroadcastErrors = true
 
     ---------------
     -- copy from here to unit.start
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"send", "getRange", "setSignalIn", "getSignalIn"}
+    local expectedFunctions = {"send", "broadcast", "getRange", "setSignalIn", "getSignalIn"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
@@ -283,7 +285,7 @@ function _G.TestEmitterUnit.testGameBehavior()
         _G.send = true
 
         _G.expectedCall = true
-        slot1.send("channel", "message")
+        slot1.broadcast("message")
         awaitReceive()
 
         local message
@@ -293,19 +295,19 @@ function _G.TestEmitterUnit.testGameBehavior()
         message = string.rep(tenChars, 100)
         assert(message:len() > 512)
         _G.expectedCall = true
-        slot1.send(message, message)
+        slot1.broadcast(message)
         awaitReceive(message)
 
         -- -- test sending json
         -- message = [[{"key":"value"}]]
         -- _G.expectedCall = true
-        -- slot1.send(message, message)
+        -- slot1.broadcast(message)
         -- awaitReceive(message)
 
         _G.send = false
 
         -- play with set signal
-        -- non-zero values will send * to the default channel, if the value is changed it will send a duplicate message
+        -- non-zero values will send * to the default channel, if the value is changed it may send a duplicate message
         -- allows for and reports repeats but doesn't require them
         _G.signals = true
         _G.repeated = false

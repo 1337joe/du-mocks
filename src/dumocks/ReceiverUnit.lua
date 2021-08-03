@@ -1,4 +1,4 @@
---- Receives messages on given channels.
+--- Receives messages on the element's channel.
 --
 -- Element class: ReceiverUnit
 --
@@ -57,47 +57,45 @@ function M:getSignalOut(plug)
     return MockElement.getSignalOut(self, plug)
 end
 
---- Event: Emitted when a message is received on any channel.
---
--- Note: Max channel and message string length is currently 512 characters each, any additional text will be truncated.
+--- Event: Emitted when a message is received on the element's channel.
 --
 -- Note: This is documentation on an event handler, not a callable method.
--- @tparam string channel The channel; can be used as a filter.
 -- @tparam string message The message received.
-function M.EVENT_receive(channel, message)
+function M.EVENT_receive(message)
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterReceive")
 end
 
---- Mock only, not in-game: Register a handler for the in-game `receive(channel,message)` event.
+--- Mock only, not in-game: Register a handler for the in-game `receive(message)` event.
 -- @tparam function callback The function to call when the a message is received.
--- @tparam string channel The channel to filter on, or "*" for all.
 -- @tparam string message The message to filter for, or "*" for all.
 -- @treturn int The index of the callback.
 -- @see EVENT_receive
-function M:mockRegisterReceive(callback, channel, message)
-    -- default to all
-    channel = channel or "*"
+function M:mockRegisterReceive(callback, message)
     message = message or "*"
 
     local index = #self.receiveCallbacks + 1
-    self.receiveCallbacks[index] = {callback = callback, channel = channel, message = message}
+    self.receiveCallbacks[index] = {callback = callback, message = message}
     return index
 end
 
 --- Mock only, not in-game: Simulates a message reaching the receiver.
--- @tparam string channel The channel; can be used as a filter.
+-- @tparam string channel The channel a message was sent on, must match receiver default channel for it to be received.
 -- @tparam string message The message received.
 function M:mockDoReceive(channel, message)
+    local processMessage = self.defaultChannel and self.defaultChannel:len() > 0 and channel == self.defaultChannel
+    if not processMessage then
+        return
+    end
+
     -- enable out signal for as long as it takes to process receive handlers
-    self.plugOut = self.defaultChannel and channel == self.defaultChannel
+    self.plugOut = true
 
     -- call callbacks in order, saving exceptions until end
     local errors = ""
     for i,callback in pairs(self.receiveCallbacks) do
-        -- filter on the channel and on message
-        if (callback.channel == "*" or callback.channel == channel) and
-                (callback.message == "*" or callback.message == message) then
-            local status,err = pcall(callback.callback, channel, message)
+        -- filter on the receiver default channel and on message
+        if (callback.message == "*" or callback.message == message) then
+            local status,err = pcall(callback.callback, message)
             if not status then
                 errors = errors.."\nError while running callback "..i..": "..err
             end
