@@ -46,7 +46,7 @@ end
 -- Test setup:
 -- 1. core unit of any type, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, g, spawnNumberSticker, spawnArrowSticker, deleteSticker, moveSticker
+-- Exercises: getElementClass, g, spawnNumberSticker, spawnArrowSticker, deleteSticker, moveSticker, getPvPTimer
 function _G.TestCoreUnit.testGameBehavior()
     local mock, closure
     local result, message
@@ -101,7 +101,7 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
                              "getConstructOrientationUp", "getConstructOrientationRight",
                              "getConstructOrientationForward", "getConstructWorldOrientationUp",
                              "getConstructWorldOrientationRight", "getConstructWorldOrientationForward",
-                             "getSchematicInfo", "getElementIndustryStatus"}
+                             "getSchematicInfo", "getElementIndustryStatus", "getPvPTimer"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
@@ -161,6 +161,8 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
 
     assert(slot1.moveSticker(firstSticker, 1, 2, 3) == 0) -- success
     assert(slot1.moveSticker(-1, 1, 2, 3) == -1) -- failure
+
+    assert(slot1.getPvPTimer() == 0.0)
 
     system.print("Success")
     unit.exit()
