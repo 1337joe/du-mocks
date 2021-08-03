@@ -90,6 +90,8 @@ function M:new(o, id, elementName)
 
     o.stickers = {}
 
+    o.pvpTimer = 0.0
+
     return o
 end
 
@@ -633,6 +635,21 @@ end
 function M:getSchematicInfo(schematicId)
 end
 
+--- The construct's current state of the PvP timer.
+--
+-- @treturn float Positive remaining time of the PvP timer.
+function M:getPvPTimer()
+    return self.pvpTimer
+end
+
+--- Event: Emitted when the PvP timer started or elapsed.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam boolean active True if the timer started.
+function M.EVENT_pvpTimer(active)
+    assert(false, "This is implemented for documentation purposes.")
+end
+
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
@@ -694,6 +711,7 @@ function M:mockGetClosure()
     closure.getConstructWorldOrientationRight = function() return self:getConstructWorldOrientationRight() end
     closure.getConstructWorldOrientationForward = function() return self:getConstructWorldOrientationForward() end
     closure.getSchematicInfo = function(schematicId) return self:getSchematicInfo(schematicId) end
+    closure.getPvPTimer = function() return self:getPvPTimer() end
     return closure
 end
 
