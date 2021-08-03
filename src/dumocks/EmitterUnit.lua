@@ -1,4 +1,4 @@
---- This unit is capable of emitting messages on channels.
+--- This unit is capable of emitting messages on a channel.
 --
 -- Element class: EmitterUnit
 --
@@ -27,7 +27,7 @@ function M:new(o, id, elementName)
 
     o.defaultChannel = ""
     o.range = 1000 -- meters
-    o.propagateSendErrors = false -- in-game module gets no feedback, make optional for testing purposes
+    o.propagateBroadcastErrors = false -- in-game module gets no feedback, make optional for testing purposes
     o.receiverCallbacks = {}
 
     return o
@@ -58,13 +58,13 @@ function M:setSignalIn(plug, state)
             self.plugIn = value
         end
 
-        -- send * on default channel (if set)
-        if value > 0.0 and self.defaultChannel and self.defaultChannel:len() > 0 then
-            self:send(self.defaultChannel, "*")
+        -- send * on default channel
+        if value > 0.0 then
+            self:broadcast("*")
 
             -- do it again if it's a new value
             if value ~= oldValue then
-                self:send(self.defaultChannel, "*")
+                self:broadcast("*")
             end
         end
     end
@@ -99,26 +99,45 @@ local function trimString(inpString)
     return string.sub(inpString, 0, 512)
 end
 
---- Send a message on the given channel.
+--- Send a message on the given channel. Note that only the last message is guaranteed to be propagated on the network,
+-- due to bandwidth limitations.
 --
 -- Note: Max channel and message string length is currently 512 characters each, any additional text will be truncated.
 -- @tparam string channel The channel name.
 -- @tparam string message The message to transmit.
 function M:send(channel, message)
-    channel = trimString(channel)
+    local outputMessage = "Warning: method send is deprecated, use broadcast instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(outputMessage)
+    else
+        print(outputMessage)
+    end
+    self:broadcast(message)
+end
+
+--- Send a message on the channel specified by the emitter. Note that only the last message is guaranteed to be propagated on the network,
+-- due to bandwidth limitations.
+--
+-- Note: Max message string length is currently 512 characters, any additional text will be truncated.
+-- @tparam string message The message to transmit.
+function M:broadcast(message)
     message = trimString(message)
+
+    if not (self.defaultChannel and self.defaultChannel:len() > 0) then
+        error("Define a broadcast channel on your Emitter (mock.defaultChannel)")
+    end
 
     -- call callbacks in order, saving exceptions until end
     local errors = ""
     for i,callback in pairs(self.receiverCallbacks) do
-        local status,err = pcall(callback, channel, message)
+        local status,err = pcall(callback, self.defaultChannel, message)
         if not status then
             errors = errors.."\nError while running callback "..i..": "..err
         end
     end
 
     -- propagate errors
-    if self.propagateSendErrors and string.len(errors) > 0 then
+    if self.propagateBroadcastErrors and string.len(errors) > 0 then
         error("Errors raised in callbacks:"..errors)
     end
 end
@@ -145,6 +164,7 @@ end
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
     closure.send = function(channel, message) return self:send(channel, message) end
+    closure.broadcast = function(message) return self:broadcast(message) end
     closure.getRange = function() return self:getRange() end
 
     closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end

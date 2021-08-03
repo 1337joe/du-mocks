@@ -38,8 +38,7 @@ function _G.TestReceiverUnit.testConstructor()
     lu.assertEquals(receiverClosure0.getMass(), defaultMass)
     lu.assertEquals(receiverClosure1.getMass(), defaultMass)
     lu.assertEquals(receiverClosure2.getMass(), defaultMass)
-    -- TODO uncomment when Receiver S definition is in place
-    -- lu.assertNotEquals(receiverClosure3.getMass(), defaultMass)
+    lu.assertNotEquals(receiverClosure3.getMass(), defaultMass)
 end
 
 --- Verify get range retrieves range properly.
@@ -57,6 +56,7 @@ end
 --- Verify receive calls all callbacks and propagates errors.
 function _G.TestReceiverUnit.testReceiveError()
     local mock = mru:new()
+    mock.defaultChannel = "channel"
 
     local calls = 0
     local callback1Order, callback2Order
@@ -65,14 +65,14 @@ function _G.TestReceiverUnit.testReceiveError()
         callback1Order = calls
         error("I'm a bad callback.")
     end
-    mock:mockRegisterReceive(callbackError, "*", "*")
+    mock:mockRegisterReceive(callbackError, "*")
 
     local callback2 = function(_, _)
         calls = calls + 1
         callback2Order = calls
         error("I'm a bad callback, too.")
     end
-    mock:mockRegisterReceive(callback2, "*", "*")
+    mock:mockRegisterReceive(callback2, "*")
 
     -- both called, proper order, errors thrown
     lu.assertErrorMsgContains("bad callback", mock.mockDoReceive, mock, "channel", "message")
@@ -81,155 +81,104 @@ function _G.TestReceiverUnit.testReceiveError()
     lu.assertEquals(callback2Order, 2)
 end
 
---- Verify unfiltered receive gets all messages.
-function _G.TestReceiverUnit.testReceiveAll()
-    local mock = mru:new()
-
-    local expectedChannel, expectedMessage
-    local actualChannel, actualMessage
-
-    local callback = function(channel, message)
-        actualChannel = channel
-        actualMessage = message
-    end
-    mock:mockRegisterReceive(callback, "*", "*")
-
-    actualChannel = nil
-    actualMessage = nil
-    expectedChannel = "channel"
-    expectedMessage = "message"
-    mock:mockDoReceive(expectedChannel, expectedMessage)
-    lu.assertEquals(actualChannel, expectedChannel)
-    lu.assertEquals(actualMessage, expectedMessage)
-
-    actualChannel = nil
-    actualMessage = nil
-    expectedChannel = "filter"
-    expectedMessage = "message"
-    mock:mockDoReceive(expectedChannel, expectedMessage)
-    lu.assertEquals(actualChannel, expectedChannel)
-    lu.assertEquals(actualMessage, expectedMessage)
-
-    actualChannel = nil
-    actualMessage = nil
-    expectedChannel = "channel"
-    expectedMessage = "filter"
-    mock:mockDoReceive(expectedChannel, expectedMessage)
-    lu.assertEquals(actualChannel, expectedChannel)
-    lu.assertEquals(actualMessage, expectedMessage)
-end
-
 --- Verify filtering on channel works.
 function _G.TestReceiverUnit.testReceiveFilterChannel()
     local mock = mru:new()
+    mock.defaultChannel = "channel"
 
-    local expectedChannel, expectedMessage
-    local actualChannel, actualMessage
+    local expectedMessage, actualMessage
 
-    local callback = function(channel, message)
-        actualChannel = channel
+    local called
+    local callback = function(message)
+        called = true
         actualMessage = message
     end
-    mock:mockRegisterReceive(callback, "channel", "*")
+    mock:mockRegisterReceive(callback, "*")
 
-    actualChannel = nil
+    called = false
     actualMessage = nil
-    expectedChannel = "channel"
     expectedMessage = "message"
-    mock:mockDoReceive(expectedChannel, expectedMessage)
-    lu.assertEquals(actualChannel, expectedChannel)
+    mock:mockDoReceive("channel", expectedMessage)
+    lu.assertTrue(called)
     lu.assertEquals(actualMessage, expectedMessage)
 
-    actualChannel = nil
+    called = false
     actualMessage = nil
-    expectedChannel = "filter"
     expectedMessage = "message"
-    mock:mockDoReceive(expectedChannel, expectedMessage)
-    lu.assertNil(actualChannel)
+    mock:mockDoReceive("filter", expectedMessage)
+    lu.assertFalse(called)
     lu.assertNil(actualMessage)
 
-    actualChannel = nil
+    called = false
     actualMessage = nil
-    expectedChannel = "channel"
     expectedMessage = "filter"
-    mock:mockDoReceive(expectedChannel, expectedMessage)
-    lu.assertEquals(actualChannel, expectedChannel)
+    mock:mockDoReceive("channel", expectedMessage)
+    lu.assertTrue(called)
     lu.assertEquals(actualMessage, expectedMessage)
 end
 
 --- Verify filtering on messages works.
 function _G.TestReceiverUnit.testReceiveFilterMessage()
     local mock = mru:new()
+    mock.defaultChannel = "channel"
 
-    local expectedChannel, expectedMessage
-    local actualChannel, actualMessage
+    local expectedMessage, actualMessage
 
-    local callback = function(channel, message)
-        actualChannel = channel
+    local called
+    local callback = function(message)
+        called = true
         actualMessage = message
     end
-    mock:mockRegisterReceive(callback, "*", "message")
+    mock:mockRegisterReceive(callback, "message")
 
-    actualChannel = nil
+    called = false
     actualMessage = nil
-    expectedChannel = "channel"
     expectedMessage = "message"
-    mock:mockDoReceive(expectedChannel, expectedMessage)
-    lu.assertEquals(actualChannel, expectedChannel)
+    mock:mockDoReceive("channel", expectedMessage)
+    lu.assertTrue(called)
     lu.assertEquals(actualMessage, expectedMessage)
 
-    actualChannel = nil
+    called = false
     actualMessage = nil
-    expectedChannel = "filter"
-    expectedMessage = "message"
-    mock:mockDoReceive(expectedChannel, expectedMessage)
-    lu.assertEquals(actualChannel, expectedChannel)
-    lu.assertEquals(actualMessage, expectedMessage)
-
-    actualChannel = nil
-    actualMessage = nil
-    expectedChannel = "channel"
     expectedMessage = "filter"
-    mock:mockDoReceive(expectedChannel, expectedMessage)
-    lu.assertNil(actualChannel)
+    mock:mockDoReceive("channel", expectedMessage)
+    lu.assertFalse(called)
     lu.assertNil(actualMessage)
 end
 
 --- Verify filtering on channel and message at the same time works.
 function _G.TestReceiverUnit.testReceiveFilterBoth()
     local mock = mru:new()
+    mock.defaultChannel = "channel"
 
-    local expectedChannel, expectedMessage
-    local actualChannel, actualMessage
+    local expectedMessage, actualMessage
 
-    local callback = function(channel, message)
-        actualChannel = channel
+    local called
+    local callback = function(message)
+        called = true
         actualMessage = message
     end
-    mock:mockRegisterReceive(callback, "channel", "message")
+    mock:mockRegisterReceive(callback, "message")
 
-    actualChannel = nil
+    called = false
     actualMessage = nil
-    expectedChannel = "channel"
     expectedMessage = "message"
-    mock:mockDoReceive(expectedChannel, expectedMessage)
-    lu.assertEquals(actualChannel, expectedChannel)
+    mock:mockDoReceive("channel", expectedMessage)
+    lu.assertTrue(called)
     lu.assertEquals(actualMessage, expectedMessage)
 
-    actualChannel = nil
+    called = false
     actualMessage = nil
-    expectedChannel = "filter"
     expectedMessage = "message"
-    mock:mockDoReceive(expectedChannel, expectedMessage)
-    lu.assertNil(actualChannel)
+    mock:mockDoReceive("filter", expectedMessage)
+    lu.assertFalse(called)
     lu.assertNil(actualMessage)
 
-    actualChannel = nil
+    called = false
     actualMessage = nil
-    expectedChannel = "channel"
     expectedMessage = "filter"
-    mock:mockDoReceive(expectedChannel, expectedMessage)
-    lu.assertNil(actualChannel)
+    mock:mockDoReceive("channel", expectedMessage)
+    lu.assertFalse(called)
     lu.assertNil(actualMessage)
 end
 
@@ -260,8 +209,8 @@ function _G.TestReceiverUnit.testGameBehavior()
     end
 
     local slot2 = {}
-    function slot2.send(channel, message)
-        mock:mockDoReceive(channel, message)
+    function slot2.broadcast(message)
+        mock:mockDoReceive(mock.defaultChannel, message)
     end
 
     ---------------
@@ -275,20 +224,9 @@ function _G.TestReceiverUnit.testGameBehavior()
 
     local allCount, messageFilterCount, channelFilterCount
 
-    local receiveAllListener = function(channel, message)
+    local receiveChannelListener = function(message)
         ---------------
-        -- copy from here to slot1.receive(channel,message) * *
-        ---------------
-        allCount = allCount + 1
-        ---------------
-        -- copy to here to slot1.receive(channel,message) * *
-        ---------------
-    end
-    mock:mockRegisterReceive(receiveAllListener, "*", "*")
-
-    local receiveChannelListener = function(channel, message)
-        ---------------
-        -- copy from here to slot1.receive(channel,message) duMocks *
+        -- copy from here to slot1.receive(message) *
         ---------------
         -- momentary on, if this isn't quick enough to catch the out signal send it to a switch and check that
         assert(slot1.getSignalOut("out") == 1.0)
@@ -296,22 +234,10 @@ function _G.TestReceiverUnit.testGameBehavior()
         channelFilterCount = channelFilterCount + 1
         assert(message == "filtered", "Received: " .. message)
         ---------------
-        -- copy to here to slot1.receive(channel,message) duMocks *
+        -- copy to here to slot1.receive(message) *
         ---------------
     end
-    mock:mockRegisterReceive(receiveChannelListener, "duMocks", "*")
-
-    local receiveMessageListener = function(channel, message)
-        ---------------
-        -- copy from here to slot1.receive(channel,message) * message
-        ---------------
-        messageFilterCount = messageFilterCount + 1
-        assert(channel == "filtered", "Received on: " .. channel)
-        ---------------
-        -- copy to here to slot1.receive(channel,message) * message
-        ---------------
-    end
-    mock:mockRegisterReceive(receiveMessageListener, "*", "message")
+    mock:mockRegisterReceive(receiveChannelListener, "*")
 
     ---------------
     -- copy from here to unit.start
@@ -335,9 +261,7 @@ function _G.TestReceiverUnit.testGameBehavior()
     messageFilterCount = 0
     channelFilterCount = 0
 
-    slot2.send("unexpected", "unexpected")
-    slot2.send("filtered", "message")
-    slot2.send("duMocks", "filtered")
+    slot2.broadcast("filtered")
 
     -- all messages should be processed easily within 1 second
     unit.setTimer("stop", 0.25)
@@ -348,9 +272,7 @@ function _G.TestReceiverUnit.testGameBehavior()
     ---------------
     -- copy from here to unit.stop()
     ---------------
-    assert(allCount == 3, allCount)
-    assert(messageFilterCount == 1)
-    assert(channelFilterCount == 1)
+    assert(channelFilterCount == 1, "Received: " .. channelFilterCount)
 
     -- multi-part script, can't just print success because end of script was reached
     if string.find(unit.getData(), '"showScriptError":false') then
