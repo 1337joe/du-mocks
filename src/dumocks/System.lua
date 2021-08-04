@@ -120,6 +120,8 @@ end
 --   <li><span class="parameter">@{CoreUnit:getData|core}</span> The widget created by core units.</li>
 --   <li><span class="parameter">@{EngineUnit:getData|engine_unit}</span> The widget created by engines.</li>
 --   <li><span class="parameter">@{GyroUnit:getData|gyro}</span> The widget created by gyroscopes.</li>
+--   <li><span class="parameter">@{ShieldGeneratorUnit:getData|shield_generator}</span> The widget created by shield
+--     generators.</li>
 --   <li><span class="parameter">@{WarpDriveUnit:getData|warpdrive}</span> The widget created by warp drives.</li>
 --   <li><span class="parameter">@{WeaponUnit:getData|weapon}</span> The widget created by weapons.</li>
 -- </ul>

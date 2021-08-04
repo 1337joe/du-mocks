@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # stop for error if test returns non-0 exit code
-# set -e
+set -e
 
 # set return code for final result
 exitCode=0
