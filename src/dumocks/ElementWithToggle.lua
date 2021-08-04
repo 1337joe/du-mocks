@@ -27,6 +27,7 @@
 -- @see LightUnit
 -- @see ManualSwitchUnit
 -- @see ScreenUnit
+-- @see ShieldGeneratorUnit
 -- @module ElementWithToggle
 -- @alias M
 
