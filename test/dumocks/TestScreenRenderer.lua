@@ -33,8 +33,13 @@ function _G.TestScreenRenderer.testGameBehavior()
                                "setNextStrokeColor", "getDeltaTime", "addImage", "loadImage", "setNextRotation",
                                "loadFont", "setNextRotationDegrees", "addTriangle", "requestAnimationFrame", "addQuad",
                                "setNextStrokeWidth", "addText", "getRenderCostMax", "addLine", "getRenderCost",
-                               "addBox", "next", "pairs", "ipairs", "select", "type", "tostring", "tonumber", "pcall",
-                               "xpcall", "assert", "error"}
+                               "addBox", "getInput", "setOutput", "setDefaultRotation", "isImageLoaded",
+                               "setDefaultShadow", "setDefaultStrokeColor", "setNextTextAlign", "setNextShadow",
+                               "isFontLoaded", "setDefaultStrokeWidth", "addBoxRounded", "setBackgroundColor",
+                               "getCursorPressed", "getCursorReleased", "getCursorDown", "setDefaultFillColor",
+                               "getFontMetrics", "getTextBounds", "logMessage",
+                               "next", "pairs", "ipairs", "select", "type", "tostring", "tonumber", "pcall", "xpcall",
+                               "assert", "error", "load", "require", "setmetatable", "getmetatable"}
     local unexpectedFunctions = {}
 
     local expectedTables = {"table", "string", "math"}
@@ -44,6 +49,28 @@ function _G.TestScreenRenderer.testGameBehavior()
         ["_VERSION"] = "Lua 5.3"
     }
     local unexpectedStrings = {}
+
+    local expectedNumbers = {
+        Shape_Box = 0,
+        Shape_BoxRounded = 1,
+        Shape_Circle = 2,
+        Shape_Image = 3,
+        Shape_Line = 4,
+        Shape_Polygon = 5,
+        Shape_Text = 6,
+
+        AlignH_Left = 0,
+        AlignH_Center = 1,
+        AlignH_Right = 2,
+
+        AlignV_Ascender = 0,
+        AlignV_Top = 1,
+        AlignV_Middle = 2,
+        AlignV_Baseline = 3,
+        AlignV_Bottom = 4,
+        AlignV_Descender = 5,
+    }
+    local unexpectedNumbers = {}
 
     local other = {}
     for key, value in pairs(_ENV) do
@@ -86,6 +113,15 @@ function _G.TestScreenRenderer.testGameBehavior()
                 end
             end
             table.insert(unexpectedStrings, string.format("%s=%s (%s)", key, value, expected))
+        elseif type(value) == "number" then
+            local expected = expectedNumbers[key]
+            if expected then
+                expectedNumbers[key] = nil
+                if expected == value then
+                    goto continueOuter
+                end
+            end
+            table.insert(unexpectedNumbers, string.format("%s=%s (%s)", key, value, expected))
         else
             table.insert(other, string.format("%s(%s)", key, type(value)))
         end
@@ -96,30 +132,55 @@ function _G.TestScreenRenderer.testGameBehavior()
     local message = ""
 
     if #expectedFunctions > 0 then
-        message = message .. "Missing expected functions: " .. table.concat(expectedFunctions, ", ") .. "\n"
+        message = message .. "Missing expected functions. " .. table.concat(expectedFunctions, ", ") .. "\n"
     end
     if #unexpectedFunctions > 0 then
-        message = message .. "Found unexpected functions: " .. table.concat(unexpectedFunctions, ", ") .. "\n"
+        message = message .. "Found unexpected functions. " .. table.concat(unexpectedFunctions, ", ") .. "\n"
     end
 
     if #expectedTables > 0 then
-        message = message .. "Missing expected tables: " .. table.concat(expectedTables, ", ") .. "\n"
+        message = message .. "Missing expected tables. " .. table.concat(expectedTables, ", ") .. "\n"
     end
     if #unexpectedTables > 0 then
-        message = message .. "Found unexpected tables: " .. table.concat(unexpectedTables, ", ") .. "\n"
+        message = message .. "Found unexpected tables. " .. table.concat(unexpectedTables, ", ") .. "\n"
     end
 
-    if #expectedStrings > 0 then
-        message = message .. "Missing expected strings: " .. table.concat(expectedStrings, ", ") .. "\n"
+    -- table with keys set has to be iterated
+    local function tableLength(input)
+        local count = 0
+        for _ in pairs(input) do
+            count = count + 1
+        end
+        return count
+    end
+
+    if tableLength(expectedStrings) > 0 then
+        message = message .. "Missing expected strings. "
+        for key, value in pairs(expectedNumbers) do
+            message = message .. string.format("%s=%s, ", key, value)
+        end
+        message = message .. "\n"
     end
     if #unexpectedStrings > 0 then
-        message = message .. "Found unexpected strings: " .. table.concat(unexpectedStrings, ", ") .. "\n"
+        message = message .. "Found unexpected strings. " .. table.concat(unexpectedStrings, ", ") .. "\n"
+    end
+
+    if tableLength(expectedNumbers) > 0 then
+        message = message .. "Missing expected numbers. "
+        for key, value in pairs(expectedNumbers) do
+            message = message .. string.format("%s=%s, ", key, value)
+        end
+        message = message .. "\n"
+    end
+    if #unexpectedNumbers > 0 then
+        message = message .. "Found unexpected numbers. " .. table.concat(unexpectedNumbers, ", ") .. "\n"
     end
 
     if #other > 0 then
-        message = message .. "Found other entries: " .. table.concat(other, ", ") .. "\n"
+        message = message .. "Found other entries. " .. table.concat(other, ", ") .. "\n"
     end
     if message:len() > 0 then
+        logMessage(message)
         error(message)
     end
 

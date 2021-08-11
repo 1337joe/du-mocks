@@ -7,6 +7,8 @@
 --   <li>ScreenSignUnit: Signs</li>
 -- </ul>
 --
+-- Documentation for the @{ScreenRenderer} is separate.
+--
 -- Note: The max size of screen content is 50,000 characters. Any calls to set or add content that result in the screen
 -- exceeding this will silently fail.
 --
@@ -14,6 +16,7 @@
 -- @see Element
 -- @see ElementWithState
 -- @see ElementWithToggle
+-- @see ScreenRenderer
 -- @module ScreenUnit
 -- @alias M
 
@@ -123,25 +126,6 @@ local function validateFloat(value)
     return value
 end
 
---- <b>Deprecated:</b> Displays the given text at the given coordinates in the screen, and returns an ID to move it later.
---
--- This method is deprecated: addText should be used instead.
--- @see addText
--- @tparam 0..100 x Horizontal position, as a percentage of the screen width.
--- @tparam 0..100 y Vertical position, as a percentage of the screen height.
--- @tparam 0..100 fontSize Text font size, as a percentage of the screen width.
--- @tparam string text The text to display.
--- @return An integer ID that can be used later to update/remove the added element.
-function M:setText(x, y, fontSize, text)
-    local message = "Warning: method setText is deprecated, use addText instead"
-    if _G.system and _G.system.print and type(_G.system.print) == "function" then
-        _G.system.print(message)
-    else
-        print(message)
-    end
-    self:addText(x, y, fontSize, text)
-end
-
 local ADD_TEXT_TEMPLATE = '<div style="font-size:%.6fvw">%s</div>'
 --- Displays the given text at the given coordinates in the screen, and returns an ID to move it later.
 -- @tparam 0..100 x Horizontal position, as a percentage of the screen width.
@@ -174,21 +158,6 @@ function M:setCenteredText(text)
     self:setHTML(string.format(CENTERED_TEXT_TEMPLATE, fontSize, text))
 end
 
---- <b>Deprecated:</b> Set the whole screen HTML content (overrides anything already set).
---
--- This method is deprecated: setHTML should be used instead.
--- @see setHTML
--- @tparam html html The HTML content to display.
-function M:setRawHTML(html)
-    local message = "Warning: method setRawHTML is deprecated, use setHTML instead"
-    if _G.system and _G.system.print and type(_G.system.print) == "function" then
-        _G.system.print(message)
-    else
-        print(message)
-    end
-    self:setHTML(html)
-end
-
 --- Set the whole screen HTML content (overrides anything already set).
 -- @tparam html html The HTML content to display.
 function M:setHTML(html)
@@ -198,27 +167,26 @@ function M:setHTML(html)
     generateHtml(self)
 end
 
---- Set the screen to draw using a script (overrides anything already set).
--- @tparam string script The Lua script that will define what is drawn.
+--- Set the screen render script, switching the screen to native rendering mode.
+-- @tparam string script The Lua render script.
 function M:setRenderScript(script)
 end
 
---- <b>Deprecated:</b> Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
---
--- This method is deprecated: addContent should be used instead.
--- @see addContent
--- @tparam 0..100 x Horizontal position, as a percentage of the screen width.
--- @tparam 0..100 y Vertical position, as a percentage of the screen height.
--- @tparam html html The HTML content to display, which can contain SVG elements to make drawings.
--- @return An integer ID that can be used later to update/remove the added element.
-function M:setContent(x, y, html)
-    local message = "Warning: method setContent is deprecated, use addContent instead"
-    if _G.system and _G.system.print and type(_G.system.print) == "function" then
-        _G.system.print(message)
-    else
-        print(message)
-    end
-    self:addContent(x, y, html)
+--- Set the screen render script parameters, which will be automatically set during the Lua execution.
+-- @tparam string params A string that can be retrieved by calling getInput in a render script.
+-- @see ScreenRenderer:getInput
+function M:setScriptInput(params)
+end
+
+--- Set the screen render script output to the empty string.
+-- @see ScreenRenderer:setOutput
+function M:clearScriptOutput()
+end
+
+--- Get the screen render script output.
+-- @treturn string The contents of the last render script setOutput call, or an empty string.
+-- @see ScreenRenderer:setOutput
+function M:getScriptOutput()
 end
 
 --- Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
@@ -533,6 +501,9 @@ function M:mockGetClosure()
     closure.setCenteredText = function(text) return self:setCenteredText(text) end
     closure.setHTML = function(html) return self:setHTML(html) end
     closure.setRenderScript = function(script) return self:setRenderScript(script) end
+    closure.setScriptInput = function(params) return self:setScriptInput(params) end
+    closure.clearScriptOutput = function() return self:clearScriptOutput() end
+    closure.getScriptOutput = function() return self:getScriptOutput() end
     closure.addContent = function(x, y, html) return self:addContent(x, y, html) end
     closure.setSVG = function(svg) return self:setSVG(svg) end
     closure.resetContent = function(id, html) return self:resetContent(id, html) end
@@ -543,10 +514,6 @@ function M:mockGetClosure()
     closure.getMouseY = function() return self:getMouseY() end
     closure.getMouseState = function() return self:getMouseState() end
     closure.clear = function() return self:clear() end
-    -- undocumented (deprecated) methods
-    closure.setText = function(x, y, fontSize, text) return self:setText(x, y, fontSize, text) end
-    closure.setRawHTML = function(html) return self:setRawHTML(html) end
-    closure.setContent = function(x, y, html) return self:setContent(x, y, html) end
 
     closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
     closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
