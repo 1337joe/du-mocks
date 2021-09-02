@@ -160,7 +160,7 @@ function _G.TestEmitterUnit.testGameBehavior()
 
     local finished = false
 
-    -- stub this in directly to supress print in the unit test
+    -- stub this in directly to suppress print in the unit test
     local unit = {}
     unit.getData = function()
         return '"showScriptError":false'
@@ -204,7 +204,7 @@ function _G.TestEmitterUnit.testGameBehavior()
 
     local receiveListener = function(channel, message)
         ---------------
-        -- copy from here to slot2.receive(channel,message) * *
+        -- copy from here to slot2.receive(message) *
         ---------------
         if _G.send then
             assert(channel:len() <= 512, string.format("Channel longer than expected max: %d", channel:len()))
@@ -237,7 +237,7 @@ function _G.TestEmitterUnit.testGameBehavior()
 
         unit.setTimer("resume", 0.5)
         ---------------
-        -- copy to here to slot2.receive(channel,message) * *
+        -- copy to here to slot2.receive(message) *
         ---------------
     end
     mock:mockRegisterReceiver(receiveListener)
@@ -369,7 +369,7 @@ function _G.TestEmitterUnit.testGameBehavior()
     _G.emitterCoroutine = coroutine.create(messagingTest)
     coroutine.resume(_G.emitterCoroutine)
 
-    -- report failure if coroutine has not reached success within 1 second
+    -- report failure if coroutine has not reached success within 5 seconds
     unit.setTimer("fail", 5)
     ---------------
     -- copy to here to unit.start
@@ -383,7 +383,6 @@ function _G.TestEmitterUnit.testGameBehavior()
     tickResume()
     tickResume()
     tickResume()
-    -- tickResume()
 
     lu.assertTrue(finished)
 end

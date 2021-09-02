@@ -33,7 +33,39 @@ function M:new(o, id, elementName)
     o.shieldHitPoints = elementDefinition.maxShieldHitPoints
     o.maxShieldHitPoints = elementDefinition.maxShieldHitPoints
 
+    o.absorbedCallbacks = {}
+    o.downCallbacks = {}
+    o.restoredCallbacks = {}
+
+    -- automatically call appropriate callbacks on state change, if disabled use mockTriggerCallback after state change
+    o.autoCallback = true
+    o.newState = o.state
+
     return o
+end
+
+-- Behavior override to allow for delayed state change.
+function M:activate()
+    self.newState = true
+    if self.autoCallback then
+        self:mockTriggerCallback()
+    end
+end
+
+-- Behavior override to allow for delayed state change.
+function M:deactivate()
+    self.newState = false
+    if self.autoCallback then
+        self:mockTriggerCallback()
+    end
+end
+
+-- Behavior override to allow for delayed state change.
+function M:toggle()
+    self.newState = not self.state
+    if self.autoCallback then
+        self:mockTriggerCallback()
+    end
 end
 
 local DATA_TEMPLATE = '{"elementId":%d,"helperId":"shield_generator","isActive":%s,"name":"%s [%d]","shieldHp":%f,' ..
@@ -69,6 +101,9 @@ end
 --- Returns the current hit points of the shield.
 -- @treturn float The current hit points of the shield.
 function M:getShieldHitPoints()
+    if not self.state then
+        return 0
+    end
     return self.shieldHitPoints
 end
 
@@ -98,6 +133,138 @@ end
 -- Note: This is documentation on an event handler, not a callable method.
 function M.EVENT_restored()
     assert(false, "This is implemented for documentation purposes.")
+end
+
+--- Mock only, not in-game: Register a handler for the in-game `down()` event.
+-- @tparam function callback The function to call when the shield goes down.
+-- @treturn int The index of the callback.
+-- @see EVENT_down
+function M:mockRegisterDown(callback)
+    local index = #self.downCallbacks + 1
+    self.downCallbacks[index] = callback
+    return index
+end
+
+--- Mock only, not in-game: Simulates the shield going down, either from damage or deactivation.
+--
+-- Note: The state updates to false before the event handlers are called.
+function M:mockDoDown()
+    -- bail if already deactivated
+    if not self.state then
+        return
+    end
+
+    -- state changes before calling handlers
+    self.state = false
+
+    -- call callbacks in order, saving exceptions until end
+    local errors = ""
+    for i,callback in pairs(self.downCallbacks) do
+        local status,err = pcall(callback)
+        if not status then
+            errors = errors.."\nError while running callback "..i..": "..err
+        end
+    end
+
+    -- propagate errors
+    if string.len(errors) > 0 then
+        error("Errors raised in callbacks:"..errors)
+    end
+end
+
+--- Mock only, not in-game: Register a handler for the in-game `absorbed(hitpoints)` event.
+-- @tparam function callback The function to call when the shield comes up.
+-- @tparam string The hit points to filter for or "*" for all.
+-- @treturn int The index of the callback.
+-- @see EVENT_absorbed
+function M:mockRegisterAbsorbed(callback, hitpoints)
+    local index = #self.absorbedCallbacks + 1
+    self.absorbedCallbacks[index] = {callback = callback, hitpoints = hitpoints}
+    return index
+end
+
+--- Mock only, not in-game: Simulates the shield absorbing damage.
+--
+-- Note: The state updates to true before the event handlers are called.
+-- @tparam int hitpoints The amount of damage to deal.
+function M:mockDoAbsorbed(hitpoints)
+    -- bail if deactivated
+    if not self.state then
+        return
+    end
+
+    -- TODO does the shield go down before calling absorbed or not?
+    self.shieldHitPoints = math.min(0, self.shieldHitPoints - hitpoints)
+
+    -- call callbacks in order, saving exceptions until end
+    local errors = ""
+    for i,callback in pairs(self.restoredCallbacks) do
+        -- filter on the receiver default channel and on message
+        if (callback.hitpoints == "*" or callback.hitpoints == hitpoints) then
+            local status,err = pcall(callback.callback, hitpoints)
+            if not status then
+                errors = errors.."\nError while running callback "..i..": "..err
+            end
+        end
+    end
+
+    -- propagate errors
+    if string.len(errors) > 0 then
+        error("Errors raised in callbacks:"..errors)
+    end
+end
+
+--- Mock only, not in-game: Register a handler for the in-game `restored()` event.
+-- @tparam function callback The function to call when the shield comes up.
+-- @treturn int The index of the callback.
+-- @see EVENT_restored
+function M:mockRegisterRestored(callback)
+    local index = #self.restoredCallbacks + 1
+    self.restoredCallbacks[index] = callback
+    return index
+end
+
+--- Mock only, not in-game: Simulates the shield becoming active.
+--
+-- Note: The state updates to true before the event handlers are called.
+function M:mockDoRestored()
+    -- bail if already activated
+    if self.state then
+        return
+    end
+
+    -- TODO does this only fire when shield is restored to max or also when shield is turned on while damaged?
+    -- In other words, should this method set shieldHitPoints to max?
+    -- state changes before calling handlers
+    self.state = true
+
+    -- call callbacks in order, saving exceptions until end
+    local errors = ""
+    for i,callback in pairs(self.restoredCallbacks) do
+        local status,err = pcall(callback)
+        if not status then
+            errors = errors.."\nError while running callback "..i..": "..err
+        end
+    end
+
+    -- propagate errors
+    if string.len(errors) > 0 then
+        error("Errors raised in callbacks:"..errors)
+    end
+end
+
+--- Mock only, not in-game: Triggers the appropriate callback when the element state changes. Shields don't activate /
+-- deactivate instantly, so this allows for a user-managed delay.
+function M:mockTriggerCallback()
+    if self.newState == self.state then
+        return
+    end
+
+    if self.newState then
+        self:mockDoRestored()
+    else
+        self:mockDoDown()
+    end
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
