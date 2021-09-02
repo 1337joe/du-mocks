@@ -135,6 +135,51 @@ function M.EVENT_restored()
     assert(false, "This is implemented for documentation purposes.")
 end
 
+--- Mock only, not in-game: Register a handler for the in-game `absorbed(hitpoints)` event.
+-- @tparam function callback The function to call when the shield comes up.
+-- @tparam string The hit points to filter for or "*" for all.
+-- @treturn int The index of the callback.
+-- @see EVENT_absorbed
+function M:mockRegisterAbsorbed(callback, hitpoints)
+    local index = #self.absorbedCallbacks + 1
+    self.absorbedCallbacks[index] = {callback = callback, hitpoints = hitpoints}
+    return index
+end
+
+--- Mock only, not in-game: Simulates the shield absorbing damage.
+--
+-- Note: The state updates to true before the event handlers are called.
+-- @tparam int hitpoints The amount of damage to deal.
+function M:mockDoAbsorbed(hitpoints)
+    -- bail if deactivated
+    if not self.state then
+        return
+    end
+
+    -- TODO does the shield go down before calling absorbed or not?
+    self.shieldHitPoints = math.max(0, self.shieldHitPoints - hitpoints)
+    if self.shieldHitPoints == 0 then
+        self.state = false
+    end
+
+    -- call callbacks in order, saving exceptions until end
+    local errors = ""
+    for i,callback in pairs(self.absorbedCallbacks) do
+        -- filter on the receiver default channel and on message
+        if (callback.hitpoints == "*" or callback.hitpoints == hitpoints) then
+            local status,err = pcall(callback.callback, hitpoints)
+            if not status then
+                errors = errors.."\nError while running callback "..i..": "..err
+            end
+        end
+    end
+
+    -- propagate errors
+    if string.len(errors) > 0 then
+        error("Errors raised in callbacks:"..errors)
+    end
+end
+
 --- Mock only, not in-game: Register a handler for the in-game `down()` event.
 -- @tparam function callback The function to call when the shield goes down.
 -- @treturn int The index of the callback.
@@ -163,48 +208,6 @@ function M:mockDoDown()
         local status,err = pcall(callback)
         if not status then
             errors = errors.."\nError while running callback "..i..": "..err
-        end
-    end
-
-    -- propagate errors
-    if string.len(errors) > 0 then
-        error("Errors raised in callbacks:"..errors)
-    end
-end
-
---- Mock only, not in-game: Register a handler for the in-game `absorbed(hitpoints)` event.
--- @tparam function callback The function to call when the shield comes up.
--- @tparam string The hit points to filter for or "*" for all.
--- @treturn int The index of the callback.
--- @see EVENT_absorbed
-function M:mockRegisterAbsorbed(callback, hitpoints)
-    local index = #self.absorbedCallbacks + 1
-    self.absorbedCallbacks[index] = {callback = callback, hitpoints = hitpoints}
-    return index
-end
-
---- Mock only, not in-game: Simulates the shield absorbing damage.
---
--- Note: The state updates to true before the event handlers are called.
--- @tparam int hitpoints The amount of damage to deal.
-function M:mockDoAbsorbed(hitpoints)
-    -- bail if deactivated
-    if not self.state then
-        return
-    end
-
-    -- TODO does the shield go down before calling absorbed or not?
-    self.shieldHitPoints = math.min(0, self.shieldHitPoints - hitpoints)
-
-    -- call callbacks in order, saving exceptions until end
-    local errors = ""
-    for i,callback in pairs(self.restoredCallbacks) do
-        -- filter on the receiver default channel and on message
-        if (callback.hitpoints == "*" or callback.hitpoints == hitpoints) then
-            local status,err = pcall(callback.callback, hitpoints)
-            if not status then
-                errors = errors.."\nError while running callback "..i..": "..err
-            end
         end
     end
 

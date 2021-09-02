@@ -149,7 +149,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | ReceiverUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | ScreenRenderer | :heavy_check_mark: :heavy_minus_sign: | :soon: | | :soon: :heavy_check_mark: | - |
 | ScreenUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark:| :soon: :heavy_check_mark: | :heavy_check_mark: |
-| ShieldGeneratorUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
+| ShieldGeneratorUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | TelemeterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | WarpDriveUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :soon: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | WeaponUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :heavy_check_mark: | :soon: |

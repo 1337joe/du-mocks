@@ -69,6 +69,11 @@ function _G.TestShieldGeneratorUnit.testAutoCallback()
 
     mock.state = false
     lu.assertEquals(closure.getState(), 0)
+    mock:mockTriggerCallback()
+    lu.assertEquals(closure.getState(), 0)
+
+    mock.state = false
+    lu.assertEquals(closure.getState(), 0)
     closure.toggle()
     lu.assertEquals(closure.getState(), 0)
     mock:mockTriggerCallback()
@@ -100,6 +105,206 @@ function _G.TestShieldGeneratorUnit.testGetShieldHitPoints()
 
     mock.state = false
     lu.assertEquals(closure.getShieldHitPoints(), 0)
+end
+
+--- Verify absorbed works without errors.
+function _G.TestShieldGeneratorUnit.testAbsorbed()
+    local mock = msgu:new()
+    local closure = mock:mockGetClosure()
+
+    local called, state
+    local callback = function()
+        called = true
+        state = closure.getState()
+    end
+    mock:mockRegisterAbsorbed(callback, "*")
+
+    mock.state = true
+    mock.shieldHitPoints = mock.maxShieldHitPoints
+    lu.assertTrue(mock.state)
+
+    -- weak hit
+    called = false
+    mock:mockDoAbsorbed(10)
+    lu.assertTrue(called)
+    -- changes before callbacks
+    lu.assertEquals(mock.shieldHitPoints, mock.maxShieldHitPoints - 10)
+    lu.assertEquals(state, 1) -- no change, not enough damage
+
+    lu.assertTrue(mock.state)
+
+    -- strong hit
+    called = false
+    mock:mockDoAbsorbed(mock.maxShieldHitPoints + 100)
+    lu.assertTrue(called)
+    -- changes before callbacks
+    lu.assertEquals(mock.shieldHitPoints, 0)
+    lu.assertEquals(state, 0)
+
+    lu.assertFalse(mock.state)
+
+    -- hit after down
+    called = false
+    mock:mockDoAbsorbed(10)
+    lu.assertFalse(called)
+
+    lu.assertFalse(mock.state)
+end
+
+--- Verify absorbed works with and propagates errors.
+function _G.TestShieldGeneratorUnit.testAbsorbedError()
+    local mock = msgu:new()
+
+    local calls = 0
+    local callback1Order, callback2Order
+    local callbackError = function()
+        calls = calls + 1
+        callback1Order = calls
+        error("I'm a bad callback.")
+    end
+    mock:mockRegisterAbsorbed(callbackError, "*")
+
+    local callback2 = function()
+        calls = calls + 1
+        callback2Order = calls
+        error("I'm a bad callback, too.")
+    end
+    mock:mockRegisterAbsorbed(callback2, "*")
+
+    mock.state = true
+    mock.shieldHitPoints = mock.maxShieldHitPoints
+    lu.assertTrue(mock.state)
+
+    -- both called, proper order, errors thrown
+    lu.assertErrorMsgContains("bad callback", mock.mockDoAbsorbed, mock, 10)
+    lu.assertEquals(calls, 2)
+    lu.assertEquals(callback1Order, 1)
+    lu.assertEquals(callback2Order, 2)
+
+    lu.assertTrue(mock.state)
+    lu.assertEquals(mock.shieldHitPoints, mock.maxShieldHitPoints - 10)
+end
+
+--- Verify down works without errors.
+function _G.TestShieldGeneratorUnit.testDown()
+    local mock = msgu:new()
+    local closure = mock:mockGetClosure()
+
+    local called, state
+    local callback = function()
+        called = true
+        state = closure.getState()
+    end
+    mock:mockRegisterDown(callback)
+
+    mock.state = true
+    lu.assertTrue(mock.state)
+
+    called = false
+    mock:mockDoDown()
+    lu.assertTrue(called)
+    lu.assertEquals(state, 0) -- changes before callbacks
+
+    lu.assertFalse(mock.state)
+
+    called = false
+    mock:mockDoDown()
+    lu.assertFalse(called)
+
+    lu.assertFalse(mock.state)
+end
+
+--- Verify down works with and propagates errors.
+function _G.TestShieldGeneratorUnit.testDownError()
+    local mock = msgu:new()
+
+    local calls = 0
+    local callback1Order, callback2Order
+    local callbackError = function()
+        calls = calls + 1
+        callback1Order = calls
+        error("I'm a bad callback.")
+    end
+    mock:mockRegisterDown(callbackError)
+
+    local callback2 = function()
+        calls = calls + 1
+        callback2Order = calls
+        error("I'm a bad callback, too.")
+    end
+    mock:mockRegisterDown(callback2)
+
+    mock.state = true
+    lu.assertTrue(mock.state)
+
+    -- both called, proper order, errors thrown
+    lu.assertErrorMsgContains("bad callback", mock.mockDoDown, mock)
+    lu.assertEquals(calls, 2)
+    lu.assertEquals(callback1Order, 1)
+    lu.assertEquals(callback2Order, 2)
+
+    lu.assertFalse(mock.state)
+end
+
+--- Verify restored works without errors.
+function _G.TestShieldGeneratorUnit.testRestored()
+    local mock = msgu:new()
+    local closure = mock:mockGetClosure()
+
+    local called, state
+    local callback = function()
+        called = true
+        state = closure.getState()
+    end
+    mock:mockRegisterRestored(callback)
+
+    mock.state = false
+    lu.assertFalse(mock.state)
+
+    called = false
+    mock:mockDoRestored()
+    lu.assertTrue(called)
+    lu.assertEquals(state, 1) -- changes before callbacks
+
+    lu.assertTrue(mock.state)
+
+    called = false
+    mock:mockDoRestored()
+    lu.assertFalse(called)
+
+    lu.assertTrue(mock.state)
+end
+
+--- Verify restored works with and propagates errors.
+function _G.TestShieldGeneratorUnit.testRestoredError()
+    local mock = msgu:new()
+
+    local calls = 0
+    local callback1Order, callback2Order
+    local callbackError = function()
+        calls = calls + 1
+        callback1Order = calls
+        error("I'm a bad callback.")
+    end
+    mock:mockRegisterRestored(callbackError)
+
+    local callback2 = function()
+        calls = calls + 1
+        callback2Order = calls
+        error("I'm a bad callback, too.")
+    end
+    mock:mockRegisterRestored(callback2)
+
+    mock.state = false
+    lu.assertFalse(mock.state)
+
+    -- both called, proper order, errors thrown
+    lu.assertErrorMsgContains("bad callback", mock.mockDoRestored, mock)
+    lu.assertEquals(calls, 2)
+    lu.assertEquals(callback1Order, 1)
+    lu.assertEquals(callback2Order, 2)
+
+    lu.assertTrue(mock.state)
 end
 
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
