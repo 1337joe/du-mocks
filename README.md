@@ -124,14 +124,14 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | Library | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_minus_sign: :heavy_check_mark: | :heavy_minus_sign: |
 | System | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_minus_sign: |
 | Element | :heavy_check_mark: :heavy_minus_sign: | :soon: | :soon: | :heavy_minus_sign: :heavy_minus_sign: | :heavy_minus_sign: |
-| AntiGravityGeneratorUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :soon: |
-| ContainerUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :soon: |
+| AntiGravityGeneratorUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| ContainerUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | ControlUnit | :heavy_check_mark: :white_large_square: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | CoreUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | CounterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DatabankUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DetectionZoneUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| DoorUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :soon: |
+| DoorUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | EmitterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | EngineUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :heavy_check_mark: | :soon: |
 | FireworksUnit | :heavy_check_mark: :white_large_square: | :soon: | :soon: | :white_large_square: :white_large_square: | :white_large_square: |

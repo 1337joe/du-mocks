@@ -33,9 +33,9 @@ elementDefinitions["expanded container xl"] = {mass = 88413.0, maxHitPoints = 69
 elementDefinitions["parcel container xs"] = {mass = 224.68, maxHitPoints = 124.0, class = CLASS_PARCEL, maxVolume = 1000}
 elementDefinitions["parcel container s"] = {mass = 1256.17, maxHitPoints = 999.0, class = CLASS_PARCEL, maxVolume = 8000}
 elementDefinitions["parcel container m"] = {mass = 7273.75, maxHitPoints = 7997.0, class = CLASS_PARCEL, maxVolume = 64000}
-elementDefinitions["parcel container l"] = {mass = 14550, maxHitPoints = 17316.0, class = CLASS_PARCEL, maxVolume = 128000} -- TODO check exact mass
-elementDefinitions["parcel container xl"] = {mass = 43310, maxHitPoints = 34633.0, class = CLASS_PARCEL, maxVolume = 256000} -- TODO check exact mass
-elementDefinitions["parcel expanded container xl"] = {mass = 86630, maxHitPoints = 69267.0, class = CLASS_PARCEL, maxVolume = 512000} -- TODO check exact mass
+elementDefinitions["parcel container l"] = {mass = 14547.5, maxHitPoints = 17316.0, class = CLASS_PARCEL, maxVolume = 128000}
+elementDefinitions["parcel container xl"] = {mass = 43313.71, maxHitPoints = 34633.0, class = CLASS_PARCEL, maxVolume = 256000}
+elementDefinitions["parcel expanded container xl"] = {mass = 86627.42, maxHitPoints = 69267.0, class = CLASS_PARCEL, maxVolume = 512000}
 
 elementDefinitions["atmospheric fuel tank xs"] = {mass = 35.03, maxHitPoints = 50.0, class = CLASS_ATMO, maxVolume = 100}
 elementDefinitions["atmospheric fuel tank s"] = {mass = 182.67, maxHitPoints = 163.0, class = CLASS_ATMO, maxVolume = 400}
