@@ -117,7 +117,7 @@ function _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ign
             end
         end
 
-        table.insert(unexpectedFields, key)
+        table.insert(unexpectedFields, string.format("%s:%s", key, value))
 
         ::continueOuter::
     end
