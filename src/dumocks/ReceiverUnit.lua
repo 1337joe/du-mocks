@@ -1,4 +1,4 @@
---- Receives messages on the element's channel.
+--- Receives messages on given channels.
 --
 -- Element class: ReceiverUnit
 --
@@ -25,7 +25,7 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
-    o.defaultChannel = ""
+    o.channelList = ""
     o.range = 1000 -- meters
     o.receiveCallbacks = {}
 
@@ -36,6 +36,18 @@ end
 -- @treturn meter The range.
 function M:getRange()
     return self.range
+end
+
+--- Set the channels list.
+-- @tparam string channelList The channels list separated by commas.
+function M:setChannels(channelList)
+    self.channelList = channelList
+end
+
+--- Returns the channels list.
+-- @treturn string The channels list separated by commas.
+function M:getChannels()
+    return self.channelList
 end
 
 --- Return the value of a signal in the specified OUT plug of the element.
@@ -57,32 +69,46 @@ function M:getSignalOut(plug)
     return MockElement.getSignalOut(self, plug)
 end
 
---- Event: Emitted when a message is received on the element's channel.
+--- Event: Emitted when a message is received on any channel defined on the element.
 --
 -- Note: This is documentation on an event handler, not a callable method.
+-- @tparam string channel The channel; can be used as a filter.
 -- @tparam string message The message received.
-function M.EVENT_receive(message)
+function M.EVENT_receive(channel, message)
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterReceive")
 end
 
---- Mock only, not in-game: Register a handler for the in-game `receive(message)` event.
+--- Mock only, not in-game: Register a handler for the in-game `receive(channel,message)` event.
 -- @tparam function callback The function to call when the a message is received.
+-- @tparam string channel The channel to filter on, or "*" for all.
 -- @tparam string message The message to filter for, or "*" for all.
 -- @treturn int The index of the callback.
 -- @see EVENT_receive
-function M:mockRegisterReceive(callback, message)
+function M:mockRegisterReceive(callback, channel, message)
+    -- default to all
+    channel = channel or "*"
     message = message or "*"
 
     local index = #self.receiveCallbacks + 1
-    self.receiveCallbacks[index] = {callback = callback, message = message}
+    self.receiveCallbacks[index] = {
+        callback = callback,
+        channel = channel,
+        message = message
+    }
     return index
 end
 
 --- Mock only, not in-game: Simulates a message reaching the receiver.
--- @tparam string channel The channel a message was sent on, must match receiver default channel for it to be received.
+-- @tparam string channel The channel a message was sent on, must match a channel in channelList to be received.
 -- @tparam string message The message received.
 function M:mockDoReceive(channel, message)
-    local processMessage = self.defaultChannel and self.defaultChannel:len() > 0 and channel == self.defaultChannel
+    local processMessage = false
+    for listenChannel in string.gmatch(self.channelList, "%s*([^,]+)%s*") do
+        if listenChannel == channel then
+            processMessage = true
+            break
+        end
+    end
     if not processMessage then
         return
     end
@@ -92,12 +118,13 @@ function M:mockDoReceive(channel, message)
 
     -- call callbacks in order, saving exceptions until end
     local errors = ""
-    for i,callback in pairs(self.receiveCallbacks) do
-        -- filter on the receiver default channel and on message
-        if (callback.message == "*" or callback.message == message) then
-            local status,err = pcall(callback.callback, message)
+    for i, callback in pairs(self.receiveCallbacks) do
+        -- filter on the channel and on message
+        if (callback.channel == "*" or callback.channel == channel) and
+                (callback.message == "*" or callback.message == message) then
+            local status, err = pcall(callback.callback, channel, message)
             if not status then
-                errors = errors.."\nError while running callback "..i..": "..err
+                errors = errors .. "\nError while running callback " .. i .. ": " .. err
             end
         end
     end
@@ -106,7 +133,7 @@ function M:mockDoReceive(channel, message)
 
     -- propagate errors
     if string.len(errors) > 0 then
-        error("Errors raised in callbacks:"..errors)
+        error("Errors raised in callbacks:" .. errors)
     end
 end
 
@@ -116,6 +143,8 @@ end
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
     closure.getRange = function() return self:getRange() end
+    closure.setChannels = function(channelList) return self:setChannels(channelList) end
+    closure.getChannels = function() return self:getChannels() end
 
     closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
     return closure
