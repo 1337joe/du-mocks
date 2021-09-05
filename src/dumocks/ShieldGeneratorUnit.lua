@@ -13,10 +13,10 @@ local MockElement = require "dumocks.Element"
 local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
-elementDefinitions["shield generator xs"] = {mass = 670.0, maxHitPoints = 1400.0, maxShieldHitPoints = 300000.0}
-elementDefinitions["shield generator s"] = {mass = 3300.0, maxHitPoints = 4500.0, maxShieldHitPoints = 1750000.0}
-elementDefinitions["shield generator m"] = {mass = 17000.0, maxHitPoints = 6750.0, maxShieldHitPoints = 8000000.0}
-elementDefinitions["shield generator l"] = {mass = 92000.0, maxHitPoints = 31500.0, maxShieldHitPoints = 25000000.0}
+elementDefinitions["shield generator xs"] = {mass = 670.0, maxHitPoints = 1400.0, maxShieldHitpoints = 500000.0, ventingMaxCooldown = 60.0}
+elementDefinitions["shield generator s"] = {mass = 3300.0, maxHitPoints = 4500.0, maxShieldHitpoints = 2000000.0, ventingMaxCooldown = 120.0}
+elementDefinitions["shield generator m"] = {mass = 17000.0, maxHitPoints = 6750.0, maxShieldHitpoints = 7500000.0, ventingMaxCooldown = 240.0}
+elementDefinitions["shield generator l"] = {mass = 92000.0, maxHitPoints = 31500.0, maxShieldHitpoints = 20000000.0, ventingMaxCooldown = 480.0}
 local DEFAULT_ELEMENT = "shield generator xs"
 
 local M = MockElementWithToggle:new()
@@ -30,8 +30,14 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
-    o.shieldHitPoints = elementDefinition.maxShieldHitPoints
-    o.maxShieldHitPoints = elementDefinition.maxShieldHitPoints
+    o.shieldHitpoints = elementDefinition.maxShieldHitpoints
+    o.maxShieldHitpoints = elementDefinition.maxShieldHitpoints
+
+    o.venting = false
+    o.ventingCooldown = 0
+    o.ventingMaxCooldown = elementDefinition.ventingMaxCooldown
+
+    o.plugIn = 0.0
 
     o.absorbedCallbacks = {}
     o.downCallbacks = {}
@@ -68,8 +74,10 @@ function M:toggle()
     end
 end
 
-local DATA_TEMPLATE = '{"elementId":%d,"helperId":"shield_generator","isActive":%s,"name":"%s [%d]","shieldHp":%f,' ..
-    '"shieldMaxHp":%f,"type":"%s"}'
+local DATA_TEMPLATE = '{"elementId":%d,"helperId":"shield_generator","isActive":%s,"isVenting":%s,' ..
+                      '"ventingCooldown":%f,"ventingMaxCooldown":%f,"ventingStartHp":%f,"ventingTargetHp":%f,' ..
+                      '"resistances":{%s},"name":"%s [%d]","shieldHp":%f,"shieldMaxHp":%f,"type":"%s"}'
+local RESISTANCE_TEMPLATE = '{"%s":{"stress":%f,"value":%f}'
 --- Get element data as JSON.
 --
 -- Shield generators have a <code>shield_generator</code> widget, which contains the following fields (bold fields are
@@ -80,6 +88,24 @@ local DATA_TEMPLATE = '{"elementId":%d,"helperId":"shield_generator","isActive":
 --     </li>
 --   <li><b><span class="parameter">isActive</span></b> (<span class="type">boolean</span>) True if the shield is
 --     active, false otherwise.</li>
+--   <li><b><span class="parameter">isVenting</span></b> (<span class="type">boolean</span>) True if the shield is
+--     venting, false otherwise.</li>
+--   <li><b><span class="parameter">ventingCooldown</span></b> (<span class="type">float</span>) Remaining cooldown
+--     before venting is possible in seconds.</li>
+--   <li><span class="parameter">ventingMaxCooldown</span> (<span class="type">float</span>) Max cooldown before
+--     venting is possible once venting stops.</li>
+--   <li><b><span class="parameter">ventingStartHp</span></b> (<span class="type">float</span>) Shield hit points when
+--     venting started, used to calculate percent done with venting.</li>
+--   <li><b><span class="parameter">ventingTargetHp</span></b> (<span class="type">float</span>) Shield hit points when
+--     venting will stop, used to calculate percent done with venting.</li>
+--   <li><b><span class="parameter">resistances</span></b> (<span class="type">float</span>) List of resistance
+--     parameters for each of: antimatter, electromagnetic, kinetic, thermic
+--     <ul>
+--       <li><b><span class="parameter">stress</span></b> (<span class="type">float</span>) Percentage to fill the
+--         stress meter, &le; 0.01 = 0 bars, &le; .26 = 1 bar, &le; .51 = 2 bars, &gt; .51 = 3 bars.</li>
+--       <li><b><span class="parameter">value</span></b> (<span class="type">float</span>) Percentage value to show
+--         next to resistance stress meter, 0.01 will show as 1%.</li>
+--     </ul></li>
 --   <li><span class="parameter">name</span> (<span class="type">string</span>) The name of the element.</li>
 --   <li><span class="parameter">elementId</span> (<span class="type">int</span>) The (globally unique?) id of the
 --     shield generator element, may be related to linking the commands to the element.</li>
@@ -89,8 +115,18 @@ local DATA_TEMPLATE = '{"elementId":%d,"helperId":"shield_generator","isActive":
 -- @treturn string Data as JSON.
 function M:getData()
     local generatorId = 123456789
-    return string.format(DATA_TEMPLATE, generatorId, self.state, self.name, self:getId(), self.shieldHitPoints,
-        self.maxShieldHitPoints, self:getWidgetType())
+    local ventingStartHp = 0.0
+    local ventingTargetHp = self.maxShieldHitpoints
+    local resistances = {
+        string.format(RESISTANCE_TEMPLATE, "antimatter", 0.0, 0.0),
+        string.format(RESISTANCE_TEMPLATE, "electromagnetic", 0.0, 0.0),
+        string.format(RESISTANCE_TEMPLATE, "kinetic", 0.0, 0.0),
+        string.format(RESISTANCE_TEMPLATE, "thermic", 0.0, 0.0)
+    }
+    local resistancesString = table.concat(resistances, ",")
+    return string.format(DATA_TEMPLATE, generatorId, self.state, self.venting, self.ventingCooldown,
+        self.ventingMaxCooldown, ventingStartHp, ventingTargetHp, resistancesString, self.name, self:getId(),
+        self.shieldHitpoints, self.maxShieldHitpoints, self:getWidgetType())
 end
 
 -- Override default with realistic patten to id.
@@ -100,24 +136,158 @@ end
 
 --- Returns the current hit points of the shield.
 -- @treturn float The current hit points of the shield.
-function M:getShieldHitPoints()
+function M:getShieldHitpoints()
     if not self.state then
         return 0
     end
-    return self.shieldHitPoints
+    return self.shieldHitpoints
 end
 
 --- Returns the maximal hit points of the shield.
 -- @treturn float The maximal hit points of the shield.
-function M:getMaxShieldHitPoints()
-    return self.maxShieldHitPoints
+function M:getMaxShieldHitpoints()
+    return self.maxShieldHitpoints
+end
+
+--- Activate shield venting to restore hit points.
+-- @treturn 0/1 1 if venting started, 0 if an error occurred.
+function M:startVenting()
+    if self.ventingCooldown > 0 then
+        return 0
+    end
+
+    self.venting = true
+end
+
+-- TODO add mock venting step function to increase health based on time elapsed while venting
+
+--- Mock only, not in-game: Reset shield state at end of venting.
+function M:mockEndVenting()
+    self.venting = false
+    self.ventingCooldown = self.ventingMaxCooldown
+end
+
+--- Check whether venting is in progress.
+-- @treturn 0/1 1 if venting is ongoing, 0 otherwise.
+function M:isVenting()
+    if self.venting then
+        return 1
+    end
+    return 0
+end
+
+--- Returns time after which venting is possible again.
+-- @treturn float Remaining seconds of the venting cooldown.
+function M:getVentingCooldown()
+    return self.ventingCooldown
+end
+
+--- Returns maximal cooldown between venting.
+-- @treturn float Maximal seconds of the venting cooldown.
+function M:getVentingMaxCooldown()
+    return self.ventingMaxCooldown
+end
+
+--- Returns distribution of resistance pool over resistance types.
+-- @treturn vec4 Resistance to damage type (antimatter, electromagnetic, kinetic, thermic).
+function M:getResistances()
+end
+
+--- Distribute the resistance pool according to damage type.
+-- @tparam float antimatter Antimatter damage resistance.
+-- @tparam float electromagnetic Electromagnetic damage resistance.
+-- @tparam float kinetic Kinetic damage resistance.
+-- @tparam float thermic Thermic damage resistance.
+-- @treturn 0/1 1 if resistance was distributed, 0 if an error occurred.
+function M:setResistances(antimatter, electromagnetic, kinetic, thermic)
+end
+
+--- Returns time after which adjusting resistances is possible again.
+-- @treturn float Remaining seconds of the resistance cooldown.
+function M:getResistancesCooldown()
+end
+
+--- Returns maximal cooldown between adjusting resistances.
+-- @treturn float Maximal seconds of the resistance cooldown.
+function M:getResistancesMaxCooldown()
+end
+
+--- Returns total resistance pool that may be distributed.
+-- @treturn float Total pool of resistances.
+function M:getResistancesPool()
+end
+
+--- Returns the remaining amount of the resistance pool that can be distributed.
+-- @treturn float Remaining resistance pool.
+function M:getResistancesRemaining()
+end
+
+--- Returns ratio per damage type of recent weapon impacts after applying resistances.
+-- @treturn vec4 Stress ratio due to damage type (antimatter, electromagnetic, kinetic, thermic).
+function M:getStressRatio()
+end
+
+--- Returns ratio per damage type of recent weapon impacts without resistance.
+-- @treturn vec4 Stress ratio due to damage type (antimatter, electromagnetic, kinetic, thermic).
+function M:getStressRatioRaw()
+end
+
+--- Returns stress, that is the total hit points of recent weapon impacts after applying resistances.
+-- @treturn float Total stress hit points due to recent weapon impacts.
+function M:getStressHitpoints()
+end
+
+--- Returns stress, that is the total hit points of recent weapon impacts without resistances.
+-- @treturn float Total stress hit points due to recent weapon impacts.
+function M:getStressHitpointsRaw()
+end
+
+--- Set the value of a signal in the specified IN plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"in" for the in signal. TODO is it possible to connect something to pass an in signal?</li>
+-- </ul>
+-- @param plug A valid plug name to set.
+-- @tparam 0/1 state The plug signal state
+function M:setSignalIn(plug, state)
+end
+
+--- Return the value of a signal in the specified IN plug of the element.
+--
+-- Valid plug names are:
+-- <ul>
+-- <li>"in" for the in signal.</li>
+-- </ul>
+-- @param plug A valid plug name to query.
+-- @treturn 0/1 The plug signal state
+function M:getSignalIn(plug)
+    return MockElement.getSignalIn(self)
+end
+
+--- Event: Emitted when we started or stopped venting.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam 0/1 active 1 if the element was activated, 0 otherwise.
+function M.EVENT_toggled(active)
+    assert(false, "This is implemented for documentation purposes.")
 end
 
 --- Event: Emitted when the shield absorbed incoming damage.
 --
 -- Note: This is documentation on an event handler, not a callable method.
 -- @tparam float hitpoints Hit points the shield lost.
-function M.EVENT_absorbed(hitpoints)
+-- @tparam float rawHitpoints Total damage without taking resistances into account.
+function M.EVENT_absorbed(hitpoints, rawHitpoints)
+    assert(false, "This is implemented for documentation purposes.")
+end
+
+--- Event: Emitted when venting started, stopped or restored some hitpoints.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam 0/1 active 1 when venting is active, 0 otherwise.
+-- @tparam float restoredHitpoints Hitpoints restored since last venting step.
+function M.EVENT_venting(active, restoredHitpoints)
     assert(false, "This is implemented for documentation purposes.")
 end
 
@@ -135,14 +305,19 @@ function M.EVENT_restored()
     assert(false, "This is implemented for documentation purposes.")
 end
 
---- Mock only, not in-game: Register a handler for the in-game `absorbed(hitpoints)` event.
+--- Mock only, not in-game: Register a handler for the in-game `absorbed(hitpoints, rawHitpoints)` event.
 -- @tparam function callback The function to call when the shield comes up.
--- @tparam string The hit points to filter for or "*" for all.
+-- @tparam string hitpoints The hit points to filter for or "*" for all.
+-- @tparam string rawHitpoints The raw hit points to filter for or "*" for all.
 -- @treturn int The index of the callback.
 -- @see EVENT_absorbed
-function M:mockRegisterAbsorbed(callback, hitpoints)
+function M:mockRegisterAbsorbed(callback, hitpoints, rawHitpoints)
     local index = #self.absorbedCallbacks + 1
-    self.absorbedCallbacks[index] = {callback = callback, hitpoints = hitpoints}
+    self.absorbedCallbacks[index] = {
+        callback = callback,
+        hitpoints = hitpoints,
+        rawHitpoints = rawHitpoints
+    }
     return index
 end
 
@@ -150,33 +325,35 @@ end
 --
 -- Note: The state updates to true before the event handlers are called.
 -- @tparam int hitpoints The amount of damage to deal.
-function M:mockDoAbsorbed(hitpoints)
+-- @tparam int rawHitpoints The amount of damage to deal before taking resistances into account.
+function M:mockDoAbsorbed(hitpoints, rawHitpoints)
     -- bail if deactivated
     if not self.state then
         return
     end
 
     -- TODO does the shield go down before calling absorbed or not?
-    self.shieldHitPoints = math.max(0, self.shieldHitPoints - hitpoints)
-    if self.shieldHitPoints == 0 then
+    self.shieldHitpoints = math.max(0, self.shieldHitpoints - hitpoints)
+    if self.shieldHitpoints == 0 then
         self.state = false
     end
 
     -- call callbacks in order, saving exceptions until end
     local errors = ""
-    for i,callback in pairs(self.absorbedCallbacks) do
+    for i, callback in pairs(self.absorbedCallbacks) do
         -- filter on the receiver default channel and on message
-        if (callback.hitpoints == "*" or callback.hitpoints == hitpoints) then
-            local status,err = pcall(callback.callback, hitpoints)
+        if (callback.hitpoints == "*" or callback.hitpoints == hitpoints) and
+                (callback.rawHitpoints == "*" or callback.rawHitpoints == rawHitpoints) then
+            local status, err = pcall(callback.callback, hitpoints)
             if not status then
-                errors = errors.."\nError while running callback "..i..": "..err
+                errors = errors .. "\nError while running callback " .. i .. ": " .. err
             end
         end
     end
 
     -- propagate errors
     if string.len(errors) > 0 then
-        error("Errors raised in callbacks:"..errors)
+        error("Errors raised in callbacks:" .. errors)
     end
 end
 
@@ -204,16 +381,16 @@ function M:mockDoDown()
 
     -- call callbacks in order, saving exceptions until end
     local errors = ""
-    for i,callback in pairs(self.downCallbacks) do
-        local status,err = pcall(callback)
+    for i, callback in pairs(self.downCallbacks) do
+        local status, err = pcall(callback)
         if not status then
-            errors = errors.."\nError while running callback "..i..": "..err
+            errors = errors .. "\nError while running callback " .. i .. ": " .. err
         end
     end
 
     -- propagate errors
     if string.len(errors) > 0 then
-        error("Errors raised in callbacks:"..errors)
+        error("Errors raised in callbacks:" .. errors)
     end
 end
 
@@ -237,22 +414,22 @@ function M:mockDoRestored()
     end
 
     -- TODO does this only fire when shield is restored to max or also when shield is turned on while damaged?
-    -- In other words, should this method set shieldHitPoints to max?
+    -- In other words, should this method set shieldHitpoints to max?
     -- state changes before calling handlers
     self.state = true
 
     -- call callbacks in order, saving exceptions until end
     local errors = ""
-    for i,callback in pairs(self.restoredCallbacks) do
-        local status,err = pcall(callback)
+    for i, callback in pairs(self.restoredCallbacks) do
+        local status, err = pcall(callback)
         if not status then
-            errors = errors.."\nError while running callback "..i..": "..err
+            errors = errors .. "\nError while running callback " .. i .. ": " .. err
         end
     end
 
     -- propagate errors
     if string.len(errors) > 0 then
-        error("Errors raised in callbacks:"..errors)
+        error("Errors raised in callbacks:" .. errors)
     end
 end
 
@@ -276,8 +453,25 @@ end
 function M:mockGetClosure()
     local closure = MockElementWithToggle.mockGetClosure(self)
 
-    closure.getShieldHitPoints = function() return self:getShieldHitPoints() end
-    closure.getMaxShieldHitPoints = function() return self:getMaxShieldHitPoints() end
+    closure.getShieldHitpoints = function() return self:getShieldHitpoints() end
+    closure.getMaxShieldHitpoints = function() return self:getMaxShieldHitpoints() end
+    closure.startVenting = function() return self:startVenting() end
+    closure.isVenting = function() return self:isVenting() end
+    closure.getVentingCooldown = function() return self:getVentingCooldown() end
+    closure.getVentingMaxCooldown = function() return self:getVentingMaxCooldown() end
+    closure.getResistances = function() return self:getResistances() end
+    closure.setResistances = function(antimatter, electromagnetic, kinetic, thermic) return self:setResistances(antimatter, electromagnetic, kinetic, thermic) end
+    closure.getResistancesCooldown = function() return self:getResistancesCooldown() end
+    closure.getResistancesMaxCooldown = function() return self:getResistancesMaxCooldown() end
+    closure.getResistancesPool = function() return self:getResistancesPool() end
+    closure.getResistancesRemaining = function() return self:getResistancesRemaining() end
+    closure.getStressRatio = function() return self:getStressRatio() end
+    closure.getStressRatioRaw = function() return self:getStressRatioRaw() end
+    closure.getStressHitpoints = function() return self:getStressHitpoints() end
+    closure.getStressHitpointsRaw = function() return self:getStressHitpointsRaw() end
+
+    closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
+    closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
     return closure
 end
 

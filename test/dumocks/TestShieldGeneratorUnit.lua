@@ -16,7 +16,7 @@ _G.TestShieldGeneratorUnit = {}
 function _G.TestShieldGeneratorUnit.testConstructor()
 
     -- default element:
-    -- ["shield generator xs"] = {mass = 670.0, maxHitPoints = 1400.0, maxShieldHitPoints = 300000.0}
+    -- ["shield generator xs"] = {mass = 670.0, maxHitpoints = 1400.0, maxShieldHitpoints = 300000.0}
 
     local mock0 = msgu:new()
     local mock1 = msgu:new(nil, 1, "Shield Generator XS")
@@ -95,16 +95,16 @@ function _G.TestShieldGeneratorUnit.testAutoCallback()
 end
 
 --- Verify shield hitpoints considers state.
-function _G.TestShieldGeneratorUnit.testGetShieldHitPoints()
+function _G.TestShieldGeneratorUnit.testGetShieldHitpoints()
     local mock = msgu:new()
-    mock.shieldHitPoints = 100
+    mock.shieldHitpoints = 100
     local closure = mock:mockGetClosure()
 
     mock.state = true
-    lu.assertEquals(closure.getShieldHitPoints(), 100)
+    lu.assertEquals(closure.getShieldHitpoints(), 100)
 
     mock.state = false
-    lu.assertEquals(closure.getShieldHitPoints(), 0)
+    lu.assertEquals(closure.getShieldHitpoints(), 0)
 end
 
 --- Verify absorbed works without errors.
@@ -120,7 +120,7 @@ function _G.TestShieldGeneratorUnit.testAbsorbed()
     mock:mockRegisterAbsorbed(callback, "*")
 
     mock.state = true
-    mock.shieldHitPoints = mock.maxShieldHitPoints
+    mock.shieldHitpoints = mock.maxShieldHitpoints
     lu.assertTrue(mock.state)
 
     -- weak hit
@@ -128,17 +128,17 @@ function _G.TestShieldGeneratorUnit.testAbsorbed()
     mock:mockDoAbsorbed(10)
     lu.assertTrue(called)
     -- changes before callbacks
-    lu.assertEquals(mock.shieldHitPoints, mock.maxShieldHitPoints - 10)
+    lu.assertEquals(mock.shieldHitpoints, mock.maxShieldHitpoints - 10)
     lu.assertEquals(state, 1) -- no change, not enough damage
 
     lu.assertTrue(mock.state)
 
     -- strong hit
     called = false
-    mock:mockDoAbsorbed(mock.maxShieldHitPoints + 100)
+    mock:mockDoAbsorbed(mock.maxShieldHitpoints + 100)
     lu.assertTrue(called)
     -- changes before callbacks
-    lu.assertEquals(mock.shieldHitPoints, 0)
+    lu.assertEquals(mock.shieldHitpoints, 0)
     lu.assertEquals(state, 0)
 
     lu.assertFalse(mock.state)
@@ -172,7 +172,7 @@ function _G.TestShieldGeneratorUnit.testAbsorbedError()
     mock:mockRegisterAbsorbed(callback2, "*")
 
     mock.state = true
-    mock.shieldHitPoints = mock.maxShieldHitPoints
+    mock.shieldHitpoints = mock.maxShieldHitpoints
     lu.assertTrue(mock.state)
 
     -- both called, proper order, errors thrown
@@ -182,7 +182,7 @@ function _G.TestShieldGeneratorUnit.testAbsorbedError()
     lu.assertEquals(callback2Order, 2)
 
     lu.assertTrue(mock.state)
-    lu.assertEquals(mock.shieldHitPoints, mock.maxShieldHitPoints - 10)
+    lu.assertEquals(mock.shieldHitpoints, mock.maxShieldHitpoints - 10)
 end
 
 --- Verify down works without errors.
@@ -313,7 +313,7 @@ end
 -- Test setup:
 -- 1. 1x Shield Generator, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState, getShieldHitPoints, getMaxShieldHitPoints
+-- Exercises: getElementClass, deactivate, activate, toggle, getState, getShieldHitpoints, getMaxShieldHitpoints
 function _G.TestShieldGeneratorUnit.testGameBehavior()
     local mock = msgu:new(nil, 1)
     mock.autoCallback = false
@@ -371,21 +371,21 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
 
     local absorbedListener = function()
         ---------------
-        -- copy from here to slot1.absorbed(hitpoints) *
+        -- copy from here to slot1.absorbed(hitpoints,rawHitpoints) * *
         ---------------
         assert(false, "Not expecting absorbed to be called.")
         ---------------
-        -- copy to here to slot1.absorbed(hitpoints) *
+        -- copy to here to slot1.absorbed(hitpoints,rawHitpoints) * *
         ---------------
     end
-    --mock:mockRegisterAbsorbed(absorbedListener)
+    mock:mockRegisterAbsorbed(absorbedListener)
 
     local downListener = function()
         ---------------
         -- copy from here to slot1.down()
         ---------------
         assert(slot1.getState() == 0, "Expected off before calling")
-        assert(slot1.getShieldHitPoints() == 0, "Expected 0 HP when off")
+        assert(slot1.getShieldHitpoints() == 0, "Expected 0 HP when off")
 
         -- give element time to settle before changing
         unit.setTimer("delay", 0.5)
@@ -400,7 +400,7 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
         -- copy from here to slot1.restored()
         ---------------
         assert(slot1.getState() == 1, "Expected on before calling")
-        assert(slot1.getShieldHitPoints() == slot1.getMaxShieldHitPoints(), "Expected max HP when on")
+        assert(slot1.getShieldHitpoints() == slot1.getMaxShieldHitpoints(), "Expected max HP when on")
 
         -- give element time to settle before changing
         unit.setTimer("delay", 0.5)
@@ -414,7 +414,11 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getShieldHitPoints", "getMaxShieldHitPoints"}
+    local expectedFunctions = {"getShieldHitpoints", "getMaxShieldHitpoints", "getStressHitpoints",
+                               "getStressHitpointsRaw", "getStressRatio", "getStressRatioRaw", "getResistances",
+                               "setResistances", "getResistancesRemaining", "getResistancesPool",
+                               "getResistancesCooldown", "getResistancesMaxCooldown", "isVenting", "startVenting",
+                               "getVentingCooldown", "getVentingMaxCooldown", "setSignalIn", "getSignalIn"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
@@ -427,7 +431,10 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
     assert(slot1.getElementClass() == "ShieldGeneratorUnit")
 
     local data = slot1.getData()
-    local expectedFields = {"elementId", "helperId", "isActive", "name", "shieldHp", "shieldMaxHp", "type"}
+    local expectedFields = {"elementId", "helperId", "isActive", "isVenting", "ventingCooldown", "ventingMaxCooldown",
+        "ventingStartHp", "ventingTargetHp", "resistances", "antimatter", "stress", "value", "electromagnetic",
+        "stress", "value", "kinetic", "stress", "value", "thermic", "stress", "value", "name", "shieldHp",
+        "shieldMaxHp", "type"}
     local expectedValues = {}
     expectedValues["helperId"] = '"shield_generator"'
     expectedValues["type"] = '"shield_generator"'
@@ -437,7 +444,7 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
     assert(slot1.getMass() >= 670.0)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3, "shield_generator")
 
-    assert(slot1.getMaxShieldHitPoints() >= 300000)
+    assert(slot1.getMaxShieldHitpoints() >= 300000)
 
     local function stateChangeTest()
         -- ensure initial state on
@@ -448,7 +455,7 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
         end
 
         -- full hp when on
-        assert(slot1.getShieldHitPoints() >= 300000)
+        assert(slot1.getShieldHitpoints() >= 300000)
 
         -- validate methods
         slot1.deactivate()
@@ -462,7 +469,7 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
         assert(slot1.getState() == 0)
 
         -- no hp when off
-        assert(slot1.getShieldHitPoints() == 0)
+        assert(slot1.getShieldHitpoints() == 0)
 
         system.print("Success")
         unit.exit()
@@ -473,7 +480,8 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
 
     _G.resumeCoroutine = function()
         assert(_G.shieldStateCoroutine, "Coroutine must exist when resume is called.")
-        assert(coroutine.status(_G.shieldStateCoroutine) ~= "dead", "Coroutine should not be dead when resume is called.")
+        assert(coroutine.status(_G.shieldStateCoroutine) ~= "dead",
+            "Coroutine should not be dead when resume is called.")
 
         -- resume routine only when expected call has been received and processed
         local ok, message = coroutine.resume(_G.shieldStateCoroutine)
