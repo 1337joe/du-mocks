@@ -97,7 +97,7 @@ end
 function _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ignoreFields)
     ignoreFields = ignoreFields or {}
     local unexpectedFields = {}
-    for key, value in string.gmatch(data, "\"(.-)\":(.-)[},]") do
+    for key, value in string.gmatch(data, "\"(.-)\":(.-)[{},]") do
         if expectedValues[key] then
             assert(expectedValues[key] == value,
                 "Unexpected value for " .. key .. ", expected " .. expectedValues[key] .. " but was " .. value)

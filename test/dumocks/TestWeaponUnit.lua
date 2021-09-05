@@ -64,7 +64,8 @@ function _G.TestWeaponUnit.gameBehaviorHelper(mock, slot11)
                             "operationalStatus", "outOfZone", "repeatedFire", "weaponStatus", "staticProperties",
                             "cycleTime", "magazineVolume", "optimalAimingCone", "optimalDistance", "optimalTracking",
                             "reloadTime", "size", "unloadTime", "targetConstruct", "elementId", "properties",
-                            "ammoMax", "ammoName", "ammoTypeId", "cycleAnimationRemainingTime", "fireBlocked"}
+                            "ammoMax", "ammoName", "ammoTypeId", "cycleAnimationRemainingTime", "fireBlocked",
+                            "ammoCount", "baseDamage", "constructId"}
     local expectedValues = {}
     local ignoreFields = {}
     expectedValues["helperId"] = '"weapon"'
