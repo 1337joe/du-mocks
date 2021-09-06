@@ -2,9 +2,6 @@
 --- Test the utilties for running tests.
 -- @see tests.Utilities
 
--- set search path to include src directory
-package.path = package.path .. ";src/?.lua"
-
 local lu = require("luaunit")
 require("test.Utilities")
 

@@ -3,7 +3,7 @@
 -- @see dumocks.ManualSwitchUnit
 
 -- set search path to include src directory
-package.path = package.path .. ";src/?.lua"
+package.path = "src/?.lua;" .. package.path
 
 local lu = require("luaunit")
 
