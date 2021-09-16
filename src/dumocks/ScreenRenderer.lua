@@ -46,6 +46,9 @@ local M = {
 }
 
 --- Shape constants for shapeType. Used to set default properties by shape.
+--
+-- Note: These are constants defined directly in the screen renderer, the grouping in a table is for documentation
+-- purposes only.
 -- @table Shape
 M.Shape = {
     Shape_Box = 0,
@@ -58,6 +61,9 @@ M.Shape = {
 }
 
 --- Horizontal alignment constants for alignH. Used by @{setNextTextAlign}.
+--
+-- Note: These are constants defined directly in the screen renderer, the grouping in a table is for documentation
+-- purposes only.
 -- @table AlignH
 M.AlignH = {
     AlignH_Left = 0,
@@ -65,6 +71,9 @@ M.AlignH = {
     AlignH_Right = 2,
 }
 --- Vertical alignment constants for alignV. Used by @{setNextTextAlign}.
+--
+-- Note: These are constants defined directly in the screen renderer, the grouping in a table is for documentation
+-- purposes only.
 -- @table AlignV
 M.AlignV = {
     AlignV_Ascender = 0,

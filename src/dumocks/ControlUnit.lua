@@ -544,6 +544,7 @@ function M:mockGetClosure()
         export[k] = v
     end
     closure.export = export
+    closure.unit = closure
 
     -- all linked elements by name
     for name, element in pairs(self.linkedElements) do
