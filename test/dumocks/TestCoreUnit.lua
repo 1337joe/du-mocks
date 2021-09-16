@@ -101,7 +101,11 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
                              "getConstructOrientationUp", "getConstructOrientationRight",
                              "getConstructOrientationForward", "getConstructWorldOrientationUp",
                              "getConstructWorldOrientationRight", "getConstructWorldOrientationForward",
-                             "getSchematicInfo", "getElementIndustryStatus", "getPvPTimer"}
+                             "getSchematicInfo", "getElementIndustryStatus", "getPvPTimer", "getPlayersOnBoard",
+                             "getDockedConstructs", "isPlayerBoarded", "isConstructDocked", "forceDeboard",
+                             "forceUndock", "getBoardedPlayerMass", "getDockedConstructMass", "getParent",
+                             "getCloseParents", "getClosestParent", "dock", "undock", "setDockingMode",
+                             "getDockingMode", "getMaxCoreStress", "getCoreStress", "getCoreStressRatio"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
@@ -115,12 +119,14 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
 
     -- test inherited methods
     local data = slot1.getData()
-    local expectedFields = {"helperId", "name", "type", "altitude", "gravity"}
+    local expectedFields = {"helperId", "name", "type", "altitude", "gravity", "currentStress", "maxStress"}
     local expectedValues = {}
     expectedValues["type"] = '"core"'
     expectedValues["helperId"] = '"core"'
+    expectedValues["currentStress"] = "0.0"
     if isStatic or isSpace then
         expectedValues["gravity"] = "0.0"
+        expectedValues["maxStress"] = "0.0" -- TODO verify for space construct
     end
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
 

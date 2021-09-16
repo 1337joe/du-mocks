@@ -35,7 +35,7 @@ function M:new(o, id, elementDefinition)
 end
 
 --- Returns the activation state of the element.
--- @return 1 when the element is on, 0 otherwise.
+-- @treturn 0/1 1 when the element is on, 0 otherwise.
 function M:getState()
     if self.state then
         return 1

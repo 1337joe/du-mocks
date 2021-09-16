@@ -87,6 +87,8 @@ function M:new(o, id, elementName)
     o.constructWorldOrientationUp = {0, 0, 0} -- vec3
     o.constructWorldOrientationRight = {0, 0, 0} -- vec3
     o.constructWorldOrientationForward = {0, 0, 0} -- vec3
+    o.currentStress = 0
+    o.maxStress = 0
 
     o.stickers = {}
 
@@ -95,7 +97,15 @@ function M:new(o, id, elementName)
     return o
 end
 
-local DATA_TEMPLATE = '{"helperId":"%s","type":"%s","name":"%s [%d]","altitude":%f,"gravity":%s}'
+local function formatFloat(float)
+    if float == 0 then
+        return "0.0"
+    end
+    return string.format("%.15f", float)
+end
+
+local DATA_TEMPLATE =
+    '{"helperId":"%s","type":"%s","name":"%s [%d]","altitude":%f,"gravity":%s,"currentStress":%s,"maxStress":%s}'
 --- Get element data as JSON.
 --
 -- Core units have a <code>core</code> widget, which contains the following fields (bold fields are visible when making
@@ -103,20 +113,19 @@ local DATA_TEMPLATE = '{"helperId":"%s","type":"%s","name":"%s [%d]","altitude":
 -- <ul>
 --   <li><b><span class="parameter">altitude</span></b> (<span class="type">float</span>) Altitude in meters.</li>
 --   <li><b><span class="parameter">gravity</span></b> (<span class="type">float</span>) Gravity in m/s<sup>2</sup>.</li>
+--   <li><span class="parameter">currentStress</span> (<span class="type">float</span>) Current core stress.</li>
+--   <li><span class="parameter">maxStress</span> (<span class="type">float</span>) Max core stress.</li>
 --   <li><span class="parameter">name</span> (<span class="type">string</span>) The name of the element.</li>
 --   <li><span class="parameter">helperId</span> (<span class="type">string</span>) <code>core</code></li>
 --   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>core</code></li>
 -- </ul>
 -- @treturn string Data as JSON.
 function M:getData()
-    local gString
-    if self:g() == 0 then
-        gString = "0.0"
-    else
-        gString = string.format("%.15f", self:g())
-    end
+    local gString = formatFloat(self:g())
+    local cStressString = formatFloat(self.currentStress)
+    local mStressString = formatFloat(self.maxStress)
     return string.format(DATA_TEMPLATE, self.helperId, self:getWidgetType(), self.name, self:getId(),
-                            self:getAltitude(), gString)
+                            self:getAltitude(), gString, cStressString, mStressString)
 end
 
 -- Override default with realistic patten to id.
@@ -362,44 +371,6 @@ function M:getElementTypeById(uid)
     return ""
 end
 
---- Position of the element, identified by its UID.
---
--- Position is relative to the negative-most corner of the build volume, not the center. To get center-relative positions subtract:
--- <ul>
---   <li>Core XS: 16</li>
---   <li>Core S: 32</li>
---   <li>Core M: 64</li>
---   <li>Core L: 128</li>
--- </ul>
--- @tparam int uid The UID of the element.
--- @treturn vec3 Position of the element in local coordinates.
-function M:getElementPositionById(uid)
-    if self.elements[uid] and self.elements[uid].position then
-        return self.elements[uid].position
-    end
-    return {}
-end
-
---- Rotation of the element, identified by its UID.
--- @tparam int uid The UID of the element.
--- @treturn quat Rotation of the element as a quaternion (x,y,z,w).
-function M:getElementRotationById(uid)
-    if self.elements[uid] and self.elements[uid].position then
-        return self.elements[uid].rotation
-    end
-    return {}
-end
-
---- List of tags associated to the element, identified by its UID.
--- @tparam int uid The UID of the element.
--- @treturn string Tags as JSON list.
-function M:getElementTagsById(uid)
-    if self.elements[uid] and self.elements[uid].tags then
-        return self.elements[uid].tags
-    end
-    return {}
-end
-
 --- <b>Deprecated:</b> Current level of hit points of the element, identified by its UID.
 --
 -- This method is deprecated: getElementHitPointsById should be used instead.
@@ -478,12 +449,57 @@ function M:getElementMassById(uid)
     return 0.0
 end
 
+--- Position of the element, identified by its UID.
+--
+-- Position is relative to the negative-most corner of the build volume, not the center. To get center-relative positions subtract:
+-- <ul>
+--   <li>Core XS: 16</li>
+--   <li>Core S: 32</li>
+--   <li>Core M: 64</li>
+--   <li>Core L: 128</li>
+-- </ul>
+-- @tparam int uid The UID of the element.
+-- @treturn vec3 Position of the element in local coordinates.
+function M:getElementPositionById(uid)
+    if self.elements[uid] and self.elements[uid].position then
+        return self.elements[uid].position
+    end
+    return {}
+end
+
+--- Rotation of the element, identified by its UID.
+-- @tparam int uid The UID of the element.
+-- @treturn quat Rotation of the element as a quaternion (x,y,z,w).
+function M:getElementRotationById(uid)
+    if self.elements[uid] and self.elements[uid].position then
+        return self.elements[uid].rotation
+    end
+    return {}
+end
+
 --- Status of the industry unit element, identified by its UID.
 -- @tparam int uid The UID of the element.
 -- @treturn json If the element is an industry unit, this returns a json (to be parsed with json.decode) with: state,
 -- schematicId, stopRequested, unitsProduced, remainingTime, batchesRequested, batchesRemaining, maintainProductAmount,
 -- currentProductAmount.
 function M:getElementIndustryStatus(uid)
+end
+
+--- List of tags associated to the element, identified by its UID.
+-- @tparam int uid The UID of the element.
+-- @treturn string Tags as JSON list.
+function M:getElementTagsById(uid)
+    if self.elements[uid] and self.elements[uid].tags then
+        return self.elements[uid].tags
+    end
+    return {}
+end
+
+--- Retrieves schematic details for the id provided as json.
+-- @tparam int schematicId The id of the schematic to query, example: 1199082577 for Pure Aluminium refining.
+-- @treturn jsonstr The schematic defails as a json object with fields: id, time, level, ingredients, products; where
+-- ingredients and products are lists of json objects with fields: name, quantity, type
+function M:getSchematicInfo(schematicId)
 end
 
 --- Altitude above sea level, with respect to the closest planet (0 in space).
@@ -628,18 +644,116 @@ function M:getConstructWorldOrientationForward()
     return self.constructWorldOrientationForward
 end
 
---- Retrieves schematic details for the id provided as json.
--- @tparam int schematicId The id of the schematic to query, example: 1199082577 for Pure Aluminium refining.
--- @treturn jsonstr The schematic defails as a json object with fields: id, time, level, ingredients, products; where
--- ingredients and products are lists of json objects with fields: name, quantity, type
-function M:getSchematicInfo(schematicId)
-end
-
 --- The construct's current state of the PvP timer.
---
 -- @treturn float Positive remaining time of the PvP timer.
 function M:getPvPTimer()
     return self.pvpTimer
+end
+
+--- Returns the list of player ids on board the construct.
+-- @treturn list List of Players IDs.
+function M:getPlayersOnBoard()
+end
+
+--- Returns the list of ids of constructs docked to the construct.
+-- @treturn list List of Construct IDs.
+function M:getDockedConstructs()
+end
+
+--- Returns True if the given player is boarded to the construct.
+-- @tparam int pid The player id.
+-- @treturn 0/1 1 if the given player is boarded to the construct, 0 otherwise.
+function M:isPlayerBoarded(pid)
+    return 0
+end
+
+--- Returns True if the given construct is docked to the construct.
+-- @tparam int cid The construct id.
+-- @treturn 0/1 1 if the given construct is docked to the construct, 0 otherwise.
+function M:isConstructDocked(cid)
+    return 0
+end
+
+--- Sends a request to unboard a player with the given id.
+-- @tparam int pid The player id.
+-- @treturn 0/1 1 if the operation is a success, 0 otherwise.
+function M:forceDeboard(pid)
+end
+
+--- Sends a request to undock a construct with the given id.
+-- @tparam int cid The construct id.
+-- @treturn 0/1 1 if the operation is a success, 0 otherwise.
+function M:forceUndock(cid)
+end
+
+--- Returns the mass of the given player if it is on board the construct.
+-- @tparam pid The player id.
+-- @treturn float The mass of the player.
+function M:getBoardedPlayerMass(pid)
+end
+
+--- Returns the mass of the given construct if it is docked to the construct.
+-- @tparam cid The construct id.
+-- @treturn The mass of the construct.
+function M:getDockedConstructMass(cid)
+end
+
+--- Returns the id of the parent construct of our active construct.
+-- @treturn int The parent id.
+function M:getParent()
+end
+
+--- Returns the list of ids of nearby constructs, on which the construct can dock.
+-- @treturn list List of ids of nearby constructs.
+function M:getCloseParents()
+end
+
+--- Returns the id of the nearest construct, on which the construct can dock.
+-- @treturn int The id of the nearest construct.
+function M:getClosestParent()
+end
+
+--- Sends a request to dock to the given construct. Limited to piloting controllers.
+-- @tparam int pid The parent id.
+-- @treturn 0/1 1 if the operation is a success, 0 otherwise.
+function M:dock(pid)
+end
+
+--- Sends a request to undock the construct. Limited to piloting controllers.
+-- @treturn 0/1 1 if the operation is a success, 0 otherwise.
+function M:undock()
+end
+
+--- Sets the docking mode.
+-- @tparam int mode 0: Manual, 1: Automatic, 2: Semi-automatic
+-- @treturn 0/1 1 if the operation is a success, 0 otherwise.
+function M:setDockingMode(mode)
+end
+
+--- Returns the current docking mode.
+-- @treturn int 0: Manual, 1: Automatic, 2: Semi-automatic
+function M:getDockingMode()
+end
+
+--- The core's current stress, destroyed when reaching max stress.
+--
+-- @treturn float Stress the core absorbed.
+function M:getCoreStress()
+    return self.currentStress
+end
+
+--- The maximal stress the core can bear before it gets destroyed.
+--
+-- @treturn float Maximal stress before destruction.
+function M:getMaxCoreStress()
+    return self.maxStress
+end
+
+--- The core's current stress to max stress ratio.
+--
+-- @treturn float Between 0 for no stress and 1 for destruction.
+function M:getCoreStressRatio()
+    return self.currentStress / self.maxStress
 end
 
 --- Event: Emitted when the PvP timer started or elapsed.
@@ -647,6 +761,46 @@ end
 -- Note: This is documentation on an event handler, not a callable method.
 -- @tparam boolean active True if the timer started.
 function M.EVENT_pvpTimer(active)
+    assert(false, "This is implemented for documentation purposes.")
+end
+
+--- Event: Emitted when core unit stress changed.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam float stress Difference to previous stress value.
+function M.EVENT_stressChanged()
+    assert(false, "This is implemented for documentation purposes.")
+end
+
+--- Event: Emitted when a player boards the construct.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam int pid The id of the boarding player.
+function M.EVENT_playerBoarded(pid)
+    assert(false, "This is implemented for documentation purposes.")
+end
+
+--- Event: Emitted when another construct docks this construct.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam int cid The id of the docking construct.
+function M.EVENT_constructDocked(cid)
+    assert(false, "This is implemented for documentation purposes.")
+end
+
+--- Event: Emitted when the construct becomes docked.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam int cid The parent id.
+function M.EVENT_docked(cid)
+    assert(false, "This is implemented for documentation purposes.")
+end
+
+--- Event: Emitted when the construct is undocked.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam int cid The old parent id.
+function M.EVENT_undocked(cid)
     assert(false, "This is implemented for documentation purposes.")
 end
 
@@ -712,6 +866,24 @@ function M:mockGetClosure()
     closure.getConstructWorldOrientationForward = function() return self:getConstructWorldOrientationForward() end
     closure.getSchematicInfo = function(schematicId) return self:getSchematicInfo(schematicId) end
     closure.getPvPTimer = function() return self:getPvPTimer() end
+    closure.getPlayersOnBoard = function() return self:getPlayersOnBoard() end
+    closure.getDockedConstructs = function() return self:getDockedConstructs() end
+    closure.isPlayerBoarded = function(pid) return self:isPlayerBoarded(pid) end
+    closure.isConstructDocked = function(cid) return self:isConstructDocked(cid) end
+    closure.forceDeboard = function(pid) return self:forceDeboard(pid) end
+    closure.forceUndock = function(cid) return self:forceUndock(cid) end
+    closure.getBoardedPlayerMass = function(pid) return self:getBoardedPlayerMass(pid) end
+    closure.getDockedConstructMass = function(cid) return self:getDockedConstructMass(cid) end
+    closure.getParent = function() return self:getParent() end
+    closure.getCloseParents = function() return self:getCloseParents() end
+    closure.getClosestParent = function() return self:getClosestParent() end
+    closure.dock = function(pid) return self:dock(pid) end
+    closure.undock = function() return self:undock() end
+    closure.setDockingMode = function(mode) return self:setDockingMode(mode) end
+    closure.getDockingMode = function() return self:getDockingMode() end
+    closure.getCoreStress = function() return self:getCoreStress() end
+    closure.getMaxCoreStress = function() return self:getMaxCoreStress() end
+    closure.getCoreStressRatio = function() return self:getCoreStressRatio() end
     return closure
 end
 
