@@ -39,6 +39,7 @@ function M:new(o, id, elementName)
 
     o.plugIn = 0.0
 
+    o.toggledCallbacks = {}
     o.absorbedCallbacks = {}
     o.downCallbacks = {}
     o.restoredCallbacks = {}
@@ -242,15 +243,37 @@ end
 function M:getStressHitpointsRaw()
 end
 
+
 --- Set the value of a signal in the specified IN plug of the element.
 --
 -- Valid plug names are:
 -- <ul>
--- <li>"in" for the in signal. TODO is it possible to connect something to pass an in signal?</li>
+-- <li>"in" for the in signal (has no actual effect on agg state when modified this way).</li>
 -- </ul>
 -- @param plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
+    if plug == "in" then
+        local value = tonumber(state)
+        if type(value) ~= "number" then
+            value = 0.0
+        end
+
+        -- expected behavior, but in fact nothing happens in-game
+        if value > 0.0 then
+            -- self:activate()
+        else
+            -- self:deactivate()
+        end
+
+        if value <= 0 then
+            self.plugIn = 0
+        elseif value >= 1.0 then
+            self.plugIn = 1.0
+        else
+            self.plugIn = value
+        end
+    end
 end
 
 --- Return the value of a signal in the specified IN plug of the element.
@@ -262,10 +285,23 @@ end
 -- @param plug A valid plug name to query.
 -- @treturn 0/1 The plug signal state
 function M:getSignalIn(plug)
+    if plug == "in" then
+        -- clamp to valid values
+        local value = tonumber(self.plugIn)
+        if type(value) ~= "number" then
+            return 0.0
+        elseif value >= 1.0 then
+            return 1.0
+        elseif value <= 0.0 then
+            return 0.0
+        else
+            return value
+        end
+    end
     return MockElement.getSignalIn(self)
 end
 
---- Event: Emitted when we started or stopped venting.
+--- Event: Emitted when we started or stopped the shield generator.
 --
 -- Note: This is documentation on an event handler, not a callable method.
 -- @tparam 0/1 active 1 if the element was activated, 0 otherwise.
@@ -291,7 +327,7 @@ function M.EVENT_venting(active, restoredHitpoints)
     assert(false, "This is implemented for documentation purposes.")
 end
 
---- Event: Emitted when the shield hit points reached 0 due to damage or deactivation.
+--- Event: Emitted when the shield hit points reached 0 due to damages.
 --
 -- Note: This is documentation on an event handler, not a callable method.
 function M.EVENT_down()
@@ -305,8 +341,53 @@ function M.EVENT_restored()
     assert(false, "This is implemented for documentation purposes.")
 end
 
+--- Mock only, not in-game: Register a handler for the in-game `toggled(active)` event.
+-- @tparam function callback The function to call when the shield state changes.
+-- @tparam string active The state to filter for or "*" for all.
+-- @treturn int The index of the callback.
+-- @see EVENT_toggled
+function M:mockRegisterToggled(callback, active)
+    local index = #self.toggledCallbacks + 1
+    self.toggledCallbacks[index] = {
+        callback = callback,
+        active = active
+    }
+    return index
+end
+
+--- Mock only, not in-game: Simulates the shield changing state.
+--
+-- Note: The state updates before the event handlers are called.
+-- @tparam 0/1 active The new state, 0 for off, 1 for on.
+function M:mockDoToggled(active)
+    -- bail if already in desired state
+    if self.state == (active == 1) then
+        return
+    end
+
+    self.state = (active == 1)
+
+    -- call callbacks in order, saving exceptions until end
+    local activeString = tostring(active) -- in case registered with string argument, following "*" pattern
+    local errors = ""
+    for i, callback in pairs(self.toggledCallbacks) do
+        -- filter on active
+        if (callback.active == "*" or callback.active == active or callback.active == activeString) then
+            local status, err = pcall(callback.callback, active)
+            if not status then
+                errors = errors .. "\nError while running callback " .. i .. ": " .. err
+            end
+        end
+    end
+
+    -- propagate errors
+    if string.len(errors) > 0 then
+        error("Errors raised in callbacks:" .. errors)
+    end
+end
+
 --- Mock only, not in-game: Register a handler for the in-game `absorbed(hitpoints, rawHitpoints)` event.
--- @tparam function callback The function to call when the shield comes up.
+-- @tparam function callback The function to call when the shield absorbs damage.
 -- @tparam string hitpoints The hit points to filter for or "*" for all.
 -- @tparam string rawHitpoints The raw hit points to filter for or "*" for all.
 -- @treturn int The index of the callback.
@@ -341,10 +422,10 @@ function M:mockDoAbsorbed(hitpoints, rawHitpoints)
     -- call callbacks in order, saving exceptions until end
     local errors = ""
     for i, callback in pairs(self.absorbedCallbacks) do
-        -- filter on the receiver default channel and on message
+        -- filter on the absorbed hitpoints/raw hitpoints
         if (callback.hitpoints == "*" or callback.hitpoints == hitpoints) and
                 (callback.rawHitpoints == "*" or callback.rawHitpoints == rawHitpoints) then
-            local status, err = pcall(callback.callback, hitpoints)
+            local status, err = pcall(callback.callback, hitpoints, rawHitpoints)
             if not status then
                 errors = errors .. "\nError while running callback " .. i .. ": " .. err
             end
@@ -441,9 +522,9 @@ function M:mockTriggerCallback()
     end
 
     if self.newState then
-        self:mockDoRestored()
+        self:mockDoToggled(1)
     else
-        self:mockDoDown()
+        self:mockDoToggled(0)
     end
 end
 

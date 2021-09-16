@@ -59,7 +59,7 @@ end
 
 -- prepare output
 local TARGET_PATTERN = "([a-zA-Z0-9]+)%.([a-zA-Z()*,]+)(.*)"
-local ARGS_PATTERN = "([a-zA-Z_*]+)"
+local ARGS_PATTERN = "([a-zA-Z0-9_*]+)"
 local BOILERPLATE_START = [[
 {
     "slots":{

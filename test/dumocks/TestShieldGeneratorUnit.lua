@@ -107,26 +107,125 @@ function _G.TestShieldGeneratorUnit.testGetShieldHitpoints()
     lu.assertEquals(closure.getShieldHitpoints(), 0)
 end
 
+--- Verify toggled works without errors.
+function _G.TestShieldGeneratorUnit.testToggled()
+    local mock = msgu:new()
+    local closure = mock:mockGetClosure()
+
+    local called, calledOn, calledOff, state, actualActive
+    local callback = function(active)
+        called = true
+        state = closure.getState()
+        actualActive = active
+    end
+    mock:mockRegisterToggled(callback, "*")
+    local callbackOn = function(active)
+        calledOn = true
+    end
+    mock:mockRegisterToggled(callbackOn, "1") -- intentionally string
+    local callbackOff = function(active)
+        calledOff = true
+    end
+    mock:mockRegisterToggled(callbackOff, 0) -- intentionally not string
+
+    local expectedState, expectedActive
+
+    -- same state - no-op
+    called, calledOn, calledOff = false, false, false
+    mock.state = true
+    mock:mockDoToggled(1)
+    lu.assertFalse(called)
+    lu.assertFalse(calledOn)
+    lu.assertFalse(calledOff)
+
+    called, calledOn, calledOff = false, false, false
+    mock.state = false
+    mock:mockDoToggled(0)
+    lu.assertFalse(called)
+    lu.assertFalse(calledOn)
+    lu.assertFalse(calledOff)
+
+    -- change state, specific callbacks expected
+    called, calledOn, calledOff = false, false, false
+    expectedState, expectedActive = 0, 0
+    mock.state = true
+    mock:mockDoToggled(expectedActive)
+    lu.assertTrue(called)
+    lu.assertFalse(calledOn)
+    lu.assertTrue(calledOff)
+    lu.assertEquals(state, expectedState)
+    lu.assertEquals(actualActive, expectedActive)
+
+    called, calledOn, calledOff = false, false, false
+    expectedState, expectedActive = 1, 1
+    mock.state = false
+    mock:mockDoToggled(expectedActive)
+    lu.assertTrue(called)
+    lu.assertTrue(calledOn)
+    lu.assertFalse(calledOff)
+    lu.assertEquals(state, expectedState)
+    lu.assertEquals(actualActive, expectedActive)
+end
+
+--- Verify toggled works with and propagates errors.
+function _G.TestShieldGeneratorUnit.testToggledError()
+    local mock = msgu:new()
+
+    local calls = 0
+    local callback1Order, callback2Order
+    local callbackError = function()
+        calls = calls + 1
+        callback1Order = calls
+        error("I'm a bad callback.")
+    end
+    mock:mockRegisterToggled(callbackError, "*")
+
+    local callback2 = function()
+        calls = calls + 1
+        callback2Order = calls
+        error("I'm a bad callback, too.")
+    end
+    mock:mockRegisterToggled(callback2, "*")
+
+    mock.state = true
+
+    -- both called, proper order, errors thrown, state still changes
+    lu.assertErrorMsgContains("bad callback", mock.mockDoToggled, mock, 0)
+    lu.assertEquals(calls, 2)
+    lu.assertEquals(callback1Order, 1)
+    lu.assertEquals(callback2Order, 2)
+
+    lu.assertFalse(mock.state)
+end
+
 --- Verify absorbed works without errors.
 function _G.TestShieldGeneratorUnit.testAbsorbed()
     local mock = msgu:new()
     local closure = mock:mockGetClosure()
 
-    local called, state
-    local callback = function()
+    local called, state, actualDamage, actualDamageRaw
+    local callback = function(hitpoints, rawHitpoints)
         called = true
         state = closure.getState()
+        actualDamage = hitpoints
+        actualDamageRaw = rawHitpoints
     end
-    mock:mockRegisterAbsorbed(callback, "*")
+    mock:mockRegisterAbsorbed(callback, "*", "*")
 
     mock.state = true
     mock.shieldHitpoints = mock.maxShieldHitpoints
     lu.assertTrue(mock.state)
 
+    local expectedDamage, expectedDamageRaw
+
     -- weak hit
     called = false
-    mock:mockDoAbsorbed(10)
+    expectedDamage = 10
+    expectedDamageRaw = 1.5 * expectedDamage
+    mock:mockDoAbsorbed(expectedDamage, expectedDamageRaw)
     lu.assertTrue(called)
+    lu.assertEquals(actualDamage, expectedDamage)
+    lu.assertEquals(actualDamageRaw, expectedDamageRaw)
     -- changes before callbacks
     lu.assertEquals(mock.shieldHitpoints, mock.maxShieldHitpoints - 10)
     lu.assertEquals(state, 1) -- no change, not enough damage
@@ -135,8 +234,12 @@ function _G.TestShieldGeneratorUnit.testAbsorbed()
 
     -- strong hit
     called = false
-    mock:mockDoAbsorbed(mock.maxShieldHitpoints + 100)
+    expectedDamage = mock.maxShieldHitpoints + 100
+    expectedDamageRaw = 1.5 * expectedDamage
+    mock:mockDoAbsorbed(expectedDamage, expectedDamageRaw)
     lu.assertTrue(called)
+    lu.assertEquals(actualDamage, expectedDamage)
+    lu.assertEquals(actualDamageRaw, expectedDamageRaw)
     -- changes before callbacks
     lu.assertEquals(mock.shieldHitpoints, 0)
     lu.assertEquals(state, 0)
@@ -162,27 +265,26 @@ function _G.TestShieldGeneratorUnit.testAbsorbedError()
         callback1Order = calls
         error("I'm a bad callback.")
     end
-    mock:mockRegisterAbsorbed(callbackError, "*")
+    mock:mockRegisterAbsorbed(callbackError, "*", "*")
 
     local callback2 = function()
         calls = calls + 1
         callback2Order = calls
         error("I'm a bad callback, too.")
     end
-    mock:mockRegisterAbsorbed(callback2, "*")
+    mock:mockRegisterAbsorbed(callback2, "*", "*")
 
     mock.state = true
     mock.shieldHitpoints = mock.maxShieldHitpoints
     lu.assertTrue(mock.state)
 
-    -- both called, proper order, errors thrown
-    lu.assertErrorMsgContains("bad callback", mock.mockDoAbsorbed, mock, 10)
+    -- both called, proper order, errors thrown, state still changes
+    lu.assertErrorMsgContains("bad callback", mock.mockDoAbsorbed, mock, mock.maxShieldHitpoints + 10, 15)
     lu.assertEquals(calls, 2)
     lu.assertEquals(callback1Order, 1)
     lu.assertEquals(callback2Order, 2)
 
-    lu.assertTrue(mock.state)
-    lu.assertEquals(mock.shieldHitpoints, mock.maxShieldHitpoints - 10)
+    lu.assertFalse(mock.state)
 end
 
 --- Verify down works without errors.
@@ -373,7 +475,7 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
         ---------------
         -- copy from here to slot1.absorbed(hitpoints,rawHitpoints) * *
         ---------------
-        assert(false, "Not expecting absorbed to be called.")
+        assert(false, "Not expecting absorbed to be called outside of combat.")
         ---------------
         -- copy to here to slot1.absorbed(hitpoints,rawHitpoints) * *
         ---------------
@@ -384,11 +486,7 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
         ---------------
         -- copy from here to slot1.down()
         ---------------
-        assert(slot1.getState() == 0, "Expected off before calling")
-        assert(slot1.getShieldHitpoints() == 0, "Expected 0 HP when off")
-
-        -- give element time to settle before changing
-        unit.setTimer("delay", 0.5)
+        assert(false, "Not expecting down to be called outside of combat.")
         ---------------
         -- copy to here to slot1.down()
         ---------------
@@ -399,16 +497,54 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
         ---------------
         -- copy from here to slot1.restored()
         ---------------
-        assert(slot1.getState() == 1, "Expected on before calling")
-        assert(slot1.getShieldHitpoints() == slot1.getMaxShieldHitpoints(), "Expected max HP when on")
-
-        -- give element time to settle before changing
-        unit.setTimer("delay", 0.5)
+        assert(false, "Not expecting restored to be called outside of combat.")
         ---------------
         -- copy to here to slot1.restored()
         ---------------
     end
     mock:mockRegisterRestored(restoredListener)
+
+    local toggledListener = function(active)
+        ---------------
+        -- copy from here to slot1.toggled(active) *
+        ---------------
+        _G.toggleCount = _G.toggleCount + 1
+
+        local state = slot1.getState()
+        assert(state == active,
+            string.format("Expected state to match toggle argument: active=%d, state=%d.", active, state))
+
+        -- give element time to settle before changing
+        unit.setTimer("delay", 0.25)
+        ---------------
+        -- copy to here to slot1.toggled(active) *
+        ---------------
+    end
+    mock:mockRegisterToggled(toggledListener, "*")
+    local toggledListenerActive = function(active)
+        ---------------
+        -- copy from here to slot1.toggled(active) 1
+        ---------------
+        _G.toggleOnCount = _G.toggleOnCount + 1
+        assert(slot1.getState() == 1, "Expected state 1 when toggled active.")
+        assert(slot1.getShieldHitpoints() == slot1.getMaxShieldHitpoints(), "Expected max HP when on")
+        ---------------
+        -- copy to here to slot1.toggled(active) 1
+        ---------------
+    end
+    mock:mockRegisterToggled(toggledListenerActive, 1)
+    local toggledListenerInactive = function(active)
+        ---------------
+        -- copy from here to slot1.toggled(active) 0
+        ---------------
+        _G.toggleOffCount = _G.toggleOffCount + 1
+        assert(slot1.getState() == 0, "Expected state 1 when toggled inactive.")
+        -- assert(slot1.getShieldHitpoints() == 0, "Expected 0 HP when off") -- inconsistent
+        ---------------
+        -- copy to here to slot1.toggled(active) 0
+        ---------------
+    end
+    mock:mockRegisterToggled(toggledListenerInactive, 0)
 
     ---------------
     -- copy from here to unit.start()
@@ -444,7 +580,41 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
     assert(slot1.getMass() >= 670.0)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3, "shield_generator")
 
+    local initialState = slot1.getState()
+
+    -- play with set signal, has no actual effect on state when set programmatically
+    slot1.setSignalIn("in", 0.0)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", 1.0)
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(slot1.getState() == initialState)
+    -- fractions within [0,1] work, and string numbers are cast
+    slot1.setSignalIn("in", 0.7)
+    assert(slot1.getSignalIn("in") == 0.7)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", "0.5")
+    assert(slot1.getSignalIn("in") == 0.5)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", "0.0")
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", "7.0")
+    assert(slot1.getSignalIn("in") == 1.0)
+    assert(slot1.getState() == initialState)
+    -- invalid sets to 0
+    slot1.setSignalIn("in", "text")
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+    slot1.setSignalIn("in", nil)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getState() == initialState)
+
     assert(slot1.getMaxShieldHitpoints() >= 300000)
+
+    _G.toggleCount = 0
+    _G.toggleOnCount = 0
+    _G.toggleOffCount = 0
 
     local function stateChangeTest()
         -- ensure initial state on
@@ -457,6 +627,11 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
         -- full hp when on
         assert(slot1.getShieldHitpoints() >= 300000)
 
+        -- reset
+        _G.toggleCount = 0
+        _G.toggleOnCount = 0
+        _G.toggleOffCount = 0
+
         -- validate methods
         slot1.deactivate()
         coroutine.yield()
@@ -468,8 +643,11 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
         coroutine.yield()
         assert(slot1.getState() == 0)
 
-        -- no hp when off
-        assert(slot1.getShieldHitpoints() == 0)
+        -- assert(slot1.getShieldHitpoints() == 0, "Expected 0 HP when off") -- inconsistent
+
+        assert(_G.toggleCount == 3, "Total toggle count: " .. _G.toggleCount)
+        assert(_G.toggleOnCount == 1, "Total toggle on count: " .. _G.toggleOnCount)
+        assert(_G.toggleOffCount == 2, "Total toggle off count: " .. _G.toggleOffCount)
 
         system.print("Success")
         unit.exit()
