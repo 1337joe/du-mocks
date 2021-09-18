@@ -58,7 +58,7 @@ function M.findElement(elementDefinitions, elementName, defaultName)
 
     local chosenDefinition = elementDefinitions[elementName]
     if chosenDefinition then
-        chosenDefinition.name = elementName
+        chosenDefinition.name = chosenDefinition.name or elementName
     end
     return chosenDefinition
 end
@@ -78,7 +78,7 @@ function M:new(o, id, elementDefinition)
     o.name = "" -- not directly accessible but used to label default widgets; defaults to name of element type
 
     if elementDefinition then
-        o.name = elementDefinition.name or ""
+        o.name = string.format("%s [%d]", elementDefinition.name, o.id)
         o.mass = elementDefinition.mass or 0
         o.maxHitPoints = elementDefinition.maxHitPoints or 100
         o.hitPoints = elementDefinition.maxHitPoints or 100

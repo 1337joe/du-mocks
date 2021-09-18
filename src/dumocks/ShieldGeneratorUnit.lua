@@ -68,7 +68,7 @@ function M:toggle()
     end
 end
 
-local DATA_TEMPLATE = '{"elementId":%d,"helperId":"shield_generator","isActive":%s,"name":"%s [%d]","shieldHp":%f,' ..
+local DATA_TEMPLATE = '{"elementId":%d,"helperId":"shield_generator","isActive":%s,"name":"%s","shieldHp":%f,' ..
     '"shieldMaxHp":%f,"type":"%s"}'
 --- Get element data as JSON.
 --
@@ -89,7 +89,7 @@ local DATA_TEMPLATE = '{"elementId":%d,"helperId":"shield_generator","isActive":
 -- @treturn string Data as JSON.
 function M:getData()
     local generatorId = 123456789
-    return string.format(DATA_TEMPLATE, generatorId, self.state, self.name, self:getId(), self.shieldHitPoints,
+    return string.format(DATA_TEMPLATE, generatorId, self.state, self.name, self.shieldHitPoints,
         self.maxShieldHitPoints, self:getWidgetType())
 end
 

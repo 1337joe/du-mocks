@@ -36,7 +36,7 @@ function M:new(o, id, elementName)
 end
 
 local DATA_TEMPLATE = [[
-    {"elementId":"%d","helperId":"%s","name":"%s [%d]",
+    {"elementId":"%d","helperId":"%s","name":"%s",
         "properties": {
             "ammoCount":0,
             "ammoMax":0,
@@ -116,7 +116,8 @@ local DATA_TEMPLATE = [[
 function M:getData()
     local weaponId = 123456789
     local targetConstruct = [[{"constructId":"0"}]]
-    return string.format(DATA_TEMPLATE, weaponId, self.helperId, self.name, self:getId(), self.staticProperties, targetConstruct, self:getWidgetType())
+    return string.format(DATA_TEMPLATE, weaponId, self.helperId, self.name, self.staticProperties, targetConstruct,
+        self:getWidgetType())
 end
 
 -- Override default with realistic patten to id.

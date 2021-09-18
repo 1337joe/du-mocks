@@ -91,13 +91,12 @@ function _G.TestAntiGravityGeneratorUnit.testGetData()
     local mock = maggu:new(nil, 2)
     local closure = mock:mockGetClosure()
 
-    mock.name = "Anti-gravity generator s"
     mock.baseAltitude = 1217.0
     mock.antiGravityField = 1.2000000178813932
     mock.antiGravityPower = 0.38769580129994552
 
     local data = closure.getData()
-    lu.assertStrContains(data, '"name":"Anti-gravity generator s [2]"')
+    lu.assertStrContains(data, '"name":"anti-gravity generator s [2]"')
     lu.assertStrContains(data, '"type":"antigravity_generator"')
     lu.assertStrContains(data, '"helperId":"antigravity_generator"')
     lu.assertStrContains(data, '"showError":false')

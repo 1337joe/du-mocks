@@ -44,7 +44,7 @@ function M:new(o, id, elementName)
 end
 
 local DATA_TEMPLATE = '{"antiGPower":%.17f,"antiGravityField":%.16f,"baseAltitude\":%f,\"helperId\":\"antigravity_generator'..
-    '\",\"name\":\"%s [%d]\",\"showError\":%s,\"type\":\"%s\"}'
+    '\",\"name\":\"%s\",\"showError\":%s,\"type\":\"%s\"}'
 --- Get element data as JSON.
 --
 -- Anti-gravity generators have an <code>antigravity_generator</code> widget, which contains the following fields (bold
@@ -65,7 +65,7 @@ local DATA_TEMPLATE = '{"antiGPower":%.17f,"antiGravityField":%.16f,"baseAltitud
 -- @treturn string Data as JSON.
 function M:getData()
     return string.format(DATA_TEMPLATE, self.antiGravityPower, self.antiGravityField, self.baseAltitude, self.name,
-        self:getId(), false, self:getWidgetType())
+        false, self:getWidgetType())
 end
 
 -- Override default with realistic patten to id.

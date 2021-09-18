@@ -95,7 +95,7 @@ function M:new(o, id, elementName)
     return o
 end
 
-local DATA_TEMPLATE = '{"helperId":"%s","type":"%s","name":"%s [%d]","altitude":%f,"gravity":%s}'
+local DATA_TEMPLATE = '{"helperId":"%s","type":"%s","name":"%s","altitude":%f,"gravity":%s}'
 --- Get element data as JSON.
 --
 -- Core units have a <code>core</code> widget, which contains the following fields (bold fields are visible when making
@@ -115,8 +115,7 @@ function M:getData()
     else
         gString = string.format("%.15f", self:g())
     end
-    return string.format(DATA_TEMPLATE, self.helperId, self:getWidgetType(), self.name, self:getId(),
-                            self:getAltitude(), gString)
+    return string.format(DATA_TEMPLATE, self.helperId, self:getWidgetType(), self.name, self:getAltitude(), gString)
 end
 
 -- Override default with realistic patten to id.

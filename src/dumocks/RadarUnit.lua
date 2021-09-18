@@ -73,7 +73,7 @@ function M:new(o, id, elementName)
 end
 
 
-local DATA_TEMPLATE = '{"helperId":"%s","type":"%s","name":"%s [%d]",'..
+local DATA_TEMPLATE = '{"helperId":"%s","type":"%s","name":"%s",'..
 [["constructsList":[],"elementId":"%d",
 "properties":{
     "broken":false,
@@ -101,8 +101,8 @@ function M:getData()
     local radarId = 123456789
     local worksInAtmosphere = self.elementClass == CLASS_ATMO
     local worksInSpace = self.elementClass == CLASS_SPACE
-    return string.format(DATA_TEMPLATE, self.helperId, self:getWidgetType(), self.name, self:getId(),
-                            radarId, worksInAtmosphere, worksInSpace)
+    return string.format(DATA_TEMPLATE, self.helperId, self:getWidgetType(), self.name, radarId, worksInAtmosphere,
+                            worksInSpace)
 end
 
 -- Override default with realistic patten to id.

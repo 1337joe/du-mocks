@@ -75,7 +75,7 @@ function M:new(o, id, elementName)
 end
 
 local DATA_TEMPLATE =
-    '{"helperId":"%s","type":"%s","name":"%s [%d]","currentMaxThrust":%f,"currentThrust":%f,"maxThrustBase":%f}'
+    '{"helperId":"%s","type":"%s","name":"%s","currentMaxThrust":%f,"currentThrust":%f,"maxThrustBase":%f}'
 --- Get element data as JSON.
 --
 -- Engines have an <code>engine_unit</code> widget, which contains the following fields (bold fields are visible when
@@ -96,7 +96,7 @@ function M:getData()
     local currentMaxThrust = 0
     local currentThrust = 0
     local maxThrustBase = 0
-    return string.format(DATA_TEMPLATE, self.helperId, self:getWidgetType(), self.name, self:getId(), currentMaxThrust,
+    return string.format(DATA_TEMPLATE, self.helperId, self:getWidgetType(), self.name, currentMaxThrust,
                             currentThrust, maxThrustBase)
 end
 

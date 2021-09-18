@@ -35,12 +35,12 @@ elementDefinitions["parcel container s"] = {mass = 1256.17, maxHitPoints = 999.0
 elementDefinitions["parcel container m"] = {mass = 7273.75, maxHitPoints = 7997.0, class = CLASS_PARCEL, maxVolume = 64000}
 elementDefinitions["parcel container l"] = {mass = 14547.5, maxHitPoints = 17316.0, class = CLASS_PARCEL, maxVolume = 128000}
 elementDefinitions["parcel container xl"] = {mass = 43313.71, maxHitPoints = 34633.0, class = CLASS_PARCEL, maxVolume = 256000}
-elementDefinitions["parcel expanded container xl"] = {mass = 86627.42, maxHitPoints = 69267.0, class = CLASS_PARCEL, maxVolume = 512000}
+elementDefinitions["expanded parcel container xl"] = {mass = 86627.42, maxHitPoints = 69267.0, class = CLASS_PARCEL, maxVolume = 512000}
 
-elementDefinitions["atmospheric fuel tank xs"] = {mass = 35.03, maxHitPoints = 50.0, class = CLASS_ATMO, maxVolume = 100}
-elementDefinitions["atmospheric fuel tank s"] = {mass = 182.67, maxHitPoints = 163.0, class = CLASS_ATMO, maxVolume = 400}
-elementDefinitions["atmospheric fuel tank m"] = {mass = 988.67, maxHitPoints = 1315.0, class = CLASS_ATMO, maxVolume = 1600}
-elementDefinitions["atmospheric fuel tank l"] = {mass = 5481.27, maxHitPoints = 10461.0, class = CLASS_ATMO, maxVolume = 12800}
+elementDefinitions["atmospheric fuel tank xs"] = {name = "Atmospheric Fuel Tank xs", mass = 35.03, maxHitPoints = 50.0, class = CLASS_ATMO, maxVolume = 100}
+elementDefinitions["atmospheric fuel tank s"] = {name = "Atmospheric Fuel Tank s", mass = 182.67, maxHitPoints = 163.0, class = CLASS_ATMO, maxVolume = 400}
+elementDefinitions["atmospheric fuel tank m"] = {name = "Atmospheric Fuel Tank m", mass = 988.67, maxHitPoints = 1315.0, class = CLASS_ATMO, maxVolume = 1600}
+elementDefinitions["atmospheric fuel tank l"] = {name = "Atmospheric Fuel Tank l", mass = 5481.27, maxHitPoints = 10461.0, class = CLASS_ATMO, maxVolume = 12800}
 
 elementDefinitions["space fuel tank s"] = {mass = 182.67, maxHitPoints = 187.0, class = CLASS_SPACE, maxVolume = 400}
 elementDefinitions["space fuel tank m"] = {mass = 988.67, maxHitPoints = 1496.0, class = CLASS_SPACE, maxVolume = 1600}
@@ -159,7 +159,7 @@ function M:getItemsList()
     return self.storageJson
 end
 
-local DATA_TEMPLATE = '{\"name\":\"%s [%d]\","percentage":%.16f,"timeLeft":%s,\"helperId\":\"%s\",\"type\":\"%s\"}'
+local DATA_TEMPLATE = '{\"name\":\"%s\","percentage":%.16f,"timeLeft":%s,\"helperId\":\"%s\",\"type\":\"%s\"}'
 --- Get element data as JSON.
 --
 -- Fuel containers (element classes <code>AtmoFuelContainer</code>, <code>SpaceFuelContainer</code>, and
@@ -180,8 +180,7 @@ function M:getData()
     if self.elementClass == CLASS_ITEM or self.elementClass == CLASS_PARCEL then
         return MockElement:getData()
     end
-    return string.format(DATA_TEMPLATE, self.name, self:getId(), self.percentage, self.timeLeft, self.helperId,
-               self:getWidgetType())
+    return string.format(DATA_TEMPLATE, self.name, self.percentage, self.timeLeft, self.helperId, self:getWidgetType())
 end
 
 -- Override default with realistic patten to id.

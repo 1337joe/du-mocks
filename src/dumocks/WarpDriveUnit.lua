@@ -28,7 +28,7 @@ function M:new(o, id, elementName)
     return o
 end
 
-local DATA_TEMPLATE = '{\"helperId\":\"warpdrive\",\"type\":\"%s\",\"name\":\"%s [%d]\",\"elementId\":\"%d\",\"' ..
+local DATA_TEMPLATE = '{\"helperId\":\"warpdrive\",\"type\":\"%s\",\"name\":\"%s\",\"elementId\":\"%d\",\"' ..
                       'buttonMsg\":\"%s\",\"errorMsg\":\"%s\",\"cellCount\":\"%s\",\"showError\":%s,' ..
                       '\"destination\":\"%s\",\"distance\":%d}'
 --- Get element data as JSON.
@@ -66,8 +66,8 @@ function M:getData()
     local destination = "Unknown"
     local distance = 0
 
-    return string.format(DATA_TEMPLATE, self:getWidgetType(), self.name, self:getId(), warpDriveId, buttonMsg, errorMsg,
-               cellCount, showError, destination, distance)
+    return string.format(DATA_TEMPLATE, self:getWidgetType(), self.name, warpDriveId, buttonMsg, errorMsg, cellCount,
+        showError, destination, distance)
 end
 
 -- Override default with realistic patten to id.

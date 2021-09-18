@@ -58,7 +58,7 @@ function M:toggle()
     self.state = self.dynamicCore == true and not self.state
 end
 
-local DATA_TEMPLATE = '{\"helperId\":\"gyro\",\"name\":\"%s [%d]\","pitch":%.17f,"roll":%.16f,\"type\":\"%s\"}'
+local DATA_TEMPLATE = '{\"helperId\":\"gyro\",\"name\":\"%s\","pitch":%.17f,"roll":%.16f,\"type\":\"%s\"}'
 --- Get element data as JSON.
 --
 -- Gyroscopes have a <code>gyro</code> widget, which contains the following fields (bold fields are visible when making
@@ -72,7 +72,7 @@ local DATA_TEMPLATE = '{\"helperId\":\"gyro\",\"name\":\"%s [%d]\","pitch":%.17f
 -- </ul>
 -- @treturn string Data as JSON.
 function M:getData()
-    return string.format(DATA_TEMPLATE, self.name, self:getId(), self.pitch, self.roll, self:getWidgetType())
+    return string.format(DATA_TEMPLATE, self.name, self.pitch, self.roll, self:getWidgetType())
 end
 
 -- Override default with realistic patten to id.

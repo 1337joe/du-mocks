@@ -94,7 +94,7 @@ function M:new(o, id, elementName)
 end
 
 local GENERIC_DATA_TEMPLATE =
-    '{"helperId":"%s","type":"%s","name":"%s [%d]","elementId":"%d","showScriptError":%s,"controlMasterModeId":%d'
+    '{"helperId":"%s","type":"%s","name":"%s","elementId":"%d","showScriptError":%s,"controlMasterModeId":%d'
 local COCKPIT_DATA_TEMPLATE = ',"acceleration":%f,"airDensity":%f,"airResistance":%f,"atmoThrust":%f,' ..
                                  '"controlData":%s,"showHasBrokenFuelTank":%s,"showOutOfFuel":%s,"showOverload":%s,' ..
                                  '"showSlowDown":%s,"spaceThrust":%f,"speed":%f}'
@@ -110,7 +110,7 @@ function M:getData()
     local masterModeId = 0
     if self.elementClass == CLASS_GENERIC or self.elementClass == CLASS_PVP or self.elementClass == CLASS_ECU then
         formatString = formatString .. "}"
-        return string.format(formatString, type, type, self.name, self:getId(), controllerId, showError, masterModeId)
+        return string.format(formatString, type, type, self.name, controllerId, showError, masterModeId)
     else
         formatString = formatString .. COCKPIT_DATA_TEMPLATE
         local speed = 0.0
@@ -127,12 +127,12 @@ function M:getData()
 
         if self.elementClass == CLASS_REMOTE then
             formatString = formatString .. "}"
-            return string.format(formatString, type, type, self.name, self:getId(), controllerId, showError, masterModeId,
+            return string.format(formatString, type, type, self.name, controllerId, showError, masterModeId,
                        acceleration, airDensity, airResistance, atmoThrust, controlData, showHasBrokenFuelTank,
                        showOutOfFuel, showOverload, showSlowDown, spaceThrust, speed)
         else
             controlData = string.format(CONTROL_DATA_TEMPLATE, 3, 0, 0, 3, 0, 0, 3, 0, 0, 0)
-            return string.format(formatString, type, type, self.name, self:getId(), controllerId, showError, masterModeId,
+            return string.format(formatString, type, type, self.name, controllerId, showError, masterModeId,
                        acceleration, airDensity, airResistance, atmoThrust, controlData, showHasBrokenFuelTank,
                        showOutOfFuel, showOverload, showSlowDown, spaceThrust, speed)
         end
