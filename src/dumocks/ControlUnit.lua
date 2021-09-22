@@ -98,7 +98,7 @@ local GENERIC_DATA_TEMPLATE =
     '{"helperId":"%s","type":"%s","name":"%s","elementId":"%d","showScriptError":%s,"controlMasterModeId":%d'
 local COCKPIT_DATA_TEMPLATE = ',"acceleration":%f,"airDensity":%f,"airResistance":%f,"atmoThrust":%f,' ..
                                  '"controlData":%s,"showHasBrokenFuelTank":%s,"showOutOfFuel":%s,"showOverload":%s,' ..
-                                 '"showSlowDown":%s,"spaceThrust":%f,"speed":%f}'
+                                 '"showSlowDown":%s,"spaceThrust":%f,"speed":%f'
 local CONTROL_DATA_TEMPLATE = '{"axisData":[{"commandType":%d,"commandValue":%f,"speed":%f},' ..
                                 '{"commandType":%d,"commandValue":%f,"speed":%f},' ..
                                 '{"commandType":%d,"commandValue":%f,"speed":%f}],' ..
@@ -115,7 +115,7 @@ function M:getData()
         formatString = formatString .. "}"
         return string.format(formatString, type, type, self.name, controllerId, showError, masterModeId)
     else
-        formatString = formatString .. COCKPIT_DATA_TEMPLATE .. PARENTING_DATA_TEMPLATE
+        formatString = formatString .. COCKPIT_DATA_TEMPLATE .. PARENTING_DATA_TEMPLATE .. "}"
         local speed = 0.0
         local acceleration = 0.0
         local airDensity = 0.0
@@ -132,19 +132,11 @@ function M:getData()
         local parentName = ""
         local parentingState = 0
 
-        if self.elementClass == CLASS_REMOTE then
-            formatString = formatString .. "}"
-            return string.format(formatString, type, type, self.name, controllerId, showError, masterModeId,
-                       acceleration, airDensity, airResistance, atmoThrust, controlData, showHasBrokenFuelTank,
-                       showOutOfFuel, showOverload, showSlowDown, spaceThrust, speed, autoParentingMode,
-                       closestConstructName, parentName, parentingState)
-        else
-            controlData = string.format(CONTROL_DATA_TEMPLATE, 3, 0, 0, 3, 0, 0, 3, 0, 0, 0)
-            return string.format(formatString, type, type, self.name, controllerId, showError, masterModeId,
-                       acceleration, airDensity, airResistance, atmoThrust, controlData, showHasBrokenFuelTank,
-                       showOutOfFuel, showOverload, showSlowDown, spaceThrust, speed, autoParentingMode,
-                       closestConstructName, parentName, parentingState)
-        end
+        controlData = string.format(CONTROL_DATA_TEMPLATE, 3, 0, 0, 3, 0, 0, 3, 0, 0, 0)
+        return string.format(formatString, type, type, self.name, controllerId, showError, masterModeId, acceleration,
+                    airDensity, airResistance, atmoThrust, controlData, showHasBrokenFuelTank, showOutOfFuel,
+                    showOverload, showSlowDown, spaceThrust, speed, autoParentingMode, closestConstructName,
+                    parentName, parentingState)
     end
 end
 

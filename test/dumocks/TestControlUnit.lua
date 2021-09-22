@@ -257,24 +257,22 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
         table.insert(expectedFields, "closestConstructName")
         table.insert(expectedFields, "parentName")
         table.insert(expectedFields, "parentingState")
-        if not isRemote then
-            -- all of this is within the controlData value
-            -- TODO use real json parsing to detect this in a sensible way
-            table.insert(expectedFields, "axisData")
-            table.insert(expectedFields, "speed")
-            table.insert(expectedFields, "speed")
-            table.insert(expectedFields, "speed")
-            table.insert(expectedFields, "currentMasterMode")
-            table.insert(expectedFields, "masterModeData")
-            table.insert(expectedFields, "name")
-            table.insert(expectedFields, "name")
-            table.insert(expectedFields, "commandType")
-            table.insert(expectedFields, "commandType")
-            table.insert(expectedFields, "commandType")
-            table.insert(expectedFields, "commandValue")
-            table.insert(expectedFields, "commandValue")
-            table.insert(expectedFields, "commandValue")
-        end
+        -- all of this is within the controlData value
+        -- TODO use real json parsing to detect this in a sensible way
+        table.insert(expectedFields, "axisData")
+        table.insert(expectedFields, "speed")
+        table.insert(expectedFields, "speed")
+        table.insert(expectedFields, "speed")
+        table.insert(expectedFields, "currentMasterMode")
+        table.insert(expectedFields, "masterModeData")
+        table.insert(expectedFields, "name")
+        table.insert(expectedFields, "name")
+        table.insert(expectedFields, "commandType")
+        table.insert(expectedFields, "commandType")
+        table.insert(expectedFields, "commandType")
+        table.insert(expectedFields, "commandValue")
+        table.insert(expectedFields, "commandValue")
+        table.insert(expectedFields, "commandValue")
     end
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ignoreFields)
 
