@@ -228,6 +228,12 @@ function _G.TestUtilities.testVerifyWidgetData()
     local expectedValues = {}
     expectedValues["helperId"] = '"gyro"'
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
+
+    -- table in json, no error
+    local data = '{"parentingInfo":{"autoParentingMode":1,"closestConstructName":"core"}}'
+    local expectedFields = {"parentingInfo", "autoParentingMode", "closestConstructName"}
+    local expectedValues = {}
+    _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
 end
 
 os.exit(lu.LuaUnit.run())

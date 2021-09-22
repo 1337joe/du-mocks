@@ -72,7 +72,8 @@ function _G.TestRadarUnit.gameBehaviorHelper(mock, slot21)
     local expectedValues = {}
     local ignoreFields = {"errorMessage", "identifiedConstructs", "identifyConstructs", "radarStatus",
                           "selectedConstruct", "worksInEnvironment", "staticProperties", "ranges", "identify16m",
-                          "identify32m", "identify64m", "scan", "worksInAtmosphere", "worksInSpace"}
+                          "identify32m", "identify64m", "identify128m", "scan", "worksInAtmosphere", "worksInSpace",
+                          "maxIdentifiedTargets","broken"}
     expectedValues["helperId"] = '"radar"'
     expectedValues["type"] = '"radar"'
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ignoreFields)

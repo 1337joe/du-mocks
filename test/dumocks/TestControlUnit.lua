@@ -147,7 +147,7 @@ end
 -- Test setup:
 -- 1. control unit of any type, cockpit/remote controller must be on a dynamic construct
 --
--- Exercises: getElementClass, getData, isRemoteControlled
+-- Exercises: getElementClass, getData, isRemoteControlled, getMasterPlayerMass
 function _G.TestControlUnit.testGameBehavior()
     local mock, closure
     local result, message
@@ -212,7 +212,7 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
                              "activateGroundEngineAltitudeStabilization", "getSurfaceEngineAltitudeStabilization",
                              "deactivateGroundEngineAltitudeStabilization",
                              "computeGroundEngineAltitudeStabilizationCapabilities", "getThrottle",
-                             "setupControlMasterModeProperties"}
+                             "setupControlMasterModeProperties", "getMasterPlayerMass", "getMasterPlayerParent"}
         if isEcu then
             table.insert(expectedFunctions, "setSignalIn")
             table.insert(expectedFunctions, "getSignalIn")
@@ -252,15 +252,23 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
         table.insert(expectedFields, "airDensity")
         table.insert(expectedFields, "airResistance")
         ignoreFields = {"currentBrake", "maxBrake"}
+        table.insert(expectedFields, "parentingInfo")
+        table.insert(expectedFields, "autoParentingMode")
+        table.insert(expectedFields, "closestConstructName")
+        table.insert(expectedFields, "parentName")
+        table.insert(expectedFields, "parentingState")
         if not isRemote then
             -- all of this is within the controlData value
             -- TODO use real json parsing to detect this in a sensible way
+            table.insert(expectedFields, "axisData")
             table.insert(expectedFields, "speed")
             table.insert(expectedFields, "speed")
             table.insert(expectedFields, "speed")
             table.insert(expectedFields, "currentMasterMode")
             table.insert(expectedFields, "masterModeData")
             table.insert(expectedFields, "name")
+            table.insert(expectedFields, "name")
+            table.insert(expectedFields, "commandType")
             table.insert(expectedFields, "commandType")
             table.insert(expectedFields, "commandType")
             table.insert(expectedFields, "commandValue")
@@ -297,6 +305,7 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
     end
 
     if not (isGeneric or isPvp) then
+        assert(unit.getMasterPlayerMass() >= 90)
         if isRemote then
             assert(unit.isRemoteControlled() == 1)
         else

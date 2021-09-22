@@ -85,6 +85,7 @@ function M:new(o, id, elementName)
     o.timers = {} -- map: "timer name"=>timerDurationSeconds
     o.tickCallbacks = {}
     o.masterPlayerId = nil
+    o.masterPlayerMass = 90
     o.remoteControlled = o.elementClass == CLASS_REMOTE
     o.planetInfluence = 1.0
 
@@ -102,6 +103,8 @@ local CONTROL_DATA_TEMPLATE = '{"axisData":[{"commandType":%d,"commandValue":%f,
                                 '{"commandType":%d,"commandValue":%f,"speed":%f},' ..
                                 '{"commandType":%d,"commandValue":%f,"speed":%f}],' ..
                                 '"currentMasterMode":%d,"masterModeData":[{"name":""},{"name":""}]}'
+local PARENTING_DATA_TEMPLATE = ',"parentingInfo":{"autoParentingMode":%d,"closestConstructName":"%s","parentName":"%s",' ..
+                                '"parentingState":%d}'
 function M:getData()
     local formatString = GENERIC_DATA_TEMPLATE
     local controllerId = 123456789
@@ -112,7 +115,7 @@ function M:getData()
         formatString = formatString .. "}"
         return string.format(formatString, type, type, self.name, controllerId, showError, masterModeId)
     else
-        formatString = formatString .. COCKPIT_DATA_TEMPLATE
+        formatString = formatString .. COCKPIT_DATA_TEMPLATE .. PARENTING_DATA_TEMPLATE
         local speed = 0.0
         local acceleration = 0.0
         local airDensity = 0.0
@@ -124,17 +127,23 @@ function M:getData()
         local showOutOfFuel = false
         local showOverload = false
         local showSlowDown = false
+        local autoParentingMode = 0
+        local closestConstructName = ""
+        local parentName = ""
+        local parentingState = 0
 
         if self.elementClass == CLASS_REMOTE then
             formatString = formatString .. "}"
             return string.format(formatString, type, type, self.name, controllerId, showError, masterModeId,
                        acceleration, airDensity, airResistance, atmoThrust, controlData, showHasBrokenFuelTank,
-                       showOutOfFuel, showOverload, showSlowDown, spaceThrust, speed)
+                       showOutOfFuel, showOverload, showSlowDown, spaceThrust, speed, autoParentingMode,
+                       closestConstructName, parentName, parentingState)
         else
             controlData = string.format(CONTROL_DATA_TEMPLATE, 3, 0, 0, 3, 0, 0, 3, 0, 0, 0)
             return string.format(formatString, type, type, self.name, controllerId, showError, masterModeId,
                        acceleration, airDensity, airResistance, atmoThrust, controlData, showHasBrokenFuelTank,
-                       showOutOfFuel, showOverload, showSlowDown, spaceThrust, speed)
+                       showOutOfFuel, showOverload, showSlowDown, spaceThrust, speed, autoParentingMode,
+                       closestConstructName, parentName, parentingState)
         end
     end
 end
@@ -214,6 +223,17 @@ end
 -- @treturn int ID of the player running the control unit.
 function M:getMasterPlayerId()
     return self.masterPlayerId
+end
+
+--- Returns the mass of the active player.
+-- @treturn float The mass of the player in kilograms.
+function M:getMasterPlayerMass()
+    return self.masterPlayerMass
+end
+
+--- Returns the id of the construct on which the active player is boarded.
+-- @treturn int The parent id.
+function M:getMasterPlayerParent()
 end
 
 --- Automatically assign the engines within the taglist to result in the given acceleration and angular acceleration
@@ -501,12 +521,8 @@ function M:mockGetClosure()
         closure.setEngineThrust = function(tagList, thrust) return self:setEngineThrust(tagList, thrust) end
         closure.setAxisCommandValue = function(axis, commandValue) return self:setAxisCommandValue(axis, commandValue) end
         closure.getAxisCommandValue = function(axis) return self:getAxisCommandValue(axis) end
-        closure.setupAxisCommandProperties = function(axis, commandType)
-            return self:setupAxisCommandProperties(axis, commandType)
-        end
-        closure.setupControlMasterModeProperties = function(controlMasterModeId, displayName)
-            return self:setupControlMasterModeProperties(controlMasterModeId, displayName)
-        end
+        closure.setupAxisCommandProperties = function(axis, commandType) return self:setupAxisCommandProperties(axis, commandType) end
+        closure.setupControlMasterModeProperties = function(controlMasterModeId, displayName) return self:setupControlMasterModeProperties(controlMasterModeId, displayName) end
         closure.getControlMasterModeId = function() return self:getControlMasterModeId() end
         closure.cancelCurrentControlMasterMode = function() return self:cancelCurrentControlMasterMode() end
         closure.isAnyLandingGearExtended = function() return self:isAnyLandingGearExtended() end
@@ -519,17 +535,13 @@ function M:mockGetClosure()
         closure.switchOnHeadlights = function() return self:switchOnHeadlights() end
         closure.switchOffHeadlights = function() return self:switchOffHeadlights() end
         closure.isRemoteControlled = function() return self:isRemoteControlled() end
-        closure.activateGroundEngineAltitudeStabilization = function(targetAltitude)
-            return self:activateGroundEngineAltitudeStabilization(targetAltitude)
-        end
+        closure.activateGroundEngineAltitudeStabilization = function(targetAltitude) return self:activateGroundEngineAltitudeStabilization(targetAltitude) end
         closure.getSurfaceEngineAltitudeStabilization = function() return self:getSurfaceEngineAltitudeStabilization() end
-        closure.deactivateGroundEngineAltitudeStabilization = function()
-            return self:deactivateGroundEngineAltitudeStabilization()
-        end
-        closure.computeGroundEngineAltitudeStabilizationCapabilities = function()
-            return self:computeGroundEngineAltitudeStabilizationCapabilities()
-        end
+        closure.deactivateGroundEngineAltitudeStabilization = function() return self:deactivateGroundEngineAltitudeStabilization() end
+        closure.computeGroundEngineAltitudeStabilizationCapabilities = function() return self:computeGroundEngineAltitudeStabilizationCapabilities() end
         closure.getThrottle = function() return self:getThrottle() end
+        closure.getMasterPlayerMass = function() return self:getMasterPlayerMass() end
+        closure.getMasterPlayerParent = function() return self:getMasterPlayerParent() end
         if self.elementClass == CLASS_ECU then
             closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
             closure.getSignalIn = function(plug) return self:getSignalIn(plug) end

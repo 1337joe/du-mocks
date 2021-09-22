@@ -1,4 +1,4 @@
---- This unit is capable of emitting messages on a channel.
+--- This unit is capable of emitting messages on channels.
 --
 -- Element class: EmitterUnit
 --
@@ -27,7 +27,7 @@ function M:new(o, id, elementName)
 
     o.defaultChannel = ""
     o.range = 1000 -- meters
-    o.propagateBroadcastErrors = false -- in-game module gets no feedback, make optional for testing purposes
+    o.propagateSendErrors = false -- in-game module gets no feedback, make optional for testing purposes
     o.receiverCallbacks = {}
 
     return o
@@ -58,14 +58,9 @@ function M:setSignalIn(plug, state)
             self.plugIn = value
         end
 
-        -- send * on default channel
-        if value > 0.0 then
-            self:broadcast("*")
-
-            -- do it again if it's a new value
-            if value ~= oldValue then
-                self:broadcast("*")
-            end
+        -- send * on default channel (if set)
+        if value > 0.0 and self.defaultChannel and self.defaultChannel:len() > 0 then
+            self:send(self.defaultChannel, "*")
         end
     end
 end
@@ -102,44 +97,55 @@ end
 --- Send a message on the given channel. Note that only the last message is guaranteed to be propagated on the network,
 -- due to bandwidth limitations.
 --
--- Note: Max channel and message string length is currently 512 characters each, any additional text will be truncated.
+-- Note: Max channel string length is 64 characters, if the channel exceeds that the message will not be sent.
+--
+-- Note: Max message string length is 512 characters, any additional text will be truncated with a warning message displayed to the user.
 -- @tparam string channel The channel name.
 -- @tparam string message The message to transmit.
 function M:send(channel, message)
+    if channel:len() > 64 then
+        local outputMessage = "Warning: method send is deprecated, use broadcast instead"
+        if _G.system and _G.system.print and type(_G.system.print) == "function" then
+            _G.system.print(outputMessage)
+        else
+            print(outputMessage)
+        end
+    end
+
+    message = message:sub(0, 512)
+
+    -- call callbacks in order, saving exceptions until end
+    local errors = ""
+    for i, callback in pairs(self.receiverCallbacks) do
+        local status, err = pcall(callback, channel, message)
+        if not status then
+            errors = errors .. "\nError while running callback " .. i .. ": " .. err
+        end
+    end
+
+    -- propagate errors
+    if self.propagateSendErrors and string.len(errors) > 0 then
+        error("Errors raised in callbacks:" .. errors)
+    end
+end
+
+--- <b>Deprecated:</b> Send a message on the channel specified by the emitter.
+--
+-- Note: Max message string length is currently 512 characters, any additional text will be truncated.
+-- @tparam string message The message to transmit.
+function M:broadcast(message)
     local outputMessage = "Warning: method send is deprecated, use broadcast instead"
     if _G.system and _G.system.print and type(_G.system.print) == "function" then
         _G.system.print(outputMessage)
     else
         print(outputMessage)
     end
-    self:broadcast(message)
-end
-
---- Send a message on the channel specified by the emitter. Note that only the last message is guaranteed to be propagated on the network,
--- due to bandwidth limitations.
---
--- Note: Max message string length is currently 512 characters, any additional text will be truncated.
--- @tparam string message The message to transmit.
-function M:broadcast(message)
-    message = trimString(message)
 
     if not (self.defaultChannel and self.defaultChannel:len() > 0) then
         error("Define a broadcast channel on your Emitter (mock.defaultChannel)")
     end
 
-    -- call callbacks in order, saving exceptions until end
-    local errors = ""
-    for i,callback in pairs(self.receiverCallbacks) do
-        local status,err = pcall(callback, self.defaultChannel, message)
-        if not status then
-            errors = errors.."\nError while running callback "..i..": "..err
-        end
-    end
-
-    -- propagate errors
-    if self.propagateBroadcastErrors and string.len(errors) > 0 then
-        error("Errors raised in callbacks:"..errors)
-    end
+    self:send(self.defaultChannel, message)
 end
 
 --- Returns the emitter range.
