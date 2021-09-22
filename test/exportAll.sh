@@ -6,4 +6,4 @@ cd "$(dirname "$0")"
 rm -rf configExports
 mkdir -p configExports/dumocks
 
-find . -name Test\*Unit.lua -exec ./bundleCharacterizationTest.lua {} configExports/{}.txt \;
+find dumocks -name Test\*.lua -exec ./bundleCharacterizationTest.lua {} configExports/{}.txt \;

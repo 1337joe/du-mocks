@@ -29,25 +29,27 @@ function M:new(o, id, elementName)
 end
 
 local DATA_TEMPLATE = '{\"helperId\":\"warpdrive\",\"type\":\"%s\",\"name\":\"%s\",\"elementId\":\"%d\",\"' ..
-                      'buttonMsg\":\"%s\",\"errorMsg\":\"%s\",\"cellCount\":\"%s\",\"showError\":%s,' ..
-                      '\"destination\":\"%s\",\"distance\":%d}'
+                      'buttonText\":\"%s\",\"statusText\":\"%s\",\"cellCount\":\"%s\",\"showError\":%s,' ..
+                      '\"destination\":\"%s\",\"distance\":%d,\"enableButton\":%s}'
 --- Get element data as JSON.
 --
 -- Warp drives have a <code>warpdrive</code> widget, which contains the following fields (bold fields are visible when
 -- making custom use of the widget):
 -- <ul>
---   <li><b><span class="parameter">errorMsg</span></b> (<span class="type">string</span>) The error message to
---     display, if applicable.
---   <li><b><span class="parameter">showError</span></b> (<span class="type">boolean</span>) True if the error banner
---     should be shown, false otherwise.</li>
+--   <li><b><span class="parameter">statusText</span></b> (<span class="type">string</span>) The status message to
+--     display.
+--   <li><b><span class="parameter">showError</span></b> (<span class="type">boolean</span>) True if the status banner
+--     should be red, false otherwise.</li>
 --   <li><b><span class="parameter">destination</span></b> (<span class="type">string</span>) The name of the current
 --     warp destination.</li>
 --   <li><b><span class="parameter">distance</span></b> (<span class="type">float</span>) The distance (in meters) to
 --     the current warp target.</li>
 --   <li><b><span class="parameter">cellCount</span></b> (<span class="type">string</span>) The number of warp cells
 --     available over the number that will be consumed during travel to the current destination.</li>
---   <li><b><span class="parameter">buttonMsg</span></b> (<span class="type">string</span>) The button message to
+--   <li><b><span class="parameter">buttonText</span></b> (<span class="type">string</span>) The button message to
 --     display, defaults to "Activate Warp".
+--   <li><b><span class="parameter">enableButton</span></b> (<span class="type">boolean</span>) True if the button
+--     should be enabled, false otherwise.
 --   <li><span class="parameter">name</span> (<span class="type">string</span>) The name of the element.</li>
 --   <li><span class="parameter">elementId</span> (<span class="type">int</span>) The (globally unique?) id of the 
 --     warp drive element, may be related to linking the commands to the element.</li>
@@ -57,17 +59,18 @@ local DATA_TEMPLATE = '{\"helperId\":\"warpdrive\",\"type\":\"%s\",\"name\":\"%s
 -- @treturn string Data as JSON.
 function M:getData()
     local warpDriveId = 123456789
-    local buttonMsg = "CANNOT WARP"
-    local errorMsg = "PLANET TOO CLOSE"
+    local buttonText = "Cannot Warp"
+    local statusText = "INVALID CONSTRUCT"
     local showError = true
     local totalCells = 0
     local requiredCells = 0
     local cellCount = string.format("%d / %d", totalCells, requiredCells)
     local destination = "Unknown"
     local distance = 0
+    local enableButton = false
 
-    return string.format(DATA_TEMPLATE, self:getWidgetType(), self.name, warpDriveId, buttonMsg, errorMsg, cellCount,
-        showError, destination, distance)
+    return string.format(DATA_TEMPLATE, self:getWidgetType(), self.name, warpDriveId, buttonText, statusText, cellCount,
+        showError, destination, distance, enableButton)
 end
 
 -- Override default with realistic patten to id.
