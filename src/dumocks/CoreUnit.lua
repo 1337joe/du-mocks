@@ -108,8 +108,9 @@ local DATA_TEMPLATE =
     '{"helperId":"%s","type":"%s","name":"%s","altitude":%f,"gravity":%s,"currentStress":%s,"maxStress":%s}'
 --- Get element data as JSON.
 --
--- Core units have a <code>core</code> widget, which contains the following fields (bold fields are visible when making
--- custom use of the widget):
+-- Core units create a <code>core</code> widget, which is modified by the bold fields below when making custom use of
+-- the widget. The data also supports a <code>core_stress</code> widget, which is documented in
+-- @{System:createWidget|System}.
 -- <ul>
 --   <li><b><span class="parameter">altitude</span></b> (<span class="type">float</span>) Altitude in meters.</li>
 --   <li><b><span class="parameter">gravity</span></b> (<span class="type">float</span>) Gravity in m/s<sup>2</sup>.</li>
@@ -687,13 +688,13 @@ function M:forceUndock(cid)
 end
 
 --- Returns the mass of the given player if it is on board the construct.
--- @tparam pid The player id.
+-- @tparam int pid The player id.
 -- @treturn float The mass of the player.
 function M:getBoardedPlayerMass(pid)
 end
 
 --- Returns the mass of the given construct if it is docked to the construct.
--- @tparam cid The construct id.
+-- @tparam int cid The construct id.
 -- @treturn The mass of the construct.
 function M:getDockedConstructMass(cid)
 end

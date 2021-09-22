@@ -115,9 +115,16 @@ end
 --     </ul>
 --   </li>
 --   <li><span class="parameter">@{AntiGravityGeneratorUnit:getData|antigravity_generator}</span> The widget created by
---     the Anti-Gravity Generator element.</li>
+--     anti-gravity generators.</li>
 --   <li><span class="parameter">@{ContainerUnit:getData|fuel_container}</span> The widget created by fuel tanks.</li>
 --   <li><span class="parameter">@{CoreUnit:getData|core}</span> The widget created by core units.</li>
+--   <li><span class="parameter">core_stress</span> Shows a meter indicating the current level of core stress and if
+--       damage is being taken. Data is supported by @{CoreUnit:getData}.
+--     <ul>
+--       <li><span class="parameter">currentStress</span> (<span class="type">float</span>) Current core stress.</li>
+--       <li><span class="parameter">maxStress</span> (<span class="type">float</span>) Max core stress.</li>
+--     </ul>
+--   </li>
 --   <li><span class="parameter">@{EngineUnit:getData|engine_unit}</span> The widget created by engines.</li>
 --   <li><span class="parameter">@{GyroUnit:getData|gyro}</span> The widget created by gyroscopes.</li>
 --   <li><span class="parameter">@{ShieldGeneratorUnit:getData|shield_generator}</span> The widget created by shield
@@ -183,7 +190,8 @@ end
 --
 -- Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
 -- vs. via a plug signal).
--- @tparam string dataId The data ID.
+-- @tparam string dataId The data ID. May be a reference returned by @{createData} or the value returned by
+--   @{Element:getDataId} to tie the widget to an element.
 -- @tparam string widgetId The widget ID.
 -- @treturn boolean 1 on success, 0 on failure.
 function M:addDataToWidget(dataId, widgetId)

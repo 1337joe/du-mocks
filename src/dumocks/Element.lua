@@ -105,8 +105,9 @@ function M:getData()
     return "{}"
 end
 
---- Get element data ID.
+--- Get element data ID. Used to link en element to a custom widget.
 -- @treturn string Data ID. "" if invalid.
+-- @see System.addDataToWidget
 function M:getDataId()
     return ""
 end
