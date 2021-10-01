@@ -158,15 +158,23 @@ function M:startVenting()
     end
 
     self.venting = true
+
+    return 1
+end
+
+--- Stop shield venting.
+-- @treturn 0/1 1 if venting stopped, 0 if an error occurred.
+function M:stopVenting()
+    if self.venting == false then
+        return 0
+    end
+    self.venting = false
+    self.ventingCooldown = self.ventingMaxCooldown
+
+    return 1
 end
 
 -- TODO add mock venting step function to increase health based on time elapsed while venting
-
---- Mock only, not in-game: Reset shield state at end of venting.
-function M:mockEndVenting()
-    self.venting = false
-    self.ventingCooldown = self.ventingMaxCooldown
-end
 
 --- Check whether venting is in progress.
 -- @treturn 0/1 1 if venting is ongoing, 0 otherwise.
@@ -537,6 +545,7 @@ function M:mockGetClosure()
     closure.getShieldHitpoints = function() return self:getShieldHitpoints() end
     closure.getMaxShieldHitpoints = function() return self:getMaxShieldHitpoints() end
     closure.startVenting = function() return self:startVenting() end
+    closure.stopVenting = function() return self:stopVenting() end
     closure.isVenting = function() return self:isVenting() end
     closure.getVentingCooldown = function() return self:getVentingCooldown() end
     closure.getVentingMaxCooldown = function() return self:getVentingMaxCooldown() end

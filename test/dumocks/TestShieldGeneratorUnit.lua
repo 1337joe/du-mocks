@@ -554,7 +554,8 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
                                "getStressHitpointsRaw", "getStressRatio", "getStressRatioRaw", "getResistances",
                                "setResistances", "getResistancesRemaining", "getResistancesPool",
                                "getResistancesCooldown", "getResistancesMaxCooldown", "isVenting", "startVenting",
-                               "getVentingCooldown", "getVentingMaxCooldown", "setSignalIn", "getSignalIn"}
+                               "getVentingCooldown", "getVentingMaxCooldown", "setSignalIn", "getSignalIn",
+                               "stopVenting"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
