@@ -193,30 +193,35 @@ end
 --
 -- Test setup:
 -- 1. 1x item container or fuel tank, connected to Programming Board on slot1
---   a. Add 20L of oxygen or appropriate fuel to container
+--   a. Add 20L of oxygen, 20 Railgun Antimatter Ammo xs, or appropriate fuel to container
 --
 -- Exercises: getElementClass, getData, getMaxVolume, getItemsVolume, getItemsMass, getSelfMass, acquireStorage, getItemsList
 function _G.TestContainerUnit.testGameBehavior()
     local containers = {
         ["container xs"] = {
             name = "Pure Oxygen",
-            density = 1,
+            unitMass = 1,
             class = "OxygenPure"
         },
         ["parcel container xs"] = {
             name = "Pure Oxygen",
-            density = 1,
+            unitMass = 1,
             class = "OxygenPure"
         },
+        ["ammo container xs"] = {
+            name = "Railgun Antimatter Ammo xs",
+            unitMass = 2.01,
+            volume = 10
+        },
         ["atmospheric fuel tank xs"] = {
-            density = 4
+            unitMass = 4
         },
         ["space fuel tank s"] = {
-            density = 6
+            unitMass = 6
         },
         ["rocket fuel tank xs"] = {
             name = "Xeron Fuel",
-            density = 0.8,
+            unitMass = 0.8,
             class = "Xeron"
         }
     }
@@ -226,11 +231,12 @@ function _G.TestContainerUnit.testGameBehavior()
     for element, contents in pairs(containers) do
         mock = mcu:new(nil, 1, element)
 
-        mock.itemsVolume = 20
-        mock.itemsMass = mock.itemsVolume * contents.density
+        local itemQuantity = 20
+        mock.itemsVolume = itemQuantity * (contents.volume or 1.0)
+        mock.itemsMass = itemQuantity * contents.unitMass
         mock.storageJson = "{" ..
-                               string.format(mcu.JSON_ITEM_TEMPLATE, contents.class, contents.name, mock.itemsVolume,
-                                   "material", contents.density, 1.0) .. "}"
+                               string.format(mcu.JSON_ITEM_TEMPLATE, contents.class, contents.name, itemQuantity,
+                                   "material", contents.unitMass, 1.0) .. "}"
 
         closure = mock:mockGetClosure()
 
@@ -256,7 +262,7 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
     end
 
     -- use locals here since all code is in this method
-    local isItem, isParcel, isAtmo, isSpace, isRocket
+    local isItem, isParcel, isAmmo, isAtmo, isSpace, isRocket
     local storageAcquired
 
     -- storageAcquired handlers
@@ -289,6 +295,8 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
         isItem = true
     elseif class == "MissionContainer" then
         isParcel = true
+    elseif class == "AmmoContainerUnit" then
+        isAmmo = true
     elseif class == "AtmoFuelContainer" then
         isAtmo = true
     elseif class == "SpaceFuelContainer" then
@@ -300,7 +308,7 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
     end
     local data = slot1.getData()
     local widgetType = ""
-    if not (isItem or isParcel) then
+    if not (isItem or isParcel or isAmmo) then
         local expectedFields = {"timeLeft", "helperId", "name", "type"}
         local expectedValues = {}
         local ignoreFields = {"percentage"} -- doesn't always show up on initial load
@@ -325,6 +333,9 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
         volumeBase = 1000
         volumeMaxMultiplier = 1.5
     elseif isParcel then
+        volumeBase = 1000
+        volumeMaxMultiplier = 1
+    elseif isAmmo then
         volumeBase = 1000
         volumeMaxMultiplier = 1
     elseif isAtmo then
@@ -361,18 +372,27 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
     assert(itemsJson ~= "" and not itemsJson:match("%[%]"), "itemsJson is empty, does the container have contents?")
 
     -- local class = string.match(itemsJson, [["class" : "(.-)"]])
-    -- local name = string.match(itemsJson, [["name" : "(.-)"]])
+    local name = string.match(itemsJson, [["name" : "(.-)"]])
     local quantity = tonumber(string.match(itemsJson, [["quantity" : ([0-9.]+)]]))
-    local density = tonumber(string.match(itemsJson, [["unitMass" : ([0-9.]+)]]))
+    local unitMass = tonumber(string.match(itemsJson, [["unitMass" : ([0-9.]+)]]))
 
-    local expectedVolume = 20
-    assert(quantity == expectedVolume, string.format("Expected %f L but was %f", expectedVolume, quantity))
+    local expectedQuantity = 20
+    local expectedVolume = expectedQuantity
+    if name == "Railgun Antimatter Ammo xs" then
+        expectedVolume = 200
+    end
+    assert(quantity == expectedQuantity, string.format("Expected %f but was %f", expectedQuantity, quantity))
     local itemsVolume = slot1.getItemsVolume()
-    assert(itemsVolume == expectedVolume, string.format("Expected %f L but was %f", expectedVolume, itemsVolume))
+    assert(itemsVolume == expectedVolume, string.format("Expected %f L but was %f L", expectedVolume, itemsVolume))
 
-    local expectedMass = expectedVolume * density
+    local expectedMass = expectedQuantity * unitMass
     local itemsMass = slot1.getItemsMass()
-    assert(itemsMass == expectedMass, string.format("Expected %f kg but was %f", expectedMass, itemsMass))
+    local matched = false
+    local reduction = 0.05
+    for skill = 0, 5 do
+        matched = matched or itemsMass == expectedMass * (1.0 - reduction * skill)
+    end
+    assert(matched, string.format("Expected %f kg to %f kg but was %f kg", expectedMass * (1.0 - reduction * 5), expectedMass, itemsMass))
 
     assert(slot1.getSelfMass() + slot1.getItemsMass() == slot1.getMass())
 

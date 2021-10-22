@@ -18,6 +18,7 @@ local MockElement = require "dumocks.Element"
 
 local CLASS_ITEM = "ItemContainer"
 local CLASS_PARCEL = "MissionContainer"
+local CLASS_AMMO = "AmmoContainerUnit"
 local CLASS_ATMO = "AtmoFuelContainer"
 local CLASS_SPACE = "SpaceFuelContainer"
 local CLASS_ROCKET = "RocketFuelContainer"
@@ -36,6 +37,11 @@ elementDefinitions["parcel container m"] = {mass = 7273.75, maxHitPoints = 7997.
 elementDefinitions["parcel container l"] = {mass = 14547.5, maxHitPoints = 17316.0, class = CLASS_PARCEL, maxVolume = 128000}
 elementDefinitions["parcel container xl"] = {mass = 43313.71, maxHitPoints = 34633.0, class = CLASS_PARCEL, maxVolume = 256000}
 elementDefinitions["expanded parcel container xl"] = {mass = 86627.42, maxHitPoints = 69267.0, class = CLASS_PARCEL, maxVolume = 512000}
+
+elementDefinitions["ammo container xs"] = {mass = 216.15, maxHitPoints = 124.0, class = CLASS_AMMO, maxVolume = 1000}
+elementDefinitions["ammo container s"] = {mass = 1168.95, maxHitPoints = 999.0, class = CLASS_AMMO, maxVolume = 8000}
+elementDefinitions["ammo container m"] = {mass = 6439.05, maxHitPoints = 7997.0, class = CLASS_AMMO, maxVolume = 64000}
+elementDefinitions["ammo container l"] = {mass = 12878.1, maxHitPoints = 17316.0, class = CLASS_AMMO, maxVolume = 128000}
 
 elementDefinitions["atmospheric fuel tank xs"] = {name = "Atmospheric Fuel Tank xs", mass = 35.03, maxHitPoints = 50.0, class = CLASS_ATMO, maxVolume = 100}
 elementDefinitions["atmospheric fuel tank s"] = {name = "Atmospheric Fuel Tank s", mass = 182.67, maxHitPoints = 163.0, class = CLASS_ATMO, maxVolume = 400}
@@ -66,7 +72,7 @@ function M:new(o, id, elementName)
 
     o.elementClass = elementDefinition.class
 
-    if o.elementClass == CLASS_ITEM or o.elementClass == CLASS_PARCEL then
+    if o.elementClass == CLASS_ITEM or o.elementClass == CLASS_PARCEL or o.elementClass == CLASS_AMMO then
     else
         o.widgetType = "fuel_container"
         if o.elementClass == CLASS_ATMO then
@@ -177,7 +183,7 @@ local DATA_TEMPLATE = '{\"name\":\"%s\","percentage":%.16f,"timeLeft":%s,\"helpe
 -- </ul>
 -- @treturn string Data as JSON.
 function M:getData()
-    if self.elementClass == CLASS_ITEM or self.elementClass == CLASS_PARCEL then
+    if self.elementClass == CLASS_ITEM or self.elementClass == CLASS_PARCEL or self.elementClass == CLASS_AMMO then
         return MockElement:getData()
     end
     return string.format(DATA_TEMPLATE, self.name, self.percentage, self.timeLeft, self.helperId, self:getWidgetType())
@@ -185,7 +191,7 @@ end
 
 -- Override default with realistic patten to id.
 function M:getDataId()
-    if self.elementClass == CLASS_ITEM or self.elementClass == CLASS_PARCEL then
+    if self.elementClass == CLASS_ITEM or self.elementClass == CLASS_PARCEL or self.elementClass == CLASS_AMMO  then
         return MockElement:getDataId()
     end
     return "e123456"

@@ -302,7 +302,7 @@ end
 function M:getActionUpdateDeltaTime()
 end
 
---- Return the name of the given player, if in range of visibility.
+--- Return the name of the given player, if in range of visibility or broadcasted by a transponder.
 -- @tparam int id The ID of the player.
 -- @treturn string The name of the player.
 function M:getPlayerName(id)
@@ -312,6 +312,18 @@ end
 -- @tparam int id The ID of the player.
 -- @treturn string The coordinates of the player in world coordinates.
 function M:getPlayerWorldPos(id)
+end
+
+--- Returns the name of the given organization, if known, e.g. broadcasted by a transponder.
+-- @tparam int id The ID of the organization.
+-- @treturn string The name of the organization.
+function M:getOrganizationName(id)
+end
+
+--- Returns the tag of the given organization, if known, e.g. broadcasted by a transponder.
+-- @tparam int id The ID of the organization.
+-- @treturn string The tag of the organization.
+function M:getOrganizationTag(id)
 end
 
 --- Return the player world position as a waypoint string, starting with ::pos (only in explicit runs).
@@ -481,6 +493,8 @@ function M:mockGetClosure()
     closure.getActionUpdateDeltaTime = function() return self:getActionUpdateDeltaTime() end
     closure.getPlayerName = function(id) return self:getPlayerName(id) end
     closure.getPlayerWorldPos = function(id) return self:getPlayerWorldPos(id) end
+    closure.getOrganizationName = function(id) return self:getOrganizationName(id) end
+    closure.getOrganizationTag = function(id) return self:getOrganizationTag(id) end
     closure.getWaypointFromPlayerPos = function() return self:getWaypointFromPlayerPos() end
     closure.setWaypoint = function(waypoint) return self:setWaypoint(waypoint) end
     closure.print = function(msg) return self:print(msg) end

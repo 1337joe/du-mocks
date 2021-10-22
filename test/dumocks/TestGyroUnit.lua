@@ -85,8 +85,8 @@ function _G.TestGyroUnit.testGameBehavior()
     -- copy from here to unit.start()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"worldForward", "getRoll", "worldRight", "worldUp", "getYaw", "localRight",
-                               "localForward", "getPitch", "setYawWorldReference", "localUp"}
+    local expectedFunctions = {"worldForward", "getRoll", "worldRight", "worldUp", "localRight", "localForward",
+                               "getPitch", "localUp"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end

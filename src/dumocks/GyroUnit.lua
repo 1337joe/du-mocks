@@ -128,18 +128,6 @@ function M:getRoll()
     return self.roll
 end
 
---- The yaw value relative to the gyro orientation and the world reference.
--- @treturn deg The yaw angle in degrees, relative to the gyro orientation and the local gravity.
-function M:getYaw()
-    return self.yaw
-end
-
---- Set the world reference vector to calculate yaw from.
--- @param direction Reference vector of the gyro unit, in world coordinates.
-function M:setYawWorldReference(direction)
-    self.yawWorldReference = direction
-end
-
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
 -- @treturn table A table encompasing the api calls of object.
 -- @see Element:mockGetClosure
@@ -153,8 +141,6 @@ function M:mockGetClosure()
     closure.worldRight = function() return self:worldRight() end
     closure.getPitch = function() return self:getPitch() end
     closure.getRoll = function() return self:getRoll() end
-    closure.getYaw = function() return self:getYaw() end
-    closure.setYawWorldReference = function(direction) return self:setYawWorldReference(direction) end
     return closure
 end
 

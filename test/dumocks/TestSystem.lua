@@ -45,7 +45,7 @@ function _G.TestSystem.testGameBehavior()
                                "getTime", "getActionUpdateDeltaTime", "getPlayerName", "getPlayerWorldPos", "print",
                                "getWaypointFromPlayerPos", "setWaypoint", "getFov", "getScreenWidth", "getScreenHeight",
                                "load", "logInfo", "logWarning", "logError", "addMarker", "addMeasure",
-                               "__NQ_returnFromRunPlayerLUA"}
+                               "__NQ_returnFromRunPlayerLUA", "getOrganizationTag", "getOrganizationName"}
     _G.Utilities.verifyExpectedFunctions(system, expectedFunctions)
 
     assert(system.getScreenHeight() > 0, "Screen height: " .. system.getScreenHeight())
