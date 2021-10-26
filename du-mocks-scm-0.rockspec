@@ -51,6 +51,7 @@ build = {
       ["dumocks.ScreenUnit"] = "src/dumocks/ScreenUnit.lua",
       ["dumocks.System"] = "src/dumocks/System.lua",
       ["dumocks.TelemeterUnit"] = "src/dumocks/TelemeterUnit.lua",
+      ["dumocks.TransponderUnit"] = "src/dumocks/TransponderUnit.lua",
       ["dumocks.WarpDriveUnit"] = "src/dumocks/WarpDriveUnit.lua",
    },
    copy_directories = {

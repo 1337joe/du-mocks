@@ -445,6 +445,8 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
     end
     unit.setTimer = function()
     end
+    unit.stopTimer = function()
+    end
     local system = {}
     system.print = function(msg)
     end
@@ -465,6 +467,7 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
         ---------------
         -- copy from here to unit.tick(timerId) delay
         ---------------
+        unit.stopTimer("delay")
         _G.resumeCoroutine()
         ---------------
         -- copy to here to unit.tick(timerId) delay
@@ -538,7 +541,7 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
         -- copy from here to slot1.toggled(active) 0
         ---------------
         _G.toggleOffCount = _G.toggleOffCount + 1
-        assert(slot1.getState() == 0, "Expected state 1 when toggled inactive.")
+        assert(slot1.getState() == 0, "Expected state 0 when toggled inactive.")
         -- assert(slot1.getShieldHitpoints() == 0, "Expected 0 HP when off") -- inconsistent
         ---------------
         -- copy to here to slot1.toggled(active) 0
@@ -669,7 +672,6 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
 
     -- report failure if coroutine has not reached success within 5 seconds
     unit.setTimer("fail", 5)
-
     ---------------
     -- copy to here to unit.start()
     ---------------

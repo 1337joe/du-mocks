@@ -26,6 +26,7 @@
 -- @see LaserEmitterUnit
 -- @see LightUnit
 -- @see ManualSwitchUnit
+-- @see TransponderUnit
 -- @see ScreenUnit
 -- @see ShieldGeneratorUnit
 -- @module ElementWithToggle
