@@ -110,7 +110,7 @@ local DATA_TEMPLATE =
 --
 -- Core units create a <code>core</code> widget, which is modified by the bold fields below when making custom use of
 -- the widget. The data also supports a <code>core_stress</code> widget, which is documented in
--- @{System:createWidget|System}.
+-- @{system:createWidget|system}.
 -- <ul>
 --   <li><b><span class="parameter">altitude</span></b> (<span class="type">float</span>) Altitude in meters.</li>
 --   <li><b><span class="parameter">gravity</span></b> (<span class="type">float</span>) Gravity in m/s<sup>2</sup>.</li>

@@ -1,6 +1,6 @@
 --- Contains a list of useful math and helper methods that would be slow to implement in Lua, and which are given here
 -- as fast C++ implementation.
--- @module Library
+-- @module library
 -- @alias M
 
 -- define class fields
