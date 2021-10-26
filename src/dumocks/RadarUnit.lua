@@ -4,7 +4,7 @@
 -- <ul>
 --   <li>RadarPvPAtmosphericSmallGroup</li>
 --   <li>RadarPVPSpaceSmallGroup</li>
---   <li>RadarPvPAtmospheric: Medium and Large</li>
+--   <li>RadarPvPAtmospheric (for both Medium and Large atmospheric radars)</li>
 --   <li>RadarPVPSpaceMediumGroup</li>
 --   <li>RadarPVPSpaceLargeGroup</li>
 -- </ul>
@@ -110,16 +110,41 @@ function M:getDataId()
     return "e123456"
 end
 
---- Returns the current range of the radar.
--- @treturn meter The range.
+--- Returns 1 if the radar is not broken, works in the current environment and is not used by another control unit.
+-- @treturn 0/1 1 if the radar is operational, 0 otherwise.
+function M:isOperational()
+end
+
+--- Returns the scan range of the radar.
+-- @treturn meter The scan range.
 function M:getRange()
     return self.range
 end
 
---- Returns the list of construct IDs currently detection in the range.
+--- Returns ranges to identify a target based on its core size.
+-- @treturn list { xsRange, sRange, mRange, lRange }
+function M:getIdentifyRanges()
+    return { 10000, 20000, 40000, 80000 }
+end
+
+--- <b>Deprecated:</b> Returns the list of construct IDs currently detection in the range.
+--
+-- This method is deprecated: getConstructIds should be used instead.
+-- @see getConstructIds
 -- @treturn list The list of construct IDs.
--- construct.
 function M:getEntries()
+    local message = "Warning: method getEntries is deprecated, use getConstructIds instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
+    return self:getConstructIds()
+end
+
+--- Returns the list of construct IDs in the scan range.
+-- @treturn list The list of scanned construct IDs.
+function M:getConstructIds()
     local entries = {}
     for id,_ in pairs(self.entries) do
         table.insert(entries, id)
@@ -127,10 +152,68 @@ function M:getEntries()
     return entries
 end
 
+--- Returns the list of identified construct IDs.
+-- @treturn list The list of identified construct IDs.
+function M:getIdentifiedConstructIds()
+end
+
+--- Returns the ID of the target construct.
+-- @treturn int The ID of the target construct.
+function M:getTargetId()
+end
+
+--- Returns the distance to the given construct.
+-- @tparam int id The ID of the construct.
+-- @treturn float The distance between the current and target construct center.
+function M:getConstructDistance(id)
+end
+
+--- Returns 1 if the given construct is identified.
+-- @tparam int id The ID of the construct.
+-- @treturn 1/0 1 if the construct is identified, 0 otherwise.
+function M:isConstructIdentified(id)
+end
+
+--- Returns 1 if the given construct was abandoned.
+-- @tparam int id The ID of the construct.
+-- @treturn 1/0 1 if the construct has no owner, 0 otherwise.
+function M:isConstructAbandoned(id)
+end
+
+--- Return the core size of the given construct.
+-- @tparam int id The ID of the construct.
+-- @treturn string XS, S, M, L
+function M:getConstructCoreSize(id)
+end
+
+--- Returns the threat rate your construct is for the given construct.
+-- @tparam int id The ID of the construct.
+-- @treturn string none, identified, threatened_identified, threatened, attacked
+function M:getThreatTo(id)
+end
+
+--- Returns the threat rate the given construct is for your construct.
+-- @tparam int id The ID of the construct.
+-- @treturn string none, identified, threatened_identified, threatened, attacked
+function M:getThreatFrom(id)
+end
+
 --- Returns whether the target has an active transponder with matching tags.
--- @treturn bool 1 if our construct and the target have active transponders with matching tags and 0 otherwise.
+-- @tparam int id The ID of the construct.
+-- @treturn 1/0 1 if our construct and the target have active transponders with matching tags, 0 otherwise.
 function M:hasMatchingTransponder(id)
-    return false
+    return 0
+end
+
+--- Returns a table with id of the owner entities (player or organization) of the given construct, if in range and if
+-- active transponder tags match.
+-- @tparam int id The ID of the construct.
+-- @treturn table A table { playerId: pID, organizationId: oID } describing the owner. Use 
+--   @{system:getPlayerName|system.getPlayerName(pID)} and
+--   @{system:getOrganizationName|system.getOrganizationName(oID)} to retrieve info about it.
+-- @see system:getPlayerName
+-- @see system:getOrganizationName
+function M:getConstructOwner(id)
 end
 
 --- Return the size of the bounding box of the given construct, if in range.
@@ -145,7 +228,7 @@ end
 
 --- Return the type of the given construct.
 -- @tparam int id The ID of the construct.
--- @treturn string The type of the construct,: can be 'static' or 'dynamic'.
+-- @treturn string The type of the construct,: can be 'static', 'space' or 'dynamic'.
 function M:getConstructType(id)
     if self.entries[id] then
         return self.entries[id].type
@@ -153,9 +236,9 @@ function M:getConstructType(id)
     return nil
 end
 
---- Return the radar local coordinates of the given construct, if in range and if active transponder tags match.
+--- Returns the position of the given construct in construct local coordinates, if the active transponder tags match.
 -- @tparam int id The ID of the construct.
--- @treturn vec3 The xyz radar local coordinates of the construct.
+-- @treturn vec3 The xyz local coordinates relative to the construct center.
 function M:getConstructPos(id)
     if self.entries[id] then
         return self.entries[id].pos
@@ -163,7 +246,34 @@ function M:getConstructPos(id)
     return nil
 end
 
---- Return the name of the given construct, if in range.
+--- Returns the position of the given construct in world coordinates, if in range and if the active transponder tags
+-- match.
+-- @tparam int id The ID of the construct.
+-- @treturn vec3 The xyz world coordinates of the construct center.
+function M:getConstructWorldPos(id)
+end
+
+--- Returns the velocity vector of the given construct in construct local coordinates, if identified and if the active
+-- transponder tags match.
+-- @tparam int id The ID of the construct.
+-- @treturn vec3 The xyz local coordinates of the construct velocity.
+function M:getConstructVelocity(id)
+end
+
+--- Returns the velocity vector of the given construct in world coordinates, if identified and if the active
+-- transponder tags match.
+-- @tparam int id The ID of the construct.
+-- @treturn vec3 The xyz world coordinates of the construct velocity.
+function M:getConstructWorldVelocity(id)
+end
+
+--- Returns the mass of the given construct, if identified.
+-- @tparam int id The ID of the construct.
+-- @treturn float the mass of the construct.
+function M:getConstructMass(id)
+end
+
+--- Return the name of the given construct, if defined.
 -- @tparam int id The ID of the construct.
 -- @treturn string The name of the construct.
 function M:getConstructName(id)
@@ -171,6 +281,31 @@ function M:getConstructName(id)
         return self.entries[id].name
     end
     return nil
+end
+
+--- Returns a list of working elements on the given construction, if identified.
+-- @tparam int id The ID of the construct.
+-- @treturn table A table { weapons: f, radars: f, antiGravity: f, atmoEngines: f, spaceEngines: f, rocketEngines: f }
+--   with values 0.0-1.0. Exceptionally antiGravity and rocketEngines are always 1.0 if present, even if broken.
+function M:getConstructInfos(id)
+end
+
+--- Returns the speed of the given construct, if identified.
+-- @tparam int id the ID of the construct.
+-- @treturn float The speed of the construct relative to the universe.
+function M:getConstructSpeed(id)
+end
+
+--- Returns the angular speed of the given construct to your construct, if identified.
+-- @tparam int id The ID of the construct.
+-- @treturn float The angular speed of the construct relative to your construct.
+function M:getConstructAngularSpeed(id)
+end
+
+--- Returns the radial speed of the given construct to your construct, if identified.
+-- @tparam int id The id of the construct.
+-- @treturn float The radial speed of the construct relative to your construct.
+function M:getConstructRadialSpeed(id)
 end
 
 --- Event: Emitted when a construct enters the range of the radar unit.
@@ -251,13 +386,33 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
+    closure.isOperational = function() return self:isOperational() end
     closure.getRange = function() return self:getRange() end
+    closure.getIdentifyRanges = function() return self:getIdentifyRanges() end
     closure.getEntries = function() return self:getEntries() end
-    closure.hasMatchingTransponder = function() return self:hasMatchingTransponder() end
+    closure.getConstructIds = function() return self:getConstructIds() end
+    closure.getIdentifiedConstructIds = function() return self:getIdentifiedConstructIds() end
+    closure.getTargetId = function() return self:getTargetId() end
+    closure.getConstructDistance = function(id) return self:getConstructDistance(id) end
+    closure.isConstructIdentified = function(id) return self:isConstructIdentified(id) end
+    closure.isConstructAbandoned = function(id) return self:isConstructAbandoned(id) end
+    closure.getConstructCoreSize = function(id) return self:getConstructCoreSize(id) end
+    closure.getThreatTo = function(id) return self:getThreatTo(id) end
+    closure.getThreatFrom = function(id) return self:getThreatFrom(id) end
+    closure.hasMatchingTransponder = function(id) return self:hasMatchingTransponder(id) end
+    closure.getConstructOwner = function(id) return self:getConstructOwner(id) end
     closure.getConstructSize = function(id) return self:getConstructSize(id) end
     closure.getConstructType = function(id) return self:getConstructType(id) end
     closure.getConstructPos = function(id) return self:getConstructPos(id) end
+    closure.getConstructWorldPos = function(id) return self:getConstructWorldPos(id) end
+    closure.getConstructVelocity = function(id) return self:getConstructVelocity(id) end
+    closure.getConstructWorldVelocity = function(id) return self:getConstructWorldVelocity(id) end
+    closure.getConstructMass = function(id) return self:getConstructMass(id) end
     closure.getConstructName = function(id) return self:getConstructName(id) end
+    closure.getConstructInfos = function(id) return self:getConstructInfos(id) end
+    closure.getConstructSpeed = function(id) return self:getConstructSpeed(id) end
+    closure.getConstructAngularSpeed = function(id) return self:getConstructAngularSpeed(id) end
+    closure.getConstructRadialSpeed = function(id) return self:getConstructRadialSpeed(id) end
     return closure
 end
 

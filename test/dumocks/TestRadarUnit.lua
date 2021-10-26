@@ -16,7 +16,7 @@ TestRadarUnit = {}
 -- in-game.
 --
 -- Test setup:
--- 1. 1x Radar S (atmo or space), connected to Hovercraft Seat Controller on slot21
+-- 1. 1x Radar S (atmo or space), connected to Programming Board on slot1
 --
 -- Note: Must be run on a dynamic core.
 --
@@ -36,7 +36,7 @@ function _G.TestRadarUnit.testGameBehavior()
 end
 
 --- Runs characterization tests on the provided element.
-function _G.TestRadarUnit.gameBehaviorHelper(mock, slot21)
+function _G.TestRadarUnit.gameBehaviorHelper(mock, slot1)
     -- stub this in directly to supress print in the unit test
     local unit = {}
     unit.exit = function()
@@ -50,14 +50,20 @@ function _G.TestRadarUnit.gameBehaviorHelper(mock, slot21)
     ---------------
     -- verify expected functions
     local expectedFunctions = {"getEntries", "getConstructSize", "getConstructType", "getConstructPos",
-                               "getConstructName", "getRange", "hasMatchingTransponder"}
+                               "getConstructName", "getRange", "hasMatchingTransponder", "isConstructAbandoned",
+                               "isOperational", "isConstructIdentified", "getConstructIds", "getIdentifyRanges",
+                               "getConstructAngularSpeed", "getTargetId", "getConstructDistance",
+                               "getConstructCoreSize", "getConstructInfos", "getConstructRadialSpeed",
+                               "getConstructSpeed", "getIdentifiedConstructIds", "getConstructWorldVelocity",
+                               "getConstructVelocity", "getConstructOwner", "getConstructWorldPos", "getThreatFrom",
+                               "getThreatTo", "getConstructMass"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
-    _G.Utilities.verifyExpectedFunctions(slot21, expectedFunctions)
+    _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    local class = slot21.getElementClass()
+    local class = slot1.getElementClass()
     local isAtmo, isSpace
     if string.match(class, "RadarPvPAtmospheric") then
         isAtmo = true
@@ -67,7 +73,7 @@ function _G.TestRadarUnit.gameBehaviorHelper(mock, slot21)
         assert(false, "Unexpected class: " .. class)
     end
 
-    local data = slot21.getData()
+    local data = slot1.getData()
     local expectedFields = {"helperId", "name", "type", "constructsList", "elementId", "properties"}
     local expectedValues = {}
     local ignoreFields = {"errorMessage", "identifiedConstructs", "identifyConstructs", "radarStatus",
@@ -78,11 +84,12 @@ function _G.TestRadarUnit.gameBehaviorHelper(mock, slot21)
     expectedValues["type"] = '"radar"'
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ignoreFields)
 
-    assert(slot21.getMaxHitPoints() >= 88)
-    assert(slot21.getMass() == 486.72)
-    _G.Utilities.verifyBasicElementFunctions(slot21, 3, "radar")
+    assert(slot1.getMaxHitPoints() >= 88)
+    assert(slot1.getMass() == 486.72)
+    _G.Utilities.verifyBasicElementFunctions(slot1, 3, "radar")
 
     system.print("Success")
+    unit.exit()
     ---------------
     -- copy to here to unit.start()
     ---------------
