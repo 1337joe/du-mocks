@@ -191,7 +191,8 @@ function M:getConstructWorldPos()
 end
 
 --- Returns the construct unique ID.
--- @treturn int The unique ID. Can be used with database.getConstruct to retrieve info about the construct.
+-- @treturn int The unique ID. Can be used with @{database.getConstruct} to retrieve info about the construct.
+-- @see database:getConstruct
 function M:getConstructId()
     return self.constructId
 end

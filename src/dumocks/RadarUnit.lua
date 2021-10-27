@@ -311,7 +311,8 @@ end
 --- Event: Emitted when a construct enters the range of the radar unit.
 --
 -- Note: This is documentation on an event handler, not a callable method.
--- @tparam int id ID of the construct; can be used with database.getConstruct to retrieve info about it.
+-- @tparam int id ID of the construct; can be used with @{database.getConstruct} to retrieve info about it.
+-- @see database.getConstruct
 function M.EVENT_enter(id)
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterEnter")
 end
@@ -319,7 +320,8 @@ end
 --- Event: Emitted when a construct leaves the range of the radar unit.
 --
 -- Note: This is documentation on an event handler, not a callable method.
--- @tparam int id ID of the construct; can be used with database.getConstruct to retrieve info about it.
+-- @tparam int id ID of the construct; can be used with @{database.getConstruct} to retrieve info about it.
+-- @see database.getConstruct
 function M.EVENT_leave(id)
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterLeave")
 end
