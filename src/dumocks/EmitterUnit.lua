@@ -104,12 +104,13 @@ end
 -- @tparam string message The message to transmit.
 function M:send(channel, message)
     if channel:len() > 64 then
-        local outputMessage = "Warning: method send is deprecated, use broadcast instead"
+        local outputMessage = "Warning: channel name cannot exceed 64 characters"
         if _G.system and _G.system.print and type(_G.system.print) == "function" then
             _G.system.print(outputMessage)
         else
             print(outputMessage)
         end
+        return
     end
 
     message = message:sub(0, 512)
@@ -134,7 +135,7 @@ end
 -- Note: Max message string length is currently 512 characters, any additional text will be truncated.
 -- @tparam string message The message to transmit.
 function M:broadcast(message)
-    local outputMessage = "Warning: method send is deprecated, use broadcast instead"
+    local outputMessage = "Warning: method broadcast is deprecated, use send instead"
     if _G.system and _G.system.print and type(_G.system.print) == "function" then
         _G.system.print(outputMessage)
     else

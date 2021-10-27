@@ -37,7 +37,8 @@ function _G.TestScreenRenderer.testGameBehavior()
                                "setDefaultShadow", "setDefaultStrokeColor", "setNextTextAlign", "setNextShadow",
                                "isFontLoaded", "setDefaultStrokeWidth", "addBoxRounded", "setBackgroundColor",
                                "getCursorPressed", "getCursorReleased", "getCursorDown", "setDefaultFillColor",
-                               "getFontMetrics", "getTextBounds", "logMessage",
+                               "getFontMetrics", "getTextBounds", "logMessage", "getTime", "getAvailableFontName",
+                               "getAvailableFontCount",
                                "next", "pairs", "ipairs", "select", "type", "tostring", "tonumber", "pcall", "xpcall",
                                "assert", "error", "load", "require", "setmetatable", "getmetatable"}
     local unexpectedFunctions = {}
@@ -179,6 +180,13 @@ function _G.TestScreenRenderer.testGameBehavior()
     if #other > 0 then
         message = message .. "Found other entries. " .. table.concat(other, ", ") .. "\n"
     end
+
+    -- Exercise functions
+    local fontCount = getAvailableFontCount()
+    if fontCount ~= 12 then
+        message = message .. "Unepxected font count: " .. fontCount .. "\n"
+    end
+
     if message:len() > 0 then
         logMessage(message)
         error(message)

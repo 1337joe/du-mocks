@@ -195,22 +195,30 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
     if isGeneric then
         expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
                              "getMasterPlayerRelativePosition", "getMasterPlayerRelativeOrientation",
-                             "getMasterPlayerId", "getOwnerRelativePosition", "setSignalIn", "getSignalIn"}
+                             "getMasterPlayerId", "getMasterPlayerOrgIds", "getMasterPlayerPosition",
+                             "getMasterPlayerWorldPosition", "getMasterPlayerForward", "getMasterPlayerUp",
+                             "getMasterPlayerRight", "getMasterPlayerWorldForward", "getMasterPlayerWorldUp",
+                             "getMasterPlayerWorldRight", "setSignalIn", "getSignalIn"}
     elseif isPvp then
         expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
                              "getMasterPlayerRelativePosition", "getMasterPlayerRelativeOrientation",
-                             "getMasterPlayerId", "getOwnerRelativePosition"}
+                             "getMasterPlayerId", "getMasterPlayerOrgIds", "getMasterPlayerPosition",
+                             "getMasterPlayerWorldPosition", "getMasterPlayerForward", "getMasterPlayerUp",
+                             "getMasterPlayerRight", "getMasterPlayerWorldForward", "getMasterPlayerWorldUp",
+                             "getMasterPlayerWorldRight"}
     else
         expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
                              "getMasterPlayerRelativePosition", "getMasterPlayerRelativeOrientation",
-                             "getMasterPlayerId", "setEngineCommand", "setEngineThrust", "setAxisCommandValue",
-                             "getAxisCommandValue", "setupAxisCommandProperties", "getControlMasterModeId",
-                             "cancelCurrentControlMasterMode", "isAnyLandingGearExtended", "extendLandingGears",
-                             "retractLandingGears", "isMouseControlActivated", "isMouseDirectControlActivated",
-                             "getOwnerRelativePosition", "isMouseVirtualJoystickActivated", "isAnyHeadlightSwitchedOn",
-                             "switchOnHeadlights", "switchOffHeadlights", "isRemoteControlled",
-                             "activateGroundEngineAltitudeStabilization", "getSurfaceEngineAltitudeStabilization",
-                             "deactivateGroundEngineAltitudeStabilization",
+                             "getMasterPlayerId", "getMasterPlayerOrgIds", "setEngineCommand", "setEngineThrust",
+                             "setAxisCommandValue", "getAxisCommandValue", "setupAxisCommandProperties",
+                             "getControlMasterModeId", "cancelCurrentControlMasterMode", "isAnyLandingGearExtended",
+                             "extendLandingGears", "retractLandingGears", "isMouseControlActivated",
+                             "isMouseDirectControlActivated", "getMasterPlayerPosition", "getMasterPlayerWorldPosition",
+                             "getMasterPlayerForward", "getMasterPlayerUp", "getMasterPlayerRight",
+                             "getMasterPlayerWorldForward", "getMasterPlayerWorldUp", "getMasterPlayerWorldRight",
+                             "isMouseVirtualJoystickActivated", "isAnyHeadlightSwitchedOn", "switchOnHeadlights",
+                             "switchOffHeadlights", "isRemoteControlled", "activateGroundEngineAltitudeStabilization",
+                             "getSurfaceEngineAltitudeStabilization", "deactivateGroundEngineAltitudeStabilization",
                              "computeGroundEngineAltitudeStabilizationCapabilities", "getThrottle",
                              "setupControlMasterModeProperties", "getMasterPlayerMass", "getMasterPlayerParent"}
         if isEcu then

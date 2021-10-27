@@ -188,33 +188,73 @@ end
 
 --- <b>Deprecated:</b> Return the relative position (in world coordinates) of the player currently running the control unit.
 --
--- This method is deprecated: getMasterPlayerRelativePosition should be used instead.
--- @see getMasterPlayerRelativePosition
--- @treturn vec3 Relative position in world coordinates.
-function M:getOwnerRelativePosition()
-    local message = "Warning: method getOwnerRelativePosition is deprecated, use getMasterPlayerRelativePosition instead"
-    if _G.system and _G.system.print and type(_G.system.print) == "function" then
-        _G.system.print(message)
-    else
-        print(message)
-    end
-    return self:getMasterPlayerRelativePosition()
-end
-
---- Return the relative position (in world coordinates) of the player currently running the control unit.
+-- This method is deprecated: getMasterPlayerWorldPosition should be used instead
+-- @see getMasterPlayerWorldPosition
 -- @treturn vec3 Relative position in world coordinates.
 function M:getMasterPlayerRelativePosition()
 end
 
---- Return the relative orientation with respect to the ctonrol unit (in world coordinates) of the player currently running the control unit.
+--- Return the position of the player currently running the control unit, in construct local coordinates.
+-- @treturn vec3 Master player position in construct local coordinates.
+function M:getMasterPlayerPosition()
+end
+
+--- Return the position of the player currently running the control unit, in construct local coordinates.
+-- @treturn vec3 Master player position in world coordinates.
+function M:getMasterPlayerWorldPosition()
+end
+
+--- <b>Deprecated:</b> Return the relative orientation with respect to the control unit (in world coordinates) of the
+-- player currently running the control unit.
+--
+-- This method is deprecated: getMasterPlayerWorldForward, getMasterPlayerWorldUp, getMasterPlayerWorldRight should be
+-- used instead.
+-- @see getMasterPlayerWorldForward
+-- @see getMasterPlayerWorldUp
+-- @see getMasterPlayerWorldRight
 -- @treturn quat Relative orientation in world coordinates, as a quaternion.
 function M:getMasterPlayerRelativeOrientation()
+end
+
+--- Returns the forward direction vector of the player currently running the control unit, in construct local coordinates.
+-- @treturn vec3 Master player forward direction vector in construct local coordinates.
+function M:getMasterPlayerForward()
+end
+
+--- Returns the up direction vector of the player currently running the control unit, in construct local coordinates.
+-- @treturn vec3 Master player up direction vector in construct local coordinates.
+function M:getMasterPlayerUp()
+end
+
+--- Returns the right direction vector of the player currently running the control unit, in construct local coordinates.
+-- @treturn vec3 Master player right direction vector in construct local coordinates.
+function M:getMasterPlayerRight()
+end
+
+--- Returns the forward direction vector of the player currently running the control unit, in world coordinates.
+-- @treturn vec3 Master player forward direction vector in world coordinates.
+function M:getMasterPlayerWorldForward()
+end
+
+--- Returns the up direction vector of the player currently running the control unit, in world coordinates.
+-- @treturn vec3 Master player up direction vector in world coordinates.
+function M:getMasterPlayerWorldUp()
+end
+
+--- Returns the right direction vector of the player currently running the control unit, in world coordinates.
+-- @treturn vec3 Master player right direction vector in world coordinates.
+function M:getMasterPlayerWorldRight()
 end
 
 --- Return the ID of the player currently running the control unit.
 -- @treturn int ID of the player running the control unit.
 function M:getMasterPlayerId()
     return self.masterPlayerId
+end
+
+--- Returns the list of organization IDs of the player running the control unit.
+-- @treturn list Organization IDs of the player running the control unit.
+function M:getMasterPlayerOrgIds()
 end
 
 --- Returns the mass of the active player.
@@ -479,10 +519,18 @@ function M:mockGetClosure()
     closure.stopTimer = function(timerTagId) return self:stopTimer(timerTagId) end
     closure.getAtmosphereDensity = function() return self:getAtmosphereDensity() end
     closure.getClosestPlanetInfluence = function() return self:getClosestPlanetInfluence() end
-    closure.getOwnerRelativePosition = function() return self:getOwnerRelativePosition() end
-    closure.getMasterPlayerRelativePosition = function() return self:getMasterPlayerRelativePosition() end
-    closure.getMasterPlayerRelativeOrientation = function() return self:getMasterPlayerRelativeOrientation() end
     closure.getMasterPlayerId = function() return self:getMasterPlayerId() end
+    closure.getMasterPlayerOrgIds = function() return self:getMasterPlayerOrgIds() end
+    closure.getMasterPlayerRelativePosition = function() return self:getMasterPlayerRelativePosition() end
+    closure.getMasterPlayerPosition = function() return self:getMasterPlayerPosition() end
+    closure.getMasterPlayerWorldPosition = function() return self:getMasterPlayerWorldPosition() end
+    closure.getMasterPlayerRelativeOrientation = function() return self:getMasterPlayerRelativeOrientation() end
+    closure.getMasterPlayerForward = function() return self:getMasterPlayerForward() end
+    closure.getMasterPlayerUp = function() return self:getMasterPlayerUp() end
+    closure.getMasterPlayerRight = function() return self:getMasterPlayerRight() end
+    closure.getMasterPlayerWorldForward = function() return self:getMasterPlayerWorldForward() end
+    closure.getMasterPlayerWorldUp = function() return self:getMasterPlayerWorldUp() end
+    closure.getMasterPlayerWorldRight = function() return self:getMasterPlayerWorldRight() end
 
     if self.elementClass == CLASS_GENERIC then
         closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end

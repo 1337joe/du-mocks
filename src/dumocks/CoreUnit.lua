@@ -54,6 +54,7 @@ function M:new(o, id, elementName)
 
     self.elementClass = elementDefinition.class
 
+    o.constructName = ""
     o.constructMass = 0 -- kg
     o.constructIMass = 0 -- kg*m2
     o.constructCrossSection = 0 -- m2
@@ -134,6 +135,12 @@ function M:getDataId()
     return "e123456"
 end
 
+--- Returns the name of the construct.
+-- @treturn string The name of the construct.
+function M:getConstructName()
+    return self.constructName
+end
+
 --- Returns the mass of the construct.
 --
 -- Note: Only defined for dynamic cores.
@@ -178,7 +185,7 @@ function M:getMaxKinematicsParametersAlongAxis(taglist, CRefAxis)
 end
 
 --- Returns the world position of the construct.
--- @treturn vec3 The xyz world coordinates of the construct core unit position.
+-- @treturn vec3 The xyz world coordinates of the construct center position.
 function M:getConstructWorldPos()
     return self.constructWorldPos
 end
@@ -295,21 +302,6 @@ function M:rotateSticker(index, angle_x, angle_y, angle_z)
     return 0
 end
 
---- <b>Deprecated:</b> List of all the UIDs of the elements of this construct.
---
--- This method is deprecated: getElementIdList should be used instead.
--- @see getElementIdList
--- @treturn list List of element UIDs.
-function M:getElementList()
-    local message = "Warning: method getElementList is deprecated, use getElementIdList instead"
-    if _G.system and _G.system.print and type(_G.system.print) == "function" then
-        _G.system.print(message)
-    else
-        print(message)
-    end
-    return self:getElementIdList()
-end
-
 --- List of all the UIDs of the elements of this construct.
 -- @treturn list List of element UIDs.
 function M:getElementIdList()
@@ -318,22 +310,6 @@ function M:getElementIdList()
         table.insert(ids, id)
     end
     return ids
-end
-
---- <b>Deprecated:</b> Name of the element, identified by its UID.
---
--- This method is deprecated: getElementNameById should be used instead.
--- @see getElementNameById
--- @tparam int uid The UID of the element.
--- @treturn string Name of the element.
-function M:getElementName(uid)
-    local message = "Warning: method getElementName is deprecated, use getElementNameById instead"
-    if _G.system and _G.system.print and type(_G.system.print) == "function" then
-        _G.system.print(message)
-    else
-        print(message)
-    end
-    return self:getElementNameById()
 end
 
 --- Name of the element, identified by its UID.
@@ -346,22 +322,6 @@ function M:getElementNameById(uid)
     return ""
 end
 
---- <b>Deprecated:</b> Type of the element, identified by its UID.
---
--- This method is deprecated: getElementTypeById should be used instead.
--- @see getElementTypeById
--- @tparam int uid The UID of the element.
--- @treturn string The type of the element.
-function M:getElementType(uid)
-    local message = "Warning: method getElementType is deprecated, use getElementTypeById instead"
-    if _G.system and _G.system.print and type(_G.system.print) == "function" then
-        _G.system.print(message)
-    else
-        print(message)
-    end
-    return self:getElementNameById()
-end
-
     --- Type of the element, identified by its UID.
 -- @tparam int uid The UID of the element.
 -- @treturn string The type of the element.
@@ -370,22 +330,6 @@ function M:getElementTypeById(uid)
         return self.elements[uid].type
     end
     return ""
-end
-
---- <b>Deprecated:</b> Current level of hit points of the element, identified by its UID.
---
--- This method is deprecated: getElementHitPointsById should be used instead.
--- @see getElementHitPointsById
--- @tparam int uid The UID of the element.
--- @treturn float Current level of hit points of the element.
-function M:getElementHitPoints(uid)
-    local message = "Warning: method getElementHitPoints is deprecated, use getElementHitPointsById instead"
-    if _G.system and _G.system.print and type(_G.system.print) == "function" then
-        _G.system.print(message)
-    else
-        print(message)
-    end
-    return self:getElementHitPointsById()
 end
 
 --- Current level of hit points of the element, identified by its UID.
@@ -398,22 +342,6 @@ function M:getElementHitPointsById(uid)
     return 0.0
 end
 
---- <b>Deprecated:</b> Max level of hit points of the element, identified by its UID.
---
--- This method is deprecated: getElementMaxHitPointsById should be used instead.
--- @see getElementMaxHitPointsById
--- @tparam int uid The UID of the element.
--- @treturn float Max level of hit points of the element.
-function M:getElementMaxHitPoints(uid)
-    local message = "Warning: method getElementMaxHitPoints is deprecated, use getElementMaxHitPointsById instead"
-    if _G.system and _G.system.print and type(_G.system.print) == "function" then
-        _G.system.print(message)
-    else
-        print(message)
-    end
-    return self:getElementMaxHitPointsById()
-end
-
 --- Max level of hit points of the element, identified by its UID.
 -- @tparam int uid The UID of the element.
 -- @treturn float Max level of hit points of the element.
@@ -422,22 +350,6 @@ function M:getElementMaxHitPointsById(uid)
         return self.elements[uid].maxHp
     end
     return 0.0
-end
-
---- <b>Deprecated:</b> Mass of the element, identified by its UID.
---
--- This method is deprecated: getElementMassById should be used instead.
--- @see getElementMassById
--- @tparam int uid The UID of the element.
--- @treturn float Mass of the element.
-function M:getElementMass(uid)
-    local message = "Warning: method getElementMass is deprecated, use getElementMassById instead"
-    if _G.system and _G.system.print and type(_G.system.print) == "function" then
-        _G.system.print(message)
-    else
-        print(message)
-    end
-    return self:getElementMassById()
 end
 
 --- Mass of the element, identified by its UID.
@@ -450,17 +362,9 @@ function M:getElementMassById(uid)
     return 0.0
 end
 
---- Position of the element, identified by its UID.
---
--- Position is relative to the negative-most corner of the build volume, not the center. To get center-relative positions subtract:
--- <ul>
---   <li>Core XS: 16</li>
---   <li>Core S: 32</li>
---   <li>Core M: 64</li>
---   <li>Core L: 128</li>
--- </ul>
+--- Returns the position of the element, identified by its UID, in construct local coordinates.
 -- @tparam int uid The UID of the element.
--- @treturn vec3 Position of the element in local coordinates.
+-- @treturn vec3 Position of the element in construct local coordinates.
 function M:getElementPositionById(uid)
     if self.elements[uid] and self.elements[uid].position then
         return self.elements[uid].position
@@ -468,14 +372,43 @@ function M:getElementPositionById(uid)
     return {}
 end
 
---- Rotation of the element, identified by its UID.
+--- <b>Deprecated:</b> Rotation of the element, identified by its UID.
+--
+-- This method is deprecated: getElementUpById, getElementRightById, getElementForward should be used instead
+-- @see getElementUpById
+-- @see getElementRightById
+-- @see getElementForwardById
 -- @tparam int uid The UID of the element.
 -- @treturn quat Rotation of the element as a quaternion (x,y,z,w).
 function M:getElementRotationById(uid)
+    local message = "Warning: method getElementRotationById is deprecated, use getElementUpById instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(message)
+    else
+        print(message)
+    end
     if self.elements[uid] and self.elements[uid].position then
         return self.elements[uid].rotation
     end
     return {}
+end
+
+--- Returns the up direction vector of the element, identified by its UID, in construct local coordinates.
+-- @tparam int uid The UID of the element.
+-- @treturn vec3 Up direction vector of the element identified by its UID, in construct local coordinates.
+function M:getElementUpById(uid)
+end
+
+--- Returns the right direction vector of the element, identified by its UID, in construct local coordinates.
+-- @tparam int uid The UID of the element.
+-- @treturn vec3 Right direction vector of the element identified by its UID, in construct local coordinates.
+function M:getElementRightById(uid)
+end
+
+--- Returns the forward direction vector of the element, identified by its UID, in construct local coordinates.
+-- @tparam int uid The UID of the element.
+-- @treturn vec3 Forward direction vector of the element identified by its UID, in construct local coordinates.
+function M:getElementForwardById(uid)
 end
 
 --- Status of the industry unit element, identified by its UID.
@@ -585,16 +518,26 @@ function M:getWorldAngularAcceleration()
     return self.worldAngularAcceleration
 end
 
---- The construct's linear velocity, in construct local coordinates.
--- @treturn m/s Linear velocity vector, in construct local coordinates.
+--- The construct's linear velocity, relative to its parent, in construct local coordinates.
+-- @treturn m/s Relative linear velocity vector, in construct local coordinates.
 function M:getVelocity()
     return self.velocity
 end
 
---- The construct's linear velocity, in world coordinates.
--- @treturn m/s Linear velocity vector, in world coordinates.
+--- The construct's linear velocity, relative to its parent, in world coordinates.
+-- @treturn m/s Relative linear velocity vector, in world coordinates.
 function M:getWorldVelocity()
     return self.worldVelocity
+end
+
+--- The construct's absolute linear velocity, in construct local coordinates.
+-- @treturn m/s Absolute linear velocity vector, in construct local coordinates.
+function M:getAbsoluteVelocity()
+end
+
+--- The construct's absolute linear velocity, in world coordinates.
+-- @treturn m/s Absolute linear velocity vector, in world coordinates.
+function M:getWorldAbsoluteVelocity()
 end
 
 --- The construct's linear acceleration, in world coordinates.
@@ -609,44 +552,64 @@ function M:getAcceleration()
     return self.acceleration
 end
 
---- The construct's current orientation up vector, in construct local coordinates.
--- @treturn vec3 Up vector of current orientation, in local coordinates.
+--- Returns the uid of the current active orientation unit (core unit or gyro unit).
+-- @treturn int Uid of the current active orientation unit (core unit or gyro unit).
+function M:getOrientataionUnitId()
+end
+
+--- Returns the up direction vector of the active orientation unit, in construct local coordinates.
+-- @treturn vec3 Up direction vector of the active orientation unit, in construct local coordinates.
 function M:getConstructOrientationUp()
     return self.constructOrientationUp
 end
 
---- The construct's current orientation right vector, in construct local coordinates.
--- @treturn vec3 Right vector of current orientation, in local coordinates.
+--- Returns the right direction vector of the active orientation unit, in construct local coordinates.
+-- @treturn vec3 Right direction vector of the active orientation unit, in construct local coordinates.
 function M:getConstructOrientationRight()
     return self.constructOrientationRight
 end
 
---- The construct's current orientation forward vector, in construct local coordinates.
--- @treturn vec3 Forward vector of current orientation, in local coordinates.
+--- Returns the forward direction vector of the active orientation unit, in construct local coordinates.
+-- @treturn vec3 Forward direction vector of the active orientation unit, in construct local coordinates.
 function M:getConstructOrientationForward()
     return self.constructOrientationForward
 end
 
---- The construct's current orientation up vector, in world coordinates.
--- @treturn vec3 Up vector of current orientation, in world coordinates.
+--- Returns the up direction vector of the active orientation unit, in world coordinates.
+-- @treturn vec3 Up direction vector of the active orientation unit, in world coordinates.
 function M:getConstructWorldOrientationUp()
     return self.constructWorldOrientationUp
 end
 
---- The construct's current orientation right vector, in world coordinates.
--- @treturn vec3 Right vector of current orientation, in world coordinates.
+--- Returns the right direction vector of the active orientation unit, in world coordinates.
+-- @treturn vec3 Right direction vector of the active orientation unit, in world coordinates.
 function M:getConstructWorldOrientationRight()
     return self.constructWorldOrientationRight
 end
 
---- The construct's current orientation forward vector, in world coordinates.
--- @treturn vec3 Forward vector of current orientation, in world coordinates.
+--- Returns the forward direction vector of the active orientation unit, in world coordinates.
+-- @treturn vec3 Forward direction vector of the active orientation unit, in world coordinates.
 function M:getConstructWorldOrientationForward()
     return self.constructWorldOrientationForward
 end
 
+--- Returns the up direction vector of the construct, in world coordinates.
+-- @treturn vec3 Up direction vector of the construct, in world coordinates.
+function M:getConstructWorldUp()
+end
+
+--- Returns the right direction vector of the construct, in world coordinates.
+-- @treturn vec3 Right direction vector of the construct, in world coordinates.
+function M:getConstructWorldRight()
+end
+
+--- Returns the Forward direction vector of the construct, in world coordinates.
+-- @treturn vec3 Forward direction vector of the construct, in world coordinates.
+function M:getConstructWorldForward()
+end
+
 --- The construct's current state of the PvP timer.
--- @treturn float Positive remaining time of the PvP timer.
+-- @treturn float Positive remaining time of the PvP timer, or 0.0 if elapsed.
 function M:getPvPTimer()
     return self.pvpTimer
 end
@@ -704,6 +667,11 @@ end
 function M:getParent()
 end
 
+--- Returns the id of the current close stellar body
+-- @treturn int The id of the current close stellar body.
+function M:getCurrentPlanetId()
+end
+
 --- Returns the list of ids of nearby constructs, on which the construct can dock.
 -- @treturn list List of ids of nearby constructs.
 function M:getCloseParents()
@@ -734,6 +702,46 @@ end
 --- Returns the current docking mode.
 -- @treturn int 0: Manual, 1: Automatic, 2: Semi-automatic
 function M:getDockingMode()
+end
+
+--- Returns the position of the construct's parent when docked in local coordinates.
+-- @treturn vec3 The position of the construct's parent in local coordinates.
+function M:getParentPosition()
+end
+
+--- Returns the position of the construct's parent when docked in world coordinates.
+-- @treturn vec3 The position of the construct's parent in world coordinates.
+function M:getParentWorldPosition()
+end
+
+--- Returns the construct's parent forward direction vector, in local coordinates.
+-- @treturn vec3 The construct's parent forward direction vector, in local coordinates.
+function M:getParentForward()
+end
+
+--- Returns the construct's parent up direction vector, in local coordinates.
+-- @treturn vec3 The construct's parent up direction vector, in local coordinates.
+function M:getParentUp()
+end
+
+--- Returns the construct's parent right direction vector, in local coordinates.
+-- @treturn vec3 The construct's parent right direction vector, in local coordinates.
+function M:getParentRight()
+end
+
+--- Returns the construct's parent forward direction vector, in world coordinates.
+-- @treturn vec3 The construct's parent forward direction vector, in world coordinates.
+function M:getParentWorldForward()
+end
+
+--- Returns the construct's parent up direction vector, in world coordinates.
+-- @treturn vec3 The construct's parent up direction vector, in world coordinates.
+function M:getParentWorldUp()
+end
+
+--- Returns the construct's parent right direction vector, in world coordinates.
+-- @treturn vec3 The construct's parent right direction vector, in world coordinates.
+function M:getParentWorldRight()
 end
 
 --- The core's current stress, destroyed when reaching max stress.
@@ -810,6 +818,7 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
+    closure.getConstructName = function() return self:getConstructName() end
     if self.elementClass == CLASS_DYNAMIC then
         closure.getConstructMass = function() return self:getConstructMass() end
         closure.getConstructIMass = function() return self:getConstructIMass() end
@@ -831,20 +840,17 @@ function M:mockGetClosure()
     closure.rotateSticker = function(index, angle_x, angle_y, angle_z)
         return self:rotateSticker(index, angle_x, angle_y, angle_z)
     end
-    closure.getElementList = function() return self:getElementList() end
     closure.getElementIdList = function() return self:getElementIdList() end
-    closure.getElementName = function(uid) return self:getElementName(uid) end
     closure.getElementNameById = function(uid) return self:getElementNameById(uid) end
-    closure.getElementType = function(uid) return self:getElementType(uid) end
     closure.getElementTypeById = function(uid) return self:getElementTypeById(uid) end
-    closure.getElementHitPoints = function(uid) return self:getElementHitPoints(uid) end
     closure.getElementHitPointsById = function(uid) return self:getElementHitPointsById(uid) end
-    closure.getElementMaxHitPoints = function(uid) return self:getElementMaxHitPoints(uid) end
     closure.getElementMaxHitPointsById = function(uid) return self:getElementMaxHitPointsById(uid) end
-    closure.getElementMass = function(uid) return self:getElementMass(uid) end
     closure.getElementMassById = function(uid) return self:getElementMassById(uid) end
     closure.getElementPositionById = function(uid) return self:getElementPositionById(uid) end
     closure.getElementRotationById = function(uid) return self:getElementRotationById(uid) end
+    closure.getElementUpById = function(uid) return self:getElementUpById(uid) end
+    closure.getElementRightById = function(uid) return self:getElementRightById(uid) end
+    closure.getElementForwardById = function(uid) return self:getElementForwardById(uid) end
     closure.getElementTagsById = function(uid) return self:getElementTagsById(uid) end
     closure.getElementIndustryStatus = function(localId) return self:getElementIndustryStatus(localId) end
     closure.getAltitude = function() return self:getAltitude() end
@@ -857,14 +863,20 @@ function M:mockGetClosure()
     closure.getWorldAngularAcceleration = function() return self:getWorldAngularAcceleration() end
     closure.getVelocity = function() return self:getVelocity() end
     closure.getWorldVelocity = function() return self:getWorldVelocity() end
+    closure.getAbsoluteVelocity = function() return self:getAbsoluteVelocity() end
+    closure.getWorldAbsoluteVelocity = function() return self:getWorldAbsoluteVelocity() end
     closure.getWorldAcceleration = function() return self:getWorldAcceleration() end
     closure.getAcceleration = function() return self:getAcceleration() end
+    closure.getOrientationUnitId = function() return self:getOrientationUnitId() end
     closure.getConstructOrientationUp = function() return self:getConstructOrientationUp() end
     closure.getConstructOrientationRight = function() return self:getConstructOrientationRight() end
     closure.getConstructOrientationForward = function() return self:getConstructOrientationForward() end
     closure.getConstructWorldOrientationUp = function() return self:getConstructWorldOrientationUp() end
     closure.getConstructWorldOrientationRight = function() return self:getConstructWorldOrientationRight() end
     closure.getConstructWorldOrientationForward = function() return self:getConstructWorldOrientationForward() end
+    closure.getConstructWorldUp = function() return self:getConstructWorldUp() end
+    closure.getConstructWorldRight = function() return self:getConstructWorldRight() end
+    closure.getConstructWorldForward = function() return self:getConstructWorldForward() end
     closure.getSchematicInfo = function(schematicId) return self:getSchematicInfo(schematicId) end
     closure.getPvPTimer = function() return self:getPvPTimer() end
     closure.getPlayersOnBoard = function() return self:getPlayersOnBoard() end
@@ -876,12 +888,21 @@ function M:mockGetClosure()
     closure.getBoardedPlayerMass = function(pid) return self:getBoardedPlayerMass(pid) end
     closure.getDockedConstructMass = function(cid) return self:getDockedConstructMass(cid) end
     closure.getParent = function() return self:getParent() end
+    closure.getCurrentPlanetId = function() return self:getCurrentPlanetId() end
     closure.getCloseParents = function() return self:getCloseParents() end
     closure.getClosestParent = function() return self:getClosestParent() end
     closure.dock = function(pid) return self:dock(pid) end
     closure.undock = function() return self:undock() end
     closure.setDockingMode = function(mode) return self:setDockingMode(mode) end
     closure.getDockingMode = function() return self:getDockingMode() end
+    closure.getParentPosition = function() return self:getParentPosition() end
+    closure.getParentWorldPosition = function() return self:getParentWorldPosition() end
+    closure.getParentForward = function() return self:getParentForward() end
+    closure.getParentUp = function() return self:getParentUp() end
+    closure.getParentRight = function() return self:getParentRight() end
+    closure.getParentWorldForward = function() return self:getParentWorldForward() end
+    closure.getParentWorldUp = function() return self:getParentWorldUp() end
+    closure.getParentWorldRight = function() return self:getParentWorldRight() end
     closure.getCoreStress = function() return self:getCoreStress() end
     closure.getMaxCoreStress = function() return self:getMaxCoreStress() end
     closure.getCoreStressRatio = function() return self:getCoreStressRatio() end

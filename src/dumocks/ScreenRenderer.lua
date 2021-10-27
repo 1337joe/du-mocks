@@ -1,6 +1,11 @@
---- The screen renderer handles the screen render script content, which can be set with @{ScreenUnit.setRenderScript}.
--- This is based on documentation originally posted on the forum in
--- <a href="https://board.dualthegame.com/index.php?/topic/22643-lua-screen-units-api-and-instructions/">this thread</a>.
+--- RenderScript is a new technology for creating screen unit contents using Lua (also referred to as "Lua Screen
+-- Units"), rather than HTML/CSS. In general, this technology causes less performance drops in the game, while
+-- simultaneously allowing significantly more complex animaged and interactive screens.
+--
+-- Render scripts are Lua scripts residing inside screen units that provide rendering instructions for the screen. To
+-- use RenderScript, simply switch the screen mode from 'HTML' to 'Lua' in the screen unit content editor interface,
+-- then start writing a render script! Render scripts work by building up layers of geometric shapes, images, and text,
+-- that are then rendered sequentially to the screen.
 --
 -- Lua calls available within the screen renderer environment:
 -- <ul>
@@ -32,7 +37,10 @@
 --   </li>
 -- </ul>
 --
--- @see ScreenUnit
+-- Additional funcionality is provided in the rslib.lua library in your Dual Universe\Game\data\lua directory,
+-- accessible by calling <code>local rslib = require('rslib')</code>.
+--
+-- @see ScreenUnit.setRenderScript
 -- @module ScreenRenderer
 -- @alias M
 
@@ -220,13 +228,6 @@ function M:createLayer()
     return 0
 end
 
---- Set the background color of the screen as red (r), green (g), blue (b) in the range [0, 1].
--- @tparam [0,1] r The red component value.
--- @tparam [0,1] g The green component value.
--- @tparam [0,1] b The blue component value.
-function M:setBackgroundColor(r, g, b)
-end
-
 -- ---------------------- --
 -- Screen State Functions --
 -- ---------------------- --
@@ -269,6 +270,11 @@ end
 -- @treturn float Time since last refresh in seconds.
 function M:getDeltaTime()
     return self.deltaTime
+end
+
+--- Returns the time, in seconds, relative to the first execution.
+-- @treturn float Time, in seconds, since the render script started running.
+function M:getTime()
 end
 
 --- Return the current render cost of the script thus far, used to profile the performance of a screen. This can be
@@ -315,6 +321,26 @@ function M:loadImage(path)
     return 0
 end
 
+--- Returns true if the given imageHandle is loaded.
+-- @tparam int imageHandle An image handle provided by loadImage.
+-- @treturn boolean True if loaded, false otherwise.
+-- @see loadImage
+function M:isImageLoaded(imageHandle)
+    return false
+end
+
+--- Returns the number of fonts available to be used by render script.
+-- @treturn int The total number of fonts available.
+function M:getAvailableFontCount()
+    return 12
+end
+
+--- Returns the name of the nth available font.
+-- @tparam int index A number between 1 and the return value of @{getAvailableFontCount}.
+-- @treturn string The name of the font, which can be used with the @{loadFont} function.
+function M:getAvailableFontName(index)
+end
+
 --- Return a font handle that can be used with @{addText}. If the font is not yet loaded, a sentinel value will be
 -- returned that will cause addText to fail silently, so that the rendered text will not appear until the font is
 -- loaded.
@@ -342,15 +368,7 @@ function M:loadFont(name, size)
     return 0
 end
 
---- Returns true if the given imageHandle is loaded.
--- @tparam int imageHandle An image handle provided by loadImage.
--- @treturn boolean True if loaded, false otherwise.
--- @see loadImage
-function M:isImageLoaded(imageHandle)
-    return false
-end
-
---- Returns true if the given font is loaded.
+--- <b>Deprecated:</b> Returns true if the given font is loaded.
 -- @tparam int font A font handle provided by load font.
 -- @treturn boolean True if loaded, false otherwise.
 -- @see loadFont
@@ -392,6 +410,13 @@ end
 -- ------------------- --
 -- Properties Defaults --
 -- ------------------- --
+
+--- Set the background color of the screen as red (r), green (g), blue (b) in the range [0, 1].
+-- @tparam [0,1] r The red component value.
+-- @tparam [0,1] g The green component value.
+-- @tparam [0,1] b The blue component value.
+function M:setBackgroundColor(r, g, b)
+end
 
 --- Set the default fill color for all shapeType on layer. Red (r), green (g), blue (b), and alpha (a) components are
 -- specified, respectively, in the range [0, 1]. Has no effect on shapes that don't support the fillColor property.
@@ -566,27 +591,30 @@ function M:mockGetEnvironment()
     environment.addTriangle = function(layer, x1, y1, x2, y2, x3, y3) return self:addTriangle(layer, x1, y1, x2, y2, x3, y3) end
     -- Layers
     environment.createLayer = function() return self:createLayer() end
-    environment.setBackgroundColor = function(r, g, b) return self:setBackgroundColor(r, g, b) end
     -- Screen State Functions
     environment.getCursor = function() return self:getCursor() end
     environment.getCursorDown = function() return self:getCursorDown() end
     environment.getCursorPressed = function() return self:getCursorPressed() end
     environment.getCursorReleased = function() return self:getCursorReleased() end
     environment.getDeltaTime = function() return self:getDeltaTime() end
+    environment.getTime = function() return self:getTime() end
     environment.getRenderCost = function() return self:getRenderCost() end
     environment.getRenderCostMax = function() return self:getRenderCostMax() end
     environment.getResolution = function() return self:getResolution() end
     environment.logMessage = function(message) return self:logMessage(message) end
     -- Loading References
     environment.loadImage = function(path) return self:loadImage(path) end
-    environment.loadFont = function(name, size) return self:loadFont(name, size) end
     environment.isImageLoaded = function(imageHandle) return self:isImageLoaded(imageHandle) end
+    environment.getAvailableFontCount = function() return self:getAvailableFontCount() end
+    environment.getAvailableFontName = function(index) return self:getAvailableFontName(index) end
+    environment.loadFont = function(name, size) return self:loadFont(name, size) end
     environment.isFontLoaded = function(font) return self:isFontLoaded(font) end
     environment.getTextBounds = function(font, text) return self:getTextBounds(font, text) end
     environment.getFontMetrics = function(font) return self:getFontMetrics(font) end
     -- Animation
     environment.requestAnimationFrame = function(frames) return self:requestAnimationFrame(frames) end
     -- Properties Defaults
+    environment.setBackgroundColor = function(r, g, b) return self:setBackgroundColor(r, g, b) end
     environment.setDefaultFillColor = function(layer, shapeType, r, g, b, a) return self:setDefaultFillColor(layer, shapeType, r, g, b, a) end
     environment.setDefaultRotation = function(layer, shapeType, radians) return self:setDefaultRotation(layer, shapeType, radians) end
     environment.setDefaultShadow = function(layer, shapeType, radius, r, g, b, a) return self:setDefaultShadow(layer, shapeType, radius, r, g, b, a) end

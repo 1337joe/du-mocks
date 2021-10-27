@@ -50,7 +50,7 @@ end
 function _G.TestCoreUnit.testGameBehavior()
     local mock, closure
     local result, message
-    for _,element in pairs({"dynamic core unit xs", "space core unit xs", "static core unit xs"}) do
+    for _, element in pairs({"dynamic core unit xs", "space core unit xs", "static core unit xs"}) do
         mock = mcu:new(nil, 1, element)
         closure = mock:mockGetClosure()
 
@@ -68,9 +68,11 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.exit = function() end
+    unit.exit = function()
+    end
     local system = {}
-    system.print = function() end
+    system.print = function()
+    end
 
     ---------------
     -- copy from here to unit.start()
@@ -89,23 +91,28 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
 
     -- verify expected functions
     local expectedFunctions = {"getConstructWorldPos", "getConstructId", "getWorldAirFrictionAngularAcceleration",
-                             "getWorldAirFrictionAcceleration", "spawnNumberSticker", "spawnArrowSticker",
-                             "deleteSticker", "moveSticker", "rotateSticker", "getElementList", "getElementName",
-                             "getElementType", "getElementHitPoints", "getElementMaxHitPoints", "getElementMass",
-                             "getElementIdList", "getElementNameById", "getElementTypeById",
-                             "getElementHitPointsById", "getElementMaxHitPointsById", "getElementMassById",
-                             "getElementPositionById", "getElementRotationById", "getElementTagsById", "getAltitude",
-                             "g", "getWorldGravity", "getWorldVertical", "getAngularVelocity",
-                             "getWorldAngularVelocity", "getAngularAcceleration", "getWorldAngularAcceleration",
-                             "getVelocity", "getWorldVelocity", "getWorldAcceleration", "getAcceleration",
-                             "getConstructOrientationUp", "getConstructOrientationRight",
-                             "getConstructOrientationForward", "getConstructWorldOrientationUp",
-                             "getConstructWorldOrientationRight", "getConstructWorldOrientationForward",
-                             "getSchematicInfo", "getElementIndustryStatus", "getPvPTimer", "getPlayersOnBoard",
-                             "getDockedConstructs", "isPlayerBoarded", "isConstructDocked", "forceDeboard",
-                             "forceUndock", "getBoardedPlayerMass", "getDockedConstructMass", "getParent",
-                             "getCloseParents", "getClosestParent", "dock", "undock", "setDockingMode",
-                             "getDockingMode", "getMaxCoreStress", "getCoreStress", "getCoreStressRatio"}
+                               "getWorldAirFrictionAcceleration", "spawnNumberSticker", "spawnArrowSticker",
+                               "deleteSticker", "moveSticker", "rotateSticker", "getElementIdList",
+                               "getElementNameById", "getElementTypeById", "getElementHitPointsById",
+                               "getElementMaxHitPointsById", "getElementMassById", "getElementPositionById",
+                               "getElementRotationById", "getElementTagsById", "getAltitude", "g", "getWorldGravity",
+                               "getWorldVertical", "getAngularVelocity", "getWorldAngularVelocity",
+                               "getAngularAcceleration", "getWorldAngularAcceleration", "getVelocity",
+                               "getWorldVelocity", "getWorldAcceleration", "getAcceleration",
+                               "getConstructOrientationUp", "getConstructOrientationRight",
+                               "getConstructOrientationForward", "getConstructWorldOrientationUp",
+                               "getConstructWorldOrientationRight", "getConstructWorldOrientationForward",
+                               "getSchematicInfo", "getElementIndustryStatus", "getPvPTimer", "getPlayersOnBoard",
+                               "getDockedConstructs", "isPlayerBoarded", "isConstructDocked", "forceDeboard",
+                               "forceUndock", "getBoardedPlayerMass", "getDockedConstructMass", "getParent",
+                               "getCloseParents", "getClosestParent", "dock", "undock", "setDockingMode",
+                               "getDockingMode", "getMaxCoreStress", "getCoreStress", "getCoreStressRatio",
+                               "getElementUpById", "getAbsoluteVelocity", "getWorldAbsoluteVelocity",
+                               "getParentForward", "getConstructWorldRight", "getConstructName", "getParentWorldUp",
+                               "getParentWorldForward", "getElementRightById", "getParentRight", "getParentUp",
+                               "getParentWorldPosition", "getParentPosition", "getParentWorldRight",
+                               "getOrientationUnitId", "getElementForwardById", "getConstructWorldUp",
+                               "getCurrentPlanetId", "getConstructWorldForward"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
