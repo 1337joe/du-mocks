@@ -133,7 +133,6 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
     expectedValues["currentStress"] = "0.0"
     if isStatic or isSpace then
         expectedValues["gravity"] = "0.0"
-        expectedValues["maxStress"] = "0.0" -- TODO verify for space construct
     end
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
 

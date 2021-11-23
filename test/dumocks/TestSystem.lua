@@ -44,7 +44,7 @@ function _G.TestSystem.testGameBehavior()
                                "getControlDeviceLeftRightInput", "lockView", "isViewLocked", "freeze", "isFrozen",
                                "getTime", "getActionUpdateDeltaTime", "getPlayerName", "getPlayerWorldPos", "print",
                                "getWaypointFromPlayerPos", "setWaypoint", "getFov", "getScreenWidth", "getScreenHeight",
-                               "load", "logInfo", "logWarning", "logError", "addMarker", "addMeasure",
+                               "load", "logInfo", "logWarning", "logError", "addMarker", "addMeasure", "showHelper",
                                "__NQ_returnFromRunPlayerLUA", "getOrganizationTag", "getOrganizationName"}
     _G.Utilities.verifyExpectedFunctions(system, expectedFunctions)
 

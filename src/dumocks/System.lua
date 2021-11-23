@@ -360,6 +360,11 @@ function M:print(msg)
     print(msg)
 end
 
+--- Set the visibility of the helper top menu.
+-- @tparam 0/1 show 1 show the top helper menu, 0 hide the top helper menu.
+function M:showHelper(show)
+end
+
 --- Print a message to the game log file at `INFO` level. Log file is located in `<user>/AppData/Local/NQ/DualUniverse/log/`.
 --
 -- Note: This method is not documented in the codex.
@@ -498,6 +503,7 @@ function M:mockGetClosure()
     closure.getWaypointFromPlayerPos = function() return self:getWaypointFromPlayerPos() end
     closure.setWaypoint = function(waypoint) return self:setWaypoint(waypoint) end
     closure.print = function(msg) return self:print(msg) end
+    closure.showHelper = function(show) return self:showHelper(show) end
 
     closure.logInfo = function(msg) return self:logInfo(msg) end
     closure.logWarning = function(msg) return self:logWarning(msg) end
