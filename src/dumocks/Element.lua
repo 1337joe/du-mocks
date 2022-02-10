@@ -174,7 +174,7 @@ end
 --
 -- Note: This will have no effect if called on a plug that is connected to something that generates a signal, such as a
 -- switch or button.
--- @param plug The plug name, of the form IN-SIGNAL-index
+-- @tparam string plug The plug name, of the form IN-SIGNAL-index
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     -- TODO store state
@@ -185,7 +185,7 @@ end
 -- OUT, 'type' is one of the following => ITEM, FUEL, ELECTRICITY, SIGNAL, HEAT, FLUID, CONTROL, and 'index' is a number
 -- between 0 and the total number of plugs of the given type in the given direction. Some plugs have special names like
 -- "on" or "off" for the manual switch unit, just check in-game for the plug names if you have a doubt.
--- @param plug The plug name of the form IN-SIGNAL-index
+-- @tparam string plug The plug name of the form IN-SIGNAL-index
 -- @treturn 0/1 The plug signal state
 function M:getSignalIn(plug)
     -- default response for invalid plug name
@@ -197,7 +197,7 @@ end
 -- OUT, 'type' is one of the following => ITEM, FUEL, ELECTRICITY, SIGNAL, HEAT, FLUID, CONTROL, and 'index' is a number
 -- between 0 and the total number of plugs of the given type in the given direction. Some plugs have special names like
 -- "on" or "off" for the manual switch unit, just check in-game for the plug names if you have a doubt.
--- @param plug The plug name of the form OUT-SIGNAL-index
+-- @tparam string plug The plug name of the form OUT-SIGNAL-index
 -- @treturn 0/1 The plug signal state
 function M:getSignalOut(plug)
     -- default response for invalid plug name

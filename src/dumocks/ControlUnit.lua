@@ -429,7 +429,7 @@ end
 -- </ul>
 --
 -- Note: Only defined for Programming Board and ECU.
--- @param plug A valid plug name to set.
+-- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
@@ -458,7 +458,7 @@ end
 -- </ul>
 --
 -- Note: Only defined for Programming Board and ECU.
--- @param plug A valid plug name to query.
+-- @tparam string plug A valid plug name to query.
 -- @treturn 0/1 The plug signal state
 function M:getSignalIn(plug)
     if plug == "in" then
@@ -480,7 +480,7 @@ end
 --- Event: Emitted when the timer with id 'timerId' is ticking.
 --
 -- Note: This is documentation on an event handler, not a callable method.
--- @param timerId The ID (int) of the timer that just ticked (see setTimer to set a timer with a given ID)
+-- @tparam string timerId The ID (int) of the timer that just ticked (see setTimer to set a timer with a given ID)
 function M.EVENT_tick(timerId)
     assert(false, "This is implemented for documentation purposes only.")
 end

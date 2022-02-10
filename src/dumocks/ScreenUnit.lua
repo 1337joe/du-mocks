@@ -230,7 +230,7 @@ function M:setSVG(svg)
 end
 
 --- Update the element with the given ID (returned by setContent) with a new HTML content.
--- @param id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+-- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
 -- that you can store to use later here.
 -- @tparam html html The HTML content to display, which can contain SVG elements to make drawings.
 function M:resetContent(id, html)
@@ -240,7 +240,7 @@ function M:resetContent(id, html)
 end
 
 --- Delete the element with the given ID (returned by setContent).
--- @param id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+-- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
 -- that you can store to use later here.
 function M:deleteContent(id)
     -- deleting non-existent index is no-op
@@ -254,7 +254,7 @@ function M:deleteContent(id)
 end
 
 --- Update the visibility of the element with the given ID (returned by setContent).
--- @param id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+-- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
 -- that you can store to use later here.
 -- @tparam 0/1 state 0 = invisible, 1 = visible.
 function M:showContent(id, state)
@@ -269,7 +269,7 @@ function M:showContent(id, state)
 end
 
 --- Move the element with the given id (returned by setContent) to a new position in the screen.
--- @param id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+-- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
 -- that you can store to use later here.
 -- @tparam 0..100 x Horizontal position, as a percentage of the screen width.
 -- @tparam 0..100 y Vertical position, as a percentage of the screen height.
@@ -329,7 +329,7 @@ end
 -- <ul>
 -- <li>"in" for the in signal (has no actual effect on screen state when modified this way).</li>
 -- </ul>
--- @param plug A valid plug name to set.
+-- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
@@ -361,7 +361,7 @@ end
 -- <ul>
 -- <li>"in" for the in signal.</li>
 -- </ul>
--- @param plug A valid plug name to query.
+-- @tparam string plug A valid plug name to query.
 -- @treturn 0/1 The plug signal state
 function M:getSignalIn(plug)
     if plug == "in" then

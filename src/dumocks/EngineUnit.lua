@@ -232,7 +232,7 @@ end
 -- <li>"in" for the in signal.</li>
 -- </ul>
 --
--- @param plug A valid plug name to set.
+-- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
@@ -260,7 +260,7 @@ end
 -- <li>"in" for the in signal.</li>
 -- </ul>
 --
--- @param plug A valid plug name to query.
+-- @tparam string plug A valid plug name to query.
 -- @treturn 0/1 The plug signal state
 function M:getSignalIn(plug)
     if plug == "in" then

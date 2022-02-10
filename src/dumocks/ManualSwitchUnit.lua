@@ -40,7 +40,7 @@ end
 -- <ul>
 -- <li>"on" for the in signal.</li>
 -- </ul>
--- @param plug A valid plug name to set.
+-- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "on" then
@@ -70,7 +70,7 @@ end
 -- <ul>
 -- <li>"on" for the in signal.</li>
 -- </ul>
--- @param plug A valid plug name to query.
+-- @tparam string plug A valid plug name to query.
 -- @treturn 0/1 The plug signal state
 function M:getSignalIn(plug)
     if plug == "on" then
@@ -95,7 +95,7 @@ end
 -- <ul>
 -- <li>"out" for the out signal.</li>
 -- </ul>
--- @param plug A valid plug name to query.
+-- @tparam string plug A valid plug name to query.
 -- @treturn 0/1 The plug signal state
 function M:getSignalOut(plug)
     if plug == "out" then

@@ -37,7 +37,7 @@ end
 -- <ul>
 -- <li>"out" for the out signal.</li>
 -- </ul>
--- @param plug A valid plug name to query.
+-- @tparam string plug A valid plug name to query.
 -- @treturn 0/1 The plug signal state
 function M:getSignalOut(plug)
     if plug == "out" then
