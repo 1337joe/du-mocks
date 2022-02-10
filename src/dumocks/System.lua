@@ -24,7 +24,8 @@ function M:new(o)
 
     o.screenHeight = 1080
     o.screenWidth = 1920
-    o.fov = 90
+    o.cameraHorizontalFov = 90
+    o.cameraVerticalFov = 59
 
     return o
 end
@@ -348,10 +349,83 @@ function M:getScreenWidth()
     return self.screenWidth
 end
 
---- Return the current value of the player field of view.
+--- <b>Deprecated:</b> Return the current value of the player field of view.
+--
+-- This method is deprecated: getCameraHorizontalFov should be used instead
 -- @treturn float The current value of the player field of view.
 function M:getFov()
-    return self.fov
+    local outputMessage = "Warning: method getFov is deprecated, use getCameraHorizontalFov instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(outputMessage)
+    else
+        print(outputMessage)
+    end
+
+    return self:getCameraHorizontalFov()
+end
+
+--- Return the current value of the player's horizontal field of view.
+-- @treturn float The current value of the player's horizontal field of view.
+function M:getCameraHorizontalFov()
+    return self.cameraHorizontalFov
+end
+
+--- Return the current value of the player's vertical field of view.
+-- @treturn float The current value of the playter's vertical field of view.
+function M:getCameraVerticalFov()
+    return self.cameraVerticalFov
+end
+
+--- Returns the active camera mode.
+-- @treturn 1/2/3 1: First Person View, 2: Look Around Construct View, 3: Follow Construct View.
+function M:getCameraMode()
+    return 1
+end
+
+--- Checks if the active camera is in first person view.
+-- @treturn 0/1 1 if the camera is in first person view.
+function M:isFirstPerson()
+    return 1
+end
+
+--- Returns the position of the camera, in construct local coordinates.
+-- @treturn vec3 Camera position in construct local coordinates.
+function M:getCameraPos()
+end
+
+--- Returns the position of the camera, in world coordinates.
+-- @treturn vec3 Camera position in world coordinates.
+function M:getCameraWorldPos()
+end
+
+--- Returns the forward direction vector of the active camera, in world coordinates.
+-- @treturn vec3 Camera forward direction vector in world coordinates.
+function M:getCameraWorldForward()
+end
+
+--- Returns the right direction vector of the active camera, in world coordinates.
+-- @treturn vec3 Camera right direction vector in world coordinates.
+function M:getCameraWorldRight()
+end
+
+--- Returns the up direction vector of the active camera, in world coordinates.
+-- @treturn vec3 Camera up direction vector in world coordinates.
+function M:getCameraWorldUp()
+end
+
+--- Returns the forward direction vector of the active camera, in construct local coordinates.
+-- @treturn vec3 Camera forward direction vector in construct local coordinates.
+function M:getCameraForward()
+end
+
+--- Returns the right direction vector of the active camera, in construct local coordinates.
+-- @treturn vec3 Camera right direction vector in construct local coordinates.
+function M:getCameraRight()
+end
+
+--- Returns the up direction vector of the active camera, in construct local coordinates.
+-- @treturn vec3 Camera up direction vector in construct local coordinates.
+function M:getCameraUp()
 end
 
 --- Print a message in the Lua console.
@@ -365,21 +439,30 @@ end
 function M:showHelper(show)
 end
 
---- Print a message to the game log file at `INFO` level. Log file is located in `<user>/AppData/Local/NQ/DualUniverse/log/`.
+--- Play a sound file from your user folder. Only one sound at a time.
+-- @tparam string filePath Relative path to user data folder (.mp3, .wav).
+function M:playSound(filePath)
+end
+
+--- Stop the current playing sound.
+function M:stopSound()
+end
+
+--- <b>Deprecated:</b> Log functionality removed in r0.28.0.
 --
 -- Note: This method is not documented in the codex.
 -- @tparam string msg The message to print.
 function M:logInfo(msg)
 end
 
---- Print a message to the game log file at `WARNING` level. Log file is located in `<user>/AppData/Local/NQ/DualUniverse/log/`.
+--- <b>Deprecated:</b> Log functionality removed in r0.28.0.
 --
 -- Note: This method is not documented in the codex.
 -- @tparam string msg The message to print.
 function M:logWarning(msg)
 end
 
---- Print a message to the game log file at `ERROR` level. Log file is located in `<user>/AppData/Local/NQ/DualUniverse/log/`.
+--- <b>Deprecated:</b> Log functionality removed in r0.28.0.
 --
 -- Note: This method is not documented in the codex.
 -- @tparam string msg The message to print.
@@ -458,7 +541,17 @@ end
 --- Event: Console input event.
 --
 -- Note: This is documentation on an event handler, not a callable method.
+-- @tparam string text The message entered.
 function M.EVENT_inputText(text)
+    assert(false, "This is implemented for documentation purposes only.")
+end
+
+--- Event: Emitted when the player changes the camera mode.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam 1/2/3 mode The camera mode, represented by an integer (1: First Person View, 2: Look Around Construct View, 3:
+--   Follow Construct View).
+function M.EVENT_cameraChanged(mode)
     assert(false, "This is implemented for documentation purposes only.")
 end
 
@@ -486,6 +579,18 @@ function M:mockGetClosure()
     closure.getScreenHeight = function() return self:getScreenHeight() end
     closure.getScreenWidth = function() return self:getScreenWidth() end
     closure.getFov = function() return self:getFov() end
+    closure.getCameraHorizontalFov = function() return self:getCameraHorizontalFov() end
+    closure.getCameraVerticalFov = function() return self:getCameraVerticalFov() end
+    closure.getCameraMode = function() return self:getCameraMode() end
+    closure.isFirstPerson = function() return self:isFirstPerson() end
+    closure.getCameraPos = function() return self:getCameraPos() end
+    closure.getCameraWorldPos = function() return self:getCameraWorldPos() end
+    closure.getCameraWorldForward = function() return self:getCameraWorldForward() end
+    closure.getCameraWorldRight = function() return self:getCameraWorldRight() end
+    closure.getCameraWorldUp = function() return self:getCameraWorldUp() end
+    closure.getCameraForward = function() return self:getCameraForward() end
+    closure.getCameraRight = function() return self:getCameraRight() end
+    closure.getCameraUp = function() return self:getCameraUp() end
     closure.getThrottleInputFromMouseWheel = function() return self:getThrottleInputFromMouseWheel() end
     closure.getControlDeviceForwardInput = function() return self:getControlDeviceForwardInput() end
     closure.getControlDeviceYawInput = function() return self:getControlDeviceYawInput() end
@@ -504,6 +609,8 @@ function M:mockGetClosure()
     closure.setWaypoint = function(waypoint) return self:setWaypoint(waypoint) end
     closure.print = function(msg) return self:print(msg) end
     closure.showHelper = function(show) return self:showHelper(show) end
+    closure.playSound = function(filePath) return self:playSound(filePath) end
+    closure.stopSound = function() return self:stopSound() end
 
     closure.logInfo = function(msg) return self:logInfo(msg) end
     closure.logWarning = function(msg) return self:logWarning(msg) end

@@ -409,6 +409,18 @@ end
 function M:getThrottle()
 end
 
+--- Checks if the player currently running the control unit is seated.
+-- @treturn 0/1 1 if the player is seated.
+function M:isMasterPlayerSeated()
+    return 0
+end
+
+--- Returns the UID of the seat on which the player currently running the control unit is sitting.
+-- @treturn int The UID of the seat, or 0 if not seated.
+function M:getMasterPlayerSeatId()
+    return 0
+end
+
 --- Set the value of a signal in the specified IN plug of the element.
 --
 -- Valid plug names are:
@@ -531,6 +543,8 @@ function M:mockGetClosure()
     closure.getMasterPlayerWorldForward = function() return self:getMasterPlayerWorldForward() end
     closure.getMasterPlayerWorldUp = function() return self:getMasterPlayerWorldUp() end
     closure.getMasterPlayerWorldRight = function() return self:getMasterPlayerWorldRight() end
+    closure.isMasterPlayerSeated = function() return self:isMasterPlayerSeated() end
+    closure.getMasterPlayerSeatId = function() return self:getMasterPlayerSeatId() end
 
     if self.elementClass == CLASS_GENERIC then
         closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end

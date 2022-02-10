@@ -198,14 +198,15 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
                              "getMasterPlayerId", "getMasterPlayerOrgIds", "getMasterPlayerPosition",
                              "getMasterPlayerWorldPosition", "getMasterPlayerForward", "getMasterPlayerUp",
                              "getMasterPlayerRight", "getMasterPlayerWorldForward", "getMasterPlayerWorldUp",
-                             "getMasterPlayerWorldRight", "setSignalIn", "getSignalIn"}
+                             "getMasterPlayerWorldRight", "setSignalIn", "getSignalIn", "isMasterPlayerSeated",
+                             "getMasterPlayerSeatId"}
     elseif isPvp then
         expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
                              "getMasterPlayerRelativePosition", "getMasterPlayerRelativeOrientation",
                              "getMasterPlayerId", "getMasterPlayerOrgIds", "getMasterPlayerPosition",
                              "getMasterPlayerWorldPosition", "getMasterPlayerForward", "getMasterPlayerUp",
                              "getMasterPlayerRight", "getMasterPlayerWorldForward", "getMasterPlayerWorldUp",
-                             "getMasterPlayerWorldRight"}
+                             "getMasterPlayerWorldRight", "isMasterPlayerSeated", "getMasterPlayerSeatId"}
     else
         expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
                              "getMasterPlayerRelativePosition", "getMasterPlayerRelativeOrientation",
@@ -220,7 +221,8 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
                              "switchOffHeadlights", "isRemoteControlled", "activateGroundEngineAltitudeStabilization",
                              "getSurfaceEngineAltitudeStabilization", "deactivateGroundEngineAltitudeStabilization",
                              "computeGroundEngineAltitudeStabilizationCapabilities", "getThrottle",
-                             "setupControlMasterModeProperties", "getMasterPlayerMass", "getMasterPlayerParent"}
+                             "setupControlMasterModeProperties", "getMasterPlayerMass", "getMasterPlayerParent",
+                             "isMasterPlayerSeated", "getMasterPlayerSeatId"}
         if isEcu then
             table.insert(expectedFunctions, "setSignalIn")
             table.insert(expectedFunctions, "getSignalIn")

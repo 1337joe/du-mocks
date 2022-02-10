@@ -1,8 +1,8 @@
 package = "du-mocks"
-version = "scm-0"
+version = "0.28.0-1"
 source = {
-   url = "https://github.com/1337joe/du-mocks.git",
-   branch = "main",
+   url = "git+https://github.com/1337joe/du-mocks.git",
+   tag = "v0.28.0",
 }
 description = {
    summary = "Mock objects to simulate the Dual Universe lua environment.",

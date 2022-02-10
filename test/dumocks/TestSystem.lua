@@ -45,12 +45,16 @@ function _G.TestSystem.testGameBehavior()
                                "getTime", "getActionUpdateDeltaTime", "getPlayerName", "getPlayerWorldPos", "print",
                                "getWaypointFromPlayerPos", "setWaypoint", "getFov", "getScreenWidth", "getScreenHeight",
                                "load", "logInfo", "logWarning", "logError", "addMarker", "addMeasure", "showHelper",
-                               "__NQ_returnFromRunPlayerLUA", "getOrganizationTag", "getOrganizationName"}
+                               "__NQ_returnFromRunPlayerLUA", "getOrganizationTag", "getOrganizationName",
+                               "stopSound", "playSound", "getCameraRight", "getCameraWorldUp", "getCameraWorldForward",
+                               "isFirstPerson", "getCameraForward", "getCameraUp", "getCameraMode",
+                               "getCameraVerticalFov", "getCameraWorldRight", "getCameraHorizontalFov",
+                               "getCameraWorldPos", "getCameraPos"}
     _G.Utilities.verifyExpectedFunctions(system, expectedFunctions)
 
     assert(system.getScreenHeight() > 0, "Screen height: " .. system.getScreenHeight())
     assert(system.getScreenWidth() > 0, "Screen width: " .. system.getScreenWidth())
-    local fov = system.getFov()
+    local fov = system.getCameraHorizontalFov()
     assert(fov >= 60 and fov <= 120, "Fov: " .. fov)
 
     system.print("Success")
