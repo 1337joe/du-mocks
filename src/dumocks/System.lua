@@ -439,7 +439,8 @@ end
 function M:showHelper(show)
 end
 
---- Play a sound file from your user folder. Only one sound at a time.
+--- Play a sound file from your user folder (located in "My documents/NQ/DualUniverse/audio"). Only one sound at a
+-- time.
 -- @tparam string filePath Relative path to user data folder (.mp3, .wav).
 function M:playSound(filePath)
 end
