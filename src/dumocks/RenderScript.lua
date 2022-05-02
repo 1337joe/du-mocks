@@ -7,6 +7,121 @@
 -- then start writing a render script! Render scripts work by building up layers of geometric shapes, images, and text,
 -- that are then rendered sequentially to the screen.
 --
+-- The short example script below demonstrates drawing a box and some text on the screen.
+--
+-- <blockquote><code>
+-- local layer = createLayer() -- create a new layer<br>
+-- local rx, ry = getResolution() -- get the resolution of the screen<br>
+-- local font = loadFont("Play", 20) -- load the "Play" font at size 20pain
+--
+-- setNextFillColor(layer, 1, 0, 0, 1) -- set the fill color (red, green, blue, alpha) for the next shape<br>
+-- addBox(layer, rx/4, ry/4, rx/2, ry/2) -- add a box in the center of the screen<br>
+-- addText(layer, font, "Hello World!", rx/3, ry/2) -- add a text string using font
+-- </code></blockquote>
+--
+-- <h2>Animation</h2>
+--
+-- It is entirely possible to create animated screens with RenderScript; in fact, the technology really shines for
+-- complex animations, where the performance of HTML/CSS is generally low.
+--
+-- Animations are made possible by using the @{requestAnimationFrame} function to re-run in some number of frames, then
+-- changing the positioning of geometry within the layers, based on some variable such as time. Effectively, you will
+-- simply draw one frame of your animation at a time, but since RenderScript is fast enough to execute at 60 frames per
+-- second, the result will look smooth.
+--
+-- The minimal example script below demonstrates using the @{getTime} function to animate the location of a circle on
+-- the screen:
+--
+-- <blockquote><code>
+-- local layer = createLayer()<br>
+-- local rx, ry = getResolution()<br>
+-- local t = getTime()<br>
+-- local r = math.min(rx/4, ry/4)<br>
+-- local x = rx/2 + r * math.cos(t)<br>
+-- local y = ry/2 + r * math.sin(t)<br>
+--
+-- addCircle(layer, x, y, 16)<br>
+-- requestAnimationFrame(1)
+-- </code></blockquote>
+--
+-- <h2>Coordinate Space</h2>
+--
+-- All render script coordinates are in screen pixels, ranging from <code>(0, 0)</code> at the top-left of the screen,
+-- to <code>(width, height)</code> at the bottom-right. The width and height of the screen in pixels can be retrieved
+-- by calling @{getResolution}.
+--
+-- For maximal robustness, scripts should be written so as to adapt to the resolution, as screens with different sizes
+-- or aspect ratios will use different display resolutions.
+--
+-- <h2>Render Cost</h2>
+--
+-- Since render script is intended to solve screen unit performance problems, we impose relatively harsh restrictions
+-- on content compared to HTML. This does not mean you won't be able to create amazing, detailed, high-framerate screen
+-- contents; it just means that you'll need to be aware of the budgeting mechanism.
+--
+-- Any render script call that draws a shape (box, circle, line, text...) adds to a cost metric that consumes some of
+-- the screen's total rendering budget. Although the exact cost metric is subject to change, roughly-speaking, the
+-- render cost incurred by any shape is proportional to the screen-space area of the shape, plus a constant factor.
+-- This means that a box of dimension 16 x 16 consumes roughly four times as much render cost as a box of 8 x 8. This
+-- is fairly intuitive when you realize that the number of pixels filled by the larger box is four times that of the
+-- smaller box.
+--
+-- For most render scripts, it is unlikely that the maximum cost will ever be exceeded, so most users probably don't
+-- need to worry too much about this mechanism. However, drawing lots of large text or lots of large, overlapping
+-- images may cause you to exceed the budget.
+--
+-- To learn more about your script's use of this budget, use the built-in API functions @{getRenderCost} and
+-- @{getRenderCostMax}. @{getRenderCost} can be called at any point during a render script to see how much all the
+-- contents added so far cost.
+--
+-- Below is an example of how to add a simple render cost progile to your screen so that you can see cost information
+-- in real-time:
+--
+-- <blockquote><code>
+-- local rx, ry = getResolution()<br>
+-- local layer = createLayer()<br>
+-- local font = loadFont('FiraMono-Bold', 16)<br>
+-- local text = string.format('render cost: %d / %d', getRenderCost(), getRenderCostMax())<br>
+-- setNextFillColor(layer, 1, 1, 1, 1)<br>
+-- setNextTextAlign(layer, AlignH_Left, AlignV_Descender)<br>
+-- addText(layer, font, text, 16, ry - 8)
+-- </code></blockquote>
+--
+-- <h2>Render Order</h2>
+--
+-- When you need explicit control over the top-to-bottom ordering of rendered elements, you should use layers. As
+-- stated in the @{createLayer} documentation, each layer that is created within a script will be rendered on top of
+-- each previous layer, such that the first layer created appears at the bottom, while the last layer created appears
+-- at the top.
+--
+-- Shapes that live on the same layer do not offer as much control. Among the same type of shape, instances rendered
+-- later will appear on top of those rendered before, so if you add two boxes to a layer, the last box added will
+-- appear on top. However, the situation is more complex when mixing different shapes. For rendering efficiency, all
+-- instances of a shape type on the same layer are drawn at the same time. This means that all instances of one shape
+-- will appear below or above all instances of other shapes, regardless of the relative order in which they were added
+-- to the layer. Currently, the ordering is as follows, from top to bottom:
+--
+-- <ul>
+--   <li>Text</li>
+--   <li>Quads</li>
+--   <li>Triangles</li>
+--   <li>Lines</li>
+--   <li>Circles</li>
+--   <li>Rounded Boxes</li>
+--   <li>Boxes</li>
+--   <li>Beziers</li>
+--   <li>Images</li>
+-- </ul>
+--
+-- Thus, all boxes will always render below all circles on the same layer, and text on the same layer will appear on
+-- top of both. It is not possible to control this behavior, nor is it a good idea to rely on it, as it is subject to
+-- change. If you need to rely on something appearing in front of something else, you should use multiple layers.
+--
+-- <h2>Additional Functions</h2>
+--
+-- Additional funcionality is provided in the rslib.lua library in your Dual Universe\Game\data\lua directory,
+-- accessible by calling <code>local rslib = require('rslib')</code>.
+--
 -- Lua calls available within the screen renderer environment:
 -- <ul>
 --   <li><b>Libraries</b>
@@ -37,11 +152,8 @@
 --   </li>
 -- </ul>
 --
--- Additional funcionality is provided in the rslib.lua library in your Dual Universe\Game\data\lua directory,
--- accessible by calling <code>local rslib = require('rslib')</code>.
---
 -- @see ScreenUnit.setRenderScript
--- @module ScreenRenderer
+-- @module renderScript
 -- @alias M
 
 -- define class fields
@@ -59,13 +171,14 @@ local M = {
 -- purposes only.
 -- @table Shape
 M.Shape = {
-    Shape_Box = 0,
-    Shape_BoxRounded = 1,
-    Shape_Circle = 2,
-    Shape_Image = 3,
-    Shape_Line = 4,
-    Shape_Polygon = 5,
-    Shape_Text = 6,
+    Shape_Bezier = 0,
+    Shape_Box = 1,
+    Shape_BoxRounded = 2,
+    Shape_Circle = 3,
+    Shape_Image = 4,
+    Shape_Line = 5,
+    Shape_Polygon = 6,
+    Shape_Text = 7,
 }
 
 --- Horizontal alignment constants for alignH. Used by @{setNextTextAlign}.
@@ -116,10 +229,23 @@ end
 -- Shapes --
 -- ------ --
 
+--- Add a quadratic bezier curve to the given layer.
+--
+-- Supported properties: shadow, strokeColor, strokeWidth
+-- @tparam int layer The id of the layer to which to add.
+-- @tparam float x1 X coordinate of the first point of the curve (the starting point).
+-- @tparam float y1 Y coordinate of the first point of the curve (the starting point).
+-- @tparam float x2 X coordinate of the second point of the curve (the control point).
+-- @tparam float y2 Y coordinate of the second point of the curve (the control point).
+-- @tparam float x3 X coordinate of the third point of the curve (the ending point).
+-- @tparam float y3 Y coordinate of the third point of the curve (the ending point).
+function M:addBezier(layer, x1, y1, x2, y2, x3, y3)
+end
+
 --- Add a rectangle to the given layer with top-left corner (x,y) and dimensions width x height.
 --
 -- Supported properties: fillColor, rotation, shadow, strokeColor, strokeWidth
--- @tparam int layer The handle for the layer to add this shape to.
+-- @tparam int layer The id of the layer to which to add.
 -- @tparam float x The x coordinate (in pixels) of the left side of the box.
 -- @tparam float y The y coordinate (in pixels) of the top side of the box.
 -- @tparam float width The width of the box in pixels.
@@ -131,7 +257,7 @@ end
 -- rounded to radius.
 --
 -- Supported properties: fillColor, rotation, shadow, strokeColor, strokeWidth
--- @tparam int layer The handle for the layer to add this shape to.
+-- @tparam int layer The id of the layer to which to add.
 -- @tparam float x The x coordinate (in pixels) of the left side of the box.
 -- @tparam float y The y coordinate (in pixels) of the top side of the box.
 -- @tparam float width The width of the box in pixels.
@@ -143,7 +269,7 @@ end
 --- Add a circle to the given layer with center (x, y) and radius radius.
 --
 -- Supported properties: fillColor, shadow, strokeColor, strokeWidth
--- @tparam int layer The handle for the layer to add this shape to.
+-- @tparam int layer The id of the layer to which to add.
 -- @tparam float x The x coordinate (in pixels) of the center of the circle.
 -- @tparam float y The y coordinate (in pixels) of the center of the circle.
 -- @tparam float radius The radius of the circle in pixels.
@@ -153,20 +279,37 @@ end
 --- Add image reference to layer as a rectangle with top-left corner x, y) and dimensions width x height.
 --
 -- Supported properties: fillColor, rotation
--- @tparam int layer The handle for the layer to add this shape to.
+-- @tparam int layer The id of the layer to which to add.
 -- @tparam int image The handle for the image to add.
--- @tparam float x The x coordinate (in pixels) of the left side of the image.
--- @tparam float y The y coordinate (in pixels) of the top side of the image.
+-- @tparam float x The x coordinate (in pixels) of the image's top-left corner.
+-- @tparam float y The y coordinate (in pixels) of the image's top-left corner.
 -- @tparam float width The width of the image in pixels.
 -- @tparam float height The height of the image in pixels.
 -- @see loadImage
 function M:addImage(layer, image, x, y, width, height)
 end
 
+--- Add image reference to layer as a rectangle with top-left corner x, y) and dimensions width x height.
+--
+-- Supported properties: fillColor, rotation
+-- @tparam int layer The id of the layer to which to add.
+-- @tparam int image The id of the image to add.
+-- @tparam float x The x coordinate (in pixels) of the image's top-left corner.
+-- @tparam float y The y coordinate (in pixels) of the image's top-left corner.
+-- @tparam float sx Width of the image.
+-- @tparam float sy Height of the image.
+-- @tparam float subX X coordinate of the top-left corner of the sub-region to draw.
+-- @tparam float subY Y coordinate of the top-left corner of the sub-region to draw.
+-- @tparam float subSx Width of the sub-region within the image to draw.
+-- @tparam float subSy Height of the sub-region within the image to draw.
+-- @see loadImage
+function M:addImageSub(layer, image, x, y, sx, sy, subX, subY, subSx, subSy)
+end
+
 --- Add a line to layer from (x1, y1) to (x2, y2).
 --
 -- Supported properties: rotation, shadow, strokeColor, strokeWidth
--- @tparam int layer The handle for the layer to add this shape to.
+-- @tparam int layer The id of the layer to which to add.
 -- @tparam float x1 The x coordinate (in pixels) of the start of the line.
 -- @tparam float y1 The y coordinate (in pixels) of the start of the line.
 -- @tparam float x2 The x coordinate (in pixels) of the end of the line.
@@ -177,7 +320,7 @@ end
 --- Add a quadrilateral to the given layer with vertices (x1, y1), (x2, y2), (x3, y3), (x4, y4).
 --
 -- Supported properties: fillColor, rotation, shadow, strokeColor, strokeWidth
--- @tparam int layer The handle for the layer to add this shape to.
+-- @tparam int layer The id of the layer to which to add.
 -- @tparam float x1 The x coordinate (in pixels) of the first corner.
 -- @tparam float y1 The y coordinate (in pixels) of the first corner.
 -- @tparam float x2 The x coordinate (in pixels) of the second corner.
@@ -193,8 +336,8 @@ end
 -- shape toward the total rendered shape limit.
 --
 -- Supported properties: fillColor
--- @tparam int layer The handle for the layer to add this text to.
--- @tparam int font The handle for the font to use for the text.
+-- @tparam int layer The id of the layer to which to add.
+-- @tparam int font The id of the font to use.
 -- @tparam string text The text to add.
 -- @tparam float x The x coordinate (in pixels) of the top-left baseline.
 -- @tparam float y The y coordinate (in pixels) of the top-left baseline.
@@ -205,7 +348,7 @@ end
 --- Add a triangle to the given layer with vertices (x1, y1), (x2, y2), (x3, y3).
 --
 -- Supported properties: fillColor, rotation, shadow, strokeColor, strokeWidth
--- @tparam int layer The handle for the layer to add this shape to.
+-- @tparam int layer The id of the layer to which to add.
 -- @tparam float x1 The x coordinate (in pixels) of the first corner.
 -- @tparam float y1 The y coordinate (in pixels) of the first corner.
 -- @tparam float x2 The x coordinate (in pixels) of the second corner.
@@ -219,13 +362,50 @@ end
 -- Layers --
 -- ------ --
 
---- Create a new layer and return a handle to it that can be used by subsequent calls to the above add shapes. Layers
--- are rendered in the order in which they are created by the script, such that all shapes on layer N+1 will appear on
--- top of layer N. This results in the first created layer being the in the background and the last created layer will
--- be in the foreground.
--- @treturn int The handle to the newly created layer.
+--- Create a new layer that will be rendered on top of all previously-created layers.
+-- @treturn int The id that can be used to uniquely identify the layer for use with other API functions.
 function M:createLayer()
     return 0
+end
+
+--- Set a clipping rectangle applied to the layer as a whole. Layer contents that fall outside the clipping rectangle
+-- will not be rendered, and those athat are partially within the rectangle will be 'clipped' against it. The clipping
+-- rectangle is applied before layer transformations. Note that clipped contents still count toward the render cost.
+-- @tparam int layer The id of the layer for which the clipping rectangle will be set.
+-- @tparam float x The X coordinate of the clipping rectangle's top-left corner.
+-- @tparam float y The Y coordinate of the clipping rectangle's top-left corner.
+-- @tparam float sx The width of the clipping rectangle.
+-- @tparam float sy The height of the clipping rectangle.
+function M:setLayerClipRect(layer, x, y, sx, sy)
+end
+
+--- Set the transform origin of a layer; layer scaling and rotation are applied relative to this origin.
+-- @tparam int layer The id of the layer for which the origin will be set.
+-- @tparam float x The X coordinate of the layer's transform origin.
+-- @tparam float y The Y coordinate of the layer's transform origin.
+function M:setLayerOrigin(layer, x, y)
+end
+
+--- Set a rotation applied to the layer as a whole, relative to the layer's transform origin.
+-- @tparam int layer The id of the layer for which the rotation will be set.
+-- @tparam float rotation Rotation, in radians; positive is counter-clockwise, negative is clockwise.
+function M:setLayerRotation(layer, rotation)
+end
+
+--- Set a scale factor applied to the layer as a whole, relative to the layer's transform origin. Scale factors are
+-- multiplicative, so that a scale >1 enlarges the size of the layer, 1.0 does nothing, and <1 reduces the size of the
+-- layer.
+-- @tparam int layer The id of the layer for which the scale factor will be set.
+-- @tparam float sx The scale factor along the X axis.
+-- @tparam float sy The scale factor along the Y axis.
+function M:setLayerScale(layer, sx, sy)
+end
+
+--- Set a translation applied to the layer as a whole.
+-- @tparam int layer The id of the layer for which the translation will be set.
+-- @tparam float tx The translation along the X axis.
+-- @tparam float ty The translation along the Y axis.
+function M:setLayerTranslation(layer, tx, ty)
 end
 
 -- ---------------------- --
@@ -275,6 +455,12 @@ end
 --- Returns the time, in seconds, relative to the first execution.
 -- @treturn float Time, in seconds, since the render script started running.
 function M:getTime()
+end
+
+--- Return the locale in which the game is currently running.
+-- @treturn string The locale, currently one of "en-US", "fr-FR", or "de-DE".
+function M:getLocale()
+    return "en-US"
 end
 
 --- Return the current render cost of the script thus far, used to profile the performance of a screen. This can be
@@ -329,6 +515,14 @@ function M:isImageLoaded(imageHandle)
     return false
 end
 
+--- Returns the width and height of an image.
+-- @tparam int image The id of the image to query.
+-- @treturn float,float A tuple containing the width and height, respectively, of the image, or (0, 0) if the image is
+--   not yet loaded.
+function M:getImageSize(image)
+    return {0, 0}
+end
+
 --- Returns the number of fonts available to be used by render script.
 -- @treturn int The total number of fonts available.
 function M:getAvailableFontCount()
@@ -361,8 +555,9 @@ end
 --   <li>RobotoMono-Bold</li>
 -- </ul>
 -- @tparam string name The name of the font to load, chosen from the above list.
--- @tparam float size The font size in vertical pixels.
--- @treturn int The handle to the newly loaded font.
+-- @tparam float size The size, in vertical pixels, at which the font will render. Note that this size can be changed
+--   during script execution with the @{setFontSize} function.
+-- @treturn int The id that can be used to uniquely identify the font for use with other API functions.
 -- @see addText
 function M:loadFont(name, size)
     return 0
@@ -386,11 +581,24 @@ function M:getTextBounds(font, text)
 end
 
 --- Compute and return the ascender and descender height of given font.
--- @tparam int font A font handle provided by load font.
--- @treturn float,float The font metrics as (ascender height, descender height) in pixels.
+-- @tparam int font The id of the font to query.
+-- @treturn float,float A tuple containing the maximal ascender and descender, respectively, of the given font.
 -- @see loadFont
 function M:getFontMetrics(font)
     return 0.0, 0.0
+end
+
+--- Return the currently-set size for the given font.
+-- @tparam int font The id of the font to query.
+-- @treturn float The font size in vertical pixels.
+function M:getFontSize(font)
+    return 10
+end
+
+--- Set the size at which a font will render. Impacts all subsequent font-related calls, including @{addText}, @{getFontMetrics}, and @{getTextBounds}.
+-- @tparam int font The id of the font for which the size will be set.
+-- @tparam int size The new size, in vertical pixels, at which the font will render.
+function M:setFontSize(font, size)
 end
 
 -- --------- --
@@ -412,29 +620,29 @@ end
 -- ------------------- --
 
 --- Set the background color of the screen as red (r), green (g), blue (b) in the range [0, 1].
--- @tparam [0,1] r The red component value.
--- @tparam [0,1] g The green component value.
--- @tparam [0,1] b The blue component value.
+-- @tparam float r The red component, between 0 and 1.
+-- @tparam float g The green component, between 0 and 1.
+-- @tparam float b The blue component, between 0 and 1.
 function M:setBackgroundColor(r, g, b)
 end
 
 --- Set the default fill color for all shapeType on layer. Red (r), green (g), blue (b), and alpha (a) components are
 -- specified, respectively, in the range [0, 1]. Has no effect on shapes that don't support the fillColor property.
--- @tparam int layer The handle for the layer to apply this property to.
--- @tparam int shapeType The shape to apply this default to. Must be a built in constant from @{Shape}.
--- @tparam [0,1] r The red component value.
--- @tparam [0,1] g The green component value.
--- @tparam [0,1] b The blue component value.
--- @tparam [0,1] a The alpha component value.
+-- @tparam int layer The id of the layer for which the default will be set.
+-- @tparam int shapeType The type of @{Shape} to which the default will apply.
+-- @tparam float r The red component, between 0 and 1.
+-- @tparam float g The green component, between 0 and 1.
+-- @tparam float b The blue component, between 0 and 1.
+-- @tparam float a The alpha component, between 0 and 1.
 -- @see Shape
 function M:setDefaultFillColor(layer, shapeType, r, g, b, a)
 end
 
 --- Set the default rotation for all shapeType on layer. Rotation is specified in CCW radians radians. Has no effect
 -- on shapes that don't support the rotation property.
--- @tparam int layer The handle for the layer to apply this property to.
--- @tparam int shapeType The shape to apply this default to. Must be a built in constant from @{Shape}.
--- @tparam float radians The angle (in radians) to rotate by.
+-- @tparam int layer The id of the layer for which the default will be set.
+-- @tparam int shapeType The type of @{Shape} to which the default will apply.
+-- @tparam float radians Rotation, in radians; positive is counter-clockwise, negative is clockwise.
 -- @see Shape
 function M:setDefaultRotation(layer, shapeType, radians)
 end
@@ -442,25 +650,25 @@ end
 --- Set the default shadow for all shapeType on layer with size radius. Red (r), green (g), blue (b), and alpha (a)
 -- components are specified, respectively, in the range [0, 1]. Has no effect on shapes that don't support the shadow
 -- property.
--- @tparam int layer The handle for the layer to apply this property to.
--- @tparam int shapeType The shape to apply this default to. Must be a built in constant from @{Shape}.
--- @tparam float radius The radius of the shadow.
--- @tparam [0,1] r The red component value.
--- @tparam [0,1] g The green component value.
--- @tparam [0,1] b The blue component value.
--- @tparam [0,1] a The alpha component value.
+-- @tparam int layer The id of the layer for which the default will be set.
+-- @tparam int shapeType The type of @{Shape} to which the default will apply.
+-- @tparam float radius The distance that the shadow extends from the shape's border.
+-- @tparam float r The red component, between 0 and 1.
+-- @tparam float g The green component, between 0 and 1.
+-- @tparam float b The blue component, between 0 and 1.
+-- @tparam float a The alpha component, between 0 and 1.
 -- @see Shape
 function M:setDefaultShadow(layer, shapeType, radius, r, g, b, a)
 end
 
 --- Set the default stroke color for all shapeType on layer. Red (r), green (g), blue (b), and alpha (a) components are
 -- specified, respectively, in the range [0, 1]. Has no effect on shapes that don't support the strokeColor property.
--- @tparam int layer The handle for the layer to apply this property to.
+-- @tparam int layer The id of the layer for which the default will be set.
 -- @tparam int shapeType The shape to apply this default to. Must be a built in constant from @{Shape}.
--- @tparam [0,1] r The red component value.
--- @tparam [0,1] g The green component value.
--- @tparam [0,1] b The blue component value.
--- @tparam [0,1] a The alpha component value.
+-- @tparam float r The red component, between 0 and 1.
+-- @tparam float g The green component, between 0 and 1.
+-- @tparam float b The blue component, between 0 and 1.
+-- @tparam float a The alpha component, between 0 and 1.
 -- @see Shape
 function M:setDefaultStrokeColor(layer, shapeType, r, g, b, a)
 end
@@ -468,13 +676,23 @@ end
 --- Set the default stroke width for all shapeType on layer. Width is specified in pixels. Positive values produce an
 -- outer stroke, while negative values produce an inner stroke. Has no effect on shapes that don't support the
 -- strokeWidth property.
--- @tparam int layer The handle for the layer to apply this property to.
--- @tparam int shapeType The shape to apply this default to. Must be a built in constant from @{Shape}.
--- @tparam float width The width of the stroke in pixels.
+-- @tparam int layer The id of the layer for which the default will be set.
+-- @tparam int shapeType The type of @{Shape} to which the default will apply.
+-- @tparam float width Stroke width, in pixels.
 -- @see Shape
 function M:setDefaultStrokeWidth(layer, shapeType, width)
 end
 
+--- Set the default text alignment of all subsequent text strings on the given layer.
+-- @tparam int layer The id of the layer for which the default will be set.
+-- @tparam int alignH Controls the horizontal alignment of a text shape relative to the draw coordinates. Must be a
+--   built in constant from @{AlignH}.
+-- @tparam int alignV Controls the vertical alignment of a text shape relative to the draw coordinates. Must be a built
+--   in constant from @{AlignV}.
+-- @see AlignH
+-- @see AlignV
+function M:setDefaultTextAlign(layer, alignH, alignV)
+end
 -- ---------- --
 -- Properties --
 -- ---------- --
@@ -482,10 +700,10 @@ end
 --- Set the fill color of the next rendered shape on layer. Red (r), green (g), blue (b), and alpha (a) components are
 -- specified, respectively, in the range [0, 1]. Has no effect on shapes that don't support the fillColor property.
 -- @tparam int layer The handle for the layer to apply this property to.
--- @tparam [0,1] r The red component value.
--- @tparam [0,1] g The green component value.
--- @tparam [0,1] b The blue component value.
--- @tparam [0,1] a The alpha component value.
+-- @tparam float r The red component, between 0 and 1.
+-- @tparam float g The green component, between 0 and 1.
+-- @tparam float b The blue component, between 0 and 1.
+-- @tparam float a The alpha component, between 0 and 1.
 function M:setNextFillColor(layer, r, g, b, a)
 end
 
@@ -510,20 +728,20 @@ end
 -- property.
 -- @tparam int layer The handle for the layer to apply this property to.
 -- @tparam float radius The radius of the shadow.
--- @tparam [0,1] r The red component value.
--- @tparam [0,1] g The green component value.
--- @tparam [0,1] b The blue component value.
--- @tparam [0,1] a The alpha component value.
+-- @tparam float r The red component, between 0 and 1.
+-- @tparam float g The green component, between 0 and 1.
+-- @tparam float b The blue component, between 0 and 1.
+-- @tparam float a The alpha component, between 0 and 1.
 function M:setNextShadow(layer, radius, r, g, b, a)
 end
 
 --- Set the stroke color of the next rendered shape on layer. Red (r), green (g), blue (b), and alpha (a) components
 -- are specified, respectively, in the range [0, 1].
 -- @tparam int layer The handle for the layer to apply this property to.
--- @tparam [0,1] r The red component value.
--- @tparam [0,1] g The green component value.
--- @tparam [0,1] b The blue component value.
--- @tparam [0,1] a The alpha component value.
+-- @tparam float r The red component, between 0 and 1.
+-- @tparam float g The green component, between 0 and 1.
+-- @tparam float b The blue component, between 0 and 1.
+-- @tparam float a The alpha component, between 0 and 1.
 function M:setNextStrokeColor(layer, r, g, b, a)
 end
 
@@ -543,7 +761,7 @@ end
 -- useful for aligning individual text strings with high precision, they depend on the contents of the text string that
 -- is rendered. On the other hand, ascender/descender align text in such a way that the alignment will not change
 -- depending on the text string. The correct choice will depend on your specific use case and needs.
--- @tparam int layer The handle for the layer to apply this property to.
+-- @tparam int layer The id of the layer to apply this property to.
 -- @tparam int alignH Controls the horizontal alignment of a text shape relative to the draw coordinates. Must be a
 --   built in constant from @{AlignH}.
 -- @tparam int alignV Controls the vertical alignment of a text shape relative to the draw coordinates. Must be a built
@@ -573,6 +791,28 @@ function M:setOutput(outputString)
     self.output = outputString
 end
 
+-- ---------------------- --
+-- Undocumented Functions --
+-- ---------------------- --
+
+--- Unknown use.
+--
+-- Note: This method is not documented in the codex.
+function M:rawget()
+end
+
+--- Unknown use.
+--
+-- Note: This method is not documented in the codex.
+function M:rawset()
+end
+
+--- Unknown use.
+--
+-- Note: This method is not documented in the codex.
+function M:rawequal()
+end
+
 --- Mock only, not in-game: Bundles the object into an environment that can be used to override the base environment
 -- (_ENV) so that all methods are called directly against this object. It is recommended that you store your current
 -- environment reference prior to overriding it so that it can be restored.
@@ -581,16 +821,23 @@ function M:mockGetEnvironment()
     local environment = {}
     -- codex-documented methods
     -- Shapes
+    environment.addBezier = function(layer, x1, y1, x2, y2, x3, y3) return self:addBezier(layer, x1, y1, x2, y2, x3, y3) end
     environment.addBox = function(layer, x, y, width, height) return self:addBox(layer, x, y, width, height) end
     environment.addBoxRounded = function(layer, x, y, width, height, radius) return self:addBoxRounded(layer, x, y, width, height, radius) end
     environment.addCircle = function(layer, x, y, radius) return self:addCircle(layer, x, y, radius) end
     environment.addImage = function(layer, image, x, y, width, height) return self:addImage(layer, image, x, y, width, height) end
+    environment.addImageSub = function(layer, image, x, y, sx, xy, subX, xubY, subSx, subSy) return self:addImageSub(layer, image, x, y, sx, xy, subX, xubY, subSx, subSy) end
     environment.addLine = function(layer, x1, y1, x2, y2) return self:addLine(layer, x1, y1, x2, y2) end
     environment.addQuad = function(layer, x1, y1, x2, y2, x3, y3, x4, y4) return self:addQuad(layer, x1, y1, x2, y2, x3, y3, x4, y4) end
     environment.addText = function(layer, font, text, x, y) return self:addText(layer, font, text, x, y) end
     environment.addTriangle = function(layer, x1, y1, x2, y2, x3, y3) return self:addTriangle(layer, x1, y1, x2, y2, x3, y3) end
     -- Layers
     environment.createLayer = function() return self:createLayer() end
+    environment.setLayerClipRect = function(layer, x, y, sx, sy) return self:setLayerClipRect(layer, x, y, sx, sy) end
+    environment.setLayerOrigin = function(layer, x, y) return self:setLayerOrigin(layer, x, y) end
+    environment.setLayerRotation = function(layer, rotation) return self:setLayerRotation(layer, rotation) end
+    environment.setLayerScale = function(layer, sx, sy) return self:setLayerScale(layer, sx, sy) end
+    environment.setLayerTranslation = function(layer, tx, ty) return self:setLayerTranslation(layer, tx, ty) end
     -- Screen State Functions
     environment.getCursor = function() return self:getCursor() end
     environment.getCursorDown = function() return self:getCursorDown() end
@@ -598,6 +845,7 @@ function M:mockGetEnvironment()
     environment.getCursorReleased = function() return self:getCursorReleased() end
     environment.getDeltaTime = function() return self:getDeltaTime() end
     environment.getTime = function() return self:getTime() end
+    environment.getLocale = function() return self:getLocale() end
     environment.getRenderCost = function() return self:getRenderCost() end
     environment.getRenderCostMax = function() return self:getRenderCostMax() end
     environment.getResolution = function() return self:getResolution() end
@@ -605,12 +853,15 @@ function M:mockGetEnvironment()
     -- Loading References
     environment.loadImage = function(path) return self:loadImage(path) end
     environment.isImageLoaded = function(imageHandle) return self:isImageLoaded(imageHandle) end
+    environment.getImageSize = function(image) return self:getImageSize(image) end
     environment.getAvailableFontCount = function() return self:getAvailableFontCount() end
     environment.getAvailableFontName = function(index) return self:getAvailableFontName(index) end
     environment.loadFont = function(name, size) return self:loadFont(name, size) end
     environment.isFontLoaded = function(font) return self:isFontLoaded(font) end
     environment.getTextBounds = function(font, text) return self:getTextBounds(font, text) end
     environment.getFontMetrics = function(font) return self:getFontMetrics(font) end
+    environment.getFontSize = function(font) return self:getFontSize(font) end
+    environment.setFontSize = function(font, size) return self:setFontSize(font, size) end
     -- Animation
     environment.requestAnimationFrame = function(frames) return self:requestAnimationFrame(frames) end
     -- Properties Defaults
@@ -620,6 +871,7 @@ function M:mockGetEnvironment()
     environment.setDefaultShadow = function(layer, shapeType, radius, r, g, b, a) return self:setDefaultShadow(layer, shapeType, radius, r, g, b, a) end
     environment.setDefaultStrokeColor = function(layer, shapeType, r, g, b, a) return self:setDefaultStrokeColor(layer, shapeType, r, g, b, a) end
     environment.setDefaultStrokeWidth = function(layer, shapeType, width) return self:setDefaultStrokeWidth(layer, shapeType, width) end
+    environment.setDefaultTextAlign = function(layer, alignH, alignV) return self:setDefaultTextAlign(layer, alignH, alignV) end
     -- Properties
     environment.setNextFillColor = function(layer, r, g, b, a) return self:setNextFillColor(layer, r, g, b, a) end
     environment.setNextRotation = function(layer, radians) return self:setNextRotation(layer, radians) end
@@ -631,8 +883,13 @@ function M:mockGetEnvironment()
     -- Control Unit Interaction
     environment.getInput = function() return self:getInput() end
     environment.setOutput = function(outputString) return self:setOutput(outputString) end
+    -- Undocumented Functions
+    environment.rawget = function() return self:rawget() end
+    environment.rawset = function() return self:rawset() end
+    environment.rawequal = function() return self:rawequal() end
 
     -- codex-documented tables
+    environment._RSVERSION = 2
     for key, value in pairs(self.Shape) do
         environment[key] = value
     end

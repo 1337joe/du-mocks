@@ -53,7 +53,7 @@ function _G.TestWarpDriveUnit.testGameBehavior()
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
 
     assert(slot1.getMaxHitPoints() == 43117.0)
-    assert(slot1.getMass() == 31360.0)
+    assert(slot1.getMass() == 75000.0)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3, "warpdrive")
 
     system.print("Success")

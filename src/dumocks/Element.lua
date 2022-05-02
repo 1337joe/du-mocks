@@ -2,6 +2,7 @@
 --
 -- Extended by:
 -- <ul>
+--   <li>BaseShieldGeneratorUnit</li>
 --   <li>ContainerUnit</li>
 --   <li>ControlUnit</li>
 --   <li>CoreUnit</li>
@@ -10,6 +11,7 @@
 --   <li>DetectionZoneUnit</li>
 --   <li>ElementWithState</li>
 --   <li>EmitterUnit</li>
+--   <li>MiningUnit</li>
 --   <li>IndustryUnit</li>
 --   <li>RadarUnit</li>
 --   <li>ReceiverUnit</li>
@@ -17,6 +19,7 @@
 --   <li>WarpDriveUnit</li>
 --   <li>WeaponUnit</li>
 -- </ul>
+-- @see BaseShieldGeneratorUnit
 -- @see ContainerUnit
 -- @see ControlUnit
 -- @see CoreUnit
@@ -26,6 +29,7 @@
 -- @see ElementWithState
 -- @see EmitterUnit
 -- @see IndustryUnit
+-- @see MiningUnit
 -- @see RadarUnit
 -- @see ReceiverUnit
 -- @see TelemeterUnit

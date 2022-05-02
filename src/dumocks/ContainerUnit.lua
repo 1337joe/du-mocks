@@ -2,7 +2,12 @@
 --
 -- Element class:
 -- <ul>
---   <li>ItemContainer</li>
+--   <li>ContainerSmallGroup (for XS item containers)</li>
+--   <li>ContainerMediumGroup (for S item containers)</li>
+--   <li>ContainerLargeGroup (for M item containers)</li>
+--   <li>ContainerXLGroup (for L item containers)</li>
+--   <li>ContainerXXLGroup (for XL item containers)</li>
+--   <li>ContainerXXXLGroup (for expanded XL item containers)</li>
 --   <li>MissionContainer</li>
 --   <li>AtmoFuelContainer</li>
 --   <li>SpaceFuelContainer</li>
@@ -16,7 +21,12 @@
 
 local MockElement = require "dumocks.Element"
 
-local CLASS_ITEM = "ItemContainer"
+local XS_GROUP = "ContainerSmallGroup"
+local S_GROUP = "ContainerMediumGroup"
+local M_GROUP = "ContainerLargeGroup"
+local L_GROUP = "ContainerXLGroup"
+local XL_GROUP = "ContainerXXLGroup"
+local EXL_GROUP = "ContainerXXXLGroup"
 local CLASS_PARCEL = "MissionContainer"
 local CLASS_AMMO = "AmmoContainerUnit"
 local CLASS_ATMO = "AtmoFuelContainer"
@@ -24,12 +34,12 @@ local CLASS_SPACE = "SpaceFuelContainer"
 local CLASS_ROCKET = "RocketFuelContainer"
 
 local elementDefinitions = {}
-elementDefinitions["container xs"] = {mass = 229.09, maxHitPoints = 124.0, class = CLASS_ITEM, maxVolume = 1000}
-elementDefinitions["container s"] = {mass = 1281.31, maxHitPoints = 999.0, class = CLASS_ITEM, maxVolume = 8000}
-elementDefinitions["container m"] = {mass = 7421.35, maxHitPoints = 7997.0, class = CLASS_ITEM, maxVolume = 64000}
-elementDefinitions["container l"] = {mass = 14842.7, maxHitPoints = 17316.0, class = CLASS_ITEM, maxVolume = 128000}
-elementDefinitions["container xl"] = {mass = 44206.0, maxHitPoints = 34633.0, class = CLASS_ITEM, maxVolume = 256000}
-elementDefinitions["expanded container xl"] = {mass = 88413.0, maxHitPoints = 69267.0, class = CLASS_ITEM, maxVolume = 512000}
+elementDefinitions["container xs"] = {mass = 229.09, maxHitPoints = 124.0, class = XS_GROUP, maxVolume = 1000}
+elementDefinitions["container s"] = {mass = 1281.31, maxHitPoints = 999.0, class = S_GROUP, maxVolume = 8000}
+elementDefinitions["container m"] = {mass = 7421.35, maxHitPoints = 7997.0, class = M_GROUP, maxVolume = 64000}
+elementDefinitions["container l"] = {mass = 14842.7, maxHitPoints = 17316.0, class = L_GROUP, maxVolume = 128000}
+elementDefinitions["container xl"] = {mass = 44206.0, maxHitPoints = 34633.0, class = XL_GROUP, maxVolume = 256000}
+elementDefinitions["expanded container xl"] = {mass = 88413.0, maxHitPoints = 69267.0, class = EXL_GROUP, maxVolume = 512000}
 
 elementDefinitions["parcel container xs"] = {mass = 224.68, maxHitPoints = 124.0, class = CLASS_PARCEL, maxVolume = 1000}
 elementDefinitions["parcel container s"] = {mass = 1256.17, maxHitPoints = 999.0, class = CLASS_PARCEL, maxVolume = 8000}
@@ -72,16 +82,15 @@ function M:new(o, id, elementName)
 
     o.elementClass = elementDefinition.class
 
-    if o.elementClass == CLASS_ITEM or o.elementClass == CLASS_PARCEL or o.elementClass == CLASS_AMMO then
-    else
+    if o.elementClass == CLASS_ATMO then
         o.widgetType = "fuel_container"
-        if o.elementClass == CLASS_ATMO then
-            o.helperId = "fuel_container_atmo_fuel"
-        elseif o.elementClass == CLASS_SPACE then
-            o.helperId = "fuel_container_space_fuel"
-        elseif o.elementClass == CLASS_ROCKET then
-            o.helperId = "fuel_container_rocket_fuel"
-        end
+        o.helperId = "fuel_container_atmo_fuel"
+    elseif o.elementClass == CLASS_SPACE then
+        o.widgetType = "fuel_container"
+        o.helperId = "fuel_container_space_fuel"
+    elseif o.elementClass == CLASS_ROCKET then
+        o.widgetType = "fuel_container"
+        o.helperId = "fuel_container_rocket_fuel"
     end
 
     -- undefine mass in favor of self and items mass
@@ -183,18 +192,18 @@ local DATA_TEMPLATE = '{\"name\":\"%s\","percentage":%.16f,"timeLeft":%s,\"helpe
 -- </ul>
 -- @treturn string Data as JSON.
 function M:getData()
-    if self.elementClass == CLASS_ITEM or self.elementClass == CLASS_PARCEL or self.elementClass == CLASS_AMMO then
-        return MockElement:getData()
+    if self.elementClass == CLASS_ATMO or self.elementClass == CLASS_SPACE or self.elementClass == CLASS_ROCKET then
+        return string.format(DATA_TEMPLATE, self.name, self.percentage, self.timeLeft, self.helperId, self:getWidgetType())
     end
-    return string.format(DATA_TEMPLATE, self.name, self.percentage, self.timeLeft, self.helperId, self:getWidgetType())
+    return MockElement:getData()
 end
 
 -- Override default with realistic patten to id.
 function M:getDataId()
-    if self.elementClass == CLASS_ITEM or self.elementClass == CLASS_PARCEL or self.elementClass == CLASS_AMMO  then
-        return MockElement:getDataId()
+    if self.elementClass == CLASS_ATMO or self.elementClass == CLASS_SPACE or self.elementClass == CLASS_ROCKET then
+        return "e123456"
     end
-    return "e123456"
+    return MockElement:getDataId()
 end
 
 --- Event: The access to the container storage is granted. Required before using getItemsList, for example.

@@ -1,6 +1,12 @@
 --- Generates a protective shield around the construct.
 --
--- Element class: ShieldGeneratorUnit
+-- Element class:
+-- <ul>
+--   <li>ShieldGeneratorExtraSmallGroup</li>
+--   <li>ShieldGeneratorSmallGroup</li>
+--   <li>ShieldGeneratorMediumGroup</li>
+--   <li>ShieldGeneratorLargeGroup</li>
+-- </ul>
 --
 -- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
 -- @see Element
@@ -12,15 +18,20 @@
 local MockElement = require "dumocks.Element"
 local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
+local CLASS = "ShieldGenerator"
+local EXTRA_SMALL_GROUP = "ExtraSmallGroup"
+local SMALL_GROUP = "SmallGroup"
+local MEDIUM_GROUP = "MediumGroup"
+local LARGE_GROUP = "LargeGroup"
+
 local elementDefinitions = {}
-elementDefinitions["shield generator xs"] = {mass = 670.0, maxHitPoints = 1400.0, maxShieldHitpoints = 500000.0, ventingMaxCooldown = 60.0}
-elementDefinitions["shield generator s"] = {mass = 3300.0, maxHitPoints = 4500.0, maxShieldHitpoints = 2000000.0, ventingMaxCooldown = 120.0}
-elementDefinitions["shield generator m"] = {mass = 17000.0, maxHitPoints = 6750.0, maxShieldHitpoints = 7500000.0, ventingMaxCooldown = 240.0}
-elementDefinitions["shield generator l"] = {mass = 92000.0, maxHitPoints = 31500.0, maxShieldHitpoints = 20000000.0, ventingMaxCooldown = 480.0}
+elementDefinitions["shield generator xs"] = {mass = 670.0, maxHitPoints = 1400.0, class = CLASS .. EXTRA_SMALL_GROUP, maxShieldHitpoints = 450000.0, ventingMaxCooldown = 60.0}
+elementDefinitions["shield generator s"] = {mass = 5000.0, maxHitPoints = 4500.0, class = CLASS .. SMALL_GROUP, maxShieldHitpoints = 1750000.0, ventingMaxCooldown = 120.0}
+elementDefinitions["shield generator m"] = {mass = 30000.0, maxHitPoints = 6750.0, class = CLASS .. MEDIUM_GROUP, maxShieldHitpoints = 5000000.0, ventingMaxCooldown = 240.0}
+elementDefinitions["shield generator l"] = {mass = 125000.0, maxHitPoints = 31500.0, class = CLASS .. LARGE_GROUP, maxShieldHitpoints = 10000000.0, ventingMaxCooldown = 480.0}
 local DEFAULT_ELEMENT = "shield generator xs"
 
 local M = MockElementWithToggle:new()
-M.elementClass = "ShieldGeneratorUnit"
 M.widgetType = "shield_generator"
 
 function M:new(o, id, elementName)
@@ -30,6 +41,7 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
+    o.elementClass = elementDefinition.class
     o.shieldHitpoints = elementDefinition.maxShieldHitpoints
     o.maxShieldHitpoints = elementDefinition.maxShieldHitpoints
 

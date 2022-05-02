@@ -49,7 +49,8 @@ function _G.TestSystem.testGameBehavior()
                                "stopSound", "playSound", "getCameraRight", "getCameraWorldUp", "getCameraWorldForward",
                                "isFirstPerson", "getCameraForward", "getCameraUp", "getCameraMode",
                                "getCameraVerticalFov", "getCameraWorldRight", "getCameraHorizontalFov",
-                               "getCameraWorldPos", "getCameraPos"}
+                               "getCameraWorldPos", "getCameraPos", "getArkTime", "getUtcTime", "getUtcOffset",
+                               "getItem"}
     _G.Utilities.verifyExpectedFunctions(system, expectedFunctions)
 
     assert(system.getScreenHeight() > 0, "Screen height: " .. system.getScreenHeight())

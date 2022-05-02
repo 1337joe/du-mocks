@@ -251,13 +251,15 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
         expectedValues["type"] = '"cockpit"'
         expectedValues["helperId"] = '"cockpit"'
         table.insert(expectedFields, "controlData")
-        table.insert(expectedFields, "showHasBrokenFuelTank")
+        table.insert(expectedFields, "showHasInactiveFuelTank")
         table.insert(expectedFields, "showOutOfFuel")
         table.insert(expectedFields, "showOverload")
         table.insert(expectedFields, "showSlowDown")
         table.insert(expectedFields, "atmoThrust")
         table.insert(expectedFields, "spaceThrust")
         table.insert(expectedFields, "speed")
+        table.insert(expectedFields, "maxSpeed")
+        table.insert(expectedFields, "speedEffects")
         table.insert(expectedFields, "acceleration")
         table.insert(expectedFields, "airDensity")
         table.insert(expectedFields, "airResistance")
@@ -267,6 +269,15 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
         table.insert(expectedFields, "closestConstructName")
         table.insert(expectedFields, "parentName")
         table.insert(expectedFields, "parentingState")
+        -- all of this is within the speedEffects value
+        -- TODO use real json parsing to detect this in a sensible way
+        table.insert(expectedFields, "boostCount")
+        table.insert(expectedFields, "boostSpeedModifier")
+        table.insert(expectedFields, "boostSpeedModifierRatio")
+        table.insert(expectedFields, "stasisCount")
+        table.insert(expectedFields, "stasisSpeedModifier")
+        table.insert(expectedFields, "stasisSpeedModifierRatio")
+        table.insert(expectedFields, "stasisTimeRemaining")
         -- all of this is within the controlData value
         -- TODO use real json parsing to detect this in a sensible way
         table.insert(expectedFields, "axisData")

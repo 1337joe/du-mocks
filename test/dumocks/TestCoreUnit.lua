@@ -112,7 +112,9 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
                                "getParentWorldForward", "getElementRightById", "getParentRight", "getParentUp",
                                "getParentWorldPosition", "getParentPosition", "getParentWorldRight",
                                "getOrientationUnitId", "getElementForwardById", "getConstructWorldUp",
-                               "getCurrentPlanetId", "getConstructWorldForward"}
+                               "getCurrentPlanetId", "getConstructWorldForward", "getPlayersOnBoardInVRStation",
+                               "isPlayerBoardedInVRStation", "getBoardedInVRStationAvatarMass",
+                               "forceInterruptVRSession", "getMaxSpeedPerAxis", "getMaxAngularSpeed", "getMaxSpeed"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end

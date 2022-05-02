@@ -7,7 +7,7 @@
 --   <li>ScreenSignUnit: Signs</li>
 -- </ul>
 --
--- Documentation for the @{ScreenRenderer} is separate.
+-- Documentation for the @{renderScript} is separate.
 --
 -- Note: The max size of screen content is 50,000 characters. Any calls to set or add content that result in the screen
 -- exceeding this will silently fail.
@@ -16,7 +16,7 @@
 -- @see Element
 -- @see ElementWithState
 -- @see ElementWithToggle
--- @see ScreenRenderer
+-- @see renderScript
 -- @module ScreenUnit
 -- @alias M
 
@@ -174,18 +174,18 @@ end
 
 --- Set the screen render script parameters, which will be automatically set during the Lua execution.
 -- @tparam string params A string that can be retrieved by calling getInput in a render script.
--- @see ScreenRenderer:getInput
+-- @see renderScript:getInput
 function M:setScriptInput(params)
 end
 
 --- Set the screen render script output to the empty string.
--- @see ScreenRenderer:setOutput
+-- @see renderScript:setOutput
 function M:clearScriptOutput()
 end
 
 --- Get the screen render script output.
 -- @treturn string The contents of the last render script setOutput call, or an empty string.
--- @see ScreenRenderer:setOutput
+-- @see renderScript:setOutput
 function M:getScriptOutput()
 end
 

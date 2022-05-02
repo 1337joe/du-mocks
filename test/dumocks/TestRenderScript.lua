@@ -6,7 +6,7 @@
 package.path = "src/?.lua;" .. package.path
 
 local lu = require("luaunit")
-local sr = require("dumocks.ScreenRenderer")
+local sr = require("dumocks.RenderScript")
 
 _G.TestScreenRenderer = {}
 
@@ -38,7 +38,9 @@ function _G.TestScreenRenderer.testGameBehavior()
                                "isFontLoaded", "setDefaultStrokeWidth", "addBoxRounded", "setBackgroundColor",
                                "getCursorPressed", "getCursorReleased", "getCursorDown", "setDefaultFillColor",
                                "getFontMetrics", "getTextBounds", "logMessage", "getTime", "getAvailableFontName",
-                               "getAvailableFontCount",
+                               "getAvailableFontCount", "setLayerClipRect", "setFontSize", "getImageSize", "addBezier",
+                               "addImageSub", "setDefaultTextAlign", "getLocale", "setLayerRotation", "setLayerScale",
+                               "setLayerTranslation", "setLayerOrigin", "getFontSize", "rawget", "rawset", "rawequal",
                                "next", "pairs", "ipairs", "select", "type", "tostring", "tonumber", "pcall", "xpcall",
                                "assert", "error", "load", "require", "setmetatable", "getmetatable"}
     local unexpectedFunctions = {}
@@ -52,13 +54,16 @@ function _G.TestScreenRenderer.testGameBehavior()
     local unexpectedStrings = {}
 
     local expectedNumbers = {
-        Shape_Box = 0,
-        Shape_BoxRounded = 1,
-        Shape_Circle = 2,
-        Shape_Image = 3,
-        Shape_Line = 4,
-        Shape_Polygon = 5,
-        Shape_Text = 6,
+        _RSVERSION=2,
+
+        Shape_Bezier = 0,
+        Shape_Box = 1,
+        Shape_BoxRounded = 2,
+        Shape_Circle = 3,
+        Shape_Image = 4,
+        Shape_Line = 5,
+        Shape_Polygon = 6,
+        Shape_Text = 7,
 
         AlignH_Left = 0,
         AlignH_Center = 1,

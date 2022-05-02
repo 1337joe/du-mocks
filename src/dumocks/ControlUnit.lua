@@ -57,10 +57,10 @@ elementDefinitions["programming board"] = {mass = 27.74, maxHitPoints = 50.0, cl
 elementDefinitions["remote controller"] = {mass = 7.79, maxHitPoints = 50.0, class = CLASS_REMOTE}
 elementDefinitions["hovercraft seat"] = {mass = 110.33, maxHitPoints = 187.0, class = "CockpitHovercraftUnit"}
 elementDefinitions["cockpit controller"] = {mass = 1208.13, maxHitPoints = 1125.0, class = "CockpitFighterUnit"}
-elementDefinitions["command seat controller"] = {mass = 158.45, maxHitPoints = 250.0, class = "CockpitCommandmentUnit"}
-elementDefinitions["gunner module s"] = {mass = 427.9, maxHitPoints = 250.0, class = CLASS_PVP}
-elementDefinitions["gunner module m"] = {mass = 2174.12, maxHitPoints = 250.0, class = CLASS_PVP}
-elementDefinitions["gunner module l"] = {mass = 11324.61, maxHitPoints = 250.0, class = CLASS_PVP}
+elementDefinitions["command seat controller"] = {mass = 3500.0, maxHitPoints = 250.0, class = "CockpitCommandmentUnit"}
+elementDefinitions["gunner module s"] = {mass = 427.9, maxHitPoints = 250.0, class = CLASS_PVP} -- id: 1373443625
+elementDefinitions["gunner module m"] = {mass = 4250.0, maxHitPoints = 250.0, class = CLASS_PVP} -- id: 564736657
+elementDefinitions["gunner module l"] = {mass = 16000.0, maxHitPoints = 250.0, class = CLASS_PVP} -- id: 3327293642
 elementDefinitions["emergency controller"] = {mass = 9.35, maxHitPoints = 50.0, class = CLASS_ECU}
 local DEFAULT_ELEMENT = "programming board"
 
@@ -97,12 +97,15 @@ end
 local GENERIC_DATA_TEMPLATE =
     '{"helperId":"%s","type":"%s","name":"%s","elementId":"%d","showScriptError":%s,"controlMasterModeId":%d'
 local COCKPIT_DATA_TEMPLATE = ',"acceleration":%f,"airDensity":%f,"airResistance":%f,"atmoThrust":%f,' ..
-                                 '"controlData":%s,"showHasBrokenFuelTank":%s,"showOutOfFuel":%s,"showOverload":%s,' ..
-                                 '"showSlowDown":%s,"spaceThrust":%f,"speed":%f'
+                                 '"controlData":%s,"showHasInactiveFuelTank":%s,"showOutOfFuel":%s,"showOverload":%s,' ..
+                                 '"showSlowDown":%s,"spaceThrust":%f,"speed":%f,"maxSpeed":%f,"speedEffects":%s'
 local CONTROL_DATA_TEMPLATE = '{"axisData":[{"commandType":%d,"commandValue":%f,"speed":%f},' ..
                                 '{"commandType":%d,"commandValue":%f,"speed":%f},' ..
                                 '{"commandType":%d,"commandValue":%f,"speed":%f}],' ..
                                 '"currentMasterMode":%d,"masterModeData":[{"name":""},{"name":""}]}'
+local SPEED_EFFECTS_TEMPLATE = '{"boostCount":%d,"boostSpeedModifier":%f,"boostSpeedModifierRatio":%f,' ..
+                                '"stasisCount":%d,"stasisSpeedModifier":%f,"stasisSpeedModifierRatio":%f,' ..
+                                '"stasisTimeRemaining":%f}'
 local PARENTING_DATA_TEMPLATE = ',"parentingInfo":{"autoParentingMode":%d,"closestConstructName":"%s","parentName":"%s",' ..
                                 '"parentingState":%d}'
 function M:getData()
@@ -117,13 +120,14 @@ function M:getData()
     else
         formatString = formatString .. COCKPIT_DATA_TEMPLATE .. PARENTING_DATA_TEMPLATE .. "}"
         local speed = 0.0
+        local maxSpeed = 0.0
         local acceleration = 0.0
         local airDensity = 0.0
         local airResistance = 0.0
         local atmoThrust = 0.0
         local spaceThrust = 0.0
         local controlData = "{}"
-        local showHasBrokenFuelTank = false
+        local showHasInactiveFuelTank = false
         local showOutOfFuel = false
         local showOverload = false
         local showSlowDown = false
@@ -133,10 +137,11 @@ function M:getData()
         local parentingState = 0
 
         controlData = string.format(CONTROL_DATA_TEMPLATE, 3, 0, 0, 3, 0, 0, 3, 0, 0, 0)
+        local speedEffectsData = string.format(SPEED_EFFECTS_TEMPLATE, 0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.0)
         return string.format(formatString, type, type, self.name, controllerId, showError, masterModeId, acceleration,
-                    airDensity, airResistance, atmoThrust, controlData, showHasBrokenFuelTank, showOutOfFuel,
-                    showOverload, showSlowDown, spaceThrust, speed, autoParentingMode, closestConstructName,
-                    parentName, parentingState)
+                    airDensity, airResistance, atmoThrust, controlData, showHasInactiveFuelTank, showOutOfFuel,
+                    showOverload, showSlowDown, spaceThrust, speed, maxSpeed, speedEffectsData, autoParentingMode,
+                    closestConstructName, parentName, parentingState)
     end
 end
 

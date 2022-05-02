@@ -18,33 +18,33 @@ function _G.TestContainerUnit.testConstructor()
     -- default element:
     -- ["container s"] = {mass = 1281.31, maxHitPoints = 999.0}
 
-    local databank1 = mcu:new(nil, 1, "Container XS")
-    local databank2 = mcu:new(nil, 2, "invalid")
-    local databank3 = mcu:new(nil, 3, "Container S")
-    local databank4 = mcu:new(nil, 4, "Container L")
-    local databank5 = mcu:new()
+    local container1 = mcu:new(nil, 1, "Container XS")
+    local container2 = mcu:new(nil, 2, "invalid")
+    local container3 = mcu:new(nil, 3, "Container S")
+    local container4 = mcu:new(nil, 4, "Container L")
+    local container5 = mcu:new()
 
-    local databank1Closure = databank1:mockGetClosure()
-    local databank2Closure = databank2:mockGetClosure()
-    local databank3Closure = databank3:mockGetClosure()
-    local databank4Closure = databank4:mockGetClosure()
-    local databank5Closure = databank5:mockGetClosure()
+    local container1Closure = container1:mockGetClosure()
+    local container2Closure = container2:mockGetClosure()
+    local container3Closure = container3:mockGetClosure()
+    local container4Closure = container4:mockGetClosure()
+    local container5Closure = container5:mockGetClosure()
 
-    lu.assertEquals(databank1Closure.getId(), 1)
-    lu.assertEquals(databank2Closure.getId(), 2)
-    lu.assertEquals(databank3Closure.getId(), 3)
-    lu.assertEquals(databank4Closure.getId(), 4)
-    lu.assertEquals(databank5Closure.getId(), 0)
+    lu.assertEquals(container1Closure.getId(), 1)
+    lu.assertEquals(container2Closure.getId(), 2)
+    lu.assertEquals(container3Closure.getId(), 3)
+    lu.assertEquals(container4Closure.getId(), 4)
+    lu.assertEquals(container5Closure.getId(), 0)
 
     -- prove default element is selected
     local defaultMass = 1281.31
-    lu.assertEquals(databank2Closure.getMass(), defaultMass)
-    lu.assertEquals(databank3Closure.getMass(), defaultMass)
-    lu.assertEquals(databank5Closure.getMass(), defaultMass)
+    lu.assertEquals(container2Closure.getMass(), defaultMass)
+    lu.assertEquals(container3Closure.getMass(), defaultMass)
+    lu.assertEquals(container5Closure.getMass(), defaultMass)
 
     -- non-defaults (proves independence)
-    lu.assertEquals(databank1Closure.getMass(), 229.09)
-    lu.assertEquals(databank4Closure.getMass(), 14842.7)
+    lu.assertEquals(container1Closure.getMass(), 229.09)
+    lu.assertEquals(container4Closure.getMass(), 14842.7)
 end
 
 --- Verify element class is correct for various types.
@@ -53,11 +53,11 @@ function _G.TestContainerUnit.testGetElementClass()
 
     -- default - item container
     container = mcu:new():mockGetClosure()
-    lu.assertEquals(container.getElementClass(), "ItemContainer")
+    lu.assertEquals(container.getElementClass(), "ContainerMediumGroup")
 
     -- selected item container
     container = mcu:new(nil, 0, "container m"):mockGetClosure()
-    lu.assertEquals(container.getElementClass(), "ItemContainer")
+    lu.assertEquals(container.getElementClass(), "ContainerLargeGroup")
 
     -- atmo fuel container
     container = mcu:new(nil, 0, "atmospheric fuel tank s"):mockGetClosure()
@@ -291,7 +291,7 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1)
 
     -- test element class and inherited methods
     local class = slot1.getElementClass()
-    if class == "ItemContainer" then
+    if string.match(class, "Container%a+Group") ~= nil then
         isItem = true
     elseif class == "MissionContainer" then
         isParcel = true

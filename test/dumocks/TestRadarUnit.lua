@@ -74,7 +74,7 @@ function _G.TestRadarUnit.gameBehaviorHelper(mock, slot1)
     end
 
     local data = slot1.getData()
-    local expectedFields = {"helperId", "name", "type", "constructsList", "elementId", "properties"}
+    local expectedFields = {"helperId", "name", "type", "constructsList", "elementId", "properties", "currentTargetId"}
     local expectedValues = {}
     local ignoreFields = {"errorMessage", "identifiedConstructs", "identifyConstructs", "radarStatus",
                           "selectedConstruct", "worksInEnvironment", "staticProperties", "ranges", "identify16m",

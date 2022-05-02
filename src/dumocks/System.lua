@@ -289,13 +289,34 @@ function M:isFrozen()
     return 0
 end
 
---- Return the current time since the arrival of the Arkship.
+--- <b>Deprecated:</b> Return the current time since the arrival of the Arkship.
+--
+-- This method is deprecated: getArkTime should be used instead.
 -- @treturn second The current time in seconds, with a microsecond precision.
 function M:getTime()
-    -- creates dependency on posix
-    -- local s, ns = posix.clock_gettime(0)
-    -- return s + math.floor(ns / 1000 + .5)
-    return os.time() -- only precise to full seconds
+    local outputMessage = "Warning: method getTime is deprecated, use getArkTime instead"
+    if _G.system and _G.system.print and type(_G.system.print) == "function" then
+        _G.system.print(outputMessage)
+    else
+        print(outputMessage)
+    end
+
+    return self:getArkTime();
+end
+
+--- Return the current time since the arrival of the Arkship on September 30th, 2017.
+-- @treturn float Time in seconds.
+function M:getArkTime()
+end
+
+--- Return the current time since the January 1st, 1970.
+-- @treturn float Time in seconds.
+function M:getUtcTime()
+end
+
+--- Return the time offset between local timezone and UTC.
+-- @treturn float Time in seconds.
+function M:getUtcOffset()
 end
 
 --- Return delta time of action updates (to use in ActionLoop).
@@ -313,6 +334,15 @@ end
 -- @tparam int id The ID of the player.
 -- @treturn string The coordinates of the player in world coordinates.
 function M:getPlayerWorldPos(id)
+end
+
+--- Return the item table corresponding to the given item ID.
+-- @tparam int id The ID of the item.
+-- @treturn table An object table with fields: {[integer] id, [string] name, [string] displayName,
+--   [string] locDisplayName, [string] displayNameWithSize, [string] locDisplayNameWithSize, [string] description,
+--   [string] locDescription, [string] type, [number] unitMass, [number] unitVolume, [integer] tier, [string] scale,
+--   [string] iconPath}.
+function M:getItem(id)
 end
 
 --- Returns the name of the given organization, if known, e.g. broadcasted by a transponder.
@@ -601,9 +631,13 @@ function M:mockGetClosure()
     closure.freeze = function(bool) return self:freeze() end
     closure.isFrozen = function() return self:isFrozen() end
     closure.getTime = function() return self:getTime() end
+    closure.getArkTime = function() return self:getArkTime() end
+    closure.getUtcTime = function() return self:getUtcTime() end
+    closure.getUtcOffset = function() return self:getUtcOffset() end
     closure.getActionUpdateDeltaTime = function() return self:getActionUpdateDeltaTime() end
     closure.getPlayerName = function(id) return self:getPlayerName(id) end
     closure.getPlayerWorldPos = function(id) return self:getPlayerWorldPos(id) end
+    closure.getItem = function(id) return self:getItem(id) end
     closure.getOrganizationName = function(id) return self:getOrganizationName(id) end
     closure.getOrganizationTag = function(id) return self:getOrganizationTag(id) end
     closure.getWaypointFromPlayerPos = function() return self:getWaypointFromPlayerPos() end

@@ -11,7 +11,7 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-elementDefinitions["warp drive l"] = {mass = 31360.0, maxHitPoints = 43117.0}
+elementDefinitions["warp drive l"] = {mass = 75000.0, maxHitPoints = 43117.0}
 local DEFAULT_ELEMENT = "warp drive l"
 
 local M = MockElement:new()

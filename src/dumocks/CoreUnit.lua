@@ -615,9 +615,14 @@ function M:getPvPTimer()
     return self.pvpTimer
 end
 
---- Returns the list of player ids on board the construct.
+--- Returns the list of player or surrogate ids on board the construct.
 -- @treturn list List of Players IDs.
 function M:getPlayersOnBoard()
+end
+
+--- Returns the list of player ids on board the construct inside a VR Station.
+-- @treturn list List of Players IDs.
+function M:getPlayersOnBoardInVRStation()
 end
 
 --- Returns the list of ids of constructs docked to the construct.
@@ -625,10 +630,17 @@ end
 function M:getDockedConstructs()
 end
 
---- Returns True if the given player is boarded to the construct.
+--- Returns True if the given player or surrogate is boarded to the construct.
 -- @tparam int pid The player id.
 -- @treturn 0/1 1 if the given player is boarded to the construct, 0 otherwise.
 function M:isPlayerBoarded(pid)
+    return 0
+end
+
+--- Returns True if the given player is boarded to the construct inside a VR Station.
+-- @tparam int pid The player id.
+-- @treturn 0/1 1 if the given player is boarded to the construct, 0 otherwise.
+function M:isPlayerBoardedInVRStation(pid)
     return 0
 end
 
@@ -639,10 +651,16 @@ function M:isConstructDocked(cid)
     return 0
 end
 
---- Sends a request to unboard a player with the given id.
+--- Sends a request to unboard a player or surrogate with the given id.
 -- @tparam int pid The player id.
 -- @treturn 0/1 1 if the operation is a success, 0 otherwise.
 function M:forceDeboard(pid)
+end
+
+--- Sends a request to interrupt the surrogate session of a player with the given id.
+-- @tparam int pid The player id.
+-- @treturn 0/1 1 if the operation is a success, 0 otherwise.
+function M:forceInterruptVRSession(pid)
 end
 
 --- Sends a request to undock a construct with the given id.
@@ -651,10 +669,16 @@ end
 function M:forceUndock(cid)
 end
 
---- Returns the mass of the given player if it is on board the construct.
+--- Returns the mass of the given player or surrogate if it is on board the construct.
 -- @tparam int pid The player id.
 -- @treturn float The mass of the player.
 function M:getBoardedPlayerMass(pid)
+end
+
+--- Returns the mass of the given player if in VR station on board the construct.
+-- @tparam int pid The player id.
+-- @treturn float The mass of the player.
+function M:getBoardedInVRStationAvatarMass(pid)
 end
 
 --- Returns the mass of the given construct if it is docked to the construct.
@@ -746,24 +770,36 @@ function M:getParentWorldRight()
 end
 
 --- The core's current stress, destroyed when reaching max stress.
---
 -- @treturn float Stress the core absorbed.
 function M:getCoreStress()
     return self.currentStress
 end
 
 --- The maximal stress the core can bear before it gets destroyed.
---
 -- @treturn float Maximal stress before destruction.
 function M:getMaxCoreStress()
     return self.maxStress
 end
 
 --- The core's current stress to max stress ratio.
---
 -- @treturn float Between 0 for no stress and 1 for destruction.
 function M:getCoreStressRatio()
     return self.currentStress / self.maxStress
+end
+
+--- Returns max speed along current moving direction.
+-- @treturn float Max speed along current moving direction.
+function M:getMaxSpeed()
+end
+
+--- Returns max angular speed.
+-- @treturn float Max angular speed.
+function M:getMaxAngularSpeed()
+end
+
+--- Returns max speed per axis.
+-- @treturn table Max speed along axes {x, -x, y, -y, z, -z}.
+function M:getMaxSpeedPerAxis()
 end
 
 --- Event: Emitted when the PvP timer started or elapsed.
@@ -881,12 +917,16 @@ function M:mockGetClosure()
     closure.getSchematicInfo = function(schematicId) return self:getSchematicInfo(schematicId) end
     closure.getPvPTimer = function() return self:getPvPTimer() end
     closure.getPlayersOnBoard = function() return self:getPlayersOnBoard() end
+    closure.getPlayersOnBoardInVRStation = function() return self:getPlayersOnBoardInVRStation() end
     closure.getDockedConstructs = function() return self:getDockedConstructs() end
     closure.isPlayerBoarded = function(pid) return self:isPlayerBoarded(pid) end
+    closure.isPlayerBoardedInVRStation = function(pid) return self:isPlayerBoardedInVRStation(pid) end
     closure.isConstructDocked = function(cid) return self:isConstructDocked(cid) end
     closure.forceDeboard = function(pid) return self:forceDeboard(pid) end
+    closure.forceInterruptVRSession = function(pid) return self:forceInterruptVRSession(pid) end
     closure.forceUndock = function(cid) return self:forceUndock(cid) end
     closure.getBoardedPlayerMass = function(pid) return self:getBoardedPlayerMass(pid) end
+    closure.getBoardedInVRStationAvatarMass = function(pid) return self:getBoardedInVRStationAvatarMass(pid) end
     closure.getDockedConstructMass = function(cid) return self:getDockedConstructMass(cid) end
     closure.getParent = function() return self:getParent() end
     closure.getCurrentPlanetId = function() return self:getCurrentPlanetId() end
@@ -907,6 +947,9 @@ function M:mockGetClosure()
     closure.getCoreStress = function() return self:getCoreStress() end
     closure.getMaxCoreStress = function() return self:getMaxCoreStress() end
     closure.getCoreStressRatio = function() return self:getCoreStressRatio() end
+    closure.getMaxSpeed = function() return self:getMaxSpeed() end
+    closure.getMaxAngularSpeed = function() return self:getMaxAngularSpeed() end
+    closure.getMaxSpeedPerAxis = function() return self:getMaxSpeedPerAxis() end
     return closure
 end
 

@@ -568,7 +568,7 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "ShieldGeneratorUnit")
+    assert(slot1.getElementClass() == "ShieldGeneratorExtraSmallGroup")
 
     local data = slot1.getData()
     local expectedFields = {"elementId", "helperId", "isActive", "isVenting", "ventingCooldown", "ventingMaxCooldown",

@@ -2,9 +2,8 @@
 --
 -- Element class:
 -- <ul>
---   <li>RadarPvPAtmosphericSmallGroup</li>
+--   <li>RadarPvPAtmospheric</li>
 --   <li>RadarPVPSpaceSmallGroup</li>
---   <li>RadarPvPAtmospheric (for both Medium and Large atmospheric radars)</li>
 --   <li>RadarPVPSpaceMediumGroup</li>
 --   <li>RadarPVPSpaceLargeGroup</li>
 -- </ul>
@@ -12,6 +11,7 @@
 -- Displayed widget fields:
 -- <ul>
 --   <li>constructsList</li>
+--   <li>targetId</li>
 --   <li>elementId</li>
 --   <li>properties</li>
 --   <li>staticProperties</li>
@@ -31,12 +31,12 @@ local MEDIUM_GROUP = "MediumGroup"
 local LARGE_GROUP = "LargeGroup"
 
 local elementDefinitions = {}
-elementDefinitions["atmospheric radar s"] = {mass = 486.72, maxHitPoints = 88.0, class = CLASS_ATMO .. SMALL_GROUP}
-elementDefinitions["atmospheric radar m"] = {mass = 11324.61, maxHitPoints = 698.0, class = CLASS_ATMO}
-elementDefinitions["atmospheric radar l"] = {mass = 6636.8985, maxHitPoints = 12887.0, class = CLASS_ATMO}
-elementDefinitions["space radar s"] = {mass = 486.72, maxHitPoints = 88.0, class = CLASS_SPACE .. SMALL_GROUP}
-elementDefinitions["space radar m"] = {mass = 2348.45, maxHitPoints = 698.0, class = CLASS_SPACE .. MEDIUM_GROUP}
-elementDefinitions["space radar l"] = {mass = 12492.16, maxHitPoints = 12887.0, class = CLASS_SPACE .. LARGE_GROUP}
+elementDefinitions["atmospheric radar s"] = {mass = 486.72, maxHitPoints = 88.0, class = CLASS_ATMO, range = 10000.0, idRange = 2000.0}
+elementDefinitions["atmospheric radar m"] = {mass = 11324.61, maxHitPoints = 698.0, class = CLASS_ATMO, range = 10000.0, idRange = 4000.0}
+elementDefinitions["atmospheric radar l"] = {mass = 6636.8985, maxHitPoints = 12887.0, class = CLASS_ATMO, range = 10000.0, idRange = 8000.0}
+elementDefinitions["space radar s"] = {mass = 486.72, maxHitPoints = 88.0, class = CLASS_SPACE .. SMALL_GROUP, range = 400000.0, idRange = 97500.0}
+elementDefinitions["space radar m"] = {mass = 2348.45, maxHitPoints = 698.0, class = CLASS_SPACE .. MEDIUM_GROUP, range = 400000.0}
+elementDefinitions["space radar l"] = {mass = 12492.16, maxHitPoints = 12887.0, class = CLASS_SPACE .. LARGE_GROUP, range = 400000.0}
 local DEFAULT_ELEMENT = "atmospheric radar s"
 
 local M = MockElement:new()
@@ -52,7 +52,7 @@ function M:new(o, id, elementName)
 
     o.elementClass = elementDefinition.class
 
-    o.range = 0 -- meters
+    o.range = elementDefinition.range -- meters
     -- map: id => {
         -- ownerId=0,
         -- name="",
@@ -74,7 +74,9 @@ end
 
 
 local DATA_TEMPLATE = '{"helperId":"%s","type":"%s","name":"%s",'..
-[["constructsList":[],"elementId":"%d",
+[["constructsList":[],
+"currentTargetId":"%d",
+"elementId":"%d",
 "properties":{
     "broken":false,
     "errorMessage":"Jammed by atmosphere",
@@ -91,18 +93,19 @@ local DATA_TEMPLATE = '{"helperId":"%s","type":"%s","name":"%s",'..
         "identify16m":10000,
         "identify32m":20000,
         "identify64m":40000,
-        "scan":400000
+        "scan":%d
     },
     "worksInAtmosphere":%s,
     "worksInSpace":%s
 }
 }]]
 function M:getData()
+    local targetId = 0
     local radarId = 123456789
     local worksInAtmosphere = self.elementClass == CLASS_ATMO
     local worksInSpace = self.elementClass == CLASS_SPACE
-    return string.format(DATA_TEMPLATE, self.helperId, self:getWidgetType(), self.name, radarId, worksInAtmosphere,
-                            worksInSpace)
+    return string.format(DATA_TEMPLATE, self.helperId, self:getWidgetType(), self.name, targetId, radarId,
+                            self.range, worksInAtmosphere, worksInSpace)
 end
 
 -- Override default with realistic patten to id.

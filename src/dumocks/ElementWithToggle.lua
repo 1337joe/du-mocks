@@ -14,6 +14,7 @@
 --   <li>LightUnit</li>
 --   <li>ManualSwitchUnit</li>
 --   <li>ScreenUnit</li>
+--   <li>ShieldGeneratorUnit</li>
 -- </ul>
 -- @see Element
 -- @see ElementWithState
