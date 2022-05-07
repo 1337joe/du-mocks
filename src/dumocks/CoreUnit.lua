@@ -191,8 +191,9 @@ function M:getConstructWorldPos()
 end
 
 --- Returns the construct unique ID.
--- @treturn int The unique ID. Can be used with @{database.getConstruct} to retrieve info about the construct.
--- @see database:getConstruct
+-- @treturn int The unique ID. Can be used with @{game_data_lua.database.getConstruct|database.getConstruct} to
+--   retrieve info about the construct.
+-- @see game_data_lua.database:getConstruct
 function M:getConstructId()
     return self.constructId
 end

@@ -3,7 +3,7 @@
 --
 -- The database is defined by a Lua file within your Dual Universe installation, view it at:
 -- <code>...\Dual Universe\Game\data\lua\database.lua</code>
--- @module database
+-- @module game_data_lua.database
 
 database = {}
 

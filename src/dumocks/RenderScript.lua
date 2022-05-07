@@ -119,7 +119,7 @@
 --
 -- <h2>Additional Functions</h2>
 --
--- Additional funcionality is provided in the rslib.lua library in your Dual Universe\Game\data\lua directory,
+-- Additional funcionality is provided in the @{game_data_lua.rslib|rslib.lua} library in your Dual Universe\Game\data\lua directory,
 -- accessible by calling <code>local rslib = require('rslib')</code>.
 --
 -- Lua calls available within the screen renderer environment:
@@ -153,6 +153,7 @@
 -- </ul>
 --
 -- @see ScreenUnit.setRenderScript
+-- @see game_data_lua.rslib
 -- @module renderScript
 -- @alias M
 

@@ -58,8 +58,9 @@ end
 --- Event: A player just entered the zone
 --
 -- Note: This is documentation on an event handler, not a callable method.
--- @tparam int id The ID of the player. Use @{database.getPlayer}.name to retrieve its name.
--- @see database.getPlayer
+-- @tparam int id The ID of the player. Use @{game_data_lua.database.getPlayer|database.getPlayer}.name to retrieve its
+--   name.
+-- @see game_data_lua.database.getPlayer
 function M.EVENT_enter(id)
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterEnter")
 end
