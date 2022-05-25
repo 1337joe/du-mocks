@@ -2,7 +2,6 @@ doc/
 results/
 configExports/
 
-*.luacov
 luacov*
 cobertura.xml
 
@@ -14,3 +13,4 @@ luac.out
 *.src.rock
 *.zip
 *.tar.gz
+
