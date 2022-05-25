@@ -3,7 +3,7 @@
 ![Tests](https://github.com/1337joe/du-mocks/actions/workflows/test.yml/badge.svg?branch=main)
 [![Coverage](https://codecov.io/gh/1337joe/du-mocks/branch/main/graph/badge.svg)](https://codecov.io/gh/1337joe/du-mocks)
 
-Mock objects for generating a more useful codex and for use testing Dual Universe scripts offline.
+Mock objects for generating a more useful [codex](https://1337joe.github.io/du-mocks) and for use testing Dual Universe scripts offline.
 
 ## Installing
 
@@ -44,10 +44,10 @@ ldoc .
 
 Output can be found at `doc/index.html`. Note that the documentation won't show the package prefix (`dumocks.`) in file names, but it's still needed to load modules.
 
-An already compiled and uploaded copy of the documentation can be found on my website with and without documentation for mock methods:
+An already compiled and uploaded copy of the documentation can be found on this project's github pages with and without documentation for mock methods:
 
- * https://du.w3asel.com/du-mocks/mock-codex
- * https://du.w3asel.com/du-mocks/web-codex
+ * https://1337joe.github.io/du-mocks/mock-codex
+ * https://1337joe.github.io/du-mocks/web-codex
 
 ## Developer Dependencies
 

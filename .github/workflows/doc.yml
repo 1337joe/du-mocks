@@ -1,0 +1,64 @@
+name: Generate Docs
+
+on: 
+  push:
+    branches: [ main ]
+#  pull_request:
+#    branches: [ main ]
+
+jobs:
+  codex:
+    name: Generate Codex
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+
+      - uses: leafo/gh-actions-lua@v9
+
+      - uses: leafo/gh-actions-luarocks@v4
+
+      - name: Setup
+        run: |
+          luarocks install ldoc
+          mkdir docs
+
+      - name: Build mock codex
+        run: |
+          ldoc .
+          mv doc docs/mock-codex
+      
+      - name: Remove mock methods
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          find: '--- Mock'
+          replace: '-- Mock'
+          regex: false
+          include: src/dumocks/*.lua
+
+      - name: Build web codex
+        run: |
+          ldoc .
+          mv doc docs/web-codex
+      
+      - name: Clean up CSS
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          find: 'width: 700px;'
+          replace: ';'
+          regex: false
+          include: docs/**/ldoc.css
+
+      - name: Deploy Web Codex
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: codex
+          folder: docs/web-codex
+          target-folder: web-codex
+
+      - name: Deploy Mock Codex
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: codex
+          folder: docs/mock-codex
+          target-folder: mock-codex
