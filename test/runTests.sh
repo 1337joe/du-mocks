@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # stop for error if test returns non-0 exit code
-set -e
+#set -e
 
 # set return code for final result
 exitCode=0
@@ -10,13 +10,14 @@ exitCode=0
 cd "$(dirname "$0")/.."
 
 # set lua path to include src directory
-export LUA_PATH="src/?.lua;;"
+export LUA_PATH="src/?.lua;;$LUA_PATH"
 
 # clear out old results
 rm -rf test/results
 mkdir -p test/results/
 
-find . -name Test*.lua | while read test
+# Note: not whitespace-safe
+for test in $(find . -name Test\*.lua)
 do
     testName=`basename $test`
     lua -lluacov ${test} $@ -n test/results/${testName}.xml

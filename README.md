@@ -1,5 +1,8 @@
 # DU Mocks
 
+![Tests](https://github.com/1337joe/du-mocks/actions/workflows/test.yml/badge.svg?branch=main)
+[![Coverage](https://codecov.io/gh/1337joe/du-mocks/branch/main/graph/badge.svg)](https://codecov.io/gh/1337joe/du-mocks)
+
 Mock objects for generating a more useful codex and for use testing Dual Universe scripts offline.
 
 ## Installing

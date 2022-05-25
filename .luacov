@@ -1,0 +1,4 @@
+modules = {
+    ["dumocks.*"] = "src"
+}
+includeuntestedfiles = true
