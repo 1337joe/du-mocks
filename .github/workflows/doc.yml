@@ -2,7 +2,7 @@ name: Generate Docs
 
 on: 
   push:
-    branches: [ main ]
+    branches: [ main, pts ]
 #  pull_request:
 #    branches: [ main ]
 
@@ -10,6 +10,10 @@ jobs:
   codex:
     name: Generate Codex
     runs-on: ubuntu-latest
+
+    env:
+      LDOC_CONFIG: "${{ github.ref == 'refs/heads/pts' && 'config-pts.ld' || 'config.ld' }}"
+      CODEX_SUFFIX: "${{ github.ref == 'refs/heads/pts' && 'codex-pts' || 'codex' }}"
 
     steps:
       - uses: actions/checkout@master
@@ -25,7 +29,7 @@ jobs:
 
       - name: Build mock codex
         run: |
-          ldoc .
+          ldoc -c $LDOC_CONFIG .
           mv doc docs/mock-codex
       
       - name: Remove mock methods
@@ -38,7 +42,7 @@ jobs:
 
       - name: Build web codex
         run: |
-          ldoc .
+          ldoc -c $LDOC_CONFIG .
           mv doc docs/web-codex
       
       - name: Clean up CSS
@@ -54,11 +58,11 @@ jobs:
         with:
           branch: codex
           folder: docs/web-codex
-          target-folder: web-codex
+          target-folder: web-${{ env.CODEX_SUFFIX }}
 
       - name: Deploy Mock Codex
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           branch: codex
           folder: docs/mock-codex
-          target-folder: mock-codex
+          target-folder: mock-${{ env.CODEX_SUFFIX }}
