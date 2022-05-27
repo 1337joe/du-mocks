@@ -1,0 +1,597 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>DU Mocks</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><strong>MiningUnit</strong></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>MiningUnit</code></h1>
+<p>Extracts a regular amount of resources from the ground.</p>
+<p>
+<p> Element Class: MiningUnit
+<p> Extends: Element</p>
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#">Element</a>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#getStatus">getStatus ()</a></td>
+	<td class="summary">Returns the current status of the mining unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getRemainingTime">getRemainingTime ()</a></td>
+	<td class="summary">Returns the remaining time of the current batch extraction process.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getActiveOre">getActiveOre ()</a></td>
+	<td class="summary">Returns the item ID of the currently selected ore.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOrePools">getOrePools ()</a></td>
+	<td class="summary">Returns the list of ore pools in the territory.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getBaseRate">getBaseRate ()</a></td>
+	<td class="summary">Returns the base production rate of the mining unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getEfficiency">getEfficiency ()</a></td>
+	<td class="summary">Returns the efficiency rate of the mining unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAdjacencyBonus">getAdjacencyBonus ()</a></td>
+	<td class="summary">Returns the territory's adjacency bonus to the territory of the mining unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCalibrationRate">getCalibrationRate ()</a></td>
+	<td class="summary">Returns the calibration rate of the mining unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOptimalRate">getOptimalRate ()</a></td>
+	<td class="summary">Returns the optimal calibration rate of the mining unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getProductionRate">getProductionRate ()</a></td>
+	<td class="summary">Returns the current production rate of the mining unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getLastExtractionPosition">getLastExtractionPosition ()</a></td>
+	<td class="summary">Returns the position of the last calibration excavation, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getLastExtractingPlayerId">getLastExtractingPlayerId ()</a></td>
+	<td class="summary">Returns the ID of the last player who calibrated the mining unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getLastExtractionTime">getLastExtractionTime ()</a></td>
+	<td class="summary">Returns the time in seconds since the last calibration of the mining unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getLastExtractedOre">getLastExtractedOre ()</a></td>
+	<td class="summary">Returns the item ID of the ore extracted during the last calibration excavation.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getLastExtractedVolume">getLastExtractedVolume ()</a></td>
+	<td class="summary">Returns the volume of ore extracted during the last calibration excavation.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_statusChanged">EVENT_statusChanged (status)</a></td>
+	<td class="summary">Event: Emitted when the mining unit status is changed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_completed">EVENT_completed (oreId, amount)</a></td>
+	<td class="summary">Event: Emitted when the mining unit completes a batch.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_calibrated">EVENT_calibrated (oreId, amount, rate)</a></td>
+	<td class="summary">Event: Emitted when the mining unit is calibrated.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mockGetClosure">mockGetClosure ()</a></td>
+	<td class="summary">Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "getStatus"></a>
+    <strong>getStatus ()</strong>
+    </dt>
+    <dd>
+    Returns the current status of the mining unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The status of the minign unit can be: "STOPPED", "RUNNING", "JAMMED_OUTPUT_FULL".
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getRemainingTime"></a>
+    <strong>getRemainingTime ()</strong>
+    </dt>
+    <dd>
+    Returns the remaining time of the current batch extraction process.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The remaining time in seconds.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getActiveOre"></a>
+    <strong>getActiveOre ()</strong>
+    </dt>
+    <dd>
+    Returns the item ID of the currently selected ore.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The item ID of the selected ore.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOrePools"></a>
+    <strong>getOrePools ()</strong>
+    </dt>
+    <dd>
+    Returns the list of ore pools in the territory.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A list of tables composed with {[integer] oreId, [number] available, [number] maximum}
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getBaseRate"></a>
+    <strong>getBaseRate ()</strong>
+    </dt>
+    <dd>
+    Returns the base production rate of the mining unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The production rate in L/h.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getEfficiency"></a>
+    <strong>getEfficiency ()</strong>
+    </dt>
+    <dd>
+    Returns the efficiency rate of the mining unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The efficiency rate.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAdjacencyBonus"></a>
+    <strong>getAdjacencyBonus ()</strong>
+    </dt>
+    <dd>
+    Returns the territory's adjacency bonus to the territory of the mining unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The territory's adjacency bonus.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCalibrationRate"></a>
+    <strong>getCalibrationRate ()</strong>
+    </dt>
+    <dd>
+    Returns the calibration rate of the mining unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The calibration rate of the mining unit.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOptimalRate"></a>
+    <strong>getOptimalRate ()</strong>
+    </dt>
+    <dd>
+    Returns the optimal calibration rate of the mining unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        the optimal calibration rate of the mining unit.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getProductionRate"></a>
+    <strong>getProductionRate ()</strong>
+    </dt>
+    <dd>
+    Returns the current production rate of the mining unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The production rate in L/h.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getLastExtractionPosition"></a>
+    <strong>getLastExtractionPosition ()</strong>
+    </dt>
+    <dd>
+    Returns the position of the last calibration excavation, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">The</span></span>
+        coordinates in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getLastExtractingPlayerId"></a>
+    <strong>getLastExtractingPlayerId ()</strong>
+    </dt>
+    <dd>
+    Returns the ID of the last player who calibrated the mining unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The ID of the player.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getLastExtractionTime"></a>
+    <strong>getLastExtractionTime ()</strong>
+    </dt>
+    <dd>
+    Returns the time in seconds since the last calibration of the mining unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The time in seconds with milliseconds precision.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getLastExtractedOre"></a>
+    <strong>getLastExtractedOre ()</strong>
+    </dt>
+    <dd>
+    Returns the item ID of the ore extracted during the last calibration excavation.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The item ID of the extracted ore.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getLastExtractedVolume"></a>
+    <strong>getLastExtractedVolume ()</strong>
+    </dt>
+    <dd>
+    Returns the volume of ore extracted during the last calibration excavation.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The volume of ore extracted in L.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_statusChanged"></a>
+    <strong>EVENT_statusChanged (status)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the mining unit status is changed.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">status</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The new status of the mining unit, can be: "STOPPED", "RUNNING", "JAMMED_OUTPUT_FULL".
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_completed"></a>
+    <strong>EVENT_completed (oreId, amount)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the mining unit completes a batch.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">oreId</span>
+            <span class="types"><span class="type">int</span></span>
+         The item ID of the ore mined during the extraction process.
+        </li>
+        <li><span class="parameter">amount</span>
+            <span class="types"><span class="type">float</span></span>
+         Amount of ore mined.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_calibrated"></a>
+    <strong>EVENT_calibrated (oreId, amount, rate)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the mining unit is calibrated.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">oreId</span>
+            <span class="types"><span class="type">int</span></span>
+         The item ID of the ore extracted during the calibration process.
+        </li>
+        <li><span class="parameter">amount</span>
+            <span class="types"><span class="type">float</span></span>
+         Amount of ore extracted during the calibration process.
+        </li>
+        <li><span class="parameter">rate</span>
+            <span class="types"><span class="type">float</span></span>
+         The new calibration rate after calibration process.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mockGetClosure"></a>
+    <strong>mockGetClosure ()</strong>
+    </dt>
+    <dd>
+    Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A table encompasing the api calls of object.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#mockGetClosure">Element:mockGetClosure</a>
+    </ul>
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-05-27 15:19:38 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

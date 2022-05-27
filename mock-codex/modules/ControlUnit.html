@@ -1,0 +1,1461 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>DU Mocks</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><strong>ControlUnit</strong></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>ControlUnit</code></h1>
+<p>Control units come in various forms: cockpits, programming boards, emergency control units, etc.</p>
+<p> A control unit
+ stores a set of Lua scripts that can be used to control the elements that are plugged in on its CONTROL plugs.
+ Kinematics control units like cockpit or commander seats are also capable of controlling the ship's engines via the
+ update ICC method.
+<p> Note: Not all methods are available on on control units.
+<p> Element class:
+ <ul>
+   <li>Generic: Programming Board</li>
+   <li>RemoteControlUnit: Remote Controller</li>
+   <li>CockpitHovercraftUnit: Hovercraft Seat</li>
+   <li>CockpitFighterUnit: Cockpit</li>
+   <li>CockpitCommandmentUnit: Command Seat</li>
+   <li>PVPSeatUnit: Gunner Modules</li>
+   <li>ECU: Emergency Controller</li>
+ </ul>
+<p> Displayed widget fields for Generic, ECU, and PVPSeatUnit element classes:
+ <ul>
+   <li>showScriptError</li>
+   <li>elementId</li>
+   <li>controlMasterModeId</li>
+ </ul>
+<p> Additional widget fields for Cockpit and Remote classes:
+ <ul>
+   <li>showHasBrokenFuelTank</li>
+   <li>showOutOfFuel</li>
+   <li>showOverload</li>
+   <li>showSlowDown</li>
+   <li>speed</li>
+   <li>acceleration</li>
+   <li>airDensity</li>
+   <li>airResistance</li>
+   <li>atmoThrust</li>
+   <li>spaceThrust</li>
+   <li>controlData</li>
+   <li>currentBrake (not always shown)</li>
+   <li>maxBrake (not always shown)</li>
+ </ul>
+<p> Extends: Element &gt; ElementWithState &gt; ElementWithToggle</p>
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#">Element</a>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#exit">exit ()</a></td>
+	<td class="summary">Stops the control unit's Lua code and exits.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setTimer">setTimer (timerTagId, period)</a></td>
+	<td class="summary">Set up a timer with a given tag ID in a given period.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#stopTimer">stopTimer (timerTagId)</a></td>
+	<td class="summary">Stop the timer with the given ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAtmosphereDensity">getAtmosphereDensity ()</a></td>
+	<td class="summary">Returns the local atmosphere density, between 0 and 1.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getClosestPlanetInfluence">getClosestPlanetInfluence ()</a></td>
+	<td class="summary">Returns the closest planet influence, between 0 and 1.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerRelativePosition">getMasterPlayerRelativePosition ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Return the relative position (in world coordinates) of the player currently running the control unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerPosition">getMasterPlayerPosition ()</a></td>
+	<td class="summary">Return the position of the player currently running the control unit, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerWorldPosition">getMasterPlayerWorldPosition ()</a></td>
+	<td class="summary">Return the position of the player currently running the control unit, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerRelativeOrientation">getMasterPlayerRelativeOrientation ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Return the relative orientation with respect to the control unit (in world coordinates) of the
+ player currently running the control unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerForward">getMasterPlayerForward ()</a></td>
+	<td class="summary">Returns the forward direction vector of the player currently running the control unit, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerUp">getMasterPlayerUp ()</a></td>
+	<td class="summary">Returns the up direction vector of the player currently running the control unit, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerRight">getMasterPlayerRight ()</a></td>
+	<td class="summary">Returns the right direction vector of the player currently running the control unit, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerWorldForward">getMasterPlayerWorldForward ()</a></td>
+	<td class="summary">Returns the forward direction vector of the player currently running the control unit, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerWorldUp">getMasterPlayerWorldUp ()</a></td>
+	<td class="summary">Returns the up direction vector of the player currently running the control unit, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerWorldRight">getMasterPlayerWorldRight ()</a></td>
+	<td class="summary">Returns the right direction vector of the player currently running the control unit, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerId">getMasterPlayerId ()</a></td>
+	<td class="summary">Return the ID of the player currently running the control unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerOrgIds">getMasterPlayerOrgIds ()</a></td>
+	<td class="summary">Returns the list of organization IDs of the player running the control unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerMass">getMasterPlayerMass ()</a></td>
+	<td class="summary">Returns the mass of the active player.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerParent">getMasterPlayerParent ()</a></td>
+	<td class="summary">Returns the id of the construct on which the active player is boarded.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setEngineCommand">setEngineCommand (taglist, acceleration, angularAcceleration, keepForceCollinearity, keepTorqueCollinearity, priority1SubTags, priority2SubTags, priority3SubTags, toleranceRatioToStopCommand)</a></td>
+	<td class="summary">Automatically assign the engines within the taglist to result in the given acceleration and angular acceleration
+ provided.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setEngineThrust">setEngineThrust (taglist, thrust)</a></td>
+	<td class="summary">Force the thrust values for all the engines within the tag list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setAxisCommandValue">setAxisCommandValue (axis, commandValue)</a></td>
+	<td class="summary">Set the value of the throttle in the cockpit, which will be displayed in the cockpit widget when flying.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAxisCommandValue">getAxisCommandValue (axis)</a></td>
+	<td class="summary">Get the value of the throttl in the cockpit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setupAxisCommandProperties">setupAxisCommandProperties (axis, commandType, targetSpeedRanges)</a></td>
+	<td class="summary">Set the properties of an axis command.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setupControlMasterModeProperties">setupControlMasterModeProperties (controlMasterModeId, displayName)</a></td>
+	<td class="summary">Set the display name of a master mode as shown in the UI.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getControlMasterModeId">getControlMasterModeId ()</a></td>
+	<td class="summary">Get the current master mode in use.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#cancelCurrentControlMasterMode">cancelCurrentControlMasterMode ()</a></td>
+	<td class="summary">Cancel the current master mode in used.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isAnyLandingGearExtended">isAnyLandingGearExtended ()</a></td>
+	<td class="summary">Check landing gear status.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#extendLandingGears">extendLandingGears ()</a></td>
+	<td class="summary">Extend/activate/drop the landing gears.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#retractLandingGears">retractLandingGears ()</a></td>
+	<td class="summary">Retract/deactivate the landing gears.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isMouseControlActivated">isMouseControlActivated ()</a></td>
+	<td class="summary">Check if a mouse control scheme is selected.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isMouseDirectControlActivated">isMouseDirectControlActivated ()</a></td>
+	<td class="summary">Check if the mouse control direct scheme is selected.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isMouseVirtualJoystickActivated">isMouseVirtualJoystickActivated ()</a></td>
+	<td class="summary">Check if the mouse control virtual joystick scheme is selected.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isAnyHeadlightSwitchedOn">isAnyHeadlightSwitchedOn ()</a></td>
+	<td class="summary">Check lights status.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#switchOnHeadlights">switchOnHeadlights ()</a></td>
+	<td class="summary">switchOn the lights.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#switchOffHeadlights">switchOffHeadlights ()</a></td>
+	<td class="summary">switchOff the lights.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isRemoteControlled">isRemoteControlled ()</a></td>
+	<td class="summary">Check if the construct is remote controlled.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#activateGroundEngineAltitudeStabilization">activateGroundEngineAltitudeStabilization (targetAltitude)</a></td>
+	<td class="summary">The ground engines will stabilize to this altitude within their limits.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getSurfaceEngineAltitudeStabilization">getSurfaceEngineAltitudeStabilization ()</a></td>
+	<td class="summary">Return the ground engines stabilization altitude.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#deactivateGroundEngineAltitudeStabilization">deactivateGroundEngineAltitudeStabilization ()</a></td>
+	<td class="summary">THe ground engines will behave like regular engine.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#computeGroundEngineAltitudeStabilizationCapabilities">computeGroundEngineAltitudeStabilizationCapabilities ()</a></td>
+	<td class="summary">Returns ground engine stabilization altitude capabilities (lower and upper ranges).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getThrottle">getThrottle ()</a></td>
+	<td class="summary">Return the current throttle value.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isMasterPlayerSeated">isMasterPlayerSeated ()</a></td>
+	<td class="summary">Checks if the player currently running the control unit is seated.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMasterPlayerSeatId">getMasterPlayerSeatId ()</a></td>
+	<td class="summary">Returns the UID of the seat on which the player currently running the control unit is sitting.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setSignalIn">setSignalIn (plug, state)</a></td>
+	<td class="summary">Set the value of a signal in the specified IN plug of the element.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getSignalIn">getSignalIn (plug)</a></td>
+	<td class="summary">Return the value of a signal in the specified IN plug of the element.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_tick">EVENT_tick (timerId)</a></td>
+	<td class="summary">Event: Emitted when the timer with id 'timerId' is ticking.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mockRegisterTimer">mockRegisterTimer (callback, filter)</a></td>
+	<td class="summary">Mock only, not in-game: Register a handler for the in-game `tick(timerId)` event.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mockDoTick">mockDoTick (timerId)</a></td>
+	<td class="summary">Mock only, not in-game: Simulates a timer tick.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mockGetClosure">mockGetClosure ()</a></td>
+	<td class="summary">Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "exit"></a>
+    <strong>exit ()</strong>
+    </dt>
+    <dd>
+    Stops the control unit's Lua code and exits.  Warning: calling this might cause your ship to fall from the sky, use
+ it with care. It is typically used in the coding of emergency control unit scripts to stop control once the ECU
+ thinks that the ship has safely landed.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setTimer"></a>
+    <strong>setTimer (timerTagId, period)</strong>
+    </dt>
+    <dd>
+    Set up a timer with a given tag ID in a given period.  This will start to trigger the 'tick' event with the
+ corresponding ID as an argument, to help you identify what is ticking, and when.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">timerTagId</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The ID of the timer, as a string, which will be used in the 'tick' event to identify this
+ particular timer.
+        </li>
+        <li><span class="parameter">period</span>
+            <span class="types"><span class="type">second</span></span>
+         The period of the timer, in seconds. The time resolution is limited by the framerate here, so
+ you cannot set arbitrarily fast timers.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "stopTimer"></a>
+    <strong>stopTimer (timerTagId)</strong>
+    </dt>
+    <dd>
+    Stop the timer with the given ID.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">timerTagId</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The ID of the timer to stop, as a string.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAtmosphereDensity"></a>
+    <strong>getAtmosphereDensity ()</strong>
+    </dt>
+    <dd>
+    Returns the local atmosphere density, between 0 and 1.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0..1</span></span>
+        The atmosphere density (0 = in space).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getClosestPlanetInfluence"></a>
+    <strong>getClosestPlanetInfluence ()</strong>
+    </dt>
+    <dd>
+    Returns the closest planet influence, between 0 and 1.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0..1</span></span>
+        The closest planet influence. 0 = in space, 1 = on the ground.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerRelativePosition"></a>
+    <strong>getMasterPlayerRelativePosition ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Return the relative position (in world coordinates) of the player currently running the control unit.
+<p> This method is deprecated: getMasterPlayerWorldPosition should be used instead
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Relative position in world coordinates.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ControlUnit.html#getMasterPlayerWorldPosition">getMasterPlayerWorldPosition</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerPosition"></a>
+    <strong>getMasterPlayerPosition ()</strong>
+    </dt>
+    <dd>
+    Return the position of the player currently running the control unit, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Master player position in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerWorldPosition"></a>
+    <strong>getMasterPlayerWorldPosition ()</strong>
+    </dt>
+    <dd>
+    Return the position of the player currently running the control unit, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Master player position in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerRelativeOrientation"></a>
+    <strong>getMasterPlayerRelativeOrientation ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Return the relative orientation with respect to the control unit (in world coordinates) of the
+ player currently running the control unit.
+<p> This method is deprecated: getMasterPlayerWorldForward, getMasterPlayerWorldUp, getMasterPlayerWorldRight should be
+ used instead.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">quat</span></span>
+        Relative orientation in world coordinates, as a quaternion.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../modules/ControlUnit.html#getMasterPlayerWorldForward">getMasterPlayerWorldForward</a></li>
+         <li><a href="../modules/ControlUnit.html#getMasterPlayerWorldUp">getMasterPlayerWorldUp</a></li>
+         <li><a href="../modules/ControlUnit.html#getMasterPlayerWorldRight">getMasterPlayerWorldRight</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerForward"></a>
+    <strong>getMasterPlayerForward ()</strong>
+    </dt>
+    <dd>
+    Returns the forward direction vector of the player currently running the control unit, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Master player forward direction vector in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerUp"></a>
+    <strong>getMasterPlayerUp ()</strong>
+    </dt>
+    <dd>
+    Returns the up direction vector of the player currently running the control unit, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Master player up direction vector in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerRight"></a>
+    <strong>getMasterPlayerRight ()</strong>
+    </dt>
+    <dd>
+    Returns the right direction vector of the player currently running the control unit, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Master player right direction vector in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerWorldForward"></a>
+    <strong>getMasterPlayerWorldForward ()</strong>
+    </dt>
+    <dd>
+    Returns the forward direction vector of the player currently running the control unit, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Master player forward direction vector in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerWorldUp"></a>
+    <strong>getMasterPlayerWorldUp ()</strong>
+    </dt>
+    <dd>
+    Returns the up direction vector of the player currently running the control unit, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Master player up direction vector in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerWorldRight"></a>
+    <strong>getMasterPlayerWorldRight ()</strong>
+    </dt>
+    <dd>
+    Returns the right direction vector of the player currently running the control unit, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Master player right direction vector in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerId"></a>
+    <strong>getMasterPlayerId ()</strong>
+    </dt>
+    <dd>
+    Return the ID of the player currently running the control unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        ID of the player running the control unit.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerOrgIds"></a>
+    <strong>getMasterPlayerOrgIds ()</strong>
+    </dt>
+    <dd>
+    Returns the list of organization IDs of the player running the control unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">list</span></span>
+        Organization IDs of the player running the control unit.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerMass"></a>
+    <strong>getMasterPlayerMass ()</strong>
+    </dt>
+    <dd>
+    Returns the mass of the active player.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The mass of the player in kilograms.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerParent"></a>
+    <strong>getMasterPlayerParent ()</strong>
+    </dt>
+    <dd>
+    Returns the id of the construct on which the active player is boarded.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The parent id.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setEngineCommand"></a>
+    <strong>setEngineCommand (taglist, acceleration, angularAcceleration, keepForceCollinearity, keepTorqueCollinearity, priority1SubTags, priority2SubTags, priority3SubTags, toleranceRatioToStopCommand)</strong>
+    </dt>
+    <dd>
+    Automatically assign the engines within the taglist to result in the given acceleration and angular acceleration
+ provided.  Can only be called within the system.flush event. If engines designated by the tags are not capable of
+ producing the desired command, setEngineCommand will try to do its best to approximate it.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">taglist</span>
+            <span class="types"><span class="type">csv</span></span>
+         Comma (for union) or space (for intersection) separated list of tags. You can set tags directly
+ on the engines in the right-click menu.
+        </li>
+        <li><span class="parameter">acceleration</span>
+            <span class="types"><span class="type">m/s2</span></span>
+         The desired acceleration expressed in world coordinates.
+        </li>
+        <li><span class="parameter">angularAcceleration</span>
+            <span class="types"><span class="type">rad/s2</span></span>
+         The desired angular acceleration expressed in world coordinates.
+        </li>
+        <li><span class="parameter">keepForceCollinearity</span>
+            <span class="types"><span class="type">bool</span></span>
+         Forces the resulting acceleration vector to be collinear to the acceleration
+ parameter.
+        </li>
+        <li><span class="parameter">keepTorqueCollinearity</span>
+            <span class="types"><span class="type">bool</span></span>
+         Forces the resulting angular acceleration vector to be collinear to the angular
+ acceleration parameter.
+        </li>
+        <li><span class="parameter">priority1SubTags</span>
+            <span class="types"><span class="type">priority1SubTag</span></span>
+         Comma (for union) or space (for intersection) separated list of tags of
+ included engines to use as priority 1.
+        </li>
+        <li><span class="parameter">priority2SubTags</span>
+            <span class="types"><span class="type">priority2SubTag</span></span>
+         Comma (for union) or space (for intersection) separated list of tags of
+ included engines to use as priority 2.
+        </li>
+        <li><span class="parameter">priority3SubTags</span>
+            <span class="types"><span class="type">priority3SubTag</span></span>
+         Comma (for union) or space (for intersection) separated list of tags of
+ included engines to use as priority 3.
+        </li>
+        <li><span class="parameter">toleranceRatioToStopCommand</span>
+            <span class="types"><span class="type">0,1</span></span>
+         When going through with priorities, if we reach a command that is achieved
+ within this tolerance, we will stop there.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setEngineThrust"></a>
+    <strong>setEngineThrust (taglist, thrust)</strong>
+    </dt>
+    <dd>
+    Force the thrust values for all the engines within the tag list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">taglist</span>
+            <span class="types"><span class="type">csv</span></span>
+         Comma separated list of tags. You can set tags directly on the engines in the right-click menu.
+        </li>
+        <li><span class="parameter">thrust</span>
+            <span class="types"><span class="type">N</span></span>
+         The desired thrust in newtons (note that for boosters, any non zero value here will set them to
+ 100%).
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setAxisCommandValue"></a>
+    <strong>setAxisCommandValue (axis, commandValue)</strong>
+    </dt>
+    <dd>
+    Set the value of the throttle in the cockpit, which will be displayed in the cockpit widget when flying.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">axis</span>
+            <span class="types"><span class="type">0,1,2</span></span>
+         Longitudinal = 0, lateral = 1, vertical = 2.
+        </li>
+        <li><span class="parameter">commandValue</span>
+            <span class="types"><span class="type">-1..1</span></span>
+         In 'by throttle', the value of the throttle position: -1 = full reverse, 1 = full forward.
+ Or In 'By Target Speed', the value of the target speed in km/h.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAxisCommandValue"></a>
+    <strong>getAxisCommandValue (axis)</strong>
+    </dt>
+    <dd>
+    Get the value of the throttl in the cockpit.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">axis</span>
+            <span class="types"><span class="type">0,1,2</span></span>
+         Longitudinal = 0, lateral = 1, vertical = 2.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">-1..1/float</span></span>
+        In travel mode, return the value of the throttle position: -1 = full reverse, 1 = full
+ forward, or in cruise mode, return the value of the target speed.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setupAxisCommandProperties"></a>
+    <strong>setupAxisCommandProperties (axis, commandType, targetSpeedRanges)</strong>
+    </dt>
+    <dd>
+    Set the properties of an axis command.  These properties will be used to display the command in UI.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">axis</span>
+            <span class="types"><span class="type">0,1,2</span></span>
+         Longitudinal = 0, lateral = 1, vertical = 2.
+        </li>
+        <li><span class="parameter">commandType</span>
+            <span class="types"><span class="type">0,1</span></span>
+         By throttle = 0, by target speed = 1, hidden = 2.
+        </li>
+        <li><span class="parameter">targetSpeedRanges</span>
+            <span class="types"><span class="type">list</span></span>
+         This is to specify the cruise control target speed ranges (for now, only for the
+ longitudinal axis).
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setupControlMasterModeProperties"></a>
+    <strong>setupControlMasterModeProperties (controlMasterModeId, displayName)</strong>
+    </dt>
+    <dd>
+    Set the display name of a master mode as shown in the UI.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">controlMasterModeId</span>
+            <span class="types"><span class="type">int</span></span>
+         The master mode, 0=Travel Mode, 1=Cruise Control.
+        </li>
+        <li><span class="parameter">displayName</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The name of the master mode.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getControlMasterModeId"></a>
+    <strong>getControlMasterModeId ()</strong>
+    </dt>
+    <dd>
+    Get the current master mode in use.  The mode is set by clicking the UI button or using the associated keybinding.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The current master mode (for now, only 2 are available, 0 and 1).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "cancelCurrentControlMasterMode"></a>
+    <strong>cancelCurrentControlMasterMode ()</strong>
+    </dt>
+    <dd>
+    Cancel the current master mode in used.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isAnyLandingGearExtended"></a>
+    <strong>isAnyLandingGearExtended ()</strong>
+    </dt>
+    <dd>
+    Check landing gear status.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if any landing gear is extended.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "extendLandingGears"></a>
+    <strong>extendLandingGears ()</strong>
+    </dt>
+    <dd>
+    Extend/activate/drop the landing gears.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "retractLandingGears"></a>
+    <strong>retractLandingGears ()</strong>
+    </dt>
+    <dd>
+    Retract/deactivate the landing gears.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isMouseControlActivated"></a>
+    <strong>isMouseControlActivated ()</strong>
+    </dt>
+    <dd>
+    Check if a mouse control scheme is selected.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if a mouse control scheme is selected.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isMouseDirectControlActivated"></a>
+    <strong>isMouseDirectControlActivated ()</strong>
+    </dt>
+    <dd>
+    Check if the mouse control direct scheme is selected.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if a mouse control direct scheme is selected.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isMouseVirtualJoystickActivated"></a>
+    <strong>isMouseVirtualJoystickActivated ()</strong>
+    </dt>
+    <dd>
+    Check if the mouse control virtual joystick scheme is selected.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if a mouse control virtual joystick scheme is selected.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isAnyHeadlightSwitchedOn"></a>
+    <strong>isAnyHeadlightSwitchedOn ()</strong>
+    </dt>
+    <dd>
+    Check lights status.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if any headlight is switched on.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "switchOnHeadlights"></a>
+    <strong>switchOnHeadlights ()</strong>
+    </dt>
+    <dd>
+    switchOn the lights.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "switchOffHeadlights"></a>
+    <strong>switchOffHeadlights ()</strong>
+    </dt>
+    <dd>
+    switchOff the lights.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isRemoteControlled"></a>
+    <strong>isRemoteControlled ()</strong>
+    </dt>
+    <dd>
+    Check if the construct is remote controlled.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the construct is remote controlled.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "activateGroundEngineAltitudeStabilization"></a>
+    <strong>activateGroundEngineAltitudeStabilization (targetAltitude)</strong>
+    </dt>
+    <dd>
+    The ground engines will stabilize to this altitude within their limits.  THe stabilization will be done by adjusting
+ thrust to never go over the target altitude. This includes VerticalBooster and HoverEngine.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">targetAltitude</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getSurfaceEngineAltitudeStabilization"></a>
+    <strong>getSurfaceEngineAltitudeStabilization ()</strong>
+    </dt>
+    <dd>
+    Return the ground engines stabilization altitude.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The stab altitude (m) or 0 if none is set.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "deactivateGroundEngineAltitudeStabilization"></a>
+    <strong>deactivateGroundEngineAltitudeStabilization ()</strong>
+    </dt>
+    <dd>
+    THe ground engines will behave like regular engine.  This includes VerticalBooster and HoverEngine.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "computeGroundEngineAltitudeStabilizationCapabilities"></a>
+    <strong>computeGroundEngineAltitudeStabilizationCapabilities ()</strong>
+    </dt>
+    <dd>
+    Returns ground engine stabilization altitude capabilities (lower and upper ranges).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec2</span></span>
+        Stabilization altitude capabilities for the least powerful engine and the most powerful engine.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getThrottle"></a>
+    <strong>getThrottle ()</strong>
+    </dt>
+    <dd>
+    Return the current throttle value.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The throttle value between -100 and 100.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isMasterPlayerSeated"></a>
+    <strong>isMasterPlayerSeated ()</strong>
+    </dt>
+    <dd>
+    Checks if the player currently running the control unit is seated.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the player is seated.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMasterPlayerSeatId"></a>
+    <strong>getMasterPlayerSeatId ()</strong>
+    </dt>
+    <dd>
+    Returns the UID of the seat on which the player currently running the control unit is sitting.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The UID of the seat, or 0 if not seated.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setSignalIn"></a>
+    <strong>setSignalIn (plug, state)</strong>
+    </dt>
+    <dd>
+    Set the value of a signal in the specified IN plug of the element.
+<p> Valid plug names are:
+ <ul>
+ <li>"in" for the in signal (has no actual effect on controller state when modified this way).</li>
+ </ul>
+<p> Note: Only defined for Programming Board and ECU.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">plug</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         A valid plug name to set.
+        </li>
+        <li><span class="parameter">state</span>
+            <span class="types"><span class="type">0/1</span></span>
+         The plug signal state
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getSignalIn"></a>
+    <strong>getSignalIn (plug)</strong>
+    </dt>
+    <dd>
+    Return the value of a signal in the specified IN plug of the element.
+<p> Valid plug names are:
+ <ul>
+ <li>"in" for the in signal.</li>
+ </ul>
+<p> Note: Only defined for Programming Board and ECU.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">plug</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         A valid plug name to query.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        The plug signal state
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_tick"></a>
+    <strong>EVENT_tick (timerId)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the timer with id 'timerId' is ticking.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">timerId</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The ID (int) of the timer that just ticked (see setTimer to set a timer with a given ID)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mockRegisterTimer"></a>
+    <strong>mockRegisterTimer (callback, filter)</strong>
+    </dt>
+    <dd>
+    Mock only, not in-game: Register a handler for the in-game `tick(timerId)` event.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">callback</span>
+            <span class="types"><span class="type">function</span></span>
+         The function to call when the timer ticks.
+        </li>
+        <li><span class="parameter">filter</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The timerId to filter on, or "*" for all.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The index of the callback.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ControlUnit.html#EVENT_tick">EVENT_tick</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "mockDoTick"></a>
+    <strong>mockDoTick (timerId)</strong>
+    </dt>
+    <dd>
+    Mock only, not in-game: Simulates a timer tick.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">timerId</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The ID of the timer that ticked.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mockGetClosure"></a>
+    <strong>mockGetClosure ()</strong>
+    </dt>
+    <dd>
+    Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A table encompasing the api calls of object.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#mockGetClosure">Element:mockGetClosure</a>
+    </ul>
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-05-27 15:19:38 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

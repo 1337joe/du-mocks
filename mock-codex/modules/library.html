@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>DU Mocks</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+  <li><strong>library</strong></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>library</code></h1>
+<p>Contains a list of useful math and helper methods that would be slow to implement in Lua, and which are given here
+ as fast C++ implementation.</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#systemResolution3">systemResolution3 (vec_c1, vec_c2, vec_c3, vec_c0)</a></td>
+	<td class="summary">Solve the 3D linear system M*x=c0 where M is defined by its colum vectors c1,c2,c3.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#systemResolution2">systemResolution2 (vec_c1, vec_c2, vec_c0)</a></td>
+	<td class="summary">Solve the 2D linear system M*x=c0 where M is defined by its colum vectors c1,c2.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mockGetClosure">mockGetClosure ()</a></td>
+	<td class="summary">Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "systemResolution3"></a>
+    <strong>systemResolution3 (vec_c1, vec_c2, vec_c3, vec_c0)</strong>
+    </dt>
+    <dd>
+    Solve the 3D linear system M*x=c0 where M is defined by its colum vectors c1,c2,c3.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">vec_c1</span>
+            <span class="types"><span class="type">vec3</span></span>
+         The first column of the matrix M.
+        </li>
+        <li><span class="parameter">vec_c2</span>
+            <span class="types"><span class="type">vec3</span></span>
+         The second column of the matrix M.
+        </li>
+        <li><span class="parameter">vec_c3</span>
+            <span class="types"><span class="type">vec3</span></span>
+         The third column of the matrix M.
+        </li>
+        <li><span class="parameter">vec_c0</span>
+            <span class="types"><span class="type">vec3</span></span>
+         The target column of the matrix M.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The vec3 solution of the above system.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "systemResolution2"></a>
+    <strong>systemResolution2 (vec_c1, vec_c2, vec_c0)</strong>
+    </dt>
+    <dd>
+    Solve the 2D linear system M*x=c0 where M is defined by its colum vectors c1,c2.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">vec_c1</span>
+            <span class="types"><span class="type">vec3</span></span>
+         The first column of the matrix M.
+        </li>
+        <li><span class="parameter">vec_c2</span>
+            <span class="types"><span class="type">vec3</span></span>
+         The second column of the matrix M.
+        </li>
+        <li><span class="parameter">vec_c0</span>
+            <span class="types"><span class="type">vec3</span></span>
+         The target column of the matrix M.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec2</span></span>
+        The vec2 solution of the above system.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mockGetClosure"></a>
+    <strong>mockGetClosure ()</strong>
+    </dt>
+    <dd>
+    Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A table encompasing the api calls of object.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-05-27 15:19:38 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
