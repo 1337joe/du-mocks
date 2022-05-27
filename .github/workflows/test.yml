@@ -33,6 +33,9 @@ jobs:
           luarocks install luacov
           luarocks install luafilesystem
 
+      - name: Verify LuaRocks config
+        run: luarocks make
+
       - name: Test
         run: ./test/runTests.sh -o junit
 
