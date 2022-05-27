@@ -1,0 +1,1004 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>PTS DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1><span style="color:red;">PTS DU Mocks</style></h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><strong>RadarUnit</strong></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>RadarUnit</code></h1>
+<p>List local constructs and access their ID.</p>
+<p>
+<p> Element class:
+ <ul>
+   <li>RadarPvPAtmospheric</li>
+   <li>RadarPVPSpaceSmallGroup</li>
+   <li>RadarPVPSpaceMediumGroup</li>
+   <li>RadarPVPSpaceLargeGroup</li>
+ </ul>
+<p> Displayed widget fields:
+ <ul>
+   <li>constructsList</li>
+   <li>targetId</li>
+   <li>elementId</li>
+   <li>properties</li>
+   <li>staticProperties</li>
+ </ul>
+<p> Extends: Element</p>
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#">Element</a>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#isOperational">isOperational ()</a></td>
+	<td class="summary">Returns 1 if the radar is not broken, works in the current environment and is not used by another control unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getRange">getRange ()</a></td>
+	<td class="summary">Returns the scan range of the radar.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getIdentifyRanges">getIdentifyRanges ()</a></td>
+	<td class="summary">Returns ranges to identify a target based on its core size.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getEntries">getEntries ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Returns the list of construct IDs currently detection in the range.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructIds">getConstructIds ()</a></td>
+	<td class="summary">Returns the list of construct IDs in the scan range.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getIdentifiedConstructIds">getIdentifiedConstructIds ()</a></td>
+	<td class="summary">Returns the list of identified construct IDs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getTargetId">getTargetId ()</a></td>
+	<td class="summary">Returns the ID of the target construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructDistance">getConstructDistance (id)</a></td>
+	<td class="summary">Returns the distance to the given construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isConstructIdentified">isConstructIdentified (id)</a></td>
+	<td class="summary">Returns 1 if the given construct is identified.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isConstructAbandoned">isConstructAbandoned (id)</a></td>
+	<td class="summary">Returns 1 if the given construct was abandoned.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructCoreSize">getConstructCoreSize (id)</a></td>
+	<td class="summary">Return the core size of the given construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getThreatTo">getThreatTo (id)</a></td>
+	<td class="summary">Returns the threat rate your construct is for the given construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getThreatFrom">getThreatFrom (id)</a></td>
+	<td class="summary">Returns the threat rate the given construct is for your construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#hasMatchingTransponder">hasMatchingTransponder (id)</a></td>
+	<td class="summary">Returns whether the target has an active transponder with matching tags.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructOwner">getConstructOwner (id)</a></td>
+	<td class="summary">Returns a table with id of the owner entities (player or organization) of the given construct, if in range and if
+ active transponder tags match.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructSize">getConstructSize (id)</a></td>
+	<td class="summary">Return the size of the bounding box of the given construct, if in range.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructType">getConstructType (id)</a></td>
+	<td class="summary">Return the type of the given construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructPos">getConstructPos (id)</a></td>
+	<td class="summary">Returns the position of the given construct in construct local coordinates, if the active transponder tags match.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructWorldPos">getConstructWorldPos (id)</a></td>
+	<td class="summary">Returns the position of the given construct in world coordinates, if in range and if the active transponder tags
+ match.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructVelocity">getConstructVelocity (id)</a></td>
+	<td class="summary">Returns the velocity vector of the given construct in construct local coordinates, if identified and if the active
+ transponder tags match.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructWorldVelocity">getConstructWorldVelocity (id)</a></td>
+	<td class="summary">Returns the velocity vector of the given construct in world coordinates, if identified and if the active
+ transponder tags match.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructMass">getConstructMass (id)</a></td>
+	<td class="summary">Returns the mass of the given construct, if identified.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructName">getConstructName (id)</a></td>
+	<td class="summary">Return the name of the given construct, if defined.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructInfos">getConstructInfos (id)</a></td>
+	<td class="summary">Returns a list of working elements on the given construction, if identified.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructSpeed">getConstructSpeed (id)</a></td>
+	<td class="summary">Returns the speed of the given construct, if identified.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructAngularSpeed">getConstructAngularSpeed (id)</a></td>
+	<td class="summary">Returns the angular speed of the given construct to your construct, if identified.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructRadialSpeed">getConstructRadialSpeed (id)</a></td>
+	<td class="summary">Returns the radial speed of the given construct to your construct, if identified.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_enter">EVENT_enter (id)</a></td>
+	<td class="summary">Event: Emitted when a construct enters the range of the radar unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_leave">EVENT_leave (id)</a></td>
+	<td class="summary">Event: Emitted when a construct leaves the range of the radar unit.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "isOperational"></a>
+    <strong>isOperational ()</strong>
+    </dt>
+    <dd>
+    Returns 1 if the radar is not broken, works in the current environment and is not used by another control unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the radar is operational, 0 otherwise.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getRange"></a>
+    <strong>getRange ()</strong>
+    </dt>
+    <dd>
+    Returns the scan range of the radar.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">meter</span></span>
+        The scan range.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getIdentifyRanges"></a>
+    <strong>getIdentifyRanges ()</strong>
+    </dt>
+    <dd>
+    Returns ranges to identify a target based on its core size.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">list</span></span>
+        { xsRange, sRange, mRange, lRange }
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getEntries"></a>
+    <strong>getEntries ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Returns the list of construct IDs currently detection in the range.
+<p> This method is deprecated: getConstructIds should be used instead.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">list</span></span>
+        The list of construct IDs.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/RadarUnit.html#getConstructIds">getConstructIds</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getConstructIds"></a>
+    <strong>getConstructIds ()</strong>
+    </dt>
+    <dd>
+    Returns the list of construct IDs in the scan range.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">list</span></span>
+        The list of scanned construct IDs.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getIdentifiedConstructIds"></a>
+    <strong>getIdentifiedConstructIds ()</strong>
+    </dt>
+    <dd>
+    Returns the list of identified construct IDs.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">list</span></span>
+        The list of identified construct IDs.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getTargetId"></a>
+    <strong>getTargetId ()</strong>
+    </dt>
+    <dd>
+    Returns the ID of the target construct.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The ID of the target construct.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructDistance"></a>
+    <strong>getConstructDistance (id)</strong>
+    </dt>
+    <dd>
+    Returns the distance to the given construct.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The distance between the current and target construct center.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isConstructIdentified"></a>
+    <strong>isConstructIdentified (id)</strong>
+    </dt>
+    <dd>
+    Returns 1 if the given construct is identified.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">1/0</span></span>
+        1 if the construct is identified, 0 otherwise.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isConstructAbandoned"></a>
+    <strong>isConstructAbandoned (id)</strong>
+    </dt>
+    <dd>
+    Returns 1 if the given construct was abandoned.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">1/0</span></span>
+        1 if the construct has no owner, 0 otherwise.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructCoreSize"></a>
+    <strong>getConstructCoreSize (id)</strong>
+    </dt>
+    <dd>
+    Return the core size of the given construct.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        XS, S, M, L
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getThreatTo"></a>
+    <strong>getThreatTo (id)</strong>
+    </dt>
+    <dd>
+    Returns the threat rate your construct is for the given construct.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        none, identified, threatened_identified, threatened, attacked
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getThreatFrom"></a>
+    <strong>getThreatFrom (id)</strong>
+    </dt>
+    <dd>
+    Returns the threat rate the given construct is for your construct.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        none, identified, threatened_identified, threatened, attacked
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "hasMatchingTransponder"></a>
+    <strong>hasMatchingTransponder (id)</strong>
+    </dt>
+    <dd>
+    Returns whether the target has an active transponder with matching tags.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">1/0</span></span>
+        1 if our construct and the target have active transponders with matching tags, 0 otherwise.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructOwner"></a>
+    <strong>getConstructOwner (id)</strong>
+    </dt>
+    <dd>
+    Returns a table with id of the owner entities (player or organization) of the given construct, if in range and if
+ active transponder tags match.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A table { playerId: pID, organizationId: oID } describing the owner. Use
+   <a href="../modules/system.html#getPlayerName">system.getPlayerName(pID)</a> and
+   <a href="../modules/system.html#getOrganizationName">system.getOrganizationName(oID)</a> to retrieve info about it.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../modules/system.html#getPlayerName">system:getPlayerName</a></li>
+         <li><a href="../modules/system.html#getOrganizationName">system:getOrganizationName</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getConstructSize"></a>
+    <strong>getConstructSize (id)</strong>
+    </dt>
+    <dd>
+    Return the size of the bounding box of the given construct, if in range.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The size of the construct in xyz-coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructType"></a>
+    <strong>getConstructType (id)</strong>
+    </dt>
+    <dd>
+    Return the type of the given construct.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The type of the construct,: can be 'static', 'space' or 'dynamic'.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructPos"></a>
+    <strong>getConstructPos (id)</strong>
+    </dt>
+    <dd>
+    Returns the position of the given construct in construct local coordinates, if the active transponder tags match.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The xyz local coordinates relative to the construct center.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructWorldPos"></a>
+    <strong>getConstructWorldPos (id)</strong>
+    </dt>
+    <dd>
+    Returns the position of the given construct in world coordinates, if in range and if the active transponder tags
+ match.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The xyz world coordinates of the construct center.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructVelocity"></a>
+    <strong>getConstructVelocity (id)</strong>
+    </dt>
+    <dd>
+    Returns the velocity vector of the given construct in construct local coordinates, if identified and if the active
+ transponder tags match.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The xyz local coordinates of the construct velocity.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructWorldVelocity"></a>
+    <strong>getConstructWorldVelocity (id)</strong>
+    </dt>
+    <dd>
+    Returns the velocity vector of the given construct in world coordinates, if identified and if the active
+ transponder tags match.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The xyz world coordinates of the construct velocity.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructMass"></a>
+    <strong>getConstructMass (id)</strong>
+    </dt>
+    <dd>
+    Returns the mass of the given construct, if identified.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        the mass of the construct.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructName"></a>
+    <strong>getConstructName (id)</strong>
+    </dt>
+    <dd>
+    Return the name of the given construct, if defined.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The name of the construct.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructInfos"></a>
+    <strong>getConstructInfos (id)</strong>
+    </dt>
+    <dd>
+    Returns a list of working elements on the given construction, if identified.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A table { weapons: f, radars: f, antiGravity: f, atmoEngines: f, spaceEngines: f, rocketEngines: f }
+   with values 0.0-1.0. Exceptionally antiGravity and rocketEngines are always 1.0 if present, even if broken.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructSpeed"></a>
+    <strong>getConstructSpeed (id)</strong>
+    </dt>
+    <dd>
+    Returns the speed of the given construct, if identified.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         the ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The speed of the construct relative to the universe.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructAngularSpeed"></a>
+    <strong>getConstructAngularSpeed (id)</strong>
+    </dt>
+    <dd>
+    Returns the angular speed of the given construct to your construct, if identified.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The angular speed of the construct relative to your construct.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructRadialSpeed"></a>
+    <strong>getConstructRadialSpeed (id)</strong>
+    </dt>
+    <dd>
+    Returns the radial speed of the given construct to your construct, if identified.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The radial speed of the construct relative to your construct.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_enter"></a>
+    <strong>EVENT_enter (id)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when a construct enters the range of the radar unit.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         ID of the construct; can be used with <a href="../modules/game_data_lua.database.html#getConstruct">database.getConstruct</a> to
+   retrieve info about it.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/game_data_lua.database.html#getConstruct">game_data_lua.database.getConstruct</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_leave"></a>
+    <strong>EVENT_leave (id)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when a construct leaves the range of the radar unit.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         ID of the construct; can be used with <a href="../modules/game_data_lua.database.html#getConstruct">database.getConstruct</a> to
+   retrieve info about it.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/game_data_lua.database.html#getConstruct">game_data_lua.database.getConstruct</a>
+    </ul>
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-05-27 15:21:47 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

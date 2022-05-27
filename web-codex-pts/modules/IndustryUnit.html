@@ -1,0 +1,438 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>PTS DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1><span style="color:red;">PTS DU Mocks</style></h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><strong>IndustryUnit</strong></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>IndustryUnit</code></h1>
+<p>Can mass-produce produce any item/element.</p>
+<p>
+<p> Element class: IndustryUnit
+ <ul>
+   <li>IndustryUnit: Transfer Unit</li>
+   <li>Industry1: Basic Industry Units</li>
+   <li>Industry2: Uncommon Industry Units</li>
+   <li>Industry3: Advanced Industry Units</li>
+   <li>Industry4: Rare Industry Units</li>
+ </ul>
+<p> Extends: Element</p>
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#">Element</a>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#start">start ()</a></td>
+	<td class="summary">Start the production, and it will run unless it is stopped or the input resources run out.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#startAndMaintain">startAndMaintain (quantity)</a></td>
+	<td class="summary">Start maintaining the specified quantity.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#batchStart">batchStart (numBatches)</a></td>
+	<td class="summary">Start the production of numBatches and then stop.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#softStop">softStop ()</a></td>
+	<td class="summary">End the job and stop.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#hardStop">hardStop (allowIngredientLoss)</a></td>
+	<td class="summary">Stop production immediately.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getStatus">getStatus ()</a></td>
+	<td class="summary">Get the status of the industry.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCycleCountSinceStartup">getCycleCountSinceStartup ()</a></td>
+	<td class="summary">Get the count of completed cycles since the player started the unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getEfficiency">getEfficiency ()</a></td>
+	<td class="summary">Get the efficiency of the industry.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getUptime">getUptime ()</a></td>
+	<td class="summary">Get the time elapsed in seconds since the player started the unit for the latest time.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setCurrentSchematic">setCurrentSchematic (id)</a></td>
+	<td class="summary">Set the loaded schematic, based on its id.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCurrentSchematic">getCurrentSchematic ()</a></td>
+	<td class="summary">Get the id of the currently loaded schematic.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_completed">EVENT_completed ()</a></td>
+	<td class="summary">Event: Emitted when the industry unit has completed a run.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_statusChanged">EVENT_statusChanged (status)</a></td>
+	<td class="summary">Event: Emitted when the industry status has changed.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "start"></a>
+    <strong>start ()</strong>
+    </dt>
+    <dd>
+    Start the production, and it will run unless it is stopped or the input resources run out.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "startAndMaintain"></a>
+    <strong>startAndMaintain (quantity)</strong>
+    </dt>
+    <dd>
+    Start maintaining the specified quantity.  Resumes production when the quantity in the output container is too low,
+ and pauses production when it is equal or higher.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">quantity</span>
+            <span class="types"><span class="type">int</span></span>
+         Quantity to maintain inside output containers.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "batchStart"></a>
+    <strong>batchStart (numBatches)</strong>
+    </dt>
+    <dd>
+    Start the production of numBatches and then stop.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">numBatches</span>
+            <span class="types"><span class="type">int</span></span>
+         Number of batches to run before unit stops.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "softStop"></a>
+    <strong>softStop ()</strong>
+    </dt>
+    <dd>
+    End the job and stop.  The production keeps going until it is complete, then it switches to "STOPPED" status. If the
+ output container is full, then it switches to "JAMMED".
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "hardStop"></a>
+    <strong>hardStop (allowIngredientLoss)</strong>
+    </dt>
+    <dd>
+    Stop production immediately.  The resources are given back to the input container. If there is not enough room in the
+ input containers, production stoppage is skipped if `allowIngredientLoss` is set to 0, or ingredients are lost if set
+ to 1.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">allowIngredientLoss</span>
+            <span class="types"><span class="type">0/1</span></span>
+         0 = forbid loss, 1 = enable loss.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getStatus"></a>
+    <strong>getStatus ()</strong>
+    </dt>
+    <dd>
+    Get the status of the industry.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The status of the industry can be: STOPPED, RUNNING, JAMMED_MISSING_INGREDIENT, JAMMED_OUTPUT_FULL,
+ JAMMED_NO_OUTPUT_CONTAINER.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCycleCountSinceStartup"></a>
+    <strong>getCycleCountSinceStartup ()</strong>
+    </dt>
+    <dd>
+    Get the count of completed cycles since the player started the unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The count of completed cycles since startup.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getEfficiency"></a>
+    <strong>getEfficiency ()</strong>
+    </dt>
+    <dd>
+    Get the efficiency of the industry.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0..1</span></span>
+        The efficiency rate between 0 and 1.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getUptime"></a>
+    <strong>getUptime ()</strong>
+    </dt>
+    <dd>
+    Get the time elapsed in seconds since the player started the unit for the latest time.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">s</span></span>
+        The time elapsed in seconds.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setCurrentSchematic"></a>
+    <strong>setCurrentSchematic (id)</strong>
+    </dt>
+    <dd>
+    Set the loaded schematic, based on its id.  Use getCurrentSchematic to learn about your schematic id. Does not work
+ while the industry unit is running.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The schematic id to be loaded.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#getCurrentSchematic">getCurrentSchematic</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getCurrentSchematic"></a>
+    <strong>getCurrentSchematic ()</strong>
+    </dt>
+    <dd>
+    Get the id of the currently loaded schematic.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The schematic id or 0 if no valid schematic is loaded.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_completed"></a>
+    <strong>EVENT_completed ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the industry unit has completed a run.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_statusChanged"></a>
+    <strong>EVENT_statusChanged (status)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the industry status has changed.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">status</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The status of the industry can be: STOPPED, RUNNING, JAMMED_MISSING_INGREDIENT,
+ JAMMED_OUTPUT_FULL, JAMMED_NO_OUTPUT_CONTAINER.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-05-27 15:21:47 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

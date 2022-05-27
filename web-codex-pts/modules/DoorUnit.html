@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>PTS DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1><span style="color:red;">PTS DU Mocks</style></h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><strong>DoorUnit</strong></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>DoorUnit</code></h1>
+<p>A door that can be opened or closed.</p>
+<p>
+<p> Applies to doors, hatches, gates, etc.
+<p> Element Class: DoorUnit
+<p> Extends: Element &gt; ElementWithState &gt; ElementWithToggle</p>
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../modules/Element.html#">Element</a></li>
+         <li><a href="../modules/ElementWithState.html#">ElementWithState</a></li>
+         <li><a href="../modules/ElementWithToggle.html#">ElementWithToggle</a></li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#setSignalIn">setSignalIn (plug, state)</a></td>
+	<td class="summary">Set the value of a signal in the specified IN plug of the element.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getSignalIn">getSignalIn (plug)</a></td>
+	<td class="summary">Return the value of a signal in the specified IN plug of the element.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "setSignalIn"></a>
+    <strong>setSignalIn (plug, state)</strong>
+    </dt>
+    <dd>
+    Set the value of a signal in the specified IN plug of the element.
+<p> Valid plug names are:
+ <ul>
+ <li>"in" for the in signal (has no actual effect on door state when modified this way).</li>
+ </ul>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">plug</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         A valid plug name to set.
+        </li>
+        <li><span class="parameter">state</span>
+            <span class="types"><span class="type">0/1</span></span>
+         The plug signal state
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getSignalIn"></a>
+    <strong>getSignalIn (plug)</strong>
+    </dt>
+    <dd>
+    Return the value of a signal in the specified IN plug of the element.
+<p> Valid plug names are:
+ <ul>
+ <li>"in" for the in signal.</li>
+ </ul>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">plug</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         A valid plug name to query.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        The plug signal state
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-05-27 15:21:47 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
