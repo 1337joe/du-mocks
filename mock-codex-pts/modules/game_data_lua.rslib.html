@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>PTS DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1><span style="color:red;">PTS DU Mocks</style></h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><strong>game_data_lua.rslib</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>game_data_lua.rslib</code></h1>
+<p>The renderscript library is defined by a Lua file within your Dual Universe installation, view it at:
+ <code>...\Dual Universe\Game\data\lua\rslib.lua</code></p>
+<p> To use it, simply import it using:
+<p> <code>local rslib = require('rslib')</code>
+<p> then call methods as:
+<p> <code>rslib.drawQuickText("Hello World")</code>
+</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#drawQuickImage">drawQuickImage (url)</a></td>
+	<td class="summary">Draw a full-screen image loaded from the given url.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#drawQuickText">drawQuickText (text, options)</a></td>
+	<td class="summary">Draw a string of text with line breaks and word wrapping in the center of the screen.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#drawRenderCost">drawRenderCost ()</a></td>
+	<td class="summary">Draw a small render cost profiler at the bottom-left of the screen to show the current render cost of the screen
+ versus the maximum allowed cost.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getTextWrapped">getTextWrapped (font, text, maxWidth)</a></td>
+	<td class="summary">Break the given text into a table of strings such that each element takes no more than <code>maxWidth</code>
+ horizontal pixels when rendered with the given font.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#drawGrid">drawGrid (size, opacity)</a></td>
+	<td class="summary">Draw a grid on the screen.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#print">print (...)</a></td>
+	<td class="summary">Like Lua print, but uses <a href="../modules/renderScript.html#logMessage">renderScript.logMessage</a> to print to the in-game Lua chat window.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#pprint">pprint (...)</a></td>
+	<td class="summary">Pretty print, like <a href="../modules/game_data_lua.rslib.html#print">print</a>, except using <a href="../modules/game_data_lua.rslib.html#toString">toString</a> to see tables.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#toString">toString (x)</a></td>
+	<td class="summary">Like Lua tostring, but recursively stringifies tables.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "drawQuickImage"></a>
+    <strong>drawQuickImage (url)</strong>
+    </dt>
+    <dd>
+    Draw a full-screen image loaded from the given url.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">url</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The url to load the image from.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "drawQuickText"></a>
+    <strong>drawQuickText (text, options)</strong>
+    </dt>
+    <dd>
+    Draw a string of text with line breaks and word wrapping in the center of the screen.  Options may contain any of
+ the following:
+ <ul>
+   <li><span class="parameter">textColor</span> (<span class="type">table</span>) Four-component RGBA table; e.g. red
+     is <code>{1, 0, 0, 1}</code>.</li>
+   <li><span class="parameter">bgColor</span> (<span class="type">table</span>) Three-component RGB table for
+     background color.</li>
+   <li><span class="parameter">fontName</span> (<span class="type">string</span>) Name of font (see render script
+     docs).</li>
+   <li><span class="parameter">fontSize</span> (<span class="type">int</span>) Size of font, in vertical pixels.</li>
+   <li><span class="parameter">lineSpacing</span> (<span class="type">float</span>) Spacing from one baseline to the
+     next.</li>
+   <li><span class="parameter">wrapWidth</span> (<span class="type">float</span>) Total width of the text region, as
+     a fraction of screen width.</li>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The text to display.
+        </li>
+        <li><span class="parameter">options</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The options to use.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "drawRenderCost"></a>
+    <strong>drawRenderCost ()</strong>
+    </dt>
+    <dd>
+    Draw a small render cost profiler at the bottom-left of the screen to show the current render cost of the screen
+ versus the maximum allowed cost.
+<p> NOTE: displays render cost at the time of the function call, so you must call at the end of your script to see the
+ total cost!
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getTextWrapped"></a>
+    <strong>getTextWrapped (font, text, maxWidth)</strong>
+    </dt>
+    <dd>
+    Break the given text into a table of strings such that each element takes no more than <code>maxWidth</code>
+ horizontal pixels when rendered with the given font.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">font</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the font to use.
+        </li>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The text to split.
+        </li>
+        <li><span class="parameter">maxWidth</span>
+            <span class="types"><span class="type">float</span></span>
+         The max number of horizontal pixels before the string is split onto another line.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "drawGrid"></a>
+    <strong>drawGrid (size, opacity)</strong>
+    </dt>
+    <dd>
+    Draw a grid on the screen.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">size</span>
+            <span class="types"><span class="type">float</span></span>
+         The size of the grid square.
+        </li>
+        <li><span class="parameter">opacity</span>
+            <span class="types"><span class="type">float</span></span>
+         The opacity of the grid lines [0..1].
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "print"></a>
+    <strong>print (...)</strong>
+    </dt>
+    <dd>
+    Like Lua print, but uses <a href="../modules/renderScript.html#logMessage">renderScript.logMessage</a> to print to the in-game Lua chat window.
+<p> NOTE: Only visible if 'enable logging' is on for this screen!
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+         The items to print.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "pprint"></a>
+    <strong>pprint (...)</strong>
+    </dt>
+    <dd>
+    Pretty print, like <a href="../modules/game_data_lua.rslib.html#print">print</a>, except using <a href="../modules/game_data_lua.rslib.html#toString">toString</a> to see tables.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+         The items to print.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "toString"></a>
+    <strong>toString (x)</strong>
+    </dt>
+    <dd>
+    Like Lua tostring, but recursively stringifies tables.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         The item to print.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-05-27 15:21:46 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

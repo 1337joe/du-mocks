@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>PTS DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1><span style="color:red;">PTS DU Mocks</style></h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><strong>FireworksUnit</strong></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>FireworksUnit</code></h1>
+<p>A unit capable to launch fireworks that are stored in the attached container.</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#activate">activate ()</a></td>
+	<td class="summary">Fire the firework.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setExplosionDelay">setExplosionDelay (t)</a></td>
+	<td class="summary">Set the delay before the launched fireworks explodes.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setLaunchSpeed">setLaunchSpeed (v)</a></td>
+	<td class="summary">Set the speed at which the firework will be launched (impacts its altitude, depending on the local gravity).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setType">setType (type)</a></td>
+	<td class="summary">Set the type of launched firework (will affect which firework is picked in the attached container).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setColor">setColor (color)</a></td>
+	<td class="summary">Set the color of the launched firework (will affect which firework is picked in the attached container).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mockGetClosure">mockGetClosure ()</a></td>
+	<td class="summary">Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "activate"></a>
+    <strong>activate ()</strong>
+    </dt>
+    <dd>
+    Fire the firework.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setExplosionDelay"></a>
+    <strong>setExplosionDelay (t)</strong>
+    </dt>
+    <dd>
+    Set the delay before the launched fireworks explodes.  Max=5s.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">t</span>
+            <span class="types"><span class="type">second</span></span>
+         The delay before explosion.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setLaunchSpeed"></a>
+    <strong>setLaunchSpeed (v)</strong>
+    </dt>
+    <dd>
+    Set the speed at which the firework will be launched (impacts its altitude, depending on the local gravity).
+ Max=200m/s.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">v</span>
+            <span class="types"><span class="type">m/s</span></span>
+         The launch speed.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setType"></a>
+    <strong>setType (type)</strong>
+    </dt>
+    <dd>
+    Set the type of launched firework (will affect which firework is picked in the attached container).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">type</span>
+            <span class="types"><span class="type">int</span></span>
+         0=BALL, 1=PALMTREE, 2=RING, 3=SHOWER.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setColor"></a>
+    <strong>setColor (color)</strong>
+    </dt>
+    <dd>
+    Set the color of the launched firework (will affect which firework is picked in the attached container).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">color</span>
+            <span class="types"><span class="type">int</span></span>
+         0=BLUE, 1=GOLD, 2=GREEN, 3=PURPLE, 4=RED, 5=SILVER
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mockGetClosure"></a>
+    <strong>mockGetClosure ()</strong>
+    </dt>
+    <dd>
+    Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A table encompasing the api calls of object.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#mockGetClosure">Element:mockGetClosure</a>
+    </ul>
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-05-27 15:21:46 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

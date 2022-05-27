@@ -1,0 +1,2484 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>PTS DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1><span style="color:red;">PTS DU Mocks</style></h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><strong>renderScript</strong></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>renderScript</code></h1>
+<p>RenderScript is a new technology for creating screen unit contents using Lua (also referred to as "Lua Screen
+ Units"), rather than HTML/CSS.</p>
+<p> In general, this technology causes less performance drops in the game, while
+ simultaneously allowing significantly more complex animaged and interactive screens.
+<p> Render scripts are Lua scripts residing inside screen units that provide rendering instructions for the screen. To
+ use RenderScript, simply switch the screen mode from 'HTML' to 'Lua' in the screen unit content editor interface,
+ then start writing a render script! Render scripts work by building up layers of geometric shapes, images, and text,
+ that are then rendered sequentially to the screen.
+<p> The short example script below demonstrates drawing a box and some text on the screen.
+<p> <blockquote><code>
+ local layer = createLayer() -- create a new layer<br>
+ local rx, ry = getResolution() -- get the resolution of the screen<br>
+ local font = loadFont("Play", 20) -- load the "Play" font at size 20pain
+<p> setNextFillColor(layer, 1, 0, 0, 1) -- set the fill color (red, green, blue, alpha) for the next shape<br>
+ addBox(layer, rx/4, ry/4, rx/2, ry/2) -- add a box in the center of the screen<br>
+ addText(layer, font, "Hello World!", rx/3, ry/2) -- add a text string using font
+ </code></blockquote>
+<p> <h2>Animation</h2>
+<p> It is entirely possible to create animated screens with RenderScript; in fact, the technology really shines for
+ complex animations, where the performance of HTML/CSS is generally low.
+<p> Animations are made possible by using the <a href="../modules/renderScript.html#requestAnimationFrame">requestAnimationFrame</a> function to re-run in some number of frames, then
+ changing the positioning of geometry within the layers, based on some variable such as time. Effectively, you will
+ simply draw one frame of your animation at a time, but since RenderScript is fast enough to execute at 60 frames per
+ second, the result will look smooth.
+<p> The minimal example script below demonstrates using the <a href="../modules/renderScript.html#getTime">getTime</a> function to animate the location of a circle on
+ the screen:
+<p> <blockquote><code>
+ local layer = createLayer()<br>
+ local rx, ry = getResolution()<br>
+ local t = getTime()<br>
+ local r = math.min(rx/4, ry/4)<br>
+ local x = rx/2 + r * math.cos(t)<br>
+ local y = ry/2 + r * math.sin(t)<br>
+<p> addCircle(layer, x, y, 16)<br>
+ requestAnimationFrame(1)
+ </code></blockquote>
+<p> <h2>Coordinate Space</h2>
+<p> All render script coordinates are in screen pixels, ranging from <code>(0, 0)</code> at the top-left of the screen,
+ to <code>(width, height)</code> at the bottom-right. The width and height of the screen in pixels can be retrieved
+ by calling <a href="../modules/renderScript.html#getResolution">getResolution</a>.
+<p> For maximal robustness, scripts should be written so as to adapt to the resolution, as screens with different sizes
+ or aspect ratios will use different display resolutions.
+<p> <h2>Render Cost</h2>
+<p> Since render script is intended to solve screen unit performance problems, we impose relatively harsh restrictions
+ on content compared to HTML. This does not mean you won't be able to create amazing, detailed, high-framerate screen
+ contents; it just means that you'll need to be aware of the budgeting mechanism.
+<p> Any render script call that draws a shape (box, circle, line, text...) adds to a cost metric that consumes some of
+ the screen's total rendering budget. Although the exact cost metric is subject to change, roughly-speaking, the
+ render cost incurred by any shape is proportional to the screen-space area of the shape, plus a constant factor.
+ This means that a box of dimension 16 x 16 consumes roughly four times as much render cost as a box of 8 x 8. This
+ is fairly intuitive when you realize that the number of pixels filled by the larger box is four times that of the
+ smaller box.
+<p> For most render scripts, it is unlikely that the maximum cost will ever be exceeded, so most users probably don't
+ need to worry too much about this mechanism. However, drawing lots of large text or lots of large, overlapping
+ images may cause you to exceed the budget.
+<p> To learn more about your script's use of this budget, use the built-in API functions <a href="../modules/renderScript.html#getRenderCost">getRenderCost</a> and
+ <a href="../modules/renderScript.html#getRenderCostMax">getRenderCostMax</a>. <a href="../modules/renderScript.html#getRenderCost">getRenderCost</a> can be called at any point during a render script to see how much all the
+ contents added so far cost.
+<p> Below is an example of how to add a simple render cost progile to your screen so that you can see cost information
+ in real-time:
+<p> <blockquote><code>
+ local rx, ry = getResolution()<br>
+ local layer = createLayer()<br>
+ local font = loadFont('FiraMono-Bold', 16)<br>
+ local text = string.format('render cost: %d / %d', getRenderCost(), getRenderCostMax())<br>
+ setNextFillColor(layer, 1, 1, 1, 1)<br>
+ setNextTextAlign(layer, AlignH_Left, AlignV_Descender)<br>
+ addText(layer, font, text, 16, ry - 8)
+ </code></blockquote>
+<p> <h2>Render Order</h2>
+<p> When you need explicit control over the top-to-bottom ordering of rendered elements, you should use layers. As
+ stated in the <a href="../modules/renderScript.html#createLayer">createLayer</a> documentation, each layer that is created within a script will be rendered on top of
+ each previous layer, such that the first layer created appears at the bottom, while the last layer created appears
+ at the top.
+<p> Shapes that live on the same layer do not offer as much control. Among the same type of shape, instances rendered
+ later will appear on top of those rendered before, so if you add two boxes to a layer, the last box added will
+ appear on top. However, the situation is more complex when mixing different shapes. For rendering efficiency, all
+ instances of a shape type on the same layer are drawn at the same time. This means that all instances of one shape
+ will appear below or above all instances of other shapes, regardless of the relative order in which they were added
+ to the layer. Currently, the ordering is as follows, from top to bottom:
+<p> <ul>
+   <li>Text</li>
+   <li>Quads</li>
+   <li>Triangles</li>
+   <li>Lines</li>
+   <li>Circles</li>
+   <li>Rounded Boxes</li>
+   <li>Boxes</li>
+   <li>Beziers</li>
+   <li>Images</li>
+ </ul>
+<p> Thus, all boxes will always render below all circles on the same layer, and text on the same layer will appear on
+ top of both. It is not possible to control this behavior, nor is it a good idea to rely on it, as it is subject to
+ change. If you need to rely on something appearing in front of something else, you should use multiple layers.
+<p> <h2>Additional Functions</h2>
+<p> Additional funcionality is provided in the <a href="../modules/game_data_lua.rslib.html#">rslib.lua</a> library in your Dual Universe\Game\data\lua directory,
+ accessible by calling <code>local rslib = require('rslib')</code>.
+<p> Lua calls available within the screen renderer environment:
+ <ul>
+   <li><b>Libraries</b>
+     <ul>
+       <li>table</li>
+       <li>string</li>
+       <li>math</li>
+     </ul>
+   </li>
+   <li><b>Functions</b>
+     <ul>
+       <li>next</li>
+       <li>select</li>
+       <li>pairs</li>
+       <li>ipairs</li>
+       <li>type</li>
+       <li>tostring</li>
+       <li>tonumber</li>
+       <li>pcall</li>
+       <li>xpcall</li>
+       <li>assert</li>
+       <li>error</li>
+       <li>require</li>
+       <li>load</li>
+       <li>setmetatable</li>
+       <li>getmetatable</li>
+     </ul>
+   </li>
+ </ul>
+</p>
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../modules/ScreenUnit.html#setRenderScript">ScreenUnit.setRenderScript</a></li>
+         <li><a href="../modules/game_data_lua.rslib.html#">game_data_lua.rslib</a></li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#addBezier">addBezier (layer, x1, y1, x2, y2, x3, y3)</a></td>
+	<td class="summary">Add a quadratic bezier curve to the given layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#addBox">addBox (layer, x, y, width, height)</a></td>
+	<td class="summary">Add a rectangle to the given layer with top-left corner (x,y) and dimensions width x height.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#addBoxRounded">addBoxRounded (layer, x, y, width, height, radius)</a></td>
+	<td class="summary">Add a rectangle to the given layer with top-left corner (x,y) and dimensions width x height with each corner
+ rounded to radius.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#addCircle">addCircle (layer, x, y, radius)</a></td>
+	<td class="summary">Add a circle to the given layer with center (x, y) and radius radius.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#addImage">addImage (layer, image, x, y, width, height)</a></td>
+	<td class="summary">Add image reference to layer as a rectangle with top-left corner x, y) and dimensions width x height.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#addImageSub">addImageSub (layer, image, x, y, sx, sy, subX, subY, subSx, subSy)</a></td>
+	<td class="summary">Add image reference to layer as a rectangle with top-left corner x, y) and dimensions width x height.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#addLine">addLine (layer, x1, y1, x2, y2)</a></td>
+	<td class="summary">Add a line to layer from (x1, y1) to (x2, y2).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#addQuad">addQuad (layer, x1, y1, x2, y2, x3, y3, x4, y4)</a></td>
+	<td class="summary">Add a quadrilateral to the given layer with vertices (x1, y1), (x2, y2), (x3, y3), (x4, y4).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#addText">addText (layer, font, text, x, y)</a></td>
+	<td class="summary">Add text to layer using font, with top-left baseline starting at (x, y).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#addTriangle">addTriangle (layer, x1, y1, x2, y2, x3, y3)</a></td>
+	<td class="summary">Add a triangle to the given layer with vertices (x1, y1), (x2, y2), (x3, y3).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#createLayer">createLayer ()</a></td>
+	<td class="summary">Create a new layer that will be rendered on top of all previously-created layers.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setLayerClipRect">setLayerClipRect (layer, x, y, sx, sy)</a></td>
+	<td class="summary">Set a clipping rectangle applied to the layer as a whole.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setLayerOrigin">setLayerOrigin (layer, x, y)</a></td>
+	<td class="summary">Set the transform origin of a layer; layer scaling and rotation are applied relative to this origin.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setLayerRotation">setLayerRotation (layer, rotation)</a></td>
+	<td class="summary">Set a rotation applied to the layer as a whole, relative to the layer's transform origin.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setLayerScale">setLayerScale (layer, sx, sy)</a></td>
+	<td class="summary">Set a scale factor applied to the layer as a whole, relative to the layer's transform origin.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setLayerTranslation">setLayerTranslation (layer, tx, ty)</a></td>
+	<td class="summary">Set a translation applied to the layer as a whole.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCursor">getCursor ()</a></td>
+	<td class="summary">Return the screen location that is currently raycasted by the player in screen pixel coordinates as a (x, y) tuple.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCursorDown">getCursorDown ()</a></td>
+	<td class="summary">Return true if the mouse cursor is currently pressed down on the screen, false otherwise.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCursorPressed">getCursorPressed ()</a></td>
+	<td class="summary">Return true if the mouse button changed from being released to being pressed at any point since the last update.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCursorReleased">getCursorReleased ()</a></td>
+	<td class="summary">Return true if the mouse button changed from being pressed to being released at any point since the last update.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getDeltaTime">getDeltaTime ()</a></td>
+	<td class="summary">Returns the time, in seconds, since the screen was last updated.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getTime">getTime ()</a></td>
+	<td class="summary">Returns the time, in seconds, relative to the first execution.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getLocale">getLocale ()</a></td>
+	<td class="summary">Return the locale in which the game is currently running.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getRenderCost">getRenderCost ()</a></td>
+	<td class="summary">Return the current render cost of the script thus far, used to profile the performance of a screen.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getRenderCostMax">getRenderCostMax ()</a></td>
+	<td class="summary">Return the maximum render cost limit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getResolution">getResolution ()</a></td>
+	<td class="summary">Return the current viewport resolution as a (width, height) tuple.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#logMessage">logMessage (message)</a></td>
+	<td class="summary">Write message to the Lua chat if the output checkbox is checked.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#loadImage">loadImage (path)</a></td>
+	<td class="summary">Return an image handle that can be used with <a href="../modules/renderScript.html#addImage">addImage</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isImageLoaded">isImageLoaded (imageHandle)</a></td>
+	<td class="summary">Returns true if the given imageHandle is loaded.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getImageSize">getImageSize (image)</a></td>
+	<td class="summary">Returns the width and height of an image.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAvailableFontCount">getAvailableFontCount ()</a></td>
+	<td class="summary">Returns the number of fonts available to be used by render script.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAvailableFontName">getAvailableFontName (index)</a></td>
+	<td class="summary">Returns the name of the nth available font.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#loadFont">loadFont (name, size)</a></td>
+	<td class="summary">Return a font handle that can be used with <a href="../modules/renderScript.html#addText">addText</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isFontLoaded">isFontLoaded (font)</a></td>
+	<td class="summary"><b>Deprecated:</b> Returns true if the given font is loaded.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getTextBounds">getTextBounds (font, text)</a></td>
+	<td class="summary">Compute and return the bounding box width and height of the given text in the given font as a (width, height)
+ tuple.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getFontMetrics">getFontMetrics (font)</a></td>
+	<td class="summary">Compute and return the ascender and descender height of given font.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getFontSize">getFontSize (font)</a></td>
+	<td class="summary">Return the currently-set size for the given font.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setFontSize">setFontSize (font, size)</a></td>
+	<td class="summary">Set the size at which a font will render.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#requestAnimationFrame">requestAnimationFrame (frames)</a></td>
+	<td class="summary">Notify the screen manager that this screen should be redrawn in frames frames.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setBackgroundColor">setBackgroundColor (r, g, b)</a></td>
+	<td class="summary">Set the background color of the screen as red (r), green (g), blue (b) in the range [0, 1].</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setDefaultFillColor">setDefaultFillColor (layer, shapeType, r, g, b, a)</a></td>
+	<td class="summary">Set the default fill color for all shapeType on layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setDefaultRotation">setDefaultRotation (layer, shapeType, radians)</a></td>
+	<td class="summary">Set the default rotation for all shapeType on layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setDefaultShadow">setDefaultShadow (layer, shapeType, radius, r, g, b, a)</a></td>
+	<td class="summary">Set the default shadow for all shapeType on layer with size radius.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setDefaultStrokeColor">setDefaultStrokeColor (layer, shapeType, r, g, b, a)</a></td>
+	<td class="summary">Set the default stroke color for all shapeType on layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setDefaultStrokeWidth">setDefaultStrokeWidth (layer, shapeType, width)</a></td>
+	<td class="summary">Set the default stroke width for all shapeType on layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setDefaultTextAlign">setDefaultTextAlign (layer, alignH, alignV)</a></td>
+	<td class="summary">Set the default text alignment of all subsequent text strings on the given layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setNextFillColor">setNextFillColor (layer, r, g, b, a)</a></td>
+	<td class="summary">Set the fill color of the next rendered shape on layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setNextRotation">setNextRotation (layer, radians)</a></td>
+	<td class="summary">Set the rotation of the next rendered shape on layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setNextRotationDegrees">setNextRotationDegrees (layer, degrees)</a></td>
+	<td class="summary">Set the rotation of the next rendered shape on layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setNextShadow">setNextShadow (layer, radius, r, g, b, a)</a></td>
+	<td class="summary">Set the shadow of the next rendered shape on layer with size radius.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setNextStrokeColor">setNextStrokeColor (layer, r, g, b, a)</a></td>
+	<td class="summary">Set the stroke color of the next rendered shape on layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setNextStrokeWidth">setNextStrokeWidth (layer, width)</a></td>
+	<td class="summary">Set the stroke width of the next rendered shape on layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setNextTextAlign">setNextTextAlign (layer, alignH, alignV)</a></td>
+	<td class="summary">Set the next text alignment for the next rendered shape on layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getInput">getInput ()</a></td>
+	<td class="summary">Return a string of input data (or an empty string, if no input has been set) that can be set via a control unit
+ with the screen unit API function screen.setScriptInput(inputString).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setOutput">setOutput (outputString)</a></td>
+	<td class="summary">Set the script's output string to outputString, which can be retrieved via a control unit with the screen unit API
+ function screen.getScriptOuput()</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#rawget">rawget ()</a></td>
+	<td class="summary">Unknown use.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#rawset">rawset ()</a></td>
+	<td class="summary">Unknown use.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#rawequal">rawequal ()</a></td>
+	<td class="summary">Unknown use.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mockGetEnvironment">mockGetEnvironment ()</a></td>
+	<td class="summary">Mock only, not in-game: Bundles the object into an environment that can be used to override the base environment
+ (_ENV) so that all methods are called directly against this object.</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Shape">Shape</a></td>
+	<td class="summary">Shape constants for shapeType.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AlignH">AlignH</a></td>
+	<td class="summary">Horizontal alignment constants for alignH.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AlignV">AlignV</a></td>
+	<td class="summary">Vertical alignment constants for alignV.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "addBezier"></a>
+    <strong>addBezier (layer, x1, y1, x2, y2, x3, y3)</strong>
+    </dt>
+    <dd>
+    Add a quadratic bezier curve to the given layer.
+<p> Supported properties: shadow, strokeColor, strokeWidth
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer to which to add.
+        </li>
+        <li><span class="parameter">x1</span>
+            <span class="types"><span class="type">float</span></span>
+         X coordinate of the first point of the curve (the starting point).
+        </li>
+        <li><span class="parameter">y1</span>
+            <span class="types"><span class="type">float</span></span>
+         Y coordinate of the first point of the curve (the starting point).
+        </li>
+        <li><span class="parameter">x2</span>
+            <span class="types"><span class="type">float</span></span>
+         X coordinate of the second point of the curve (the control point).
+        </li>
+        <li><span class="parameter">y2</span>
+            <span class="types"><span class="type">float</span></span>
+         Y coordinate of the second point of the curve (the control point).
+        </li>
+        <li><span class="parameter">x3</span>
+            <span class="types"><span class="type">float</span></span>
+         X coordinate of the third point of the curve (the ending point).
+        </li>
+        <li><span class="parameter">y3</span>
+            <span class="types"><span class="type">float</span></span>
+         Y coordinate of the third point of the curve (the ending point).
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "addBox"></a>
+    <strong>addBox (layer, x, y, width, height)</strong>
+    </dt>
+    <dd>
+    Add a rectangle to the given layer with top-left corner (x,y) and dimensions width x height.
+<p> Supported properties: fillColor, rotation, shadow, strokeColor, strokeWidth
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer to which to add.
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the left side of the box.
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the top side of the box.
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">float</span></span>
+         The width of the box in pixels.
+        </li>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">float</span></span>
+         The height of the box in pixels.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "addBoxRounded"></a>
+    <strong>addBoxRounded (layer, x, y, width, height, radius)</strong>
+    </dt>
+    <dd>
+    Add a rectangle to the given layer with top-left corner (x,y) and dimensions width x height with each corner
+ rounded to radius.
+<p> Supported properties: fillColor, rotation, shadow, strokeColor, strokeWidth
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer to which to add.
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the left side of the box.
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the top side of the box.
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">float</span></span>
+         The width of the box in pixels.
+        </li>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">float</span></span>
+         The height of the box in pixels.
+        </li>
+        <li><span class="parameter">radius</span>
+            <span class="types"><span class="type">float</span></span>
+         The corner radius of the box in pixels.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "addCircle"></a>
+    <strong>addCircle (layer, x, y, radius)</strong>
+    </dt>
+    <dd>
+    Add a circle to the given layer with center (x, y) and radius radius.
+<p> Supported properties: fillColor, shadow, strokeColor, strokeWidth
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer to which to add.
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the center of the circle.
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the center of the circle.
+        </li>
+        <li><span class="parameter">radius</span>
+            <span class="types"><span class="type">float</span></span>
+         The radius of the circle in pixels.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "addImage"></a>
+    <strong>addImage (layer, image, x, y, width, height)</strong>
+    </dt>
+    <dd>
+    Add image reference to layer as a rectangle with top-left corner x, y) and dimensions width x height.
+<p> Supported properties: fillColor, rotation
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer to which to add.
+        </li>
+        <li><span class="parameter">image</span>
+            <span class="types"><span class="type">int</span></span>
+         The handle for the image to add.
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the image's top-left corner.
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the image's top-left corner.
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">float</span></span>
+         The width of the image in pixels.
+        </li>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">float</span></span>
+         The height of the image in pixels.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#loadImage">loadImage</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "addImageSub"></a>
+    <strong>addImageSub (layer, image, x, y, sx, sy, subX, subY, subSx, subSy)</strong>
+    </dt>
+    <dd>
+    Add image reference to layer as a rectangle with top-left corner x, y) and dimensions width x height.
+<p> Supported properties: fillColor, rotation
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer to which to add.
+        </li>
+        <li><span class="parameter">image</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the image to add.
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the image's top-left corner.
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the image's top-left corner.
+        </li>
+        <li><span class="parameter">sx</span>
+            <span class="types"><span class="type">float</span></span>
+         Width of the image.
+        </li>
+        <li><span class="parameter">sy</span>
+            <span class="types"><span class="type">float</span></span>
+         Height of the image.
+        </li>
+        <li><span class="parameter">subX</span>
+            <span class="types"><span class="type">float</span></span>
+         X coordinate of the top-left corner of the sub-region to draw.
+        </li>
+        <li><span class="parameter">subY</span>
+            <span class="types"><span class="type">float</span></span>
+         Y coordinate of the top-left corner of the sub-region to draw.
+        </li>
+        <li><span class="parameter">subSx</span>
+            <span class="types"><span class="type">float</span></span>
+         Width of the sub-region within the image to draw.
+        </li>
+        <li><span class="parameter">subSy</span>
+            <span class="types"><span class="type">float</span></span>
+         Height of the sub-region within the image to draw.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#loadImage">loadImage</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "addLine"></a>
+    <strong>addLine (layer, x1, y1, x2, y2)</strong>
+    </dt>
+    <dd>
+    Add a line to layer from (x1, y1) to (x2, y2).
+<p> Supported properties: rotation, shadow, strokeColor, strokeWidth
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer to which to add.
+        </li>
+        <li><span class="parameter">x1</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the start of the line.
+        </li>
+        <li><span class="parameter">y1</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the start of the line.
+        </li>
+        <li><span class="parameter">x2</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the end of the line.
+        </li>
+        <li><span class="parameter">y2</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the end of the line.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "addQuad"></a>
+    <strong>addQuad (layer, x1, y1, x2, y2, x3, y3, x4, y4)</strong>
+    </dt>
+    <dd>
+    Add a quadrilateral to the given layer with vertices (x1, y1), (x2, y2), (x3, y3), (x4, y4).
+<p> Supported properties: fillColor, rotation, shadow, strokeColor, strokeWidth
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer to which to add.
+        </li>
+        <li><span class="parameter">x1</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the first corner.
+        </li>
+        <li><span class="parameter">y1</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the first corner.
+        </li>
+        <li><span class="parameter">x2</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the second corner.
+        </li>
+        <li><span class="parameter">y2</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the second corner.
+        </li>
+        <li><span class="parameter">x3</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the third corner.
+        </li>
+        <li><span class="parameter">y3</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the third corner.
+        </li>
+        <li><span class="parameter">x4</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the final corner.
+        </li>
+        <li><span class="parameter">y4</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the final corner.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "addText"></a>
+    <strong>addText (layer, font, text, x, y)</strong>
+    </dt>
+    <dd>
+    Add text to layer using font, with top-left baseline starting at (x, y).  Note that each glyph in text counts as one
+ shape toward the total rendered shape limit.
+<p> Supported properties: fillColor
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer to which to add.
+        </li>
+        <li><span class="parameter">font</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the font to use.
+        </li>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The text to add.
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the top-left baseline.
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the top-left baseline.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#loadFont">loadFont</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "addTriangle"></a>
+    <strong>addTriangle (layer, x1, y1, x2, y2, x3, y3)</strong>
+    </dt>
+    <dd>
+    Add a triangle to the given layer with vertices (x1, y1), (x2, y2), (x3, y3).
+<p> Supported properties: fillColor, rotation, shadow, strokeColor, strokeWidth
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer to which to add.
+        </li>
+        <li><span class="parameter">x1</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the first corner.
+        </li>
+        <li><span class="parameter">y1</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the first corner.
+        </li>
+        <li><span class="parameter">x2</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the second corner.
+        </li>
+        <li><span class="parameter">y2</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the second corner.
+        </li>
+        <li><span class="parameter">x3</span>
+            <span class="types"><span class="type">float</span></span>
+         The x coordinate (in pixels) of the third corner.
+        </li>
+        <li><span class="parameter">y3</span>
+            <span class="types"><span class="type">float</span></span>
+         The y coordinate (in pixels) of the third corner.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "createLayer"></a>
+    <strong>createLayer ()</strong>
+    </dt>
+    <dd>
+    Create a new layer that will be rendered on top of all previously-created layers.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The id that can be used to uniquely identify the layer for use with other API functions.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setLayerClipRect"></a>
+    <strong>setLayerClipRect (layer, x, y, sx, sy)</strong>
+    </dt>
+    <dd>
+    Set a clipping rectangle applied to the layer as a whole.  Layer contents that fall outside the clipping rectangle
+ will not be rendered, and those athat are partially within the rectangle will be 'clipped' against it. The clipping
+ rectangle is applied before layer transformations. Note that clipped contents still count toward the render cost.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer for which the clipping rectangle will be set.
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">float</span></span>
+         The X coordinate of the clipping rectangle's top-left corner.
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">float</span></span>
+         The Y coordinate of the clipping rectangle's top-left corner.
+        </li>
+        <li><span class="parameter">sx</span>
+            <span class="types"><span class="type">float</span></span>
+         The width of the clipping rectangle.
+        </li>
+        <li><span class="parameter">sy</span>
+            <span class="types"><span class="type">float</span></span>
+         The height of the clipping rectangle.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setLayerOrigin"></a>
+    <strong>setLayerOrigin (layer, x, y)</strong>
+    </dt>
+    <dd>
+    Set the transform origin of a layer; layer scaling and rotation are applied relative to this origin.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer for which the origin will be set.
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">float</span></span>
+         The X coordinate of the layer's transform origin.
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">float</span></span>
+         The Y coordinate of the layer's transform origin.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setLayerRotation"></a>
+    <strong>setLayerRotation (layer, rotation)</strong>
+    </dt>
+    <dd>
+    Set a rotation applied to the layer as a whole, relative to the layer's transform origin.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer for which the rotation will be set.
+        </li>
+        <li><span class="parameter">rotation</span>
+            <span class="types"><span class="type">float</span></span>
+         Rotation, in radians; positive is counter-clockwise, negative is clockwise.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setLayerScale"></a>
+    <strong>setLayerScale (layer, sx, sy)</strong>
+    </dt>
+    <dd>
+    Set a scale factor applied to the layer as a whole, relative to the layer's transform origin.  Scale factors are
+ multiplicative, so that a scale >1 enlarges the size of the layer, 1.0 does nothing, and <1 reduces the size of the
+ layer.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer for which the scale factor will be set.
+        </li>
+        <li><span class="parameter">sx</span>
+            <span class="types"><span class="type">float</span></span>
+         The scale factor along the X axis.
+        </li>
+        <li><span class="parameter">sy</span>
+            <span class="types"><span class="type">float</span></span>
+         The scale factor along the Y axis.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setLayerTranslation"></a>
+    <strong>setLayerTranslation (layer, tx, ty)</strong>
+    </dt>
+    <dd>
+    Set a translation applied to the layer as a whole.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer for which the translation will be set.
+        </li>
+        <li><span class="parameter">tx</span>
+            <span class="types"><span class="type">float</span></span>
+         The translation along the X axis.
+        </li>
+        <li><span class="parameter">ty</span>
+            <span class="types"><span class="type">float</span></span>
+         The translation along the Y axis.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCursor"></a>
+    <strong>getCursor ()</strong>
+    </dt>
+    <dd>
+    Return the screen location that is currently raycasted by the player in screen pixel coordinates as a (x, y) tuple.
+ Returns (-1, -1) if the current raycasted location is not inside the screen.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float,float</span></span>
+        The mouse (x, y) in pixels.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCursorDown"></a>
+    <strong>getCursorDown ()</strong>
+    </dt>
+    <dd>
+    Return true if the mouse cursor is currently pressed down on the screen, false otherwise.  Retains its state if
+ dragged out of the screen.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        True if the mouse is pressed on the screen, false otherwise.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCursorPressed"></a>
+    <strong>getCursorPressed ()</strong>
+    </dt>
+    <dd>
+    Return true if the mouse button changed from being released to being pressed at any point since the last update.
+ Note that it is possible for both getCursorPressed() and getCursorReleased() to return true in the same script
+ execution, if the mouse button was both pressed and released since the last execution.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        True if the mouse was pressed since the last update, false otherwise.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#getCursorReleased">getCursorReleased</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getCursorReleased"></a>
+    <strong>getCursorReleased ()</strong>
+    </dt>
+    <dd>
+    Return true if the mouse button changed from being pressed to being released at any point since the last update.
+ Note that it is possible for both getCursorPressed() and getCursorReleased() to return true in the same script
+ execution, if the mouse button was both pressed and released since the last execution.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        True if the mouse was released since the last update, false otherwise.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#getCursorPressed">getCursorPressed</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getDeltaTime"></a>
+    <strong>getDeltaTime ()</strong>
+    </dt>
+    <dd>
+    Returns the time, in seconds, since the screen was last updated.  Useful for timing-based animations, since screens
+ are not guaranteed to be updated at any specific time interval, it is more reliable to update animations based on
+ this timer than based on a frame counter.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        Time since last refresh in seconds.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getTime"></a>
+    <strong>getTime ()</strong>
+    </dt>
+    <dd>
+    Returns the time, in seconds, relative to the first execution.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        Time, in seconds, since the render script started running.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getLocale"></a>
+    <strong>getLocale ()</strong>
+    </dt>
+    <dd>
+    Return the locale in which the game is currently running.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The locale, currently one of "en-US", "fr-FR", or "de-DE".
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getRenderCost"></a>
+    <strong>getRenderCost ()</strong>
+    </dt>
+    <dd>
+    Return the current render cost of the script thus far, used to profile the performance of a screen.  This can be
+ used to abort further render instructions when close to the render maximum preventing the screen from shutting down.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The current render cost.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getRenderCostMax"></a>
+    <strong>getRenderCostMax ()</strong>
+    </dt>
+    <dd>
+    Return the maximum render cost limit.  When a script exceeds this render cost in one execution, an error will be
+ thrown and the contents will fail to render.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The render cost limit.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getResolution"></a>
+    <strong>getResolution ()</strong>
+    </dt>
+    <dd>
+    Return the current viewport resolution as a (width, height) tuple.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int,int</span></span>
+        resolution The resolution in the form of (width, height).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "logMessage"></a>
+    <strong>logMessage (message)</strong>
+    </dt>
+    <dd>
+    Write message to the Lua chat if the output checkbox is checked.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">message</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The message to print.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "loadImage"></a>
+    <strong>loadImage (path)</strong>
+    </dt>
+    <dd>
+    Return an image handle that can be used with <a href="../modules/renderScript.html#addImage">addImage</a>.  If the image is not yet loaded, a sentinel value will be
+ returned that will cause addImage to fail silently, so that the rendered image will not appear until it is loaded.
+ Only images that have gone through image validation are available.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">path</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The path to the image to load.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The handle to the newly loaded image.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#addImage">addImage</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "isImageLoaded"></a>
+    <strong>isImageLoaded (imageHandle)</strong>
+    </dt>
+    <dd>
+    Returns true if the given imageHandle is loaded.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">imageHandle</span>
+            <span class="types"><span class="type">int</span></span>
+         An image handle provided by loadImage.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        True if loaded, false otherwise.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#loadImage">loadImage</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getImageSize"></a>
+    <strong>getImageSize (image)</strong>
+    </dt>
+    <dd>
+    Returns the width and height of an image.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">image</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the image to query.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float,float</span></span>
+        A tuple containing the width and height, respectively, of the image, or (0, 0) if the image is
+   not yet loaded.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAvailableFontCount"></a>
+    <strong>getAvailableFontCount ()</strong>
+    </dt>
+    <dd>
+    Returns the number of fonts available to be used by render script.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The total number of fonts available.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAvailableFontName"></a>
+    <strong>getAvailableFontName (index)</strong>
+    </dt>
+    <dd>
+    Returns the name of the nth available font.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">index</span>
+            <span class="types"><span class="type">int</span></span>
+         A number between 1 and the return value of <a href="../modules/renderScript.html#getAvailableFontCount">getAvailableFontCount</a>.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The name of the font, which can be used with the <a href="../modules/renderScript.html#loadFont">loadFont</a> function.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "loadFont"></a>
+    <strong>loadFont (name, size)</strong>
+    </dt>
+    <dd>
+    Return a font handle that can be used with <a href="../modules/renderScript.html#addText">addText</a>.  If the font is not yet loaded, a sentinel value will be
+ returned that will cause addText to fail silently, so that the rendered text will not appear until the font is
+ loaded.
+<p> Name must be one of the following currently-available fonts:
+ <ul>
+   <li>FiraMono</li>
+   <li>FiraMono-Bold</li>
+   <li>Montserrat</li>
+   <li>Montserrat-Light</li>
+   <li>Montserrat-Bold</li>
+   <li>Play</li>
+   <li>Play-Bold</li>
+   <li>RefrigeratorDeluxe</li>
+   <li>RefrigeratorDeluxe-Light</li>
+   <li>RobotoCondensed</li>
+   <li>RobotoMono</li>
+   <li>RobotoMono-Bold</li>
+ </ul>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The name of the font to load, chosen from the above list.
+        </li>
+        <li><span class="parameter">size</span>
+            <span class="types"><span class="type">float</span></span>
+         The size, in vertical pixels, at which the font will render. Note that this size can be changed
+   during script execution with the <a href="../modules/renderScript.html#setFontSize">setFontSize</a> function.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The id that can be used to uniquely identify the font for use with other API functions.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#addText">addText</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "isFontLoaded"></a>
+    <strong>isFontLoaded (font)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Returns true if the given font is loaded.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">font</span>
+            <span class="types"><span class="type">int</span></span>
+         A font handle provided by load font.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        True if loaded, false otherwise.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#loadFont">loadFont</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getTextBounds"></a>
+    <strong>getTextBounds (font, text)</strong>
+    </dt>
+    <dd>
+    Compute and return the bounding box width and height of the given text in the given font as a (width, height)
+ tuple.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">font</span>
+            <span class="types"><span class="type">int</span></span>
+         A font handle provided by load font.
+        </li>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The text to calculate bounds for.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float,float</span></span>
+        The text bounds as (width, height) in pixels.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#loadFont">loadFont</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getFontMetrics"></a>
+    <strong>getFontMetrics (font)</strong>
+    </dt>
+    <dd>
+    Compute and return the ascender and descender height of given font.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">font</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the font to query.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float,float</span></span>
+        A tuple containing the maximal ascender and descender, respectively, of the given font.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#loadFont">loadFont</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getFontSize"></a>
+    <strong>getFontSize (font)</strong>
+    </dt>
+    <dd>
+    Return the currently-set size for the given font.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">font</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the font to query.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The font size in vertical pixels.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setFontSize"></a>
+    <strong>setFontSize (font, size)</strong>
+    </dt>
+    <dd>
+    Set the size at which a font will render.  Impacts all subsequent font-related calls, including <a href="../modules/renderScript.html#addText">addText</a>, <a href="../modules/renderScript.html#getFontMetrics">getFontMetrics</a>, and <a href="../modules/renderScript.html#getTextBounds">getTextBounds</a>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">font</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the font for which the size will be set.
+        </li>
+        <li><span class="parameter">size</span>
+            <span class="types"><span class="type">int</span></span>
+         The new size, in vertical pixels, at which the font will render.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "requestAnimationFrame"></a>
+    <strong>requestAnimationFrame (frames)</strong>
+    </dt>
+    <dd>
+    Notify the screen manager that this screen should be redrawn in frames frames.  A screen that requires highly-fluid
+ animations should thus call requestAnimationFrame(1) before it returns.
+<p> Usage of this function has an obvious and significant performance impact on the screen unit system. Scripts should
+ try to request updates as infrequently as possible for their application. <u>A screen with unchanging (static)
+ contents should not call this function at all.</u>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">frames</span>
+            <span class="types"><span class="type">int</span></span>
+         The number of frames to wait before redrawing the screen.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setBackgroundColor"></a>
+    <strong>setBackgroundColor (r, g, b)</strong>
+    </dt>
+    <dd>
+    Set the background color of the screen as red (r), green (g), blue (b) in the range [0, 1].
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">r</span>
+            <span class="types"><span class="type">float</span></span>
+         The red component, between 0 and 1.
+        </li>
+        <li><span class="parameter">g</span>
+            <span class="types"><span class="type">float</span></span>
+         The green component, between 0 and 1.
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">float</span></span>
+         The blue component, between 0 and 1.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setDefaultFillColor"></a>
+    <strong>setDefaultFillColor (layer, shapeType, r, g, b, a)</strong>
+    </dt>
+    <dd>
+    Set the default fill color for all shapeType on layer.  Red (r), green (g), blue (b), and alpha (a) components are
+ specified, respectively, in the range [0, 1]. Has no effect on shapes that don't support the fillColor property.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer for which the default will be set.
+        </li>
+        <li><span class="parameter">shapeType</span>
+            <span class="types"><span class="type">int</span></span>
+         The type of <a href="../modules/renderScript.html#Shape">Shape</a> to which the default will apply.
+        </li>
+        <li><span class="parameter">r</span>
+            <span class="types"><span class="type">float</span></span>
+         The red component, between 0 and 1.
+        </li>
+        <li><span class="parameter">g</span>
+            <span class="types"><span class="type">float</span></span>
+         The green component, between 0 and 1.
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">float</span></span>
+         The blue component, between 0 and 1.
+        </li>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">float</span></span>
+         The alpha component, between 0 and 1.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#Shape">Shape</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "setDefaultRotation"></a>
+    <strong>setDefaultRotation (layer, shapeType, radians)</strong>
+    </dt>
+    <dd>
+    Set the default rotation for all shapeType on layer.  Rotation is specified in CCW radians radians. Has no effect
+ on shapes that don't support the rotation property.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer for which the default will be set.
+        </li>
+        <li><span class="parameter">shapeType</span>
+            <span class="types"><span class="type">int</span></span>
+         The type of <a href="../modules/renderScript.html#Shape">Shape</a> to which the default will apply.
+        </li>
+        <li><span class="parameter">radians</span>
+            <span class="types"><span class="type">float</span></span>
+         Rotation, in radians; positive is counter-clockwise, negative is clockwise.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#Shape">Shape</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "setDefaultShadow"></a>
+    <strong>setDefaultShadow (layer, shapeType, radius, r, g, b, a)</strong>
+    </dt>
+    <dd>
+    Set the default shadow for all shapeType on layer with size radius.  Red (r), green (g), blue (b), and alpha (a)
+ components are specified, respectively, in the range [0, 1]. Has no effect on shapes that don't support the shadow
+ property.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer for which the default will be set.
+        </li>
+        <li><span class="parameter">shapeType</span>
+            <span class="types"><span class="type">int</span></span>
+         The type of <a href="../modules/renderScript.html#Shape">Shape</a> to which the default will apply.
+        </li>
+        <li><span class="parameter">radius</span>
+            <span class="types"><span class="type">float</span></span>
+         The distance that the shadow extends from the shape's border.
+        </li>
+        <li><span class="parameter">r</span>
+            <span class="types"><span class="type">float</span></span>
+         The red component, between 0 and 1.
+        </li>
+        <li><span class="parameter">g</span>
+            <span class="types"><span class="type">float</span></span>
+         The green component, between 0 and 1.
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">float</span></span>
+         The blue component, between 0 and 1.
+        </li>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">float</span></span>
+         The alpha component, between 0 and 1.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#Shape">Shape</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "setDefaultStrokeColor"></a>
+    <strong>setDefaultStrokeColor (layer, shapeType, r, g, b, a)</strong>
+    </dt>
+    <dd>
+    Set the default stroke color for all shapeType on layer.  Red (r), green (g), blue (b), and alpha (a) components are
+ specified, respectively, in the range [0, 1]. Has no effect on shapes that don't support the strokeColor property.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer for which the default will be set.
+        </li>
+        <li><span class="parameter">shapeType</span>
+            <span class="types"><span class="type">int</span></span>
+         The shape to apply this default to. Must be a built in constant from <a href="../modules/renderScript.html#Shape">Shape</a>.
+        </li>
+        <li><span class="parameter">r</span>
+            <span class="types"><span class="type">float</span></span>
+         The red component, between 0 and 1.
+        </li>
+        <li><span class="parameter">g</span>
+            <span class="types"><span class="type">float</span></span>
+         The green component, between 0 and 1.
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">float</span></span>
+         The blue component, between 0 and 1.
+        </li>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">float</span></span>
+         The alpha component, between 0 and 1.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#Shape">Shape</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "setDefaultStrokeWidth"></a>
+    <strong>setDefaultStrokeWidth (layer, shapeType, width)</strong>
+    </dt>
+    <dd>
+    Set the default stroke width for all shapeType on layer.  Width is specified in pixels. Positive values produce an
+ outer stroke, while negative values produce an inner stroke. Has no effect on shapes that don't support the
+ strokeWidth property.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer for which the default will be set.
+        </li>
+        <li><span class="parameter">shapeType</span>
+            <span class="types"><span class="type">int</span></span>
+         The type of <a href="../modules/renderScript.html#Shape">Shape</a> to which the default will apply.
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">float</span></span>
+         Stroke width, in pixels.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#Shape">Shape</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "setDefaultTextAlign"></a>
+    <strong>setDefaultTextAlign (layer, alignH, alignV)</strong>
+    </dt>
+    <dd>
+    Set the default text alignment of all subsequent text strings on the given layer.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer for which the default will be set.
+        </li>
+        <li><span class="parameter">alignH</span>
+            <span class="types"><span class="type">int</span></span>
+         Controls the horizontal alignment of a text shape relative to the draw coordinates. Must be a
+   built in constant from <a href="../modules/renderScript.html#AlignH">AlignH</a>.
+        </li>
+        <li><span class="parameter">alignV</span>
+            <span class="types"><span class="type">int</span></span>
+         Controls the vertical alignment of a text shape relative to the draw coordinates. Must be a built
+   in constant from <a href="../modules/renderScript.html#AlignV">AlignV</a>.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../modules/renderScript.html#AlignH">AlignH</a></li>
+         <li><a href="../modules/renderScript.html#AlignV">AlignV</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "setNextFillColor"></a>
+    <strong>setNextFillColor (layer, r, g, b, a)</strong>
+    </dt>
+    <dd>
+    Set the fill color of the next rendered shape on layer.  Red (r), green (g), blue (b), and alpha (a) components are
+ specified, respectively, in the range [0, 1]. Has no effect on shapes that don't support the fillColor property.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The handle for the layer to apply this property to.
+        </li>
+        <li><span class="parameter">r</span>
+            <span class="types"><span class="type">float</span></span>
+         The red component, between 0 and 1.
+        </li>
+        <li><span class="parameter">g</span>
+            <span class="types"><span class="type">float</span></span>
+         The green component, between 0 and 1.
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">float</span></span>
+         The blue component, between 0 and 1.
+        </li>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">float</span></span>
+         The alpha component, between 0 and 1.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setNextRotation"></a>
+    <strong>setNextRotation (layer, radians)</strong>
+    </dt>
+    <dd>
+    Set the rotation of the next rendered shape on layer.  Rotation is specified in CCW radians. Has no effect on shapes
+ that don't support the rotation property.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The handle for the layer to apply this property to.
+        </li>
+        <li><span class="parameter">radians</span>
+            <span class="types"><span class="type">float</span></span>
+         The angle (in radians) to rotate by.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#setNextRotationDegrees">setNextRotationDegrees</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "setNextRotationDegrees"></a>
+    <strong>setNextRotationDegrees (layer, degrees)</strong>
+    </dt>
+    <dd>
+    Set the rotation of the next rendered shape on layer.  Rotation is specified in CCW degrees. Has no effect on shapes
+ that don't support the rotation property.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The handle for the layer to apply this property to.
+        </li>
+        <li><span class="parameter">degrees</span>
+            <span class="types"><span class="type">float</span></span>
+         The angle (in degrees) to rotate by.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/renderScript.html#setNextRotation">setNextRotation</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "setNextShadow"></a>
+    <strong>setNextShadow (layer, radius, r, g, b, a)</strong>
+    </dt>
+    <dd>
+    Set the shadow of the next rendered shape on layer with size radius.  Red (r), green (g), blue (b), and alpha (a)
+ components are specified, respectively, in the range [0, 1]. Has no effect on shapes that don't support the shadow
+ property.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The handle for the layer to apply this property to.
+        </li>
+        <li><span class="parameter">radius</span>
+            <span class="types"><span class="type">float</span></span>
+         The radius of the shadow.
+        </li>
+        <li><span class="parameter">r</span>
+            <span class="types"><span class="type">float</span></span>
+         The red component, between 0 and 1.
+        </li>
+        <li><span class="parameter">g</span>
+            <span class="types"><span class="type">float</span></span>
+         The green component, between 0 and 1.
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">float</span></span>
+         The blue component, between 0 and 1.
+        </li>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">float</span></span>
+         The alpha component, between 0 and 1.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setNextStrokeColor"></a>
+    <strong>setNextStrokeColor (layer, r, g, b, a)</strong>
+    </dt>
+    <dd>
+    Set the stroke color of the next rendered shape on layer.  Red (r), green (g), blue (b), and alpha (a) components
+ are specified, respectively, in the range [0, 1].
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The handle for the layer to apply this property to.
+        </li>
+        <li><span class="parameter">r</span>
+            <span class="types"><span class="type">float</span></span>
+         The red component, between 0 and 1.
+        </li>
+        <li><span class="parameter">g</span>
+            <span class="types"><span class="type">float</span></span>
+         The green component, between 0 and 1.
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">float</span></span>
+         The blue component, between 0 and 1.
+        </li>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">float</span></span>
+         The alpha component, between 0 and 1.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setNextStrokeWidth"></a>
+    <strong>setNextStrokeWidth (layer, width)</strong>
+    </dt>
+    <dd>
+    Set the stroke width of the next rendered shape on layer.  Width is specified in pixels. Positive values produce an
+ outer stroke, while negative values produce an inner stroke. Has no effect on shapes that don't support the
+ strokeWidth property.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The handle for the layer to apply this property to.
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">float</span></span>
+         The width of the stroke in pixels.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setNextTextAlign"></a>
+    <strong>setNextTextAlign (layer, alignH, alignV)</strong>
+    </dt>
+    <dd>
+    Set the next text alignment for the next rendered shape on layer.
+<p> Note that there is a subtle difference between AlignV_Ascender/AlignV_Descender and AlignV_Top/AlignV_Bottom: the
+ ascender and descender alignment modes anchor a text string to a global top/bottom position of the font, while the
+ top and bottom alignment modes anchor a text string relative to its own bounding box. Thus, while top/bottom are
+ useful for aligning individual text strings with high precision, they depend on the contents of the text string that
+ is rendered. On the other hand, ascender/descender align text in such a way that the alignment will not change
+ depending on the text string. The correct choice will depend on your specific use case and needs.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the layer to apply this property to.
+        </li>
+        <li><span class="parameter">alignH</span>
+            <span class="types"><span class="type">int</span></span>
+         Controls the horizontal alignment of a text shape relative to the draw coordinates. Must be a
+   built in constant from <a href="../modules/renderScript.html#AlignH">AlignH</a>.
+        </li>
+        <li><span class="parameter">alignV</span>
+            <span class="types"><span class="type">int</span></span>
+         Controls the vertical alignment of a text shape relative to the draw coordinates. Must be a built
+   in constant from <a href="../modules/renderScript.html#AlignV">AlignV</a>.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../modules/renderScript.html#AlignH">AlignH</a></li>
+         <li><a href="../modules/renderScript.html#AlignV">AlignV</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getInput"></a>
+    <strong>getInput ()</strong>
+    </dt>
+    <dd>
+    Return a string of input data (or an empty string, if no input has been set) that can be set via a control unit
+ with the screen unit API function screen.setScriptInput(inputString).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The input string set by the control unit.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#setScriptInput">ScreenUnit:setScriptInput</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "setOutput"></a>
+    <strong>setOutput (outputString)</strong>
+    </dt>
+    <dd>
+    Set the script's output string to outputString, which can be retrieved via a control unit with the screen unit API
+ function screen.getScriptOuput()
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">outputString</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The string to output to the control unit.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#getScriptOutput">ScreenUnit:getScriptOutput</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "rawget"></a>
+    <strong>rawget ()</strong>
+    </dt>
+    <dd>
+    Unknown use.
+<p> Note: This method is not documented in the codex.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "rawset"></a>
+    <strong>rawset ()</strong>
+    </dt>
+    <dd>
+    Unknown use.
+<p> Note: This method is not documented in the codex.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "rawequal"></a>
+    <strong>rawequal ()</strong>
+    </dt>
+    <dd>
+    Unknown use.
+<p> Note: This method is not documented in the codex.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mockGetEnvironment"></a>
+    <strong>mockGetEnvironment ()</strong>
+    </dt>
+    <dd>
+    Mock only, not in-game: Bundles the object into an environment that can be used to override the base environment
+ (_ENV) so that all methods are called directly against this object.  It is recommended that you store your current
+ environment reference prior to overriding it so that it can be restored.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A table containing all calls available from within a screen render script.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Shape"></a>
+    <strong>Shape</strong>
+    </dt>
+    <dd>
+    Shape constants for shapeType.  Used to set default properties by shape.
+<p> Note: These are constants defined directly in the screen renderer, the grouping in a table is for documentation
+ purposes only.
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">Shape_Bezier</span>
+
+        </li>
+        <li><span class="parameter">Shape_Box</span>
+
+        </li>
+        <li><span class="parameter">Shape_BoxRounded</span>
+
+        </li>
+        <li><span class="parameter">Shape_Circle</span>
+
+        </li>
+        <li><span class="parameter">Shape_Image</span>
+
+        </li>
+        <li><span class="parameter">Shape_Line</span>
+
+        </li>
+        <li><span class="parameter">Shape_Polygon</span>
+
+        </li>
+        <li><span class="parameter">Shape_Text</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AlignH"></a>
+    <strong>AlignH</strong>
+    </dt>
+    <dd>
+    Horizontal alignment constants for alignH.  Used by <a href="../modules/renderScript.html#setNextTextAlign">setNextTextAlign</a>.
+<p> Note: These are constants defined directly in the screen renderer, the grouping in a table is for documentation
+ purposes only.
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">AlignH_Left</span>
+
+        </li>
+        <li><span class="parameter">AlignH_Center</span>
+
+        </li>
+        <li><span class="parameter">AlignH_Right</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AlignV"></a>
+    <strong>AlignV</strong>
+    </dt>
+    <dd>
+    Vertical alignment constants for alignV.  Used by <a href="../modules/renderScript.html#setNextTextAlign">setNextTextAlign</a>.
+<p> Note: These are constants defined directly in the screen renderer, the grouping in a table is for documentation
+ purposes only.
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">AlignV_Ascender</span>
+
+        </li>
+        <li><span class="parameter">AlignV_Top</span>
+
+        </li>
+        <li><span class="parameter">AlignV_Middle</span>
+
+        </li>
+        <li><span class="parameter">AlignV_Baseline</span>
+
+        </li>
+        <li><span class="parameter">AlignV_Bottom</span>
+
+        </li>
+        <li><span class="parameter">AlignV_Descender</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-05-27 15:21:46 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
