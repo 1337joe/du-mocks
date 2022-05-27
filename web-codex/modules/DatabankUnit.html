@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>DU Mocks</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><strong>DatabankUnit</strong></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>DatabankUnit</code></h1>
+<p>Stores key/value pairs in a persistent way.</p>
+<p>
+<p> Storage capacity: 30 kB
+<p> Element class: DataBankUnit
+<p> Extends: Element</p>
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#">Element</a>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#clear">clear ()</a></td>
+	<td class="summary">Clear the data bank.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getNbKeys">getNbKeys ()</a></td>
+	<td class="summary">Returns the number of keys that are stored inside the data bank.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getKeys">getKeys ()</a></td>
+	<td class="summary">Returns all the keys in the data bank.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#hasKey">hasKey (key)</a></td>
+	<td class="summary">Returns 1 if the key is present in the databank, 0 otherwise.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setStringValue">setStringValue (key, val)</a></td>
+	<td class="summary">Stores a string value at the given key.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getStringValue">getStringValue (key)</a></td>
+	<td class="summary">Returns value stored in the given key as a string.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setIntValue">setIntValue (key, val)</a></td>
+	<td class="summary">Stores an integer value at the given key.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getIntValue">getIntValue (key)</a></td>
+	<td class="summary">Returns value stored in the given key as an integer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setFloatValue">setFloatValue (key, val)</a></td>
+	<td class="summary">Stores a floating number value at the given key.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getFloatValue">getFloatValue (key)</a></td>
+	<td class="summary">Returns value stored in the given key as a floating number.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "clear"></a>
+    <strong>clear ()</strong>
+    </dt>
+    <dd>
+    Clear the data bank.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getNbKeys"></a>
+    <strong>getNbKeys ()</strong>
+    </dt>
+    <dd>
+    Returns the number of keys that are stored inside the data bank.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The number of keys.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getKeys"></a>
+    <strong>getKeys ()</strong>
+    </dt>
+    <dd>
+    Returns all the keys in the data bank.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">json</span></span>
+        The key list, as JSON sequence.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "hasKey"></a>
+    <strong>hasKey (key)</strong>
+    </dt>
+    <dd>
+    Returns 1 if the key is present in the databank, 0 otherwise.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        1 if the key exists and 0 otherwise
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setStringValue"></a>
+    <strong>setStringValue (key, val)</strong>
+    </dt>
+    <dd>
+    Stores a string value at the given key.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The key used to store the value.
+        </li>
+        <li><span class="parameter">val</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The value, as a string.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getStringValue"></a>
+    <strong>getStringValue (key)</strong>
+    </dt>
+    <dd>
+    Returns value stored in the given key as a string.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The key used to retrieve the value.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The value as a string.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setIntValue"></a>
+    <strong>setIntValue (key, val)</strong>
+    </dt>
+    <dd>
+    Stores an integer value at the given key.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The key used to store the value.
+        </li>
+        <li><span class="parameter">val</span>
+            <span class="types"><span class="type">int</span></span>
+         The value, as an integer.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getIntValue"></a>
+    <strong>getIntValue (key)</strong>
+    </dt>
+    <dd>
+    Returns value stored in the given key as an integer.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The key used to retrieve the value.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The value as an integer.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setFloatValue"></a>
+    <strong>setFloatValue (key, val)</strong>
+    </dt>
+    <dd>
+    Stores a floating number value at the given key.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The key used to store the value.
+        </li>
+        <li><span class="parameter">val</span>
+            <span class="types"><span class="type">float</span></span>
+         The value, as a floating number.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getFloatValue"></a>
+    <strong>getFloatValue (key)</strong>
+    </dt>
+    <dd>
+    Returns value stored in the given key as a floating number.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The key used to retrieve the value.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The value as a floating number.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-05-27 15:19:39 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

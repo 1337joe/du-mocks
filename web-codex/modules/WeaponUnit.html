@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>DU Mocks</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><strong>WeaponUnit</strong></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>WeaponUnit</code></h1>
+<p>A unit capable of doing damage in construct PVP.</p>
+<p>
+<p> Element class: Weapon<Type><Size>
+<p> Extends: Element</p>
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#">Element</a>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#getData">getData ()</a></td>
+	<td class="summary">Get element data as JSON.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "getData"></a>
+    <strong>getData ()</strong>
+    </dt>
+    <dd>
+    Get element data as JSON.
+<p> Weapons have a <code>weapon</code> widget, which contains the following fields (bold fields are visible when making
+ custom use of the widget):
+ <ul>
+   <li><b><span class="parameter">properties</span></b> (<span class="type">table</span>) Current weapon properties.
+     <ul>
+       <li><b><span class="parameter">ammoCount</span></b> (<span class="type">int</span>) Remaining ammo. Not present while reloading.</li>
+       <li><b><span class="parameter">ammoMax</span></b> (<span class="type">int</span>) Max capacity for current ammo. Not present while reloading.</li>
+       <li><b><span class="parameter">ammoName</span></b> (<span class="type">int</span>) Name of current ammo.</li>
+       <li><span class="parameter">ammoTypeId</span> (<span class="type">int</span>) Type id of current ammo.</li>
+       <li><b><span class="parameter">cycleAnimationRemainingTime</span></b> (<span class="type">float</span>) Remaining time for current action (s), only appears to affect status codes 3 and 4.</li>
+       <li><span class="parameter">fireBlocked</span> (<span class="type">boolean</span>) Indicates weapon is blocked (?).</li>
+       <li><span class="parameter">fireCounter</span> (<span class="type">int</span>) Number of shots fired (?).</li>
+       <li><span class="parameter">fireReady</span> (<span class="type">boolean</span>) Indicates weapon is ready to fire (?).</li>
+       <li><span class="parameter">hitProbability</span> (<span class="type">float</span>) Likelyhood of hitting target (?).</li>
+       <li><span class="parameter">hitResult</span> (<span class="type">int</span>) (?).</li>
+       <li><span class="parameter">operationalStatus</span> (<span class="type">int</span>) (?).</li>
+       <li><span class="parameter">outOfZone</span> (<span class="type">boolean</span>) Indicates out of PVP zone (?).</li>
+       <li><span class="parameter">repeatedFire</span> (<span class="type">boolean</span>) Indicates weapon will fire repeatedly (?).</li>
+       <li><b><span class="parameter">weaponStatus</span></b> (<span class="type">int</span>) Status code:
+         <ul>
+           <li><b>0</b>: No animation in progress.</li>
+           <li><b>1</b>: Firing(?).</li>
+           <li><b>2</b>: (?)</li>
+           <li><b>3</b>: Loading/Reloading(?) ammo.</li>
+           <li><b>4</b>: Unloading ammo.</li>
+         </ul></li>
+     </ul></li>
+   <li><span class="parameter">staticProperties</span> (<span class="type">table</span>) Weapon attributes.
+     <ul>
+       <li><span class="parameter">baseDamage</span> (<span class="type">float</span>) Weapon base damage.</li>
+       <li><span class="parameter">optimalAimingCone</span> (<span class="type">float</span>) Optimal aim cone (deg).</li>
+       <li><span class="parameter">optimalDistance</span> (<span class="type">float</span>) Optimal distance (m).</li>
+       <li><span class="parameter">optimalTracking</span> (<span class="type">float</span>) Optimal tracking rate (deg/s).</li>
+       <li><span class="parameter">magazineVolume</span> (<span class="type">float</span>) Magazine volume (L).</li>
+       <li><span class="parameter">cycleTime</span> (<span class="type">float</span>) Weapon rate of fire (s).</li>
+       <li><span class="parameter">reloadTime</span> (<span class="type">float</span>) Weapon reload time (s).</li>
+       <li><span class="parameter">unloadTime</span> (<span class="type">float</span>) Weapon unload time (s).</li>
+       <li><span class="parameter">size</span> (<span class="type">float</span>) Weapon cycle time (s).</li>
+     </ul></li>
+   <li><b><span class="parameter">targetConstruct</span></b> (<span class="type">table</span>) Target attributes.
+     <ul>
+       <li><b><span class="parameter">name</span></b> (<span class="type">string</span>) Name of target, will be blank if not provided.</li>
+       <li><span class="parameter">constructId</span> (<span class="type">int</span>) Id of target.</li>
+     </ul></li>
+   <li><b><span class="parameter">name</span></b> (<span class="type">string</span>) The name of the element.</li>
+   <li><span class="parameter">elementId</span> (<span class="type">int</span>) The (globally unique?) id of the
+     weapon element, may be related to linking the commands to the element.</li>
+   <li><span class="parameter">helperId</span> (<span class="type">string</span>) <code>weapon</code></li>
+   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>weapon</code></li>
+ </ul>
+<p> Descriptions of fields with a (?) are uncertain and need more testing.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        Data as JSON.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-05-27 15:19:39 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
