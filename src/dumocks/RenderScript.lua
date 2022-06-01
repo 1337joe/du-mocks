@@ -161,7 +161,7 @@
 local M = {
     resolution = {
         x = 1024,
-        y = 576,
+        y = 613,
     },
     renderCostMax = 4000000,
 }
@@ -219,11 +219,26 @@ function M:new(o)
     o.renderCost = 589824
 
     o.layers = {}
+    o.backgroundColor = {0, 0, 0}
 
+    o.locale = "en-US"
     o.input = ""
     o.output = ""
 
     return o
+end
+
+-- ---------------- --
+-- Helper Functions --
+-- ---------------- --
+
+-- Get the requested layer with error handling.
+local function getLayer(self, layer)
+    local layerRef = self.layers[layer]
+    if layerRef == nil then
+        error("invalid layer handle")
+    end
+    return layerRef
 end
 
 -- ------ --
@@ -252,6 +267,27 @@ end
 -- @tparam float width The width of the box in pixels.
 -- @tparam float height The height of the box in pixels.
 function M:addBox(layer, x, y, width, height)
+    local layerRef = getLayer(self, layer)
+    if layerRef.box == nil then
+        layerRef.box = {}
+    end
+    local layerBox = layerRef.box
+
+    local fillColor
+    if layerRef.nextFillColor ~= nil then
+        fillColor = layerRef.nextFillColor
+        layerRef.nextFillColor = nil
+    elseif layerRef.defaultFillColor[M.Shape.Shape_Box] ~= nil then
+        fillColor = layerRef.defaultFillColor[M.Shape.Shape_Box]
+    end
+
+    layerBox[#layerBox + 1] = {
+        x = x,
+        y = y,
+        width = width,
+        height = height,
+        fill = fillColor
+    }
 end
 
 --- Add a rectangle to the given layer with top-left corner (x,y) and dimensions width x height with each corner
@@ -366,7 +402,12 @@ end
 --- Create a new layer that will be rendered on top of all previously-created layers.
 -- @treturn int The id that can be used to uniquely identify the layer for use with other API functions.
 function M:createLayer()
-    return 0
+    self.layers[#self.layers + 1] = {
+        defaultFillColor = {
+            [M.Shape.Shape_Box] = {1, 1, 1, 1}
+        }
+    }
+    return #self.layers
 end
 
 --- Set a clipping rectangle applied to the layer as a whole. Layer contents that fall outside the clipping rectangle
@@ -461,7 +502,7 @@ end
 --- Return the locale in which the game is currently running.
 -- @treturn string The locale, currently one of "en-US", "fr-FR", or "de-DE".
 function M:getLocale()
-    return "en-US"
+    return self.locale
 end
 
 --- Return the current render cost of the script thus far, used to profile the performance of a screen. This can be
@@ -571,6 +612,7 @@ end
 function M:isFontLoaded(font)
     return false
 end
+
 --- Compute and return the bounding box width and height of the given text in the given font as a (width, height)
 -- tuple.
 -- @tparam int font A font handle provided by load font.
@@ -625,10 +667,12 @@ end
 -- @tparam float g The green component, between 0 and 1.
 -- @tparam float b The blue component, between 0 and 1.
 function M:setBackgroundColor(r, g, b)
+    self.backgroundColor = {r, g, b}
 end
 
 --- Set the default fill color for all shapeType on layer. Red (r), green (g), blue (b), and alpha (a) components are
 -- specified, respectively, in the range [0, 1]. Has no effect on shapes that don't support the fillColor property.
+-- Does not retroactively apply to already added shapes.
 -- @tparam int layer The id of the layer for which the default will be set.
 -- @tparam int shapeType The type of @{Shape} to which the default will apply.
 -- @tparam float r The red component, between 0 and 1.
@@ -637,6 +681,8 @@ end
 -- @tparam float a The alpha component, between 0 and 1.
 -- @see Shape
 function M:setDefaultFillColor(layer, shapeType, r, g, b, a)
+    local layerRef = getLayer(self, layer)
+    layerRef.defaultFillColor[shapeType] = {r, g, b, a}
 end
 
 --- Set the default rotation for all shapeType on layer. Rotation is specified in CCW radians radians. Has no effect
@@ -706,6 +752,8 @@ end
 -- @tparam float b The blue component, between 0 and 1.
 -- @tparam float a The alpha component, between 0 and 1.
 function M:setNextFillColor(layer, r, g, b, a)
+    local layerRef = getLayer(self, layer)
+    layerRef.nextFillColor = {r, g, b, a}
 end
 
 --- Set the rotation of the next rendered shape on layer. Rotation is specified in CCW radians. Has no effect on shapes
@@ -812,6 +860,37 @@ end
 --
 -- Note: This method is not documented in the codex.
 function M:rawequal()
+end
+
+local function colorToHex(r, g, b)
+    return string.format("#%02x%02x%02x", r * 255, g * 255, b * 255)
+end
+
+--- Mock only, not in-game: Generates an SVG image from the data provided to the renderer.
+-- @treturn string The SVG string.
+function M:mockGenerateSvg()
+    local svg = {}
+    svg[#svg + 1] = string.format([[<svg viewBox="0 0 %d %d" xmlns="http://www.w3.org/2000/svg">]], self.resolution.x, self.resolution.y)
+
+    svg[#svg + 1] = string.format([[    <rect width="100%%" height="100%%" fill="%s" />]],
+        colorToHex(table.unpack(self.backgroundColor, 1, 3)))
+
+    for _, layer in pairs(self.layers) do
+        svg[#svg + 1] = "    <g>"
+
+        if layer.box ~= nil then
+            for _, box in pairs(layer.box) do
+                svg[#svg + 1] =
+                    string.format([[        <rect x="%f" y="%f" width="%f" height="%f" fill="%s" opacity="%f" />]],
+                        box.x, box.y, box.width, box.height, colorToHex(table.unpack(box.fill, 1, 3)), box.fill[4])
+            end
+        end
+
+        svg[#svg + 1] = "    </g>"
+    end
+
+    svg[#svg + 1] = "</svg>"
+    return table.concat(svg, "\n")
 end
 
 --- Mock only, not in-game: Bundles the object into an environment that can be used to override the base environment
