@@ -248,21 +248,26 @@ local Property = {
     FillColor = {
         next = "nextFillColor",
         default = "defaultFillColor",
-        missing = {1, 1, 1, 1}
-    },
-    StrokeColor = {
-        next = "nextStrokeColor",
-        default = "defaultStrokeColor",
-        missing = {1, 1, 1, 1}
-    },
-    StrokeWidth = {
-        next = "nextStrokeWidth",
-        default = "defaultStrokeWidth",
-        missing = 0
+        missing = {1.0, 1.0, 1.0, 1.0}
     },
     Rotation = {
         next = "nextRotation",
         default = "defaultRotation",
+        missing = 0
+    },
+    Shadow = {
+        next = "nextShadow",
+        default = "defaultShadow",
+        missing = {0, 1.0, 1.0, 1.0, 1.0}
+    },
+    StrokeColor = {
+        next = "nextStrokeColor",
+        default = "defaultStrokeColor",
+        missing = {1.0, 1.0, 1.0, 1.0}
+    },
+    StrokeWidth = {
+        next = "nextStrokeWidth",
+        default = "defaultStrokeWidth",
         missing = 0
     }
 }
@@ -325,9 +330,10 @@ function M:addBox(layer, x, y, width, height)
         width = width,
         height = height,
         fillColor = getPropertyValue(layerRef, Property.FillColor, M.Shape.Shape_Box),
+        rotation = getPropertyValue(layerRef, Property.Rotation, M.Shape.Shape_Box),
+        shadow = getPropertyValue(layerRef, Property.Shadow, M.Shape.Shape_Box),
         strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_Box),
-        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Box),
-        rotation = getPropertyValue(layerRef, Property.Rotation, M.Shape.Shape_Box)
+        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Box)
     }
 end
 
@@ -355,9 +361,10 @@ function M:addBoxRounded(layer, x, y, width, height, radius)
         height = height,
         radius = radius,
         fillColor = getPropertyValue(layerRef, Property.FillColor, M.Shape.Shape_BoxRounded),
+        rotation = getPropertyValue(layerRef, Property.Rotation, M.Shape.Shape_BoxRounded),
+        shadow = getPropertyValue(layerRef, Property.Shadow, M.Shape.Shape_BoxRounded),
         strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_BoxRounded),
-        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_BoxRounded),
-        rotation = getPropertyValue(layerRef, Property.Rotation, M.Shape.Shape_Box)
+        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_BoxRounded)
     }
 end
 
@@ -379,9 +386,10 @@ function M:addCircle(layer, x, y, radius)
         x = x,
         y = y,
         radius = radius,
-        fillColor = getPropertyValue(layerRef, Property.FillColor, M.Shape.Shape_BoxRounded),
-        strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_BoxRounded),
-        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_BoxRounded)
+        fillColor = getPropertyValue(layerRef, Property.FillColor, M.Shape.Shape_Circle),
+        shadow = getPropertyValue(layerRef, Property.Shadow, M.Shape.Shape_Circle),
+        strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_Circle),
+        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Circle)
     }
 end
 
@@ -476,9 +484,10 @@ end
 function M:createLayer()
     self.layers[#self.layers + 1] = {
         defaultFillColor = {},
+        defaultRotation = {},
+        defaultShadow = {},
         defaultStrokeColor = {},
-        defaultStrokeWidth = {},
-        defaultRotation = {}
+        defaultStrokeWidth = {}
     }
     return #self.layers
 end
@@ -781,6 +790,8 @@ end
 -- @tparam float a The alpha component, between 0 and 1.
 -- @see Shape
 function M:setDefaultShadow(layer, shapeType, radius, r, g, b, a)
+    local layerRef = getLayer(self, layer)
+    layerRef.defaultShadow[shapeType] = {radius, r, g, b, a}
 end
 
 --- Set the default stroke color for all shapeType on layer. Red (r), green (g), blue (b), and alpha (a) components are
@@ -865,6 +876,8 @@ end
 -- @tparam float b The blue component, between 0 and 1.
 -- @tparam float a The alpha component, between 0 and 1.
 function M:setNextShadow(layer, radius, r, g, b, a)
+    local layerRef = getLayer(self, layer)
+    layerRef.nextShadow = {radius, r, g, b, a}
 end
 
 --- Set the stroke color of the next rendered shape on layer. Red (r), green (g), blue (b), and alpha (a) components
@@ -949,8 +962,13 @@ end
 function M:rawequal()
 end
 
-local function colorToHex(r, g, b)
-    return string.format("#%02x%02x%02x", math.floor(r * 255), math.floor(g * 255), math.floor(b * 255))
+local function colorToHex(r, g, b, a)
+    local alpha = ""
+    if a then
+        alpha = string.format("%02x", math.floor(a * 255))
+    end
+
+    return string.format("#%02x%02x%02x%s", math.floor(r * 255), math.floor(g * 255), math.floor(b * 255), alpha)
 end
 
 local function getFillString(shape)
@@ -963,6 +981,34 @@ local function getFillString(shape)
 
     return string.format([[ fill="%s"%s]],
         colorToHex(table.unpack(fillColor, 1, 3)), opacity)
+end
+
+local function getRotationString(shape, shapeType)
+    local rotationDeg = shape.rotation
+    if rotationDeg % (2 * math.pi) == 0 then
+        return ""
+    end
+
+    local cx, cy
+    if shapeType == M.Shape.Shape_Box or
+       shapeType == M.Shape.Shape_BoxRounded
+       then
+        cx = shape.x + shape.width / 2
+        cy = shape.y + shape.height / 2
+    end
+
+    return string.format([[ transform="rotate(%f %f %f)"]],
+        rotationDeg, cx, cy)
+end
+
+local function getShadowString(shape)
+    local radius, shadowColor = shape.shadow[1], {table.unpack(shape.shadow, 2)}
+    if radius == 0 or shadowColor[4] == 0 then
+        return ""
+    end
+
+    return string.format([[ style="filter: drop-shadow( 0 0 %fpx %s)"]],
+        radius / 2, colorToHex(table.unpack(shadowColor)))
 end
 
 local function getStrokeString(shape)
@@ -981,23 +1027,6 @@ local function getStrokeString(shape)
         strokeWidth, colorToHex(table.unpack(strokeColor, 1, 3)), opacity)
 end
 
-local function getRotationString(shape, shapeType)
-    local rotationDeg = shape.rotation
-    if rotationDeg % (2 * math.pi) == 0 then
-        return ""
-    end
-
-    local cx, cy
-    if shapeType == M.Shape.Shape_Box or
-       shapeType == M.Shape.Shape_BoxRounded
-       then
-        cx = shape.x + shape.width / 2
-        cy = shape.y + shape.height / 2
-    end
-
-    return string.format([[ transform="rotate(%f %f %f)"]], rotationDeg, cx, cy)
-end
-
 --- Mock only, not in-game: Generates an SVG image from the data provided to the renderer.
 -- @treturn string The SVG string.
 function M:mockGenerateSvg()
@@ -1007,42 +1036,45 @@ function M:mockGenerateSvg()
     svg[#svg + 1] = string.format([[    <rect width="100%%" height="100%%" fill="%s" />]],
         colorToHex(table.unpack(self.backgroundColor, 1, 3)))
 
-    local fillString, strokeString, rotationString
+    local fillString, rotationString, shadowString, strokeString
     for _, layer in pairs(self.layers) do
         svg[#svg + 1] = [[    <g stroke-linejoin="round">]]
 
         if layer.box then
             for _, shape in pairs(layer.box) do
                 fillString = getFillString(shape)
-                strokeString = getStrokeString(shape)
                 rotationString = getRotationString(shape, M.Shape.Shape_Box)
+                shadowString = getShadowString(shape)
+                strokeString = getStrokeString(shape)
                 svg[#svg + 1] =
-                    string.format([[        <rect x="%f" y="%f" width="%f" height="%f"%s%s%s />]],
+                    string.format([[        <rect x="%f" y="%f" width="%f" height="%f"%s%s%s%s />]],
                         shape.x, shape.y, shape.width, shape.height,
-                        fillString, strokeString, rotationString)
+                        fillString, rotationString, shadowString, strokeString)
             end
         end
 
         if layer.boxRounded then
             for _, shape in pairs(layer.boxRounded) do
                 fillString = getFillString(shape)
-                strokeString = getStrokeString(shape)
                 rotationString = getRotationString(shape, M.Shape.Shape_BoxRounded)
+                shadowString = getShadowString(shape)
+                strokeString = getStrokeString(shape)
                 svg[#svg + 1] =
-                    string.format([[        <rect x="%f" y="%f" width="%f" height="%f" rx="%f" ry="%f"%s%s%s />]],
+                    string.format([[        <rect x="%f" y="%f" width="%f" height="%f" rx="%f" ry="%f"%s%s%s%s />]],
                         shape.x, shape.y, shape.width, shape.height, shape.radius, shape.radius,
-                        fillString, strokeString, rotationString)
+                        fillString, rotationString, shadowString, strokeString)
             end
         end
 
         if layer.circle then
             for _, shape in pairs(layer.circle) do
                 fillString = getFillString(shape)
+                shadowString = getShadowString(shape)
                 strokeString = getStrokeString(shape)
                 svg[#svg + 1] =
-                    string.format([[        <circle cx="%f" cy="%f" r="%f"%s%s />]],
+                    string.format([[        <circle cx="%f" cy="%f" r="%f"%s%s%s />]],
                         shape.x, shape.y, shape.radius,
-                        fillString, strokeString)
+                        fillString, shadowString, strokeString)
             end
         end
 
