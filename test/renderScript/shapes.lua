@@ -10,13 +10,13 @@ local xRes, yRes = getResolution()
 local ROW_COUNT = 4
 local SHAPE_COUNT = 9
 local COLOR_SEQUENCE = {
-    {1, 0, 0, 1},
-    {0, 1, 0, 1},
-    {0, 0, 1, 1},
-    {0, 1, 1, 1},
-    {1, 0, 1, 1},
-    {1, 1, 0, 1},
-    {0.5, 0.5, 0.5, 1},
+    {1, 0, 0},
+    {0, 1, 0},
+    {0, 0, 1},
+    {0, 1, 1},
+    {1, 0, 1},
+    {1, 1, 0},
+    {0.5, 0.5, 0.5},
 }
 
 local size = math.min(yRes / ROW_COUNT / 2, xRes / SHAPE_COUNT / 2)
@@ -52,31 +52,46 @@ local function drawText(x, y)
     addText(layer, font, "E", x, y + size)
 end
 
+local function addAlpha(index, alpha)
+    local color = {}
+    for k,v in pairs(COLOR_SEQUENCE[index]) do
+        color[k] = v
+    end
+    color[4] = alpha
+    return color
+end
+
 local colorIndex, rotation
-local function setAllNext()
-    setNextFillColor(layer, table.unpack(COLOR_SEQUENCE[colorIndex]))
+local function setAllNext(alpha)
+    if not alpha then
+        alpha = 1.0
+    end
+
+    setNextFillColor(layer, table.unpack(addAlpha(colorIndex, alpha)))
     colorIndex = colorIndex % #COLOR_SEQUENCE + 1
 
     setNextRotation(layer, rotation)
 
-    setNextShadow(layer, size / 4, table.unpack(COLOR_SEQUENCE[colorIndex]))
+    setNextShadow(layer, size / 4, table.unpack(addAlpha(colorIndex, alpha)))
     colorIndex = colorIndex % #COLOR_SEQUENCE + 1
 
-    setNextStrokeColor(layer, table.unpack(COLOR_SEQUENCE[colorIndex]))
+    setNextStrokeColor(layer, table.unpack(addAlpha(colorIndex, alpha)))
     colorIndex = colorIndex % #COLOR_SEQUENCE + 1
 
     setNextStrokeWidth(layer, size / 8)
 end
 local function setAllDefault(shapeType)
-    setDefaultFillColor(layer, shapeType, table.unpack(COLOR_SEQUENCE[colorIndex]))
+    local alpha = 1.0
+
+    setDefaultFillColor(layer, shapeType, table.unpack(addAlpha(colorIndex, alpha)))
     colorIndex = colorIndex % #COLOR_SEQUENCE + 1
 
     setDefaultRotation(layer, shapeType, rotation)
 
-    setDefaultShadow(layer, shapeType, size / 4, table.unpack(COLOR_SEQUENCE[colorIndex]))
+    setDefaultShadow(layer, shapeType, size / 4, table.unpack(addAlpha(colorIndex, alpha)))
     colorIndex = colorIndex % #COLOR_SEQUENCE + 1
 
-    setDefaultStrokeColor(layer, shapeType, table.unpack(COLOR_SEQUENCE[colorIndex]))
+    setDefaultStrokeColor(layer, shapeType, table.unpack(addAlpha(colorIndex, alpha)))
     colorIndex = colorIndex % #COLOR_SEQUENCE + 1
 
     setDefaultStrokeWidth(layer, shapeType, size / 8)
@@ -166,55 +181,55 @@ rotation = -math.pi / 8
 
 drawImage(xOff - size / 4, yOff - size / 4)
 drawImage(xOff + size / 4, yOff + size / 4)
-setAllNext()
+setAllNext(0.8)
 drawImage(xOff, yOff)
 xOff = xOff + xStep
 
 drawBezier(xOff - size / 4, yOff - size / 4)
 drawBezier(xOff + size / 4, yOff + size / 4)
-setAllNext()
+setAllNext(0.8)
 drawBezier(xOff, yOff)
 xOff = xOff + xStep
 
 drawBox(xOff - size / 4, yOff - size / 4)
 drawBox(xOff + size / 4, yOff + size / 4)
-setAllNext()
+setAllNext(0.8)
 drawBox(xOff, yOff)
 xOff = xOff + xStep
 
 drawBoxRounded(xOff - size / 4, yOff - size / 4)
 drawBoxRounded(xOff + size / 4, yOff + size / 4)
-setAllNext()
+setAllNext(0.8)
 drawBoxRounded(xOff, yOff)
 xOff = xOff + xStep
 
 drawCircle(xOff - size / 4, yOff - size / 4)
 drawCircle(xOff + size / 4, yOff + size / 4)
-setAllNext()
+setAllNext(0.8)
 drawCircle(xOff, yOff)
 xOff = xOff + xStep
 
 drawLine(xOff - size / 4, yOff - size / 4)
 drawLine(xOff + size / 4, yOff + size / 4)
-setAllNext()
+setAllNext(0.8)
 drawLine(xOff, yOff)
 xOff = xOff + xStep
 
 drawTriangle(xOff - size / 4, yOff - size / 4)
 drawTriangle(xOff + size / 4, yOff + size / 4)
-setAllNext()
+setAllNext(0.8)
 drawTriangle(xOff, yOff)
 xOff = xOff + xStep
 
 drawQuad(xOff - size / 4, yOff - size / 4)
 drawQuad(xOff + size / 4, yOff + size / 4)
-setAllNext()
+setAllNext(0.8)
 drawQuad(xOff, yOff)
 xOff = xOff + xStep
 
 drawText(xOff - size / 4, yOff - size / 4)
 drawText(xOff + size / 4, yOff + size / 4)
-setAllNext()
+setAllNext(0.8)
 drawText(xOff, yOff)
 xOff = xOff + xStep
 
@@ -227,82 +242,60 @@ xStep = xRes / SHAPE_COUNT
 xOff = xRes / SHAPE_COUNT - (xStep + size) / 2
 yOff = yRes / ROW_COUNT * 3 + yRes / ROW_COUNT / 2 - size / 2
 
-colorIndex = 3
-
 -- draw in order of overlap
 
 drawImage(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextStrokeColor(layer, 1, 1, 1, 1)
-setNextStrokeWidth(layer, size / 10)
-addBezier(layer, xOff, yOff + size, xOff + size / 2, yOff, xOff + size, yOff + size)
+drawBezier(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextFillColor(layer, 1, 0, 0, 1)
 drawBox(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextFillColor(layer, 0, 1, 0, 1)
-addBoxRounded(layer, xOff, yOff, size, size, size / 4)
+drawBoxRounded(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextFillColor(layer, 0, 0, 1, 1)
-addCircle(layer, xOff + size / 2, yOff + size / 2, size / 2)
+drawCircle(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextStrokeColor(layer, 1, 1, 0, 1)
-setNextStrokeWidth(layer, size / 10)
-addLine(layer, xOff, yOff, xOff + size, yOff + size)
+drawLine(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextFillColor(layer, 0, 1, 1, 1)
-addTriangle(layer, xOff, yOff, xOff + size, yOff, xOff, yOff + size)
+drawTriangle(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextFillColor(layer, 1, 0, 1, 1)
-addQuad(layer, xOff, yOff, xOff + size, yOff, xOff + size, yOff + size, xOff, yOff + size)
+drawQuad(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextFillColor(layer, 1, 1, 1, 1)
-addText(layer, font, "E", xOff, yOff + size)
+drawText(xOff, yOff)
 xOff = xOff + size / 2
 
 -- reverse draw order
 xOff = xOff + size
 
-setNextFillColor(layer, 1, 1, 1, 1)
-addText(layer, font, "E", xOff, yOff + size)
+drawText(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextFillColor(layer, 1, 0, 1, 1)
-addQuad(layer, xOff, yOff, xOff + size, yOff, xOff + size, yOff + size, xOff, yOff + size)
+drawQuad(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextFillColor(layer, 0, 1, 1, 1)
-addTriangle(layer, xOff, yOff, xOff + size, yOff, xOff, yOff + size)
+drawTriangle(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextStrokeColor(layer, 1, 1, 0, 1)
-setNextStrokeWidth(layer, size / 10)
-addLine(layer, xOff, yOff, xOff + size, yOff + size)
+drawLine(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextFillColor(layer, 0, 0, 1, 1)
-addCircle(layer, xOff + size / 2, yOff + size / 2, size / 2)
+drawCircle(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextFillColor(layer, 0, 1, 0, 1)
-addBoxRounded(layer, xOff, yOff, size, size, size / 4)
+drawBoxRounded(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextFillColor(layer, 1, 0, 0, 1)
 drawBox(xOff, yOff)
 xOff = xOff + size / 2
 
-setNextStrokeColor(layer, 1, 1, 1, 1)
-setNextStrokeWidth(layer, size / 10)
-addBezier(layer, xOff, yOff + size, xOff + size / 2, yOff, xOff + size, yOff + size)
+drawBezier(xOff, yOff)
 xOff = xOff + size / 2
 
 drawImage(xOff, yOff)

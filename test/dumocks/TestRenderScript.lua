@@ -65,7 +65,7 @@ function _G.TestScreenRenderer:testShapes()
     local script = assert(loadfile(INPUT_DIR .. "shapes.lua", "t", closure))
     script()
 
-    self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Shape Overlaps", screenRenderer:mockGenerateSvg())
+    self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Shapes", screenRenderer:mockGenerateSvg())
 end
 
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
