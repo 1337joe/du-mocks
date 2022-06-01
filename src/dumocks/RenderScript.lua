@@ -233,12 +233,53 @@ end
 -- ---------------- --
 
 -- Get the requested layer with error handling.
+-- @tparam table self The RenderScript to act on.
+-- @tparam int layer The layer reference to retrieve.
+-- @treturn table The requested layer object.
 local function getLayer(self, layer)
     local layerRef = self.layers[layer]
-    if layerRef == nil then
+    if not layerRef then
         error("invalid layer handle")
     end
     return layerRef
+end
+
+local Property = {
+    FillColor = {
+        next = "nextFillColor",
+        default = "defaultFillColor",
+        missing = {1, 1, 1, 1}
+    },
+    StrokeColor = {
+        next = "nextStrokeColor",
+        default = "defaultStrokeColor",
+        missing = {1, 1, 1, 1}
+    },
+    StrokeWidth = {
+        next = "nextStrokeWidth",
+        default = "defaultStrokeWidth",
+        missing = 0
+    }
+}
+
+-- Get the requested property for the provided layer.
+-- @tparam table layer The layer object to extract the property from.
+-- @tparam table property The Property reference to look up.
+-- @tparam int shapeType The shape type to look up.
+-- @return The selected (or default) value for property.
+local function getPropertyValue(layer, property, shapeType)
+    local value
+
+    if layer[property.next] then
+        value = layer[property.next]
+        layer[property.next] = nil
+    elseif layer[property.default][shapeType] then
+        value = layer[property.default][shapeType]
+    else
+        value = property.missing
+    end
+
+    return value
 end
 
 -- ------ --
@@ -268,25 +309,19 @@ end
 -- @tparam float height The height of the box in pixels.
 function M:addBox(layer, x, y, width, height)
     local layerRef = getLayer(self, layer)
-    if layerRef.box == nil then
+    if not layerRef.box then
         layerRef.box = {}
     end
-    local layerBox = layerRef.box
+    local layerShape = layerRef.box
 
-    local fillColor
-    if layerRef.nextFillColor ~= nil then
-        fillColor = layerRef.nextFillColor
-        layerRef.nextFillColor = nil
-    elseif layerRef.defaultFillColor[M.Shape.Shape_Box] ~= nil then
-        fillColor = layerRef.defaultFillColor[M.Shape.Shape_Box]
-    end
-
-    layerBox[#layerBox + 1] = {
+    layerShape[#layerShape + 1] = {
         x = x,
         y = y,
         width = width,
         height = height,
-        fill = fillColor
+        fillColor = getPropertyValue(layerRef, Property.FillColor, M.Shape.Shape_Box),
+        strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_Box),
+        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Box)
     }
 end
 
@@ -301,6 +336,22 @@ end
 -- @tparam float height The height of the box in pixels.
 -- @tparam float radius The corner radius of the box in pixels.
 function M:addBoxRounded(layer, x, y, width, height, radius)
+    local layerRef = getLayer(self, layer)
+    if not layerRef.boxRounded then
+        layerRef.boxRounded = {}
+    end
+    local layerShape = layerRef.boxRounded
+
+    layerShape[#layerShape + 1] = {
+        x = x,
+        y = y,
+        width = width,
+        height = height,
+        radius = radius,
+        fillColor = getPropertyValue(layerRef, Property.FillColor, M.Shape.Shape_BoxRounded),
+        strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_BoxRounded),
+        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_BoxRounded)
+    }
 end
 
 --- Add a circle to the given layer with center (x, y) and radius radius.
@@ -403,9 +454,9 @@ end
 -- @treturn int The id that can be used to uniquely identify the layer for use with other API functions.
 function M:createLayer()
     self.layers[#self.layers + 1] = {
-        defaultFillColor = {
-            [M.Shape.Shape_Box] = {1, 1, 1, 1}
-        }
+        defaultFillColor = {},
+        defaultStrokeColor = {},
+        defaultStrokeWidth = {}
     }
     return #self.layers
 end
@@ -718,6 +769,8 @@ end
 -- @tparam float a The alpha component, between 0 and 1.
 -- @see Shape
 function M:setDefaultStrokeColor(layer, shapeType, r, g, b, a)
+    local layerRef = getLayer(self, layer)
+    layerRef.defaultStrokeColor[shapeType] = {r, g, b, a}
 end
 
 --- Set the default stroke width for all shapeType on layer. Width is specified in pixels. Positive values produce an
@@ -728,6 +781,8 @@ end
 -- @tparam float width Stroke width, in pixels.
 -- @see Shape
 function M:setDefaultStrokeWidth(layer, shapeType, width)
+    local layerRef = getLayer(self, layer)
+    layerRef.defaultStrokeWidth[shapeType] = width
 end
 
 --- Set the default text alignment of all subsequent text strings on the given layer.
@@ -792,6 +847,8 @@ end
 -- @tparam float b The blue component, between 0 and 1.
 -- @tparam float a The alpha component, between 0 and 1.
 function M:setNextStrokeColor(layer, r, g, b, a)
+    local layerRef = getLayer(self, layer)
+    layerRef.nextStrokeColor = {r, g, b, a}
 end
 
 --- Set the stroke width of the next rendered shape on layer. Width is specified in pixels. Positive values produce an
@@ -800,6 +857,8 @@ end
 -- @tparam int layer The handle for the layer to apply this property to.
 -- @tparam float width The width of the stroke in pixels.
 function M:setNextStrokeWidth(layer, width)
+    local layerRef = getLayer(self, layer)
+    layerRef.nextStrokeWidth = width
 end
 
 --- Set the next text alignment for the next rendered shape on layer.
@@ -863,7 +922,21 @@ function M:rawequal()
 end
 
 local function colorToHex(r, g, b)
-    return string.format("#%02x%02x%02x", r * 255, g * 255, b * 255)
+    return string.format("#%02x%02x%02x", math.floor(r * 255), math.floor(g * 255), math.floor(b * 255))
+end
+
+local function getFillString(fillColor)
+    return string.format([[fill="%s" fill-opacity="%f"]],
+        colorToHex(table.unpack(fillColor, 1, 3)), fillColor[4])
+end
+
+local function getStrokeString(strokeWidth, strokeColor)
+    if strokeWidth <= 0 then
+        return ""
+    end
+
+    return string.format([[stroke-width = "%f" stroke="%s" stroke-opacity="%f" stroke-linejoin="round"]],
+        strokeWidth, colorToHex(table.unpack(strokeColor, 1, 3)), strokeColor[4])
 end
 
 --- Mock only, not in-game: Generates an SVG image from the data provided to the renderer.
@@ -875,14 +948,29 @@ function M:mockGenerateSvg()
     svg[#svg + 1] = string.format([[    <rect width="100%%" height="100%%" fill="%s" />]],
         colorToHex(table.unpack(self.backgroundColor, 1, 3)))
 
+    local fillString, strokeString
     for _, layer in pairs(self.layers) do
         svg[#svg + 1] = "    <g>"
 
-        if layer.box ~= nil then
-            for _, box in pairs(layer.box) do
+        if layer.box then
+            for _, shape in pairs(layer.box) do
+                fillString = getFillString(shape.fillColor)
+                strokeString = getStrokeString(shape.strokeWidth, shape.strokeColor)
                 svg[#svg + 1] =
-                    string.format([[        <rect x="%f" y="%f" width="%f" height="%f" fill="%s" opacity="%f" />]],
-                        box.x, box.y, box.width, box.height, colorToHex(table.unpack(box.fill, 1, 3)), box.fill[4])
+                    string.format([[        <rect x="%f" y="%f" width="%f" height="%f" %s %s/>]],
+                        shape.x, shape.y, shape.width, shape.height,
+                        fillString, strokeString)
+            end
+        end
+
+        if layer.boxRounded then
+            for _, shape in pairs(layer.boxRounded) do
+                fillString = getFillString(shape.fillColor)
+                strokeString = getStrokeString(shape.strokeWidth, shape.strokeColor)
+                svg[#svg + 1] =
+                    string.format([[        <rect x="%f" y="%f" width="%f" height="%f" rx="%f" ry="%f" %s %s/>]],
+                        shape.x, shape.y, shape.width, shape.height, shape.radius, shape.radius,
+                        fillString, strokeString)
             end
         end
 
