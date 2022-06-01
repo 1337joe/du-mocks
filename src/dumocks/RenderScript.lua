@@ -504,6 +504,26 @@ end
 -- @tparam float y4 The y coordinate (in pixels) of the final corner.
 function M:addQuad(layer, x1, y1, x2, y2, x3, y3, x4, y4)
     local layerRef = getLayer(self, layer)
+    if not layerRef.quad then
+        layerRef.quad = {}
+    end
+    local layerShape = layerRef.quad
+
+    layerShape[#layerShape + 1] = {
+        x1 = x1,
+        y1 = y1,
+        x2 = x2,
+        y2 = y2,
+        x3 = x3,
+        y3 = y3,
+        x4 = x4,
+        y4 = y4,
+        fillColor = getPropertyValue(layerRef, Property.FillColor, M.Shape.Shape_Polygon),
+        rotation = getPropertyValue(layerRef, Property.Rotation, M.Shape.Shape_Polygon),
+        shadow = getPropertyValue(layerRef, Property.Shadow, M.Shape.Shape_Polygon),
+        strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_Polygon),
+        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Polygon)
+    }
 
     clearNext(layerRef)
 end
@@ -536,6 +556,24 @@ end
 -- @tparam float y3 The y coordinate (in pixels) of the third corner.
 function M:addTriangle(layer, x1, y1, x2, y2, x3, y3)
     local layerRef = getLayer(self, layer)
+    if not layerRef.triangle then
+        layerRef.triangle = {}
+    end
+    local layerShape = layerRef.triangle
+
+    layerShape[#layerShape + 1] = {
+        x1 = x1,
+        y1 = y1,
+        x2 = x2,
+        y2 = y2,
+        x3 = x3,
+        y3 = y3,
+        fillColor = getPropertyValue(layerRef, Property.FillColor, M.Shape.Shape_Polygon),
+        rotation = getPropertyValue(layerRef, Property.Rotation, M.Shape.Shape_Polygon),
+        shadow = getPropertyValue(layerRef, Property.Shadow, M.Shape.Shape_Polygon),
+        strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_Polygon),
+        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Polygon)
+    }
 
     clearNext(layerRef)
 end
@@ -1067,6 +1105,14 @@ local function getRotationString(shape, shapeType)
     elseif shapeType == M.Shape.Shape_Line then
         cx = (shape.x1 + shape.x2) / 2
         cy = (shape.y1 + shape.y2) / 2
+    elseif shapeType == M.Shape.Shape_Polygon then
+        if shape.x4 then
+            cx = (shape.x1 + shape.x2 + shape.x3 + shape.x4) / 4
+            cy = (shape.y1 + shape.y2 + shape.y3 + shape.y4) / 4
+        else
+            cx = (shape.x1 + shape.x2 + shape.x3) / 3
+            cy = (shape.y1 + shape.y2 + shape.y3) / 3
+        end
     end
 
     return string.format([[ transform="rotate(%f %f %f)"]],
@@ -1177,9 +1223,29 @@ function M:mockGenerateSvg()
         end
 
         if layer.triangle then
+            for _, shape in pairs(layer.triangle) do
+                fillString = getFillString(shape)
+                rotationString = getRotationString(shape, M.Shape.Shape_Polygon)
+                shadowString = getShadowString(shape)
+                strokeString = getStrokeString(shape)
+                svg[#svg + 1] =
+                    string.format([[        <polygon points="%f,%f %f,%f %f,%f"%s%s%s%s />]],
+                        shape.x1, shape.y1, shape.x2, shape.y2, shape.x3, shape.y3,
+                        fillString, rotationString, shadowString, strokeString)
+            end
         end
 
         if layer.quad then
+            for _, shape in pairs(layer.quad) do
+                fillString = getFillString(shape)
+                rotationString = getRotationString(shape, M.Shape.Shape_Polygon)
+                shadowString = getShadowString(shape)
+                strokeString = getStrokeString(shape)
+                svg[#svg + 1] =
+                    string.format([[        <polygon points="%f,%f %f,%f %f,%f %f,%f"%s%s%s%s />]],
+                        shape.x1, shape.y1, shape.x2, shape.y2, shape.x3, shape.y3, shape.x4, shape.y4,
+                        fillString, rotationString, shadowString, strokeString)
+    end
         end
 
         if layer.text then
