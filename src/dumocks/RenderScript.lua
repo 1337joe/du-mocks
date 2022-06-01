@@ -282,7 +282,6 @@ local function getPropertyValue(layer, property, shapeType)
 
     if layer[property.next] then
         value = layer[property.next]
-        layer[property.next] = nil
     elseif layer[property.default][shapeType] then
         value = layer[property.default][shapeType]
     else
@@ -290,6 +289,14 @@ local function getPropertyValue(layer, property, shapeType)
     end
 
     return value
+end
+
+-- Clear the "next" properties, for use when an item is added.
+-- @tparam table layer The layer object to reset "next" on.
+local function clearNext(layer)
+    for _, keys in pairs(Property) do
+        layer[keys.next] = nil
+    end
 end
 
 -- ------ --
@@ -307,6 +314,25 @@ end
 -- @tparam float x3 X coordinate of the third point of the curve (the ending point).
 -- @tparam float y3 Y coordinate of the third point of the curve (the ending point).
 function M:addBezier(layer, x1, y1, x2, y2, x3, y3)
+    local layerRef = getLayer(self, layer)
+    if not layerRef.bezier then
+        layerRef.bezier = {}
+    end
+    local layerShape = layerRef.bezier
+
+    layerShape[#layerShape + 1] = {
+        x1 = x1,
+        y1 = y1,
+        x2 = x2,
+        y2 = y2,
+        x3 = x3,
+        y3 = y3,
+        shadow = getPropertyValue(layerRef, Property.Shadow, M.Shape.Shape_Bezier),
+        strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_Bezier),
+        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Bezier)
+    }
+
+    clearNext(layerRef)
 end
 
 --- Add a rectangle to the given layer with top-left corner (x,y) and dimensions width x height.
@@ -335,6 +361,8 @@ function M:addBox(layer, x, y, width, height)
         strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_Box),
         strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Box)
     }
+
+    clearNext(layerRef)
 end
 
 --- Add a rectangle to the given layer with top-left corner (x,y) and dimensions width x height with each corner
@@ -366,6 +394,8 @@ function M:addBoxRounded(layer, x, y, width, height, radius)
         strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_BoxRounded),
         strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_BoxRounded)
     }
+
+    clearNext(layerRef)
 end
 
 --- Add a circle to the given layer with center (x, y) and radius radius.
@@ -391,6 +421,8 @@ function M:addCircle(layer, x, y, radius)
         strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_Circle),
         strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Circle)
     }
+
+    clearNext(layerRef)
 end
 
 --- Add image reference to layer as a rectangle with top-left corner x, y) and dimensions width x height.
@@ -404,6 +436,9 @@ end
 -- @tparam float height The height of the image in pixels.
 -- @see loadImage
 function M:addImage(layer, image, x, y, width, height)
+    local layerRef = getLayer(self, layer)
+
+    clearNext(layerRef)
 end
 
 --- Add image reference to layer as a rectangle with top-left corner x, y) and dimensions width x height.
@@ -421,6 +456,9 @@ end
 -- @tparam float subSy Height of the sub-region within the image to draw.
 -- @see loadImage
 function M:addImageSub(layer, image, x, y, sx, sy, subX, subY, subSx, subSy)
+    local layerRef = getLayer(self, layer)
+
+    clearNext(layerRef)
 end
 
 --- Add a line to layer from (x1, y1) to (x2, y2).
@@ -432,6 +470,24 @@ end
 -- @tparam float x2 The x coordinate (in pixels) of the end of the line.
 -- @tparam float y2 The y coordinate (in pixels) of the end of the line.
 function M:addLine(layer, x1, y1, x2, y2)
+    local layerRef = getLayer(self, layer)
+    if not layerRef.line then
+        layerRef.line = {}
+    end
+    local layerShape = layerRef.line
+
+    layerShape[#layerShape + 1] = {
+        x1 = x1,
+        y1 = y1,
+        x2 = x2,
+        y2 = y2,
+        rotation = getPropertyValue(layerRef, Property.Rotation, M.Shape.Shape_Line),
+        shadow = getPropertyValue(layerRef, Property.Shadow, M.Shape.Shape_Line),
+        strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_Line),
+        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Line)
+    }
+
+    clearNext(layerRef)
 end
 
 --- Add a quadrilateral to the given layer with vertices (x1, y1), (x2, y2), (x3, y3), (x4, y4).
@@ -447,6 +503,9 @@ end
 -- @tparam float x4 The x coordinate (in pixels) of the final corner.
 -- @tparam float y4 The y coordinate (in pixels) of the final corner.
 function M:addQuad(layer, x1, y1, x2, y2, x3, y3, x4, y4)
+    local layerRef = getLayer(self, layer)
+
+    clearNext(layerRef)
 end
 
 --- Add text to layer using font, with top-left baseline starting at (x, y). Note that each glyph in text counts as one
@@ -460,6 +519,9 @@ end
 -- @tparam float y The y coordinate (in pixels) of the top-left baseline.
 -- @see loadFont
 function M:addText(layer, font, text, x, y)
+    local layerRef = getLayer(self, layer)
+
+    clearNext(layerRef)
 end
 
 --- Add a triangle to the given layer with vertices (x1, y1), (x2, y2), (x3, y3).
@@ -473,6 +535,9 @@ end
 -- @tparam float x3 The x coordinate (in pixels) of the third corner.
 -- @tparam float y3 The y coordinate (in pixels) of the third corner.
 function M:addTriangle(layer, x1, y1, x2, y2, x3, y3)
+    local layerRef = getLayer(self, layer)
+
+    clearNext(layerRef)
 end
 
 -- ------ --
@@ -487,7 +552,11 @@ function M:createLayer()
         defaultRotation = {},
         defaultShadow = {},
         defaultStrokeColor = {},
-        defaultStrokeWidth = {}
+        defaultStrokeWidth = {
+            -- TODO verify default in-game
+            [M.Shape.Shape_Bezier] = 3,
+            [M.Shape.Shape_Line] = 3
+        }
     }
     return #self.layers
 end
@@ -995,6 +1064,9 @@ local function getRotationString(shape, shapeType)
        then
         cx = shape.x + shape.width / 2
         cy = shape.y + shape.height / 2
+    elseif shapeType == M.Shape.Shape_Line then
+        cx = (shape.x1 + shape.x2) / 2
+        cy = (shape.y1 + shape.y2) / 2
     end
 
     return string.format([[ transform="rotate(%f %f %f)"]],
@@ -1038,7 +1110,21 @@ function M:mockGenerateSvg()
 
     local fillString, rotationString, shadowString, strokeString
     for _, layer in pairs(self.layers) do
-        svg[#svg + 1] = [[    <g stroke-linejoin="round">]]
+        svg[#svg + 1] = [[    <g stroke-linejoin="round" stroke-linecap="round">]]
+
+        if layer.image then
+        end
+
+        if layer.bezier then
+            for _, shape in pairs(layer.bezier) do
+                shadowString = getShadowString(shape)
+                strokeString = getStrokeString(shape)
+                svg[#svg + 1] =
+                    string.format([[        <path d="M %f %f Q %f %f %f %f" fill-opacity="0"%s%s />]],
+                        shape.x1, shape.y1, shape.x2, shape.y2, shape.x3, shape.y3,
+                        shadowString, strokeString)
+            end
+        end
 
         if layer.box then
             for _, shape in pairs(layer.box) do
@@ -1076,6 +1162,27 @@ function M:mockGenerateSvg()
                         shape.x, shape.y, shape.radius,
                         fillString, shadowString, strokeString)
             end
+        end
+
+        if layer.line then
+            for _, shape in pairs(layer.line) do
+                rotationString = getRotationString(shape, M.Shape.Shape_Line)
+                shadowString = getShadowString(shape)
+                strokeString = getStrokeString(shape)
+                svg[#svg + 1] =
+                    string.format([[        <line x1="%f" y1="%f" x2="%f" y2="%f"%s%s%s />]],
+                        shape.x1, shape.y1, shape.x2, shape.y2,
+                        rotationString, shadowString, strokeString)
+            end
+        end
+
+        if layer.triangle then
+        end
+
+        if layer.quad then
+        end
+
+        if layer.text then
         end
 
         svg[#svg + 1] = "    </g>"
