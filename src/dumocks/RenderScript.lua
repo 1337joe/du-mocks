@@ -199,12 +199,12 @@ M.AlignH = {
 -- purposes only.
 -- @table AlignV
 M.AlignV = {
-    AlignV_Ascender = 0,
-    AlignV_Top = 1,
-    AlignV_Middle = 2,
-    AlignV_Baseline = 3,
+    AlignV_Ascender = 0, -- Align to top of ascender.
+    AlignV_Top = 1, -- Align to height of capital characters.
+    AlignV_Middle = 2, -- Align to middle of characters.
+    AlignV_Baseline = 3, -- Align to text baseline.
     AlignV_Bottom = 4,
-    AlignV_Descender = 5,
+    AlignV_Descender = 5, -- Align to bottom of descender.
 }
 
 function M:new(o)
@@ -1075,6 +1075,8 @@ end
 -- @see AlignH
 -- @see AlignV
 function M:setNextTextAlign(layer, alignH, alignV)
+    local layerRef = getLayer(self, layer)
+    layerRef.nextTextAlign = {alignH, alignV}
 end
 
 -- ------------------------ --
@@ -1201,12 +1203,12 @@ local AlignHMapping = {
     [M.AlignH.AlignH_Right] = "end"
 }
 local AlignVMapping = {
-    [M.AlignV.AlignV_Ascender] = "",
-    [M.AlignV.AlignV_Top] = "text-top",
-    [M.AlignV.AlignV_Middle] = "",
-    [M.AlignV.AlignV_Baseline] = "",
-    [M.AlignV.AlignV_Bottom] = "text-bottom",
-    [M.AlignV.AlignV_Descender] = "",
+    [M.AlignV.AlignV_Ascender] = "text-before-edge",
+    [M.AlignV.AlignV_Top] = "hanging",
+    [M.AlignV.AlignV_Middle] = "middle",
+    [M.AlignV.AlignV_Baseline] = "alphabetic",
+    [M.AlignV.AlignV_Bottom] = "text-after-edge",
+    [M.AlignV.AlignV_Descender] = "text-after-edge",
 }
 local function getAlignString(shape)
     local alignH = AlignHMapping[shape.textAlign[1]]
@@ -1219,9 +1221,10 @@ end
 --
 -- Known discrepancies from in-game behavior (tested in firefox):
 -- <ul>
---   <li>Stroke drawn centered on shape border instead of outside it</li>
---   <li>Shadows less vibrant</li>
---   <li>Default stroke width narrower</li>
+--   <li>Stroke is drawn centered on shape border instead of outside it.</li>
+--   <li>Shadows are less vibrant.</li>
+--   <li>Default stroke width is narrower.</li>
+--   <li>AlignV_Bottom is higher (equivalent to AlignV_Descender).</li>
 -- </ul>
 -- @treturn string The SVG string.
 function M:mockGenerateSvg()

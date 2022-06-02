@@ -73,6 +73,16 @@ function _G.TestScreenRenderer:testShapes()
     self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Shapes", screenRenderer:mockGenerateSvg())
 end
 
+function _G.TestScreenRenderer:testStrokeWidthTextAlign()
+    local screenRenderer = sr:new()
+    local closure = screenRenderer:mockGetEnvironment()
+
+    local script = assert(loadfile(INPUT_DIR .. "strokeAlign.lua", "t", closure))
+    script()
+
+    self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Stroke Width/Text Align", screenRenderer:mockGenerateSvg())
+end
+
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --
