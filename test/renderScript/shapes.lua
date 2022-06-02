@@ -98,6 +98,11 @@ local function setAllDefault(shapeType)
 end
 
 local xStep, xOff, yOff
+local function xOffInc()
+    local x = xOff
+    xOff = xOff + xStep
+    return x
+end
 
 -- ----------------------- --
 -- Sample Shapes - Default --
@@ -107,15 +112,15 @@ xStep = xRes / SHAPE_COUNT
 xOff = xRes / SHAPE_COUNT - (xStep + size) / 2
 yOff = yRes / ROW_COUNT / 2 - size / 2
 
-drawImage(xOff + xStep * 0, yOff)
-drawBezier(xOff + xStep * 1, yOff)
-drawBox(xOff + xStep * 2, yOff)
-drawBoxRounded(xOff + xStep * 3, yOff)
-drawCircle(xOff + xStep * 4, yOff)
-drawLine(xOff + xStep * 5, yOff)
-drawTriangle(xOff + xStep * 6, yOff)
-drawQuad(xOff + xStep * 7, yOff)
-drawText(xOff + xStep * 8, yOff)
+drawImage(xOffInc(), yOff)
+drawBezier(xOffInc(), yOff)
+drawBox(xOffInc(), yOff)
+drawBoxRounded(xOffInc(), yOff)
+drawCircle(xOffInc(), yOff)
+drawLine(xOffInc(), yOff)
+drawTriangle(xOffInc(), yOff)
+drawQuad(xOffInc(), yOff)
+drawText(xOffInc(), yOff)
 
 
 -- ---------------------- --
@@ -130,31 +135,31 @@ colorIndex = 1
 rotation = math.pi / 4
 
 setAllNext()
-drawImage(xOff + xStep * 0, yOff)
+drawImage(xOffInc(), yOff)
 
 setAllNext()
-drawBezier(xOff + xStep * 1, yOff)
+drawBezier(xOffInc(), yOff)
 
 setAllNext()
-drawBox(xOff + xStep * 2, yOff)
+drawBox(xOffInc(), yOff)
 
 setAllNext()
-drawBoxRounded(xOff + xStep * 3, yOff)
+drawBoxRounded(xOffInc(), yOff)
 
 setAllNext()
-drawCircle(xOff + xStep * 4, yOff)
+drawCircle(xOffInc(), yOff)
 
 setAllNext()
-drawLine(xOff + xStep * 5, yOff)
+drawLine(xOffInc(), yOff)
 
 setAllNext()
-drawTriangle(xOff + xStep * 6, yOff)
+drawTriangle(xOffInc(), yOff)
 
 setAllNext()
-drawQuad(xOff + xStep * 7, yOff)
+drawQuad(xOffInc(), yOff)
 
 setAllNext()
-drawText(xOff + xStep * 8, yOff)
+drawText(xOffInc(), yOff)
 
 
 -- ----------------------- --
@@ -238,65 +243,30 @@ xOff = xOff + xStep
 -- Shape Type Overlapping --
 -- ---------------------- --
 
-xStep = xRes / SHAPE_COUNT
-xOff = xRes / SHAPE_COUNT - (xStep + size) / 2
+xStep = size / 2
+xOff = xRes / 2 - (SHAPE_COUNT + 2) * xStep
 yOff = yRes / ROW_COUNT * 3 + yRes / ROW_COUNT / 2 - size / 2
 
 -- draw in order of overlap
+drawImage(xOffInc(), yOff)
+drawBezier(xOffInc(), yOff)
+drawBox(xOffInc(), yOff)
+drawBoxRounded(xOffInc(), yOff)
+drawCircle(xOffInc(), yOff)
+drawLine(xOffInc(), yOff)
+drawTriangle(xOffInc(), yOff)
+drawQuad(xOffInc(), yOff)
+drawText(xOffInc(), yOff)
 
-drawImage(xOff, yOff)
-xOff = xOff + size / 2
-
-drawBezier(xOff, yOff)
-xOff = xOff + size / 2
-
-drawBox(xOff, yOff)
-xOff = xOff + size / 2
-
-drawBoxRounded(xOff, yOff)
-xOff = xOff + size / 2
-
-drawCircle(xOff, yOff)
-xOff = xOff + size / 2
-
-drawLine(xOff, yOff)
-xOff = xOff + size / 2
-
-drawTriangle(xOff, yOff)
-xOff = xOff + size / 2
-
-drawQuad(xOff, yOff)
-xOff = xOff + size / 2
-
-drawText(xOff, yOff)
-xOff = xOff + size / 2
+xOff = xOff + xStep * 3
 
 -- reverse draw order
-xOff = xOff + size
-
-drawText(xOff, yOff)
-xOff = xOff + size / 2
-
-drawQuad(xOff, yOff)
-xOff = xOff + size / 2
-
-drawTriangle(xOff, yOff)
-xOff = xOff + size / 2
-
-drawLine(xOff, yOff)
-xOff = xOff + size / 2
-
-drawCircle(xOff, yOff)
-xOff = xOff + size / 2
-
-drawBoxRounded(xOff, yOff)
-xOff = xOff + size / 2
-
-drawBox(xOff, yOff)
-xOff = xOff + size / 2
-
-drawBezier(xOff, yOff)
-xOff = xOff + size / 2
-
-drawImage(xOff, yOff)
-xOff = xOff + size / 2
+drawText(xOffInc(), yOff)
+drawQuad(xOffInc(), yOff)
+drawTriangle(xOffInc(), yOff)
+drawLine(xOffInc(), yOff)
+drawCircle(xOffInc(), yOff)
+drawBoxRounded(xOffInc(), yOff)
+drawBox(xOffInc(), yOff)
+drawBezier(xOffInc(), yOff)
+drawImage(xOffInc(), yOff)

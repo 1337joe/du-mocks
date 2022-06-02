@@ -14,11 +14,10 @@ local sr = require("dumocks.RenderScript")
 
 local SVG_WRAPPER_TEMPLATE = [[<li><p>%s<br>%s</p></li>]]
 
-_G.TestScreenRenderer = {}
-
-function _G.TestScreenRenderer:setUp()
-    self.allSvg = {}
-    self.allSvg[#self.allSvg + 1] = [[
+_G.TestScreenRenderer = {
+    allSvg = {
+[[
+<!DOCTYPE html>
 <html>
 <head>
     <style>
@@ -28,7 +27,7 @@ function _G.TestScreenRenderer:setUp()
             margin: 5px;
             display: grid;
             grid-gap: 20px 5px;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
         }
         
         ul.gallery svg {
@@ -36,14 +35,19 @@ function _G.TestScreenRenderer:setUp()
             height: 100%;
         }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet"> 
 </head>
 <body>
     <ul class="gallery">
 ]]
-end
+    }
+}
 
 function _G.TestScreenRenderer:tearDown()
-    self.allSvg[#self.allSvg + 1] = [[
+    local closingTags = [[
+
     </ul>
 </body>
 </html>
@@ -54,6 +58,7 @@ function _G.TestScreenRenderer:tearDown()
         error(errorMsg)
     else
         io.output(outputHandle):write(table.concat(self.allSvg, "\n"))
+        io.output(outputHandle):write(closingTags)
         outputHandle:close()
     end
 end

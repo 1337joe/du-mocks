@@ -178,7 +178,7 @@ M.Shape = {
     Shape_Circle = 3,
     Shape_Image = 4,
     Shape_Line = 5,
-    Shape_Polygon = 6,
+    Shape_Polygon = 6, -- Applies to both Triangle and Quad.
     Shape_Text = 7,
 }
 
@@ -188,10 +188,11 @@ M.Shape = {
 -- purposes only.
 -- @table AlignH
 M.AlignH = {
-    AlignH_Left = 0,
-    AlignH_Center = 1,
-    AlignH_Right = 2,
+    AlignH_Left = 0, -- Align to the start of the text.
+    AlignH_Center = 1, -- Align to the middle of the text.
+    AlignH_Right = 2, -- Align to the end of the text.
 }
+
 --- Vertical alignment constants for alignV. Used by @{setNextTextAlign}.
 --
 -- Note: These are constants defined directly in the screen renderer, the grouping in a table is for documentation
@@ -219,6 +220,7 @@ function M:new(o)
     o.renderCost = 589824
 
     o.layers = {}
+    o.fonts = {}
     o.backgroundColor = {0, 0, 0}
 
     o.locale = "en-US"
@@ -242,6 +244,18 @@ local function getLayer(self, layer)
         error("invalid layer handle")
     end
     return layerRef
+end
+
+-- Get the requested font with error handling.
+-- @tparam table self The RenderScript to act on.
+-- @tparam int layer The font reference to retrieve.
+-- @treturn table The requested font object.
+local function getFont(self, font)
+    local fontRef = self.fonts[font]
+    if not fontRef then
+        error("invalid font handle")
+    end
+    return fontRef
 end
 
 local Property = {
@@ -269,6 +283,11 @@ local Property = {
         next = "nextStrokeWidth",
         default = "defaultStrokeWidth",
         missing = 0
+    },
+    TextAlign = {
+        next = "nextTextAlign",
+        default = "defaultTextAlign",
+        missing = {M.AlignH.AlignH_Left, M.AlignV.AlignV_Baseline} -- TODO test defaults
     }
 }
 
@@ -531,7 +550,7 @@ end
 --- Add text to layer using font, with top-left baseline starting at (x, y). Note that each glyph in text counts as one
 -- shape toward the total rendered shape limit.
 --
--- Supported properties: fillColor
+-- Supported properties: fillColor, shadow, strokeColor, strokeWidth, textAlign
 -- @tparam int layer The id of the layer to which to add.
 -- @tparam int font The id of the font to use.
 -- @tparam string text The text to add.
@@ -540,6 +559,24 @@ end
 -- @see loadFont
 function M:addText(layer, font, text, x, y)
     local layerRef = getLayer(self, layer)
+    if not layerRef.text then
+        layerRef.text = {}
+    end
+    local layerShape = layerRef.text
+    local fontRef = getFont(self, font)
+
+    layerShape[#layerShape + 1] = {
+        x = x,
+        y = y,
+        text = text,
+        font = fontRef.name,
+        size = fontRef.size,
+        fillColor = getPropertyValue(layerRef, Property.FillColor, M.Shape.Shape_Text),
+        shadow = getPropertyValue(layerRef, Property.Shadow, M.Shape.Shape_Text),
+        strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_Text),
+        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Text),
+        textAlign = getPropertyValue(layerRef, Property.TextAlign, M.Shape.Shape_Text)
+    }
 
     clearNext(layerRef)
 end
@@ -591,10 +628,10 @@ function M:createLayer()
         defaultShadow = {},
         defaultStrokeColor = {},
         defaultStrokeWidth = {
-            -- TODO verify default in-game
-            [M.Shape.Shape_Bezier] = 3,
-            [M.Shape.Shape_Line] = 3
-        }
+            [M.Shape.Shape_Bezier] = 1,
+            [M.Shape.Shape_Line] = 1
+        },
+        defaultTextAlign = {}
     }
     return #self.layers
 end
@@ -791,7 +828,15 @@ end
 -- @treturn int The id that can be used to uniquely identify the font for use with other API functions.
 -- @see addText
 function M:loadFont(name, size)
-    return 0
+    if name == "RobotoMono" then
+        name = "Roboto Mono"
+    end
+
+    self.fonts[#self.fonts + 1] = {
+        name = name,
+        size = size
+    }
+    return #self.fonts
 end
 
 --- <b>Deprecated:</b> Returns true if the given font is loaded.
@@ -799,7 +844,7 @@ end
 -- @treturn boolean True if loaded, false otherwise.
 -- @see loadFont
 function M:isFontLoaded(font)
-    return false
+    return self.fonts[font] ~= nil
 end
 
 --- Compute and return the bounding box width and height of the given text in the given font as a (width, height)
@@ -824,13 +869,16 @@ end
 -- @tparam int font The id of the font to query.
 -- @treturn float The font size in vertical pixels.
 function M:getFontSize(font)
-    return 10
+    local fontRef = getFont(self, font)
+    return fontRef.size
 end
 
 --- Set the size at which a font will render. Impacts all subsequent font-related calls, including @{addText}, @{getFontMetrics}, and @{getTextBounds}.
 -- @tparam int font The id of the font for which the size will be set.
 -- @tparam int size The new size, in vertical pixels, at which the font will render.
 function M:setFontSize(font, size)
+    local fontRef = getFont(self, font)
+    fontRef.size = size
 end
 
 -- --------- --
@@ -936,6 +984,8 @@ end
 -- @see AlignH
 -- @see AlignV
 function M:setDefaultTextAlign(layer, alignH, alignV)
+    local layerRef = getLayer(self, layer)
+    layerRef.defaultTextAlign = {alignH, alignV}
 end
 -- ---------- --
 -- Properties --
@@ -1145,7 +1195,34 @@ local function getStrokeString(shape)
         strokeWidth, colorToHex(table.unpack(strokeColor, 1, 3)), opacity)
 end
 
+local AlignHMapping = {
+    [M.AlignH.AlignH_Left] = "start",
+    [M.AlignH.AlignH_Center] = "middle",
+    [M.AlignH.AlignH_Right] = "end"
+}
+local AlignVMapping = {
+    [M.AlignV.AlignV_Ascender] = "",
+    [M.AlignV.AlignV_Top] = "text-top",
+    [M.AlignV.AlignV_Middle] = "",
+    [M.AlignV.AlignV_Baseline] = "",
+    [M.AlignV.AlignV_Bottom] = "text-bottom",
+    [M.AlignV.AlignV_Descender] = "",
+}
+local function getAlignString(shape)
+    local alignH = AlignHMapping[shape.textAlign[1]]
+    local alignV = AlignVMapping[shape.textAlign[2]]
+    return string.format([[ text-anchor="%s" dominant-baseline="%s"]],
+        alignH, alignV)
+end
+
 --- Mock only, not in-game: Generates an SVG image from the data provided to the renderer.
+--
+-- Known discrepancies from in-game behavior (tested in firefox):
+-- <ul>
+--   <li>Stroke drawn centered on shape border instead of outside it</li>
+--   <li>Shadows less vibrant</li>
+--   <li>Default stroke width narrower</li>
+-- </ul>
 -- @treturn string The SVG string.
 function M:mockGenerateSvg()
     local svg = {}
@@ -1249,6 +1326,17 @@ function M:mockGenerateSvg()
         end
 
         if layer.text then
+            for _, shape in pairs(layer.text) do
+                fillString = getFillString(shape)
+                shadowString = getShadowString(shape)
+                strokeString = getStrokeString(shape)
+                local alignString = getAlignString(shape)
+                svg[#svg + 1] =
+                    string.format([[        <text x="%f" y="%f" font-family="%s" font-size="%f"%s%s%s%s>%s</text>]],
+                        shape.x, shape.y, shape.font, shape.size,
+                        fillString, shadowString, strokeString, alignString,
+                        shape.text)
+            end
         end
 
         svg[#svg + 1] = "    </g>"
