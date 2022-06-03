@@ -186,11 +186,24 @@ local fontCount = getAvailableFontCount()
 if fontCount ~= 12 then
     message[#message + 1] = "Unepxected font count: " .. fontCount
     errorLines[#message] = true
+else
+    message[#message + 1] = "Expected font count: " .. fontCount
 end
 
 local lineSize = 20
 local layer = createLayer()
 local font = loadFont("RobotoMono", lineSize * .75)
+
+local MAX_FONTS = 8
+for fontCount = 2, MAX_FONTS do
+    loadFont(getAvailableFontName(fontCount), 10)
+end
+if pcall(loadFont, getAvailableFontName(1), 10) then
+    message[#message + 1] = "Loaded more than MAX_FONTS: " .. MAX_FONTS + 1
+    errorLines[#message] = true
+else
+    message[#message + 1] = "Expected max fonts: " .. MAX_FONTS
+end
 
 local error = {}
 for line, text in pairs(message) do

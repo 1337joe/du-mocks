@@ -234,6 +234,25 @@ end
 -- Helper Functions --
 -- ---------------- --
 
+local function validateParameters(expected, ...)
+    local args = table.pack(...)
+    local expectedType
+    for i = args.n, 1, -1 do
+        expectedType = expected[i]
+        if expectedType == "integer" then
+            expectedType = "number"
+        end
+
+        assert(type(args[i]) == expectedType,
+            string.format("expected %s for parameter %d", expected[i], i))
+
+        if expected[i] == "integer" then
+            assert(args[i] // 1 == args[i],
+                string.format("expected %s for parameter %d", expected[i], i))
+        end
+    end
+end
+
 -- Get the requested layer with error handling.
 -- @tparam table self The RenderScript to act on.
 -- @tparam int layer The layer reference to retrieve.
@@ -333,6 +352,8 @@ end
 -- @tparam float x3 X coordinate of the third point of the curve (the ending point).
 -- @tparam float y3 Y coordinate of the third point of the curve (the ending point).
 function M:addBezier(layer, x1, y1, x2, y2, x3, y3)
+    validateParameters({"integer", "number", "number", "number", "number", "number", "number"}
+        , layer, x1, y1, x2, y2, x3, y3)
     local layerRef = getLayer(self, layer)
     if not layerRef.bezier then
         layerRef.bezier = {}
@@ -363,6 +384,8 @@ end
 -- @tparam float width The width of the box in pixels.
 -- @tparam float height The height of the box in pixels.
 function M:addBox(layer, x, y, width, height)
+    validateParameters({"integer", "number", "number", "number", "number"}
+        , layer, x, y, width, height)
     local layerRef = getLayer(self, layer)
     if not layerRef.box then
         layerRef.box = {}
@@ -395,6 +418,8 @@ end
 -- @tparam float height The height of the box in pixels.
 -- @tparam float radius The corner radius of the box in pixels.
 function M:addBoxRounded(layer, x, y, width, height, radius)
+    validateParameters({"integer", "number", "number", "number", "number", "number"}
+        , layer, x, y, width, height, radius)
     local layerRef = getLayer(self, layer)
     if not layerRef.boxRounded then
         layerRef.boxRounded = {}
@@ -425,6 +450,8 @@ end
 -- @tparam float y The y coordinate (in pixels) of the center of the circle.
 -- @tparam float radius The radius of the circle in pixels.
 function M:addCircle(layer, x, y, radius)
+    validateParameters({"integer", "number", "number", "number"}
+        , layer, x, y, radius)
     local layerRef = getLayer(self, layer)
     if not layerRef.circle then
         layerRef.circle = {}
@@ -455,6 +482,8 @@ end
 -- @tparam float height The height of the image in pixels.
 -- @see loadImage
 function M:addImage(layer, image, x, y, width, height)
+    validateParameters({"integer", "integer", "number", "number", "number", "number"}
+        , layer, image, x, y, width, height)
     local layerRef = getLayer(self, layer)
 
     clearNext(layerRef)
@@ -475,6 +504,8 @@ end
 -- @tparam float subSy Height of the sub-region within the image to draw.
 -- @see loadImage
 function M:addImageSub(layer, image, x, y, sx, sy, subX, subY, subSx, subSy)
+    validateParameters({"integer", "integer", "number", "number", "number", "number", "number", "number", "number", "number"}
+        , layer, image, x, y, sx, sy, subX, subY, subSx, subSy)
     local layerRef = getLayer(self, layer)
 
     clearNext(layerRef)
@@ -489,6 +520,8 @@ end
 -- @tparam float x2 The x coordinate (in pixels) of the end of the line.
 -- @tparam float y2 The y coordinate (in pixels) of the end of the line.
 function M:addLine(layer, x1, y1, x2, y2)
+    validateParameters({"integer", "number", "number", "number", "number"}
+        , layer, x1, y1, x2, y2)
     local layerRef = getLayer(self, layer)
     if not layerRef.line then
         layerRef.line = {}
@@ -522,6 +555,8 @@ end
 -- @tparam float x4 The x coordinate (in pixels) of the final corner.
 -- @tparam float y4 The y coordinate (in pixels) of the final corner.
 function M:addQuad(layer, x1, y1, x2, y2, x3, y3, x4, y4)
+    validateParameters({"integer", "number", "number", "number", "number", "number", "number", "number", "number"}
+        , layer, x1, y1, x2, y2, x3, y3, x4, y4)
     local layerRef = getLayer(self, layer)
     if not layerRef.quad then
         layerRef.quad = {}
@@ -558,6 +593,8 @@ end
 -- @tparam float y The y coordinate (in pixels) of the top-left baseline.
 -- @see loadFont
 function M:addText(layer, font, text, x, y)
+    validateParameters({"integer", "integer", "string", "number", "number"}
+        , layer, font, text, x, y)
     local layerRef = getLayer(self, layer)
     if not layerRef.text then
         layerRef.text = {}
@@ -592,6 +629,8 @@ end
 -- @tparam float x3 The x coordinate (in pixels) of the third corner.
 -- @tparam float y3 The y coordinate (in pixels) of the third corner.
 function M:addTriangle(layer, x1, y1, x2, y2, x3, y3)
+    validateParameters({"integer", "number", "number", "number", "number", "number", "number"}
+        , layer, x1, y1, x2, y2, x3, y3)
     local layerRef = getLayer(self, layer)
     if not layerRef.triangle then
         layerRef.triangle = {}
@@ -645,6 +684,9 @@ end
 -- @tparam float sx The width of the clipping rectangle.
 -- @tparam float sy The height of the clipping rectangle.
 function M:setLayerClipRect(layer, x, y, sx, sy)
+    validateParameters({"integer", "number", "number", "number", "number"}
+        , layer, x, y, sx, sy)
+    local layerRef = getLayer(self, layer)
 end
 
 --- Set the transform origin of a layer; layer scaling and rotation are applied relative to this origin.
@@ -652,12 +694,18 @@ end
 -- @tparam float x The X coordinate of the layer's transform origin.
 -- @tparam float y The Y coordinate of the layer's transform origin.
 function M:setLayerOrigin(layer, x, y)
+    validateParameters({"integer", "number", "number"}
+        , layer, x, y)
+    local layerRef = getLayer(self, layer)
 end
 
 --- Set a rotation applied to the layer as a whole, relative to the layer's transform origin.
 -- @tparam int layer The id of the layer for which the rotation will be set.
 -- @tparam float rotation Rotation, in radians; positive is counter-clockwise, negative is clockwise.
 function M:setLayerRotation(layer, rotation)
+    validateParameters({"integer", "number"}
+        , layer, rotation)
+    local layerRef = getLayer(self, layer)
 end
 
 --- Set a scale factor applied to the layer as a whole, relative to the layer's transform origin. Scale factors are
@@ -667,6 +715,9 @@ end
 -- @tparam float sx The scale factor along the X axis.
 -- @tparam float sy The scale factor along the Y axis.
 function M:setLayerScale(layer, sx, sy)
+    validateParameters({"integer", "number", "number"}
+        , layer, sx, sy)
+    local layerRef = getLayer(self, layer)
 end
 
 --- Set a translation applied to the layer as a whole.
@@ -674,6 +725,9 @@ end
 -- @tparam float tx The translation along the X axis.
 -- @tparam float ty The translation along the Y axis.
 function M:setLayerTranslation(layer, tx, ty)
+    validateParameters({"integer", "number", "number"}
+        , layer, tx, ty)
+    local layerRef = getLayer(self, layer)
 end
 
 -- ---------------------- --
@@ -754,11 +808,8 @@ end
 --- Write message to the Lua chat if the output checkbox is checked.
 -- @tparam string message The message to print.
 function M:logMessage(message)
-    if system and type(system.print) == "function" then
-        system.print(message)
-    else
-        print(message)
-    end
+    local success, result = pcall(print, message)
+    assert(success, "expected string for parameter 1")
 end
 
 -- ------------------ --
@@ -780,6 +831,7 @@ end
 -- @treturn boolean True if loaded, false otherwise.
 -- @see loadImage
 function M:isImageLoaded(imageHandle)
+    -- TODO error message: invalid image handle
     return false
 end
 
@@ -788,19 +840,38 @@ end
 -- @treturn float,float A tuple containing the width and height, respectively, of the image, or (0, 0) if the image is
 --   not yet loaded.
 function M:getImageSize(image)
+    -- TODO error message: invalid image handle
     return {0, 0}
 end
+
+local AvailableFonts = {
+    "FiraMono",
+    "FiraMono-Bold",
+    "Montserrat",
+    "Montserrat-Bold",
+    "Montserrat-Light",
+    "Play",
+    "Play-Bold",
+    "RefrigeratorDeluxe",
+    "RefrigeratorDeluxe-Light",
+    "RobotoCondensed",
+    "RobotoMono",
+    "RobotoMono-Bold",
+}
 
 --- Returns the number of fonts available to be used by render script.
 -- @treturn int The total number of fonts available.
 function M:getAvailableFontCount()
-    return 12
+    return #AvailableFonts
 end
 
 --- Returns the name of the nth available font.
 -- @tparam int index A number between 1 and the return value of @{getAvailableFontCount}.
 -- @treturn string The name of the font, which can be used with the @{loadFont} function.
 function M:getAvailableFontName(index)
+    validateParameters({"integer"}, index)
+    assert(index >= 1 and index <= #AvailableFonts, "out-of-bounds font index")
+    return AvailableFonts[index]
 end
 
 --- Return a font handle that can be used with @{addText}. If the font is not yet loaded, a sentinel value will be
@@ -812,8 +883,8 @@ end
 --   <li>FiraMono</li>
 --   <li>FiraMono-Bold</li>
 --   <li>Montserrat</li>
---   <li>Montserrat-Light</li>
 --   <li>Montserrat-Bold</li>
+--   <li>Montserrat-Light</li>
 --   <li>Play</li>
 --   <li>Play-Bold</li>
 --   <li>RefrigeratorDeluxe</li>
@@ -828,9 +899,22 @@ end
 -- @treturn int The id that can be used to uniquely identify the font for use with other API functions.
 -- @see addText
 function M:loadFont(name, size)
+    validateParameters({"string", "number"}
+        , name, size)
+    local found = false
+    for _, font in pairs(AvailableFonts) do
+        if font == name then
+            found = true
+            break
+        end
+    end
+    assert(found, string.format("unknown font <%s>", name))
+
     if name == "RobotoMono" then
         name = "Roboto Mono"
     end
+
+    assert(#self.fonts < 8, "exceeded maximum number of loaded fonts (8)")
 
     self.fonts[#self.fonts + 1] = {
         name = name,
@@ -844,7 +928,9 @@ end
 -- @treturn boolean True if loaded, false otherwise.
 -- @see loadFont
 function M:isFontLoaded(font)
-    return self.fonts[font] ~= nil
+    validateParameters({"integer"}, font)
+    getFont(self, font)
+    return true
 end
 
 --- Compute and return the bounding box width and height of the given text in the given font as a (width, height)
@@ -854,6 +940,9 @@ end
 -- @treturn float,float The text bounds as (width, height) in pixels.
 -- @see loadFont
 function M:getTextBounds(font, text)
+    validateParameters({"integer"}
+        , font) -- not validating text as string because anything that auto-converts to a string is accepted
+    local fontRef = getFont(self, font)
     return 0.0, 0.0
 end
 
@@ -862,6 +951,8 @@ end
 -- @treturn float,float A tuple containing the maximal ascender and descender, respectively, of the given font.
 -- @see loadFont
 function M:getFontMetrics(font)
+    validateParameters({"integer"}, font)
+    local fontRef = getFont(self, font)
     return 0.0, 0.0
 end
 
@@ -869,6 +960,7 @@ end
 -- @tparam int font The id of the font to query.
 -- @treturn float The font size in vertical pixels.
 function M:getFontSize(font)
+    validateParameters({"integer"}, font)
     local fontRef = getFont(self, font)
     return fontRef.size
 end
@@ -877,6 +969,8 @@ end
 -- @tparam int font The id of the font for which the size will be set.
 -- @tparam int size The new size, in vertical pixels, at which the font will render.
 function M:setFontSize(font, size)
+    validateParameters({"integer", "number"},
+        font, size)
     local fontRef = getFont(self, font)
     fontRef.size = size
 end
@@ -893,6 +987,7 @@ end
 -- contents should not call this function at all.</u>
 -- @tparam int frames The number of frames to wait before redrawing the screen.
 function M:requestAnimationFrame(frames)
+    validateParameters({"integer"}, frames)
 end
 
 -- ------------------- --
@@ -904,6 +999,8 @@ end
 -- @tparam float g The green component, between 0 and 1.
 -- @tparam float b The blue component, between 0 and 1.
 function M:setBackgroundColor(r, g, b)
+    validateParameters({"number", "number", "number"},
+        r, g, b)
     self.backgroundColor = {r, g, b}
 end
 
@@ -918,6 +1015,8 @@ end
 -- @tparam float a The alpha component, between 0 and 1.
 -- @see Shape
 function M:setDefaultFillColor(layer, shapeType, r, g, b, a)
+    validateParameters({"integer", "integer", "number", "number", "number", "number"},
+        layer, shapeType, r, g, b, a)
     local layerRef = getLayer(self, layer)
     layerRef.defaultFillColor[shapeType] = {r, g, b, a}
 end
@@ -929,6 +1028,8 @@ end
 -- @tparam float radians Rotation, in radians; positive is counter-clockwise, negative is clockwise.
 -- @see Shape
 function M:setDefaultRotation(layer, shapeType, radians)
+    validateParameters({"integer", "integer", "number"},
+        layer, shapeType, radians)
     local layerRef = getLayer(self, layer)
     layerRef.defaultRotation[shapeType] = math.deg(radians)
 end
@@ -945,6 +1046,8 @@ end
 -- @tparam float a The alpha component, between 0 and 1.
 -- @see Shape
 function M:setDefaultShadow(layer, shapeType, radius, r, g, b, a)
+    validateParameters({"integer", "integer", "number", "number", "number", "number", "number"},
+        layer, shapeType, radius, r, g, b, a)
     local layerRef = getLayer(self, layer)
     layerRef.defaultShadow[shapeType] = {radius, r, g, b, a}
 end
@@ -959,6 +1062,8 @@ end
 -- @tparam float a The alpha component, between 0 and 1.
 -- @see Shape
 function M:setDefaultStrokeColor(layer, shapeType, r, g, b, a)
+    validateParameters({"integer", "integer", "number", "number", "number", "number"},
+        layer, shapeType, r, g, b, a)
     local layerRef = getLayer(self, layer)
     layerRef.defaultStrokeColor[shapeType] = {r, g, b, a}
 end
@@ -971,6 +1076,8 @@ end
 -- @tparam float width Stroke width, in pixels.
 -- @see Shape
 function M:setDefaultStrokeWidth(layer, shapeType, width)
+    validateParameters({"integer", "integer", "number"},
+        layer, shapeType, width)
     local layerRef = getLayer(self, layer)
     layerRef.defaultStrokeWidth[shapeType] = width
 end
@@ -984,9 +1091,12 @@ end
 -- @see AlignH
 -- @see AlignV
 function M:setDefaultTextAlign(layer, alignH, alignV)
+    validateParameters({"integer", "integer", "integer"},
+        layer, alignH, alignV)
     local layerRef = getLayer(self, layer)
     layerRef.defaultTextAlign = {alignH, alignV}
 end
+
 -- ---------- --
 -- Properties --
 -- ---------- --
@@ -999,6 +1109,8 @@ end
 -- @tparam float b The blue component, between 0 and 1.
 -- @tparam float a The alpha component, between 0 and 1.
 function M:setNextFillColor(layer, r, g, b, a)
+    validateParameters({"integer", "number", "number", "number", "number"},
+        layer, r, g, b, a)
     local layerRef = getLayer(self, layer)
     layerRef.nextFillColor = {r, g, b, a}
 end
@@ -1009,6 +1121,8 @@ end
 -- @tparam float radians The angle (in radians) to rotate by.
 -- @see setNextRotationDegrees
 function M:setNextRotation(layer, radians)
+    validateParameters({"integer", "number"},
+        layer, radians)
     local layerRef = getLayer(self, layer)
     layerRef.nextRotation = math.deg(radians)
 end
@@ -1019,6 +1133,8 @@ end
 -- @tparam float degrees The angle (in degrees) to rotate by.
 -- @see setNextRotation
 function M:setNextRotationDegrees(layer, degrees)
+    validateParameters({"integer", "number"},
+        layer, degrees)
     local layerRef = getLayer(self, layer)
     layerRef.nextRotation = degrees
 end
@@ -1033,6 +1149,8 @@ end
 -- @tparam float b The blue component, between 0 and 1.
 -- @tparam float a The alpha component, between 0 and 1.
 function M:setNextShadow(layer, radius, r, g, b, a)
+    validateParameters({"integer", "number", "number", "number", "number", "number"},
+        layer, radius, r, g, b, a)
     local layerRef = getLayer(self, layer)
     layerRef.nextShadow = {radius, r, g, b, a}
 end
@@ -1045,6 +1163,8 @@ end
 -- @tparam float b The blue component, between 0 and 1.
 -- @tparam float a The alpha component, between 0 and 1.
 function M:setNextStrokeColor(layer, r, g, b, a)
+    validateParameters({"integer", "number", "number", "number", "number"},
+        layer, r, g, b, a)
     local layerRef = getLayer(self, layer)
     layerRef.nextStrokeColor = {r, g, b, a}
 end
@@ -1055,6 +1175,8 @@ end
 -- @tparam int layer The handle for the layer to apply this property to.
 -- @tparam float width The width of the stroke in pixels.
 function M:setNextStrokeWidth(layer, width)
+    validateParameters({"integer", "number"},
+        layer, width)
     local layerRef = getLayer(self, layer)
     layerRef.nextStrokeWidth = width
 end
@@ -1075,6 +1197,8 @@ end
 -- @see AlignH
 -- @see AlignV
 function M:setNextTextAlign(layer, alignH, alignV)
+    validateParameters({"integer", "integer", "integer"},
+        layer, alignH, alignV)
     local layerRef = getLayer(self, layer)
     layerRef.nextTextAlign = {alignH, alignV}
 end

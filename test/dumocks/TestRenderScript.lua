@@ -63,6 +63,143 @@ function _G.TestScreenRenderer:tearDown()
     end
 end
 
+function _G.TestScreenRenderer.testParameterValidation()
+    local screenRenderer = sr:new()
+    local closure = screenRenderer:mockGetEnvironment()
+
+    local oldEnv = _ENV
+    local _ENV = closure
+
+        ---------------
+    -- copy from here to renderer
+    ---------------
+
+    local layer = createLayer()
+    local font = loadFont("FiraMono", 50)
+
+    local success, result
+
+    success, result = pcall(getAvailableFontName, 0)
+    assert(not success)
+    assert(string.find(result, "out%-of%-bounds font index"), "Unexpected error message- " .. result)
+
+    success, result = pcall(loadFont, "invalid", 5)
+    assert(not success)
+    assert(string.find(result, "unknown font <invalid>"), "Unexpected error message- " .. result)
+
+    success, result = pcall(addText)
+    assert(not success)
+    assert(string.find(result, "expected number for parameter 5"), "Unexpected error message- " .. result)
+
+    success, result = pcall(addText, nil, nil, nil, nil, 2.3)
+    assert(not success)
+    assert(string.find(result, "expected number for parameter 4"), "Unexpected error message- " .. result)
+
+    success, result = pcall(addText, nil, nil, nil, 1.2, 2.3)
+    assert(not success)
+    assert(string.find(result, "expected string for parameter 3"), "Unexpected error message- " .. result)
+
+    success, result = pcall(addText, nil, nil, "text", 1.2, 2.3)
+    assert(not success)
+    assert(string.find(result, "expected integer for parameter 2"), "Unexpected error message- " .. result)
+
+    success, result = pcall(addText, nil, 2, "text", 1.2, 2.3)
+    assert(not success)
+    assert(string.find(result, "expected integer for parameter 1"), "Unexpected error message- " .. result)
+
+    success, result = pcall(addText, 5, 6, "text", 1.2, 2.3)
+    assert(not success)
+    assert(string.find(result, "invalid layer handle"), "Unexpected error message- " .. result)
+
+    success, result = pcall(addText, layer, 6, "text", 1.2, 2.3)
+    assert(not success)
+    assert(string.find(result, "invalid font handle"), "Unexpected error message- " .. result)
+
+    success, result = pcall(addText, layer, font, "Success", 50, 50)
+    assert(success)
+
+    ---------------
+    -- copy to here to renderer
+    ---------------
+
+    _ENV = oldEnv
+end
+
+function _G.TestScreenRenderer.testGetLocale()
+    local screenRenderer = sr:new()
+    local closure = screenRenderer:mockGetEnvironment()
+    local expected, actual
+
+    -- English
+    expected = "en-US"
+    screenRenderer.locale = expected
+    actual = closure.getLocale()
+    lu.assertEquals(actual, expected)
+
+    -- French
+    expected = "fr-FR"
+    screenRenderer.locale = expected
+    local oldEnv = _ENV
+    local _ENV = closure
+
+    actual = getLocale()
+
+    _ENV = oldEnv
+    lu.assertEquals(actual, expected)
+
+    -- German
+    expected = "de-DE"
+    screenRenderer.locale = expected
+    local oldEnv = _ENV
+    local _ENV = closure
+
+    actual = getLocale()
+
+    _ENV = oldEnv
+    lu.assertEquals(actual, expected)
+end
+
+function _G.TestScreenRenderer.testGetInput()
+    local screenRenderer = sr:new()
+    local closure = screenRenderer:mockGetEnvironment()
+    local expected, actual
+
+    -- default: empty string
+    expected = ""
+    local oldEnv = _ENV
+    local _ENV = closure
+
+    actual = getInput()
+
+    _ENV = oldEnv
+    lu.assertEquals(actual, "")
+
+    -- non-default
+    expected = "test"
+    screenRenderer.input = expected
+    local oldEnv = _ENV
+    local _ENV = closure
+
+    actual = getInput()
+
+    _ENV = oldEnv
+    lu.assertEquals(actual, expected)
+end
+
+function _G.TestScreenRenderer.testSetOutput()
+    local screenRenderer = sr:new()
+    local closure = screenRenderer:mockGetEnvironment()
+
+    local oldEnv = _ENV
+    local _ENV = closure
+
+    setOutput("test")
+
+    _ENV = oldEnv
+
+    lu.assertEquals(screenRenderer.output, "test")
+end
+
 function _G.TestScreenRenderer:testShapes()
     local screenRenderer = sr:new()
     local closure = screenRenderer:mockGetEnvironment()
