@@ -1094,7 +1094,7 @@ function M:setDefaultTextAlign(layer, alignH, alignV)
     validateParameters({"integer", "integer", "integer"},
         layer, alignH, alignV)
     local layerRef = getLayer(self, layer)
-    layerRef.defaultTextAlign = {alignH, alignV}
+    layerRef.defaultTextAlign[M.Shape.Shape_Text] = {alignH, alignV}
 end
 
 -- ---------- --
