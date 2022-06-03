@@ -90,12 +90,16 @@ end
 -- 1. 1x Screen or Sign, paste relevent bit directly into render script
 --
 -- Exercises: ??TODO??
-function _G.TestScreenRenderer.testGameBehavior()
+function _G.TestScreenRenderer:testGameBehavior()
     local screenRenderer = sr:new()
     local closure = screenRenderer:mockGetEnvironment()
 
     local script = assert(loadfile(INPUT_DIR .. "verifyEnvironment.lua", "t", closure))
     script()
+
+    self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Verify Environment", screenRenderer:mockGenerateSvg())
+
+    lu.assertEquals(screenRenderer.output, "")
 end
 
 os.exit(lu.LuaUnit.run())
