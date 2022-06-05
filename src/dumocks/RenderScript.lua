@@ -188,7 +188,7 @@ M.Shape = {
 -- purposes only.
 -- @table AlignH
 M.AlignH = {
-    AlignH_Left = 0, -- Align to the start of the text.
+    AlignH_Left = 0, -- Default: Align to the start of the text.
     AlignH_Center = 1, -- Align to the middle of the text.
     AlignH_Right = 2, -- Align to the end of the text.
 }
@@ -202,7 +202,7 @@ M.AlignV = {
     AlignV_Ascender = 0, -- Align to top of ascender.
     AlignV_Top = 1, -- Align to height of capital characters.
     AlignV_Middle = 2, -- Align to middle of characters.
-    AlignV_Baseline = 3, -- Align to text baseline.
+    AlignV_Baseline = 3, -- Default: Align to text baseline.
     AlignV_Bottom = 4,
     AlignV_Descender = 5, -- Align to bottom of descender.
 }
