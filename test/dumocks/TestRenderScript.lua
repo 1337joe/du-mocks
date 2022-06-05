@@ -37,7 +37,11 @@ _G.TestScreenRenderer = {
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Play&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
     <ul class="gallery">
@@ -139,23 +143,13 @@ function _G.TestScreenRenderer.testGetLocale()
     -- French
     expected = "fr-FR"
     screenRenderer.locale = expected
-    local oldEnv = _ENV
-    local _ENV = closure
-
-    actual = getLocale()
-
-    _ENV = oldEnv
+    actual = closure.getLocale()
     lu.assertEquals(actual, expected)
 
     -- German
     expected = "de-DE"
     screenRenderer.locale = expected
-    local oldEnv = _ENV
-    local _ENV = closure
-
-    actual = getLocale()
-
-    _ENV = oldEnv
+    actual = closure.getLocale()
     lu.assertEquals(actual, expected)
 end
 
@@ -166,23 +160,31 @@ function _G.TestScreenRenderer.testGetInput()
 
     -- default: empty string
     expected = ""
-    local oldEnv = _ENV
-    local _ENV = closure
-
-    actual = getInput()
-
-    _ENV = oldEnv
-    lu.assertEquals(actual, "")
+    actual = closure.getInput()
+    lu.assertEquals(actual, expected)
 
     -- non-default
     expected = "test"
     screenRenderer.input = expected
-    local oldEnv = _ENV
-    local _ENV = closure
+    actual = closure.getInput()
+    lu.assertEquals(actual, expected)
+end
 
-    actual = getInput()
+function _G.TestScreenRenderer.testGetSetFontSize()
+    local screenRenderer = sr:new()
+    local closure = screenRenderer:mockGetEnvironment()
+    local expected, actual
 
-    _ENV = oldEnv
+    -- set by loading font
+    expected = 10
+    local font = closure.loadFont(closure.getAvailableFontName(1), expected)
+    actual = closure.getFontSize(font)
+    lu.assertEquals(actual, expected)
+
+    -- set by calling set
+    expected = 20
+    closure.setFontSize(font, expected)
+    actual = closure.getFontSize(font)
     lu.assertEquals(actual, expected)
 end
 
@@ -205,8 +207,8 @@ function _G.TestScreenRenderer:testShapes()
     local closure = screenRenderer:mockGetEnvironment()
 
     local script = assert(loadfile(INPUT_DIR .. "shapes.lua", "t", closure))
-    script()
 
+    script()
     self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Shapes", screenRenderer:mockGenerateSvg())
 end
 
@@ -215,9 +217,33 @@ function _G.TestScreenRenderer:testStrokeWidthTextAlign()
     local closure = screenRenderer:mockGetEnvironment()
 
     local script = assert(loadfile(INPUT_DIR .. "strokeAlign.lua", "t", closure))
-    script()
 
+    script()
     self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Stroke Width/Text Align", screenRenderer:mockGenerateSvg())
+end
+
+function _G.TestScreenRenderer:testFontSampler()
+    local screenRenderer = sr:new()
+    local closure = screenRenderer:mockGetEnvironment()
+
+    local script = assert(loadfile(INPUT_DIR .. "fontSampler.lua", "t", closure))
+
+    -- script advances screens on mouse click, cursorDown will advance every repaint
+    screenRenderer.cursorDown = true
+
+    local page = 1
+    local index, previousIndex
+    index = 0
+    repeat
+        previousIndex = index
+        screenRenderer:mockReset()
+
+        script()
+        self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Font Sampler " .. page, screenRenderer:mockGenerateSvg())
+
+        page = page + 1
+        index = closure.persistent.index
+    until index < previousIndex
 end
 
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
@@ -232,8 +258,8 @@ function _G.TestScreenRenderer:testGameBehavior()
     local closure = screenRenderer:mockGetEnvironment()
 
     local script = assert(loadfile(INPUT_DIR .. "verifyEnvironment.lua", "t", closure))
-    script()
 
+    script()
     self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Verify Environment", screenRenderer:mockGenerateSvg())
 
     lu.assertEquals(screenRenderer.output, "")

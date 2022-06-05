@@ -859,6 +859,94 @@ local AvailableFonts = {
     "RobotoMono-Bold",
 }
 
+local FontData = {
+    ["FiraMono"] = {
+        name = "Fira Mono",
+        ascenderMult = 0.935546875,
+        descenderMult = -0.265625,
+        widthMultAvg = 0.70282573084677,
+        heightMultAvg = 0.92565524193548,
+    },
+    ["FiraMono-Bold"] = {
+        name = "Fira Mono",
+        weight = "bold",
+        ascenderMult = 0.935546875,
+        descenderMult = -0.265625,
+        widthMultAvg = 0.7590568296371,
+        heightMultAvg = 0.93699596774194,
+    },
+    ["Montserrat"] = {
+        ascenderMult = 0.96875,
+        descenderMult = -0.251953125,
+        widthMultAvg = 0.7839591733871,
+        heightMultAvg = 0.921875,
+    },
+    ["Montserrat-Bold"] = {
+        weight = "bold",
+        ascenderMult = 0.96875,
+        descenderMult = -0.251953125,
+        widthMultAvg = 0.82601436491935,
+        heightMultAvg = 0.92666330645161,
+    },
+    ["Montserrat-Light"] = {
+        weight = "lighter",
+        ascenderMult = 0.96875,
+        descenderMult = -0.251953125,
+        widthMultAvg = 0.7614037298387,
+        heightMultAvg = 0.91859879032258,
+    },
+    ["Play"] = {
+        ascenderMult = 0.9375,
+        descenderMult = -0.220703125,
+        widthMultAvg = 0.7009513608871,
+        heightMultAvg = 0.87525201612903,
+    },
+    ["Play-Bold"] = {
+        weight = "bold",
+        ascenderMult = 0.9375,
+        descenderMult = -0.220703125,
+        widthMultAvg = 0.75017326108871,
+        heightMultAvg = 0.87525201612903,
+    },
+    ["RefrigeratorDeluxe"] = {
+        name = "refrigerator-deluxe, sans-serif",
+        ascenderMult = 0.82421875,
+        descenderMult = -0.1767578125,
+        widthMultAvg = 0.54813508064516,
+        heightMultAvg = 0.88886088709677,
+    },
+    ["RefrigeratorDeluxe-Light"] = {
+        name = "refrigerator-deluxe, sans-serif",
+        weight = "lighter",
+        ascenderMult = 0.82421875,
+        descenderMult = -0.1767578125,
+        widthMultAvg = 0.52898185483871,
+        heightMultAvg = 0.88860887096774,
+    },
+    ["RobotoCondensed"] = {
+        name = "Roboto Condensed",
+        ascenderMult = 0.927734375,
+        descenderMult = -0.244140625,
+        widthMultAvg = 0.63977444556452,
+        heightMultAvg = 0.93220766129032,
+    },
+    ["RobotoMono"] = {
+        name = "Roboto Mono",
+        ascenderMult = 1.0478515625,
+        descenderMult = -0.271484375,
+        widthMultAvg = 0.71044921875,
+        heightMultAvg = 0.93245967741935,
+    },
+    ["RobotoMono-Bold"] = {
+        name = "Roboto Mono",
+        weight = "bold",
+        ascenderMult = 1.0478515625,
+        descenderMult = -0.271484375,
+        widthMultAvg = 0.73979334677419,
+        heightMultAvg = 0.93321572580645,
+    }
+}
+
 --- Returns the number of fonts available to be used by render script.
 -- @treturn int The total number of fonts available.
 function M:getAvailableFontCount()
@@ -910,10 +998,6 @@ function M:loadFont(name, size)
     end
     assert(found, string.format("unknown font <%s>", name))
 
-    if name == "RobotoMono" then
-        name = "Roboto Mono"
-    end
-
     assert(#self.fonts < 8, "exceeded maximum number of loaded fonts (8)")
 
     self.fonts[#self.fonts + 1] = {
@@ -930,6 +1014,7 @@ end
 function M:isFontLoaded(font)
     validateParameters({"integer"}, font)
     getFont(self, font)
+    -- if getFont returned without error the font handle is valid and loaded
     return true
 end
 
@@ -943,7 +1028,9 @@ function M:getTextBounds(font, text)
     validateParameters({"integer"}
         , font) -- not validating text as string because anything that auto-converts to a string is accepted
     local fontRef = getFont(self, font)
-    return 0.0, 0.0
+    local fontData = FontData[fontRef.name]
+    -- using the average sizes isn't a great representation, but it's a passable initial estimate
+    return fontData.widthMultAvg * fontRef.size * #text, fontData.heightMultAvg * fontRef.size * #text
 end
 
 --- Compute and return the ascender and descender height of given font.
@@ -953,7 +1040,8 @@ end
 function M:getFontMetrics(font)
     validateParameters({"integer"}, font)
     local fontRef = getFont(self, font)
-    return 0.0, 0.0
+    local fontData = FontData[fontRef.name]
+    return fontData.ascenderMult * fontRef.size, fontData.descenderMult * fontRef.size
 end
 
 --- Return the currently-set size for the given font.
@@ -1006,7 +1094,6 @@ end
 
 --- Set the default fill color for all shapeType on layer. Red (r), green (g), blue (b), and alpha (a) components are
 -- specified, respectively, in the range [0, 1]. Has no effect on shapes that don't support the fillColor property.
--- Does not retroactively apply to already added shapes.
 -- @tparam int layer The id of the layer for which the default will be set.
 -- @tparam int shapeType The type of @{Shape} to which the default will apply.
 -- @tparam float r The red component, between 0 and 1.
@@ -1245,6 +1332,14 @@ end
 function M:rawequal()
 end
 
+--- Mock only, not in-game: Resets internal render state, to be called between script runs to ready the environment for
+-- repainting.
+function M:mockReset()
+    self.layers = {}
+    self.fonts = {}
+    self.backgroundColor = {0, 0, 0}
+end
+
 local function colorToHex(r, g, b, a)
     local alpha = ""
     if a then
@@ -1321,6 +1416,14 @@ local function getStrokeString(shape)
         strokeWidth, colorToHex(table.unpack(strokeColor, 1, 3)), opacity)
 end
 
+local function getFontString(shape)
+    local font = FontData[shape.font]
+    local fontFamily = font.name or shape.font
+    local fontWeight = font.weight or "normal"
+    return string.format([[ font-family="%s" font-weight="%s"]],
+        fontFamily, fontWeight)
+end
+
 local AlignHMapping = {
     [M.AlignH.AlignH_Left] = "start",
     [M.AlignH.AlignH_Center] = "middle",
@@ -1349,6 +1452,7 @@ end
 --   <li>Shadows are less vibrant.</li>
 --   <li>Default stroke width is narrower.</li>
 --   <li>AlignV_Bottom is higher (equivalent to AlignV_Descender).</li>
+--   <li>RefrigeratorDeluxe(-Light) is not available from google fonts and may not render properly if not installed.</li>
 -- </ul>
 -- @treturn string The SVG string.
 function M:mockGenerateSvg()
@@ -1457,10 +1561,11 @@ function M:mockGenerateSvg()
                 fillString = getFillString(shape)
                 shadowString = getShadowString(shape)
                 strokeString = getStrokeString(shape)
+                local fontString = getFontString(shape)
                 local alignString = getAlignString(shape)
                 svg[#svg + 1] =
-                    string.format([[        <text x="%f" y="%f" font-family="%s" font-size="%f"%s%s%s%s>%s</text>]],
-                        shape.x, shape.y, shape.font, shape.size,
+                    string.format([[        <text x="%f" y="%f" font-size="%f"%s%s%s%s%s>%s</text>]],
+                        shape.x, shape.y, shape.size, fontString,
                         fillString, shadowString, strokeString, alignString,
                         shape.text)
             end
