@@ -676,7 +676,7 @@ function M:createLayer()
 end
 
 --- Set a clipping rectangle applied to the layer as a whole. Layer contents that fall outside the clipping rectangle
--- will not be rendered, and those athat are partially within the rectangle will be 'clipped' against it. The clipping
+-- will not be rendered, and those that are partially within the rectangle will be 'clipped' against it. The clipping
 -- rectangle is applied before layer transformations. Note that clipped contents still count toward the render cost.
 -- @tparam int layer The id of the layer for which the clipping rectangle will be set.
 -- @tparam float x The X coordinate of the clipping rectangle's top-left corner.
@@ -687,6 +687,11 @@ function M:setLayerClipRect(layer, x, y, sx, sy)
     validateParameters({"integer", "number", "number", "number", "number"}
         , layer, x, y, sx, sy)
     local layerRef = getLayer(self, layer)
+    layerRef.clipRect = {
+        x = x,
+        y = y,
+        width = sx,
+        height = sy}
 end
 
 --- Set the transform origin of a layer; layer scaling and rotation are applied relative to this origin.
@@ -697,6 +702,7 @@ function M:setLayerOrigin(layer, x, y)
     validateParameters({"integer", "number", "number"}
         , layer, x, y)
     local layerRef = getLayer(self, layer)
+    layerRef.origin = {x, y}
 end
 
 --- Set a rotation applied to the layer as a whole, relative to the layer's transform origin.
@@ -706,6 +712,7 @@ function M:setLayerRotation(layer, rotation)
     validateParameters({"integer", "number"}
         , layer, rotation)
     local layerRef = getLayer(self, layer)
+    layerRef.rotation = math.deg(rotation)
 end
 
 --- Set a scale factor applied to the layer as a whole, relative to the layer's transform origin. Scale factors are
@@ -718,6 +725,7 @@ function M:setLayerScale(layer, sx, sy)
     validateParameters({"integer", "number", "number"}
         , layer, sx, sy)
     local layerRef = getLayer(self, layer)
+    layerRef.scale = {sx, sy}
 end
 
 --- Set a translation applied to the layer as a whole.
@@ -728,6 +736,7 @@ function M:setLayerTranslation(layer, tx, ty)
     validateParameters({"integer", "number", "number"}
         , layer, tx, ty)
     local layerRef = getLayer(self, layer)
+    layerRef.translation = {tx, ty}
 end
 
 -- ---------------------- --
@@ -1340,6 +1349,15 @@ function M:mockReset()
     self.backgroundColor = {0, 0, 0}
 end
 
+local function getClipPath(layer)
+    if not layer.clipRect then
+        return ""
+    end
+    local shape = layer.clipRect
+    return string.format([[<rect x="%f" y="%f" width="%f" height="%f" />]],
+        shape.x, shape.y, shape.width, shape.height)
+end
+
 local function colorToHex(r, g, b, a)
     local alpha = ""
     if a then
@@ -1347,6 +1365,35 @@ local function colorToHex(r, g, b, a)
     end
 
     return string.format("#%02x%02x%02x%s", math.floor(r * 255), math.floor(g * 255), math.floor(b * 255), alpha)
+end
+
+local function getTransformString(layer)
+    local transforms = {}
+
+    if layer.translation then
+        transforms[#transforms + 1] = string.format("translate(%f %f)", layer.translation[1], layer.translation[2])
+    end
+
+    local xO, yO = 0, 0
+    if layer.origin then
+        xO = layer.origin[1]
+        yO = layer.origin[2]
+        transforms[#transforms + 1] = string.format("translate(%f %f)", xO, yO)
+    end
+    if layer.rotation then
+        transforms[#transforms + 1] = string.format("rotate(%f)", layer.rotation)
+    end
+    if layer.scale then
+        transforms[#transforms + 1] = string.format("scale(%f %f)", layer.scale[1], layer.scale[2], xO, yO)
+    end
+    if layer.origin then
+        transforms[#transforms + 1] = string.format("translate(%f %f)", -xO, -yO)
+    end
+
+    if #transforms > 0 then
+        return string.format([[ transform="%s"]], table.concat(transforms, " "))
+    end
+    return ""
 end
 
 local function getFillString(shape)
@@ -1457,14 +1504,32 @@ end
 -- @treturn string The SVG string.
 function M:mockGenerateSvg()
     local svg = {}
-    svg[#svg + 1] = string.format([[<svg viewBox="0 0 %d %d" xmlns="http://www.w3.org/2000/svg">]], self.resolution.x, self.resolution.y)
+    svg[#svg + 1] = string.format([[<svg viewBox="0 0 %d %d" xmlns="http://www.w3.org/2000/svg">]],
+        self.resolution.x, self.resolution.y)
+
+    svg[#svg + 1] = [[    <defs>]]
+    local clipPath
+    for id, layer in pairs(self.layers) do
+        clipPath = getClipPath(layer)
+        if string.len(clipPath) > 0 then
+            svg[#svg + 1] = string.format([[        <clipPath id="layer%d">%s</clipPath>]], id, clipPath)
+        end
+    end
+    svg[#svg + 1] = [[    </defs>]]
 
     svg[#svg + 1] = string.format([[    <rect width="100%%" height="100%%" fill="%s" />]],
         colorToHex(table.unpack(self.backgroundColor, 1, 3)))
 
-    local fillString, rotationString, shadowString, strokeString
-    for _, layer in pairs(self.layers) do
-        svg[#svg + 1] = [[    <g stroke-linejoin="round" stroke-linecap="round">]]
+    local clipPathString, transformString, fillString, rotationString, shadowString, strokeString
+    for id, layer in pairs(self.layers) do
+        if layer.clipRect then
+            clipPathString = string.format([[ clip-path="url(#layer%d)"]], id)
+        else
+            clipPathString = ""
+        end
+        transformString = getTransformString(layer)
+        svg[#svg + 1] = string.format([[    <g stroke-linejoin="round" stroke-linecap="round"%s%s>]],
+            clipPathString, transformString)
 
         if layer.image then
         end
