@@ -24,21 +24,21 @@ local MockElement = require "dumocks.Element"
 local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
-elementDefinitions["screen xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["screen xl"] = {mass = 12810.88, maxHitPoints = 28116.0, class = "ScreenUnit"}
-elementDefinitions["transparent screen xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["transparent screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["transparent screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["transparent screen l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["sign xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
-elementDefinitions["sign s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
-elementDefinitions["sign m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
-elementDefinitions["sign l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
-elementDefinitions["vertical sign xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
-elementDefinitions["vertical sign m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
-elementDefinitions["vertical sign l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
+elementDefinitions["screen xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["screen xl"] = {mass = 12810.88, maxHitPoints = 28116.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["transparent screen xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["transparent screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["transparent screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["transparent screen l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["sign xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 512.0}
+elementDefinitions["sign s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 1024.0}
+elementDefinitions["sign m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 512.0}
+elementDefinitions["sign l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 256.0}
+elementDefinitions["vertical sign xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 512.0, resolutionY = 1024.0}
+elementDefinitions["vertical sign m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 512.0, resolutionY = 1024.0}
+elementDefinitions["vertical sign l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 256.0, resolutionY = 1024.0}
 local DEFAULT_ELEMENT = "screen xs"
 
 local M = MockElementWithToggle:new()
@@ -51,8 +51,10 @@ function M:new(o, id, elementName)
     self.__index = self
 
     o.elementClass = elementDefinition.class
+    o.resolutionX = elementDefinition.resolutionX
+    o.resolutionY = elementDefinition.resolutionY
 
-    o.html = "" -- this is the displayed content, for use in checking what's on the screen
+    o.html = "" -- this is the displayed content, for use in checking what's on the screen in non-lua mode
 
     o.directHtml = "" -- this is html set through setHTML, used as the foundation for building self.html
     o.contentList = {}

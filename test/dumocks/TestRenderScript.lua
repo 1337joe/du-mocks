@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
---- Tests on dumocks.ScreenRenderer.
--- @see dumocks.ScreenRenderer
+--- Tests on dumocks.renderScript.
+-- @see dumocks.renderScript
 
 -- set search path to include src directory
 package.path = "src/?.lua;" .. package.path
@@ -14,7 +14,7 @@ local sr = require("dumocks.RenderScript")
 
 local SVG_WRAPPER_TEMPLATE = [[<li><p>%s<br>%s</p></li>]]
 
-_G.TestScreenRenderer = {
+_G.TestRenderScript = {
     allSvg = {
 [[
 <!DOCTYPE html>
@@ -49,7 +49,7 @@ _G.TestScreenRenderer = {
     }
 }
 
-function _G.TestScreenRenderer:tearDown()
+function _G.TestRenderScript:tearDown()
     local closingTags = [[
 
     </ul>
@@ -67,7 +67,7 @@ function _G.TestScreenRenderer:tearDown()
     end
 end
 
-function _G.TestScreenRenderer.testParameterValidation()
+function _G.TestRenderScript.testParameterValidation()
     local screenRenderer = sr:new()
     local closure = screenRenderer:mockGetEnvironment()
 
@@ -122,6 +122,10 @@ function _G.TestScreenRenderer.testParameterValidation()
     success, result = pcall(addText, layer, font, "Success", 50, 50)
     assert(success)
 
+    -- TODO auto-boxable strings not yet implemented
+    -- success, result = pcall(addText, layer, font, 1, 50, 50)
+    -- assert(success)
+
     ---------------
     -- copy to here to renderer
     ---------------
@@ -129,7 +133,7 @@ function _G.TestScreenRenderer.testParameterValidation()
     _ENV = oldEnv
 end
 
-function _G.TestScreenRenderer.testGetLocale()
+function _G.TestRenderScript.testGetLocale()
     local screenRenderer = sr:new()
     local closure = screenRenderer:mockGetEnvironment()
     local expected, actual
@@ -153,24 +157,7 @@ function _G.TestScreenRenderer.testGetLocale()
     lu.assertEquals(actual, expected)
 end
 
-function _G.TestScreenRenderer.testGetInput()
-    local screenRenderer = sr:new()
-    local closure = screenRenderer:mockGetEnvironment()
-    local expected, actual
-
-    -- default: empty string
-    expected = ""
-    actual = closure.getInput()
-    lu.assertEquals(actual, expected)
-
-    -- non-default
-    expected = "test"
-    screenRenderer.input = expected
-    actual = closure.getInput()
-    lu.assertEquals(actual, expected)
-end
-
-function _G.TestScreenRenderer.testGetSetFontSize()
+function _G.TestRenderScript.testGetSetFontSize()
     local screenRenderer = sr:new()
     local closure = screenRenderer:mockGetEnvironment()
     local expected, actual
@@ -188,21 +175,33 @@ function _G.TestScreenRenderer.testGetSetFontSize()
     lu.assertEquals(actual, expected)
 end
 
-function _G.TestScreenRenderer.testSetOutput()
+function _G.TestRenderScript.testGetInput()
+    local screenRenderer = sr:new()
+    local closure = screenRenderer:mockGetEnvironment()
+    local expected, actual
+
+    -- default: empty string
+    expected = ""
+    actual = closure.getInput()
+    lu.assertEquals(actual, expected)
+
+    -- non-default
+    expected = "test"
+    screenRenderer.input = expected
+    actual = closure.getInput()
+    lu.assertEquals(actual, expected)
+end
+
+function _G.TestRenderScript.testSetOutput()
     local screenRenderer = sr:new()
     local closure = screenRenderer:mockGetEnvironment()
 
-    local oldEnv = _ENV
-    local _ENV = closure
-
-    setOutput("test")
-
-    _ENV = oldEnv
-
-    lu.assertEquals(screenRenderer.output, "test")
+    local expected = "test"
+    closure.setOutput(expected)
+    lu.assertEquals(screenRenderer.output, expected)
 end
 
-function _G.TestScreenRenderer:testShapes()
+function _G.TestRenderScript:testShapes()
     local screenRenderer = sr:new()
     local closure = screenRenderer:mockGetEnvironment()
 
@@ -212,7 +211,7 @@ function _G.TestScreenRenderer:testShapes()
     self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Shapes", screenRenderer:mockGenerateSvg())
 end
 
-function _G.TestScreenRenderer:testStrokeWidthTextAlign()
+function _G.TestRenderScript:testStrokeWidthTextAlign()
     local screenRenderer = sr:new()
     local closure = screenRenderer:mockGetEnvironment()
 
@@ -222,7 +221,7 @@ function _G.TestScreenRenderer:testStrokeWidthTextAlign()
     self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Stroke Width/Text Align", screenRenderer:mockGenerateSvg())
 end
 
-function _G.TestScreenRenderer:testFontSampler()
+function _G.TestRenderScript:testFontSampler()
     local screenRenderer = sr:new()
     local closure = screenRenderer:mockGetEnvironment()
 
@@ -246,7 +245,7 @@ function _G.TestScreenRenderer:testFontSampler()
     until index < previousIndex
 end
 
-function _G.TestScreenRenderer:testLayerOperations()
+function _G.TestRenderScript:testLayerOperations()
     local screenRenderer = sr:new()
     local closure = screenRenderer:mockGetEnvironment()
 
@@ -256,6 +255,8 @@ function _G.TestScreenRenderer:testLayerOperations()
     self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Layer Operations", screenRenderer:mockGenerateSvg())
 end
 
+-- TODO: Tests for render cost characterization
+
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --
@@ -263,7 +264,7 @@ end
 -- 1. 1x Screen or Sign, paste relevent bit directly into render script
 --
 -- Exercises: ??TODO??
-function _G.TestScreenRenderer:testGameBehavior()
+function _G.TestRenderScript:testGameBehavior()
     local screenRenderer = sr:new()
     local closure = screenRenderer:mockGetEnvironment()
 

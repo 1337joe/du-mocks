@@ -214,17 +214,18 @@ function M:new(o)
     setmetatable(o, self)
     self.__index = self
 
+    o.input = ""
     o.mouseX, o.mouseY = -1, -1
     o.cursorDown, o.cursorPressed, o.cursorReleased = false, false, false
     o.deltaTime = 0.0
-    o.renderCost = 589824
+    o.time = 0.0
+    o.locale = "en-US"
 
     o.layers = {}
     o.fonts = {}
     o.backgroundColor = {0, 0, 0}
+    o.renderCost = 589824
 
-    o.locale = "en-US"
-    o.input = ""
     o.output = ""
 
     return o
@@ -306,7 +307,7 @@ local Property = {
     TextAlign = {
         next = "nextTextAlign",
         default = "defaultTextAlign",
-        missing = {M.AlignH.AlignH_Left, M.AlignV.AlignV_Baseline} -- TODO test defaults
+        missing = {M.AlignH.AlignH_Left, M.AlignV.AlignV_Baseline}
     }
 }
 
@@ -486,6 +487,8 @@ function M:addImage(layer, image, x, y, width, height)
         , layer, image, x, y, width, height)
     local layerRef = getLayer(self, layer)
 
+    -- TODO Implement
+
     clearNext(layerRef)
 end
 
@@ -507,6 +510,8 @@ function M:addImageSub(layer, image, x, y, sx, sy, subX, subY, subSx, subSy)
     validateParameters({"integer", "integer", "number", "number", "number", "number", "number", "number", "number", "number"}
         , layer, image, x, y, sx, sy, subX, subY, subSx, subSy)
     local layerRef = getLayer(self, layer)
+
+    -- TODO Implement
 
     clearNext(layerRef)
 end
@@ -593,6 +598,7 @@ end
 -- @tparam float y The y coordinate (in pixels) of the top-left baseline.
 -- @see loadFont
 function M:addText(layer, font, text, x, y)
+    -- TODO should validate text against auto-boxable strings
     validateParameters({"integer", "integer", "string", "number", "number"}
         , layer, font, text, x, y)
     local layerRef = getLayer(self, layer)
@@ -786,6 +792,7 @@ end
 --- Returns the time, in seconds, relative to the first execution.
 -- @treturn float Time, in seconds, since the render script started running.
 function M:getTime()
+    return self.time
 end
 
 --- Return the locale in which the game is currently running.
@@ -832,6 +839,7 @@ end
 -- @treturn int The handle to the newly loaded image.
 -- @see addImage
 function M:loadImage(path)
+    -- TODO Implement
     return 0
 end
 
@@ -841,6 +849,7 @@ end
 -- @see loadImage
 function M:isImageLoaded(imageHandle)
     -- TODO error message: invalid image handle
+    -- TODO Implement
     return false
 end
 
@@ -850,7 +859,8 @@ end
 --   not yet loaded.
 function M:getImageSize(image)
     -- TODO error message: invalid image handle
-    return {0, 0}
+    -- TODO Implement
+    return 0, 0
 end
 
 local AvailableFonts = {
@@ -1034,12 +1044,14 @@ end
 -- @treturn float,float The text bounds as (width, height) in pixels.
 -- @see loadFont
 function M:getTextBounds(font, text)
+    -- TODO should validate text against auto-boxable strings
     validateParameters({"integer"}
-        , font) -- not validating text as string because anything that auto-converts to a string is accepted
+        , font)
     local fontRef = getFont(self, font)
     local fontData = FontData[fontRef.name]
     -- using the average sizes isn't a great representation, but it's a passable initial estimate
-    return fontData.widthMultAvg * fontRef.size * #text, fontData.heightMultAvg * fontRef.size * #text
+    local length = string.len(text)
+    return fontData.widthMultAvg * fontRef.size * length, fontData.heightMultAvg * fontRef.size
 end
 
 --- Compute and return the ascender and descender height of given font.
@@ -1347,6 +1359,8 @@ function M:mockReset()
     self.layers = {}
     self.fonts = {}
     self.backgroundColor = {0, 0, 0}
+    self.renderCost = 0
+    -- TODO - does output reset on refresh?
 end
 
 local function getClipPath(layer)
