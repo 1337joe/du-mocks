@@ -1331,28 +1331,6 @@ function M:setOutput(outputString)
     self.output = outputString
 end
 
--- ---------------------- --
--- Undocumented Functions --
--- ---------------------- --
-
---- Unknown use.
---
--- Note: This method is not documented in the codex.
-function M:rawget()
-end
-
---- Unknown use.
---
--- Note: This method is not documented in the codex.
-function M:rawset()
-end
-
---- Unknown use.
---
--- Note: This method is not documented in the codex.
-function M:rawequal()
-end
-
 --- Mock only, not in-game: Resets internal render state, to be called between script runs to ready the environment for
 -- repainting.
 function M:mockReset()
@@ -1727,10 +1705,6 @@ function M:mockGetEnvironment()
     -- Control Unit Interaction
     environment.getInput = function() return self:getInput() end
     environment.setOutput = function(outputString) return self:setOutput(outputString) end
-    -- Undocumented Functions
-    environment.rawget = function() return self:rawget() end
-    environment.rawset = function() return self:rawset() end
-    environment.rawequal = function() return self:rawequal() end
 
     -- codex-documented tables
     environment._RSVERSION = 2
@@ -1763,6 +1737,9 @@ function M:mockGetEnvironment()
     environment.load = _ENV.load
     environment.setmetatable = _ENV.setmetatable
     environment.getmetatable = _ENV.getmetatable
+    environment.rawget = _ENV.rawget
+    environment.rawset = _ENV.rawset
+    environment.rawequal = _ENV.rawequal
     -- tables
     environment.table = _ENV.table
     environment.string = _ENV.string
