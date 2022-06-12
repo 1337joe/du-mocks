@@ -11,6 +11,7 @@ local OUTPUT_FILE = "test/results/TestRenderScript.html"
 
 local lu = require("luaunit")
 local sr = require("dumocks.RenderScript")
+local msu = require("dumocks.ScreenUnit")
 
 local SVG_WRAPPER_TEMPLATE = [[<li><p>%s<br>%s</p></li>]]
 
@@ -28,11 +29,13 @@ _G.TestRenderScript = {
             display: grid;
             grid-gap: 20px 5px;
             grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            grid-template-rows: repeat(300px);
         }
         
         ul.gallery svg {
             width: 100%;
             height: 100%;
+            max-height: 450px;
         }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -274,6 +277,24 @@ function _G.TestRenderScript:testLayerOperations()
 
     script()
     self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Layer Operations", screenRenderer:mockGenerateSvg())
+end
+
+function _G.TestRenderScript:testResolutions()
+    local screens = {"screen m", "sign xs", "vertical sign xs", "sign s", "sign l", "vertical sign l"}
+
+    local mockScreen, renderScript, environment, script
+    for _, name in pairs(screens) do
+        mockScreen = msu:new(nil, 1, name)
+
+        renderScript = sr:new(nil, mockScreen.resolutionX, mockScreen.resolutionY)
+        renderScript.input = name
+        environment = renderScript:mockGetEnvironment()
+
+        script = assert(loadfile(INPUT_DIR .. "resolutionCheck.lua", "t", environment))
+
+        script()
+        self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Resolution: " .. name, renderScript:mockGenerateSvg())
+    end
 end
 
 -- TODO: Tests for render cost characterization

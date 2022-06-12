@@ -159,10 +159,6 @@
 
 -- define class fields
 local M = {
-    resolution = {
-        x = 1024,
-        y = 613,
-    },
     renderCostMax = 4000000,
 }
 
@@ -207,12 +203,17 @@ M.AlignV = {
     AlignV_Descender = 5, -- Align to bottom of descender.
 }
 
-function M:new(o)
+function M:new(o, xRes, yRes)
     -- define default instance fields
     o = o or {
     }
     setmetatable(o, self)
     self.__index = self
+
+    o.resolution = {
+        x = xRes or 1024,
+        y = yRes or 613,
+    }
 
     o.input = ""
     o.mouseX, o.mouseY = -1, -1

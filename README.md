@@ -90,11 +90,12 @@ Testing render script works a little differently: because render script is run i
 <details><summary>Inline Render Script</summary>
 
 ```lua
-local screenRenderer = sr:new()
-local environment = screenRenderer:mockGetEnvironment()
+local rs = require("dumocks.RenderScript")
+local renderScript = rs:new()
+local environment = renderScript:mockGetEnvironment()
 
 -- Set screen input
-screenRenderer.input = "Test"
+renderScript.input = "Test"
 
 -- switch to the sandboxed environment
 local oldEnv = _ENV
@@ -108,7 +109,7 @@ setOutput("test")
 _ENV = oldEnv
 
 -- Print the screen output
-print(screenRenderer.output)
+print(renderScript.output)
 ```
 
 </details>
@@ -116,25 +117,53 @@ print(screenRenderer.output)
 <details><summary>External File Render Script</summary>
 
 ```lua
-local screenRenderer = sr:new()
-local environment = screenRenderer:mockGetEnvironment()
+local rs = require("dumocks.RenderScript")
+local renderScript = rs:new()
+local environment = renderScript:mockGetEnvironment()
 
 local script = assert(loadfile("path/to/my/renderscript.lua", "t", environment))
 
 -- Set screen input (read with readInput())
-screenRenderer.input = "Test"
+renderScript.input = "Test"
 
 script()
 
 -- Print the screen output (written with setOutput())
-print(screenRenderer.output)
+print(renderScript.output)
 -- Print the SVG output of the script
-print(screenRenderer:mockGenerateSvg())
+print(renderScript:mockGenerateSvg())
 ```
 
 </details>
 
-Renderscript screen output can be exported as an SVG image by calling `screenRenderer.mockGenerateSvg()` (see the external file sample code above).
+<details><summary>ScreenUnit</summary>
+
+```lua
+local msu = require("dumocks.ScreenUnit")
+local screenUnit = msu:new()
+local closure = screenUnit:mockGetClosure()
+
+local script = [[
+   assert(getInput() == "test input")
+   local xRes, yRes = getResolution()
+   setOutput(tostring(xRes))
+]]
+
+closure.setScriptInput("test input")
+closure.setRenderScript(script)
+
+local renderScript, environment = mock:mockDoRenderScript()
+
+-- Print the output returned to the ScreenUnit
+print(closure.getScriptOutput())
+-- Print the SVG output of the script
+print(renderScript:mockGenerateSvg())
+
+```
+
+</details>
+
+Renderscript screen output can be exported as an SVG image by calling `renderScript.mockGenerateSvg()` (see the external file sample code above).
 
 More fleshed out examples of this as well as an HTML header for including most of the in-game fonts are in [TestRenderScript.lua](https://github.com/1337joe/du-mocks/blob/main/test/dumocks/TestRenderScript.lua). The output of this test script from the latest `main` build can be found [here](https://1337joe.github.io/du-mocks/test-results/TestRenderScript.html).
 
