@@ -1635,6 +1635,37 @@ function M:mockGenerateSvg()
     return table.concat(svg, "\n")
 end
 
+-- Modified require based on: https://stackoverflow.com/a/45430931
+local delim = package.config:match("^(.-)\n"):gsub("%%", "%%%%")
+
+local function searchpath(name, path)
+    local pname = name:gsub("%.", delim):gsub("%%", "%%%%")
+    local msg = {}
+    for subpath in path:gmatch("[^;]+") do
+        local fpath = subpath:gsub("%?", pname)
+        local f = io.open(fpath, "r")
+        if f then
+            f:close()
+            return fpath
+        end
+        msg[#msg + 1] = "\n\tno file '" .. fpath .. "'"
+    end
+    return nil, table.concat(msg)
+end
+
+local function requireToEnvironment(modname, env)
+    assert(type(modname) == "string")
+    local filename, msg = searchpath(modname, package.path)
+    if not filename then
+        error(string.format("error loading module '%s':%s", modname, msg))
+    end
+    local mod, msg = loadfile(filename, "bt", env)
+    if not mod then
+        error(string.format("error loading module '%s' from file '%s':\n\t%s", modname, filename, msg))
+    end
+    return mod()
+end
+
 --- Mock only, not in-game: Bundles the object into an environment that can be used to override the base environment
 -- (_ENV) so that all methods are called directly against this object. It is recommended that you store your current
 -- environment reference prior to overriding it so that it can be restored.
@@ -1733,7 +1764,7 @@ function M:mockGetEnvironment()
     environment.xpcall = _ENV.xpcall
     environment.assert = _ENV.assert
     environment.error = _ENV.error
-    environment.require = _ENV.require
+    environment.require = function(modname) return requireToEnvironment(modname, environment) end
     environment.load = _ENV.load
     environment.setmetatable = _ENV.setmetatable
     environment.getmetatable = _ENV.getmetatable

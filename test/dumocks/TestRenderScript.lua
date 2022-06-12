@@ -201,6 +201,27 @@ function _G.TestRenderScript.testSetOutput()
     lu.assertEquals(screenRenderer.output, expected)
 end
 
+function _G.TestRenderScript.testRequire()
+    local screenRenderer = sr:new()
+    local environment = screenRenderer:mockGetEnvironment()
+
+    -- working case - loads module on path
+    local mlu = environment.require("dumocks.LightUnit")
+    lu.assertNotNil(mlu)
+    lu.assertEquals(type(mlu), "table")
+    local mock = mlu:new(nil, 1, "long light m")
+    lu.assertEquals(mock:mockGetClosure().getElementClass(), "LightUnit")
+
+    -- non-working case - target module not on path
+    lu.assertErrorMsgContains("no file", environment.require, "missing")
+
+    -- temporarily add to path for bad module that fails to load
+    local oldPath = package.path
+    package.path = "test/?.lua;" .. package.path
+    lu.assertErrorMsgContains("unexpected symbol near", environment.require, "renderScript.badRequire")
+    package.path = oldPath
+end
+
 function _G.TestRenderScript:testShapes()
     local screenRenderer = sr:new()
     local closure = screenRenderer:mockGetEnvironment()
