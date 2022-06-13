@@ -1443,7 +1443,7 @@ end
 local function getStrokeString(shape)
     local strokeWidth, strokeColor = shape.strokeWidth, shape.strokeColor
 
-    if strokeWidth <= 0 then
+    if strokeWidth <= 0 or strokeColor[4] <= 0 then
         return ""
     end
 
@@ -1488,8 +1488,9 @@ end
 --
 -- Known discrepancies from in-game behavior (tested in firefox):
 -- <ul>
---   <li>Stroke is drawn centered on shape border instead of outside it.</li>
+--   <li>Stroke is drawn centered on shape border instead of outside it (Polygons, Text).</li>
 --   <li>Shadows are less vibrant.</li>
+--   <li>Shadows are hidden by stroke (Boxes, Circle).</li>
 --   <li>Default stroke width is narrower.</li>
 --   <li>AlignV_Bottom is higher (equivalent to AlignV_Descender).</li>
 --   <li>RefrigeratorDeluxe(-Light) is not available from google fonts and may not render properly if not installed.</li>
@@ -1545,9 +1546,16 @@ function M:mockGenerateSvg()
                 shadowString = getShadowString(shape)
                 strokeString = getStrokeString(shape)
                 svg[#svg + 1] =
-                    string.format([[        <rect x="%f" y="%f" width="%f" height="%f"%s%s%s%s />]],
+                    string.format([[        <rect x="%f" y="%f" width="%f" height="%f"%s%s%s />]],
                         shape.x, shape.y, shape.width, shape.height,
-                        fillString, rotationString, shadowString, strokeString)
+                        fillString, rotationString, shadowString)
+                if strokeString ~= "" then
+                    svg[#svg + 1] =
+                        string.format([[          <rect x="%f" y="%f" width="%f" height="%f" fill-opacity="0" rx="%f" ry="%f"%s%s />]],
+                            shape.x - shape.strokeWidth / 2, shape.y - shape.strokeWidth / 2, shape.width + shape.strokeWidth,
+                            shape.height + shape.strokeWidth, shape.strokeWidth / 2, shape.strokeWidth / 2,
+                            rotationString, strokeString)
+                end
             end
         end
 
@@ -1558,9 +1566,16 @@ function M:mockGenerateSvg()
                 shadowString = getShadowString(shape)
                 strokeString = getStrokeString(shape)
                 svg[#svg + 1] =
-                    string.format([[        <rect x="%f" y="%f" width="%f" height="%f" rx="%f" ry="%f"%s%s%s%s />]],
+                    string.format([[        <rect x="%f" y="%f" width="%f" height="%f" rx="%f" ry="%f"%s%s%s />]],
                         shape.x, shape.y, shape.width, shape.height, shape.radius, shape.radius,
-                        fillString, rotationString, shadowString, strokeString)
+                        fillString, rotationString, shadowString)
+                if strokeString ~= "" then
+                    svg[#svg + 1] =
+                        string.format([[          <rect x="%f" y="%f" width="%f" height="%f" fill-opacity="0" rx="%f" ry="%f"%s%s />]],
+                            shape.x - shape.strokeWidth / 2, shape.y - shape.strokeWidth / 2, shape.width + shape.strokeWidth,
+                            shape.height + shape.strokeWidth, shape.radius + shape.strokeWidth / 2, shape.radius + shape.strokeWidth / 2,
+                            rotationString, strokeString)
+                end
             end
         end
 
@@ -1570,9 +1585,15 @@ function M:mockGenerateSvg()
                 shadowString = getShadowString(shape)
                 strokeString = getStrokeString(shape)
                 svg[#svg + 1] =
-                    string.format([[        <circle cx="%f" cy="%f" r="%f"%s%s%s />]],
+                    string.format([[        <circle cx="%f" cy="%f" r="%f"%s%s />]],
                         shape.x, shape.y, shape.radius,
-                        fillString, shadowString, strokeString)
+                        fillString, shadowString)
+                if strokeString ~= "" then
+                    svg[#svg + 1] =
+                        string.format([[          <circle cx="%f" cy="%f" r="%f" fill-opacity="0"%s />]],
+                            shape.x, shape.y, shape.radius + shape.strokeWidth / 2,
+                            strokeString)
+                end
             end
         end
 

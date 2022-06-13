@@ -1,6 +1,6 @@
 # DU Mocks
 
-![Tests](https://github.com/1337joe/du-mocks/actions/workflows/test.yml/badge.svg?branch=main)
+[![Tests](https://github.com/1337joe/du-mocks/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/1337joe/du-mocks/actions/workflows/test.yml)
 [![Coverage](https://codecov.io/gh/1337joe/du-mocks/branch/main/graph/badge.svg)](https://codecov.io/gh/1337joe/du-mocks)
 
 Mock objects for generating a more useful [codex](https://1337joe.github.io/du-mocks) and for use testing Dual Universe scripts offline.

@@ -67,7 +67,7 @@ jobs:
 
       - name: Deploy Screen Renderer Output
         uses: JamesIves/github-pages-deploy-action@v4.3.3
-        if: ${{ matrix.luaVersion == '5.3' && (github.event_name == 'push' && github.head_ref == 'main') }}
+        if: ${{ matrix.luaVersion == '5.3' && (github.event_name == 'push' && github.ref_name == 'main') }}
         with:
           branch: codex
           folder: test/results

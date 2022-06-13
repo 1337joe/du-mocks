@@ -16,7 +16,7 @@ jobs:
       CODEX_SUFFIX: "${{ github.ref == 'refs/heads/pts' && 'codex-pts' || 'codex' }}"
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
 
       - uses: leafo/gh-actions-lua@v9
 
