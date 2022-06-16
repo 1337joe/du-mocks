@@ -446,16 +446,13 @@
  function screen.getScriptOuput()</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#rawget">rawget ()</a></td>
-	<td class="summary">Unknown use.</td>
+	<td class="name" nowrap><a href="#mockReset">mockReset ()</a></td>
+	<td class="summary">Mock only, not in-game: Resets internal render state, to be called between script runs to ready the environment for
+ repainting.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#rawset">rawset ()</a></td>
-	<td class="summary">Unknown use.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#rawequal">rawequal ()</a></td>
-	<td class="summary">Unknown use.</td>
+	<td class="name" nowrap><a href="#mockGenerateSvg">mockGenerateSvg ()</a></td>
+	<td class="summary">Mock only, not in-game: Generates an SVG image from the data provided to the renderer.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#mockGetEnvironment">mockGetEnvironment ()</a></td>
@@ -854,7 +851,7 @@
     <dd>
     Add text to layer using font, with top-left baseline starting at (x, y).  Note that each glyph in text counts as one
  shape toward the total rendered shape limit.
-<p> Supported properties: fillColor
+<p> Supported properties: fillColor, shadow, strokeColor, strokeWidth, textAlign
 
 
     <h3>Parameters:</h3>
@@ -962,7 +959,7 @@
     </dt>
     <dd>
     Set a clipping rectangle applied to the layer as a whole.  Layer contents that fall outside the clipping rectangle
- will not be rendered, and those athat are partially within the rectangle will be 'clipped' against it. The clipping
+ will not be rendered, and those that are partially within the rectangle will be 'clipped' against it. The clipping
  rectangle is applied before layer transformations. Note that clipped contents still count toward the render cost.
 
 
@@ -1500,8 +1497,8 @@
    <li>FiraMono</li>
    <li>FiraMono-Bold</li>
    <li>Montserrat</li>
-   <li>Montserrat-Light</li>
    <li>Montserrat-Bold</li>
+   <li>Montserrat-Light</li>
    <li>Play</li>
    <li>Play-Bold</li>
    <li>RefrigeratorDeluxe</li>
@@ -2292,12 +2289,12 @@
 
 </dd>
     <dt>
-    <a name = "rawget"></a>
-    <strong>rawget ()</strong>
+    <a name = "mockReset"></a>
+    <strong>mockReset ()</strong>
     </dt>
     <dd>
-    Unknown use.
-<p> Note: This method is not documented in the codex.
+    Mock only, not in-game: Resets internal render state, to be called between script runs to ready the environment for
+ repainting.
 
 
 
@@ -2307,30 +2304,29 @@
 
 </dd>
     <dt>
-    <a name = "rawset"></a>
-    <strong>rawset ()</strong>
+    <a name = "mockGenerateSvg"></a>
+    <strong>mockGenerateSvg ()</strong>
     </dt>
     <dd>
-    Unknown use.
-<p> Note: This method is not documented in the codex.
+    Mock only, not in-game: Generates an SVG image from the data provided to the renderer.
+<p> Known discrepancies from in-game behavior (tested in firefox):
+ <ul>
+   <li>Stroke is drawn centered on shape border instead of outside it (Polygons, Text).</li>
+   <li>Shadows are less vibrant.</li>
+   <li>Shadows are hidden by stroke (Boxes, Circle).</li>
+   <li>Default stroke width is narrower.</li>
+   <li>AlignV_Bottom is higher (equivalent to AlignV_Descender).</li>
+   <li>RefrigeratorDeluxe(-Light) is not available from google fonts and may not render properly if not installed.</li>
+ </ul>
 
 
 
+    <h3>Returns:</h3>
+    <ol>
 
-
-
-
-</dd>
-    <dt>
-    <a name = "rawequal"></a>
-    <strong>rawequal ()</strong>
-    </dt>
-    <dd>
-    Unknown use.
-<p> Note: This method is not documented in the codex.
-
-
-
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The SVG string.
+    </ol>
 
 
 
@@ -2393,7 +2389,7 @@
 
         </li>
         <li><span class="parameter">Shape_Polygon</span>
-
+        Applies to both Triangle and Quad.
         </li>
         <li><span class="parameter">Shape_Text</span>
 
@@ -2418,13 +2414,14 @@
     <h3>Fields:</h3>
     <ul>
         <li><span class="parameter">AlignH_Left</span>
-
+            <span class="types"><span class="type">Default</span></span>
+         Align to the start of the text.
         </li>
         <li><span class="parameter">AlignH_Center</span>
-
+        Align to the middle of the text.
         </li>
         <li><span class="parameter">AlignH_Right</span>
-
+        Align to the end of the text.
         </li>
     </ul>
 
@@ -2446,22 +2443,23 @@
     <h3>Fields:</h3>
     <ul>
         <li><span class="parameter">AlignV_Ascender</span>
-
+            <span class="types"><span class="type">Default</span></span>
+        Align to top of ascender.
         </li>
         <li><span class="parameter">AlignV_Top</span>
-
+        Align to height of capital characters.
         </li>
         <li><span class="parameter">AlignV_Middle</span>
-
+        Align to middle of characters.
         </li>
         <li><span class="parameter">AlignV_Baseline</span>
-
+         Align to text baseline.
         </li>
         <li><span class="parameter">AlignV_Bottom</span>
 
         </li>
         <li><span class="parameter">AlignV_Descender</span>
-
+        Align to bottom of descender.
         </li>
     </ul>
 
@@ -2477,7 +2475,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-05-28 12:19:48 </i>
+<i style="float:right;">Last updated 2022-06-16 13:27:25 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
