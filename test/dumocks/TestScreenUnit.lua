@@ -272,6 +272,74 @@ function _G.TestScreenUnit.testSetHTML()
     lu.assertEquals(#mock.contentList, 0)
 end
 
+function _G.TestScreenUnit.testSetScriptInput()
+    local mock = msu:new()
+    local closure = mock:mockGetClosure()
+    local input
+
+    input = nil
+    closure.setScriptInput(input)
+    lu.assertEquals(mock.scriptInput, "")
+
+    input = ""
+    closure.setScriptInput(input)
+    lu.assertEquals(mock.scriptInput, input)
+
+    input = "Text"
+    closure.setScriptInput(input)
+    lu.assertEquals(mock.scriptInput, input)
+
+    input = 1.0
+    closure.setScriptInput(input)
+    lu.assertEquals(mock.scriptInput, "1.0")
+
+    input = '{"json":"success"}'
+    closure.setScriptInput(input)
+    lu.assertEquals(mock.scriptInput, input)
+end
+
+function _G.TestScreenUnit.testClearScriptOutput()
+    local mock = msu:new()
+    local closure = mock:mockGetClosure()
+
+    mock.scriptOutput = nil
+    closure.clearScriptOutput()
+    lu.assertEquals(mock.scriptOutput, "")
+
+    mock.scriptOutput = ""
+    closure.clearScriptOutput()
+    lu.assertEquals(mock.scriptOutput, "")
+
+    mock.scriptOutput = "Text"
+    closure.clearScriptOutput()
+    lu.assertEquals(mock.scriptOutput, "")
+end
+
+function _G.TestScreenUnit.testGetScriptOutput()
+    local mock = msu:new()
+    local closure = mock:mockGetClosure()
+    local output
+
+    mock.scriptOutput = nil
+    lu.assertEquals(closure.getScriptOutput(), "")
+
+    output = ""
+    mock.scriptOutput = output
+    lu.assertEquals(closure.getScriptOutput(), output)
+
+    output = "Text"
+    mock.scriptOutput = output
+    lu.assertEquals(closure.getScriptOutput(), output)
+
+    output = 1.0
+    mock.scriptOutput = output
+    lu.assertEquals(closure.getScriptOutput(), "1.0")
+
+    output = '{"json":"success"}'
+    mock.scriptOutput = output
+    lu.assertEquals(closure.getScriptOutput(), output)
+end
+
 --- Verify set svg sets fills template correctly.
 function _G.TestScreenUnit.testSetSVG()
     local mock = msu:new()
@@ -726,6 +794,24 @@ function _G.TestScreenUnit.testMouseUp()
     lu.assertTrue(call2Order < call3Order)
     lu.assertEquals(actualX, expectedX)
     lu.assertEquals(actualY, expectedY)
+end
+
+function _G.TestScreenUnit.testMockDoRenderScript()
+    local mock = msu:new()
+    local closure = mock:mockGetClosure()
+
+    local script = [[
+        assert(getInput() == "test input")
+        local xRes, yRes = getResolution()
+        setOutput(tostring(xRes))
+    ]]
+
+    closure.setScriptInput("test input")
+    closure.setRenderScript(script)
+
+    mock:mockDoRenderScript()
+
+    lu.assertEquals(closure.getScriptOutput(), tostring(mock.resolutionX))
 end
 
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run

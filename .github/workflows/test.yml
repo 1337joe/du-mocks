@@ -2,7 +2,7 @@ name: Tests
 
 on: 
   push:
-    branches: [ main, pts ]
+    branches:
   pull_request:
     branches: [ main ]
 
@@ -54,9 +54,21 @@ jobs:
       - name: Export In-Game Tests
         run: ./test/exportAll.sh
 
-      - name: Upload Test Configs
+      - name: Upload Test Artifacts
         uses: actions/upload-artifact@v3
         if: ${{ matrix.luaVersion == '5.3' }}
         with:
           name: test_configs
-          path: test/configExports
+          path: |
+            test/configExports
+            test/results/*.html
+
+      - run: rm -f test/results/*.xml
+
+      - name: Deploy Screen Renderer Output
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        if: ${{ matrix.luaVersion == '5.3' && (github.event_name == 'push' && github.ref_name == 'main') }}
+        with:
+          branch: codex
+          folder: test/results
+          target-folder: test-results

@@ -23,22 +23,24 @@
 local MockElement = require "dumocks.Element"
 local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
+local RenderScript = require("dumocks.RenderScript")
+
 local elementDefinitions = {}
-elementDefinitions["screen xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["screen xl"] = {mass = 12810.88, maxHitPoints = 28116.0, class = "ScreenUnit"}
-elementDefinitions["transparent screen xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["transparent screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["transparent screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["transparent screen l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit"}
-elementDefinitions["sign xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
-elementDefinitions["sign s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
-elementDefinitions["sign m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
-elementDefinitions["sign l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
-elementDefinitions["vertical sign xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
-elementDefinitions["vertical sign m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
-elementDefinitions["vertical sign l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit"}
+elementDefinitions["screen xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["screen xl"] = {mass = 12810.88, maxHitPoints = 28116.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["transparent screen xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["transparent screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["transparent screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["transparent screen l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["sign xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 512.0}
+elementDefinitions["sign s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 1024.0}
+elementDefinitions["sign m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 512.0}
+elementDefinitions["sign l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 256.0}
+elementDefinitions["vertical sign xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 512.0, resolutionY = 1024.0}
+elementDefinitions["vertical sign m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 512.0, resolutionY = 1024.0}
+elementDefinitions["vertical sign l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 256.0, resolutionY = 1024.0}
 local DEFAULT_ELEMENT = "screen xs"
 
 local M = MockElementWithToggle:new()
@@ -51,8 +53,10 @@ function M:new(o, id, elementName)
     self.__index = self
 
     o.elementClass = elementDefinition.class
+    o.resolutionX = elementDefinition.resolutionX
+    o.resolutionY = elementDefinition.resolutionY
 
-    o.html = "" -- this is the displayed content, for use in checking what's on the screen
+    o.html = "" -- this is the displayed content, for use in checking what's on the screen in non-lua mode
 
     o.directHtml = "" -- this is html set through setHTML, used as the foundation for building self.html
     o.contentList = {}
@@ -69,6 +73,10 @@ function M:new(o, id, elementName)
 
     o.mouseDownCallbacks = {}
     o.mouseUpCallbacks = {}
+
+    o.renderScript = ""
+    o.scriptInput = ""
+    o.scriptOutput = ""
 
     return o
 end
@@ -170,23 +178,27 @@ end
 --- Set the screen render script, switching the screen to native rendering mode.
 -- @tparam string script The Lua render script.
 function M:setRenderScript(script)
+    self.renderScript = script
 end
 
 --- Set the screen render script parameters, which will be automatically set during the Lua execution.
 -- @tparam string params A string that can be retrieved by calling getInput in a render script.
 -- @see renderScript:getInput
 function M:setScriptInput(params)
+    self.scriptInput = validateText(params)
 end
 
 --- Set the screen render script output to the empty string.
 -- @see renderScript:setOutput
 function M:clearScriptOutput()
+    self.scriptOutput = ""
 end
 
 --- Get the screen render script output.
 -- @treturn string The contents of the last render script setOutput call, or an empty string.
 -- @see renderScript:setOutput
 function M:getScriptOutput()
+    return validateText(self.scriptOutput)
 end
 
 --- Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
@@ -489,6 +501,22 @@ function M:mockRegisterHtmlCallback(callback)
     local index = #self.htmlCallbacks + 1
     self.htmlCallbacks[index] = callback
     return index
+end
+
+--- Mock only, not in-game: Executes the script set by @{setRenderScript} in a new @{renderScript} environment
+-- configured for resolution and script input and saves the script output for retrieval by @{getScriptOutput}.
+-- @treturn RenderScript,table Tuple containing the @{renderScript} reference and the resulting environment.
+function M:mockDoRenderScript()
+    local renderScript = RenderScript:new(nil, self.resolutionX, self.resolutionY)
+    renderScript.input = self.scriptInput
+    local environment = renderScript:mockGetEnvironment()
+
+    local script = assert(load(self.renderScript, nil, "t", environment))
+    script()
+
+    self.scriptOutput = renderScript.output
+
+    return renderScript, environment
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
