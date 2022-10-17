@@ -34,9 +34,12 @@ function M:new(o, id, elementDefinition)
     return o
 end
 
---- Returns the activation state of the element.
+--- <b>Deprecated:</b> Returns the activation state of the element.
+--
+-- This method is deprecated: element-specific methods should be used instead.
 -- @treturn 0/1 1 when the element is on, 0 otherwise.
 function M:getState()
+    M.deprecated("getState")
     if self.state then
         return 1
     end

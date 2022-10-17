@@ -4,13 +4,16 @@
 local lu = require("luaunit")
 
 ---------------
--- copy from here to library.start()
+-- copy from here to library.onStart()
 ---------------
 _G.Utilities = {}
 
-_G.Utilities.elementFunctions = {"show", "hide", "getData", "getDataId", "getWidgetType", "getIntegrity",
-                                 "getHitPoints", "getMaxHitPoints", "getId", "getMass", "getElementClass",
-                                 "load", "getRemainingRestorations", "getMaxRestorations"}
+_G.Utilities.elementFunctions = {"show", "showWidget", "hide", "hideWidget", "getData", "getWidgetData", "getDataId",
+                                 "getWidgetDataId", "getWidgetType", "getName", "getElementClass", "getClass",
+                                 "getMass", "getItemId", "getId", "getLocalId", "getIntegrity", "getHitPoints",
+                                 "getMaxHitPoints", "getRemainingRestorations", "getMaxRestorations", "getPosition",
+                                 "getBoundingBoxSize", "getBoundingBoxCenter", "getUp", "getRight", "getForward",
+                                 "getWorldUp", "getWorldRight", "getWorldForward", "load" }
 _G.Utilities.toggleFunctions = {"activate", "deactivate", "toggle", "getState"}
 
 --- Verifies that exactly the expected functions are found in the target element.
@@ -67,8 +70,8 @@ end
 -- @tparam int expectedRestorations The expected max (and remaining) restorations for the element.
 -- @tparam string expectedWidgetType The name of the widget type expected, or nil/false if there is no widget.
 function _G.Utilities.verifyBasicElementFunctions(slot, expectedRestorations, expectedWidgetType)
-    local id = slot.getId()
-    assert(id and id > 0, string.format("Invalid ID: %s", id))
+    local localId = slot.getLocalId()
+    assert(localId and localId > 0, string.format("Invalid ID: %s", localId))
     assert(slot.getIntegrity() == 100.0 * slot.getHitPoints() / slot.getMaxHitPoints())
     assert(slot.getMaxRestorations() == expectedRestorations,
         string.format("Max restorations: %d", slot.getMaxRestorations()))
@@ -76,17 +79,17 @@ function _G.Utilities.verifyBasicElementFunctions(slot, expectedRestorations, ex
         string.format("Remaining restorations: %d", slot.getRemainingRestorations()))
 
     local widgetType = slot.getWidgetType()
-    local dataId = slot.getDataId()
+    local dataId = slot.getWidgetDataId()
     if expectedWidgetType and expectedWidgetType ~= "" then
         assert(widgetType == expectedWidgetType, string.format("Expected widget type %s: %s", expectedWidgetType, widgetType))
         assert(string.match(dataId, "e%d+"), string.format("Expected dataId to match e%%d pattern: %s", dataId))
     else
         assert(widgetType == "", string.format("Unexpected widget type: %s", widgetType))
         assert(dataId == "", string.format("Unexpected data id: %s", dataId))
-        assert(slot.getData() == "{}", string.format("Unexpected data: %s", slot.getData()))
+        assert(slot.getWidgetData() == "{}", string.format("Unexpected data: %s", slot.getWidgetData()))
     end
-    slot.show()
-    slot.hide()
+    slot.showWidget()
+    slot.hideWidget()
 end
 
 --- Verifies exactly the expected fields and values are found within the widget data.
@@ -125,7 +128,7 @@ function _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ign
     assert(#unexpectedFields == 0, "Found unexpected data fields: " .. table.concat(unexpectedFields, ", "))
 end
 ---------------
--- copy to here to library.start()
+-- copy to here to library.onStart()
 ---------------
 
 return _G.Utilities

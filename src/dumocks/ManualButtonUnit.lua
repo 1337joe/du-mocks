@@ -12,8 +12,8 @@ local MockElement = require "dumocks.Element"
 local MockElementWithState = require "dumocks.ElementWithState"
 
 local elementDefinitions = {}
-elementDefinitions["manual button xs"] = {mass = 13.27, maxHitPoints = 50.0}
-elementDefinitions["manual button s"] = {mass = 13.27, maxHitPoints = 50.0}
+elementDefinitions["manual button xs"] = {mass = 13.27, maxHitPoints = 50.0, itemId = 1550904282}
+elementDefinitions["manual button s"] = {mass = 13.27, maxHitPoints = 50.0, itemId = 2896791363}
 local DEFAULT_ELEMENT = "manual button s"
 
 local M = MockElementWithState:new()
@@ -32,6 +32,15 @@ function M:new(o, id, elementName)
     return o
 end
 
+--- Checks if the manual button is down.
+-- @treturn 0/1 1 if the manual button is down.
+function M:isDown()
+    if self.state then
+        return 1
+    end
+    return 0
+end
+
 --- Return the value of a signal in the specified OUT plug of the element.
 --
 -- Valid plug names are:
@@ -39,7 +48,7 @@ end
 -- <li>"out" for the out signal.</li>
 -- </ul>
 -- @tparam string plug A valid plug name to query.
--- @treturn 0/1 The plug signal state
+-- @treturn 0/1 The plug signal state.
 function M:getSignalOut(plug)
     if plug == "out" then
         if self.state then
@@ -51,17 +60,39 @@ function M:getSignalOut(plug)
     return MockElement.getSignalOut(self, plug)
 end
 
---- Event: The button has been pressed.
+--- <b>Deprecated:</b> Event: The button has been pressed.
 --
 -- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onPressed should be used instead.
+-- @see EVENT_onPressed
 function M.EVENT_pressed()
+    M.deprecated("EVENT_pressed", "EVENT_onPressed")
+    M.EVENT_onPressed()
+end
+
+--- Event: Emitted when the button is pressed.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+function M.EVENT_onPressed()
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterPressed")
 end
 
---- Event: The button has been released.
+--- <b>Deprecated:</b> Event: The button has been released.
 --
 -- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onReleased should be used instead.
+-- @see EVENT_onReleased
 function M.EVENT_released()
+    M.deprecated("EVENT_released", "EVENT_onReleased")
+    M.EVENT_onReleased()
+end
+
+--- Event: Emitted when the button is released.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+function M.EVENT_onReleased()
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterReleased")
 end
 
@@ -146,6 +177,7 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElementWithState.mockGetClosure(self)
+    closure.isDown = function() return self:isDown() end
 
     closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
     return closure
