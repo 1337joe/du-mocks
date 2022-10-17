@@ -63,13 +63,13 @@ local DATA_TEMPLATE = '{"antiGPower":%.17f,"antiGravityField":%.16f,"baseAltitud
 --   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>antigravity_generator</code></li>
 -- </ul>
 -- @treturn string Data as JSON.
-function M:getData()
+function M:getWidgetData()
     return string.format(DATA_TEMPLATE, self.antiGravityPower, self.antiGravityField, self.baseAltitude, self.name,
         false, self:getWidgetType())
 end
 
 -- Override default with realistic patten to id.
-function M:getDataId()
+function M:getWidgetDataId()
     return "e123456"
 end
 

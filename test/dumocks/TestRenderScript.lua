@@ -213,7 +213,7 @@ function _G.TestRenderScript.testRequire()
     lu.assertNotNil(mlu)
     lu.assertEquals(type(mlu), "table")
     local mock = mlu:new(nil, 1, "long light m")
-    lu.assertEquals(mock:mockGetClosure().getElementClass(), "LightUnit")
+    lu.assertEquals(mock:mockGetClosure().getClass(), "LightUnit")
 
     -- non-working case - target module not on path
     lu.assertErrorMsgContains("no file", environment.require, "missing")

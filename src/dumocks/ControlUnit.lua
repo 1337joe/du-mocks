@@ -108,7 +108,7 @@ local SPEED_EFFECTS_TEMPLATE = '{"boostCount":%d,"boostSpeedModifier":%f,"boostS
                                 '"stasisTimeRemaining":%f}'
 local PARENTING_DATA_TEMPLATE = ',"parentingInfo":{"autoParentingMode":%d,"closestConstructName":"%s","parentName":"%s",' ..
                                 '"parentingState":%d}'
-function M:getData()
+function M:getWidgetData()
     local formatString = GENERIC_DATA_TEMPLATE
     local controllerId = 123456789
     local type = self:getWidgetType()
@@ -146,7 +146,7 @@ function M:getData()
 end
 
 -- Override default with realistic patten to id.
-function M:getDataId()
+function M:getWidgetDataId()
     return "e123456"
 end
 

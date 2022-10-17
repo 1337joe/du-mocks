@@ -126,7 +126,7 @@ local RESISTANCE_TEMPLATE = '{"%s":{"stress":%f,"value":%f}'
 --   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>shield_generator</code></li>
 -- </ul>
 -- @treturn string Data as JSON.
-function M:getData()
+function M:getWidgetData()
     local generatorId = 123456789
     local ventingStartHp = 0.0
     local ventingTargetHp = self.maxShieldHitpoints
@@ -143,7 +143,7 @@ function M:getData()
 end
 
 -- Override default with realistic patten to id.
-function M:getDataId()
+function M:getWidgetDataId()
     return "e123456"
 end
 

@@ -92,7 +92,7 @@ local DATA_TEMPLATE =
 --   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>engine_unit</code></li>
 -- </ul>
 -- @treturn string Data as JSON.
-function M:getData()
+function M:getWidgetData()
     local currentMaxThrust = 0
     local currentThrust = 0
     local maxThrustBase = 0
@@ -101,7 +101,7 @@ function M:getData()
 end
 
 -- Override default with realistic patten to id.
-function M:getDataId()
+function M:getWidgetDataId()
     return "e123456"
 end
 

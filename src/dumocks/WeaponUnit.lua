@@ -113,7 +113,7 @@ local DATA_TEMPLATE = [[
 --
 -- Descriptions of fields with a (?) are uncertain and need more testing.
 -- @treturn string Data as JSON.
-function M:getData()
+function M:getWidgetData()
     local weaponId = 123456789
     local targetConstruct = [[{"constructId":"0"}]]
     return string.format(DATA_TEMPLATE, weaponId, self.helperId, self.name, self.staticProperties, targetConstruct,
@@ -121,7 +121,7 @@ function M:getData()
 end
 
 -- Override default with realistic patten to id.
-function M:getDataId()
+function M:getWidgetDataId()
     return "e123456"
 end
 

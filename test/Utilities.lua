@@ -71,7 +71,7 @@ end
 -- @tparam string expectedWidgetType The name of the widget type expected, or nil/false if there is no widget.
 function _G.Utilities.verifyBasicElementFunctions(slot, expectedRestorations, expectedWidgetType)
     local localId = slot.getLocalId()
-    assert(localId and localId > 0, string.format("Invalid ID: %s", localId))
+    assert(localId and localId > 0, string.format("Invalid Local ID: %s", localId))
     assert(slot.getIntegrity() == 100.0 * slot.getHitPoints() / slot.getMaxHitPoints())
     assert(slot.getMaxRestorations() == expectedRestorations,
         string.format("Max restorations: %d", slot.getMaxRestorations()))

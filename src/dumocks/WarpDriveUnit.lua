@@ -57,7 +57,7 @@ local DATA_TEMPLATE = '{\"helperId\":\"warpdrive\",\"type\":\"%s\",\"name\":\"%s
 --   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>warpdrive</code></li>
 -- </ul>
 -- @treturn string Data as JSON.
-function M:getData()
+function M:getWidgetData()
     local warpDriveId = 123456789
     local buttonText = "Cannot Warp"
     local statusText = "INVALID CONSTRUCT"
@@ -74,7 +74,7 @@ function M:getData()
 end
 
 -- Override default with realistic patten to id.
-function M:getDataId()
+function M:getWidgetDataId()
     return "e123456"
 end
 

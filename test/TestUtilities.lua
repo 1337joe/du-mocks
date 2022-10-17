@@ -55,7 +55,7 @@ function _G.TestUtilities.testVerifyBasicElementFunctions()
 
     local function createSampleElement()
         local sample = {}
-        sample.id = 1
+        sample.localId = 1
         sample.integrity = 50
         sample.hitPoints = 75
         sample.maxHitPoints = 150
@@ -65,8 +65,8 @@ function _G.TestUtilities.testVerifyBasicElementFunctions()
         sample.dataId = ""
         sample.data = "{}"
 
-        sample.getId = function()
-            return sample.id
+        sample.getLocalId = function()
+            return sample.localId
         end
         sample.getIntegrity = function()
             return sample.integrity
@@ -86,25 +86,25 @@ function _G.TestUtilities.testVerifyBasicElementFunctions()
         sample.getWidgetType = function()
             return sample.widgetType
         end
-        sample.getDataId = function()
+        sample.getWidgetDataId = function()
             return sample.dataId
         end
-        sample.getData = function()
+        sample.getWidgetData = function()
             return sample.data
         end
-        sample.show = function()
+        sample.showWidget = function()
         end
-        sample.hide = function()
+        sample.hideWidget = function()
         end
         return sample
     end
 
     -- id not set
     element = createSampleElement()
-    element.id = nil
+    element.localId = nil
     result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
     lu.assertFalse(result)
-    lu.assertStrIContains(message, "invalid id")
+    lu.assertStrIContains(message, "invalid local id")
 
     -- integrity/hp/max hp relationship broken
     element = createSampleElement()
@@ -176,7 +176,7 @@ function _G.TestUtilities.testVerifyBasicElementFunctions()
 
     -- show fails
     element = createSampleElement()
-    element.show = function()
+    element.showWidget = function()
         error("bad show")
     end
     result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
@@ -184,7 +184,7 @@ function _G.TestUtilities.testVerifyBasicElementFunctions()
 
     -- hide fails
     element = createSampleElement()
-    element.hide = function()
+    element.hideWidget = function()
         error("bad hide")
     end
     result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)

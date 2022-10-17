@@ -99,7 +99,7 @@ local DATA_TEMPLATE = '{"helperId":"%s","type":"%s","name":"%s",'..
     "worksInSpace":%s
 }
 }]]
-function M:getData()
+function M:getWidgetData()
     local targetId = 0
     local radarId = 123456789
     local worksInAtmosphere = self.elementClass == CLASS_ATMO
@@ -109,7 +109,7 @@ function M:getData()
 end
 
 -- Override default with realistic patten to id.
-function M:getDataId()
+function M:getWidgetDataId()
     return "e123456"
 end
 

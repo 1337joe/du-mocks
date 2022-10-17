@@ -191,19 +191,19 @@ local DATA_TEMPLATE = '{\"name\":\"%s\","percentage":%.16f,"timeLeft":%s,\"helpe
 --   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>fuel_container</code></li>
 -- </ul>
 -- @treturn string Data as JSON.
-function M:getData()
+function M:getWidgetData()
     if self.elementClass == CLASS_ATMO or self.elementClass == CLASS_SPACE or self.elementClass == CLASS_ROCKET then
         return string.format(DATA_TEMPLATE, self.name, self.percentage, self.timeLeft, self.helperId, self:getWidgetType())
     end
-    return MockElement:getData()
+    return MockElement:getWidgetData()
 end
 
 -- Override default with realistic patten to id.
-function M:getDataId()
+function M:getWidgetDataId()
     if self.elementClass == CLASS_ATMO or self.elementClass == CLASS_SPACE or self.elementClass == CLASS_ROCKET then
         return "e123456"
     end
-    return MockElement:getDataId()
+    return MockElement:getWidgetDataId()
 end
 
 --- Event: The access to the container storage is granted. Required before using getItemsList, for example.
