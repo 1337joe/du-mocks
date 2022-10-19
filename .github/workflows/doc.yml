@@ -16,11 +16,11 @@ jobs:
       CODEX_SUFFIX: "${{ github.ref == 'refs/heads/pts' && 'codex-pts' || 'codex' }}"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.1.0
 
-      - uses: leafo/gh-actions-lua@v9
+      - uses: leafo/gh-actions-lua@v9.1.0
 
-      - uses: leafo/gh-actions-luarocks@v4
+      - uses: leafo/gh-actions-luarocks@v4.3.0
 
       - name: Setup
         run: |
@@ -54,14 +54,14 @@ jobs:
           include: docs/**/ldoc.css
 
       - name: Deploy Web Codex
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
           branch: codex
           folder: docs/web-codex
           target-folder: web-${{ env.CODEX_SUFFIX }}
 
       - name: Deploy Mock Codex
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
           branch: codex
           folder: docs/mock-codex
