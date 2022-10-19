@@ -241,7 +241,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | ControlUnit | :heavy_check_mark: :white_large_square: | :soon: | :soon: | :soon: :soon: | :heavy_check_mark: |
 | CoreUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :soon: | :heavy_check_mark: |
 | CounterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |
-| DatabankUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |
+| DatabankUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DetectionZoneUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |
 | DoorUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |
 | EmitterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |

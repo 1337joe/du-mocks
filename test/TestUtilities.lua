@@ -15,7 +15,8 @@ function _G.TestUtilities.testVerifyExpectedFunctions()
     -- unexpected
     expected = {}
     actual = {
-        activate = function() end
+        activate = function()
+        end
     }
     local result, message = pcall(_G.Utilities.verifyExpectedFunctions, actual, expected)
     lu.assertFalse(result)
@@ -33,7 +34,8 @@ function _G.TestUtilities.testVerifyExpectedFunctions()
     -- both unexpected and missing
     expected = {"deactivate"}
     actual = {
-        activate = function() end
+        activate = function()
+        end
     }
     local result, message = pcall(_G.Utilities.verifyExpectedFunctions, actual, expected)
     lu.assertFalse(result)
@@ -43,7 +45,8 @@ function _G.TestUtilities.testVerifyExpectedFunctions()
     -- no error
     expected = {"activate"}
     actual = {
-        activate = function() end
+        activate = function()
+        end
     }
     _G.Utilities.verifyExpectedFunctions(actual, expected)
 end
@@ -206,21 +209,24 @@ function _G.TestUtilities.testVerifyWidgetData()
     local expectedFields = {"helperId"}
     local expectedValues = {}
     expectedValues["helperId"] = '"gyro"'
-    lu.assertErrorMsgContains("Missing expected data fields: helperId", _G.Utilities.verifyWidgetData, data, expectedFields, expectedValues)
+    lu.assertErrorMsgContains("Missing expected data fields: helperId", _G.Utilities.verifyWidgetData, data,
+        expectedFields, expectedValues)
 
     -- wrong value
     local data = '{"helperId":"something else"}'
     local expectedFields = {"helperId"}
     local expectedValues = {}
     expectedValues["helperId"] = '"gyro"'
-    lu.assertErrorMsgContains("Unexpected value for helperId, expected \"gyro\"", _G.Utilities.verifyWidgetData, data, expectedFields, expectedValues)
+    lu.assertErrorMsgContains("Unexpected value for helperId, expected \"gyro\"", _G.Utilities.verifyWidgetData, data,
+        expectedFields, expectedValues)
 
     -- unexpected field
     local data = '{"helperId":"gyro","type":"gyro"}'
     local expectedFields = {"helperId"}
     local expectedValues = {}
     expectedValues["helperId"] = '"gyro"'
-    lu.assertErrorMsgContains("Found unexpected data fields: type", _G.Utilities.verifyWidgetData, data, expectedFields, expectedValues)
+    lu.assertErrorMsgContains("Found unexpected data fields: type", _G.Utilities.verifyWidgetData, data, expectedFields,
+        expectedValues)
 
     -- no error, all checks hit
     local data = '{"helperId":"gyro"}'
@@ -234,6 +240,25 @@ function _G.TestUtilities.testVerifyWidgetData()
     local expectedFields = {"parentingInfo", "autoParentingMode", "closestConstructName"}
     local expectedValues = {}
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
+end
+
+--- Verify verifyDeprecated finds problems.
+function _G.TestUtilities.testVerifyDeprecated()
+    local notDep = function(arg1, arg2)
+        return arg1 + arg2
+    end
+
+    lu.assertEquals(3, notDep(1, 2))
+
+    local dep = function(arg1, arg2)
+        _G.system.print("Warning: method dep is deprecated")
+        return notDep(arg1, arg2)
+    end
+
+    _G.Utilities.verifyDeprecated("dep", dep, 1, 2)
+
+    lu.assertErrorMsgContains("Could not find substring", _G.Utilities.verifyDeprecated, "wrong name", dep, 1, 2)
+    lu.assertErrorMsgContains("No deprecated message found", _G.Utilities.verifyDeprecated, "notDep", notDep, 1, 2)
 end
 
 os.exit(lu.LuaUnit.run())

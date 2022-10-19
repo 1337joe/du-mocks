@@ -131,4 +131,25 @@ end
 -- copy to here to library.onStart()
 ---------------
 
+-- Following are functions with general use among mock tests but that aren't called by in-game characterization tests.
+
+--- Verifies that the method prints a deprecated message when called.
+function _G.Utilities.verifyDeprecated(funcName, func, ...)
+    local printedMessage = ""
+    _G.system = {}
+    _G.system.print = function(message)
+        printedMessage = printedMessage .. message
+    end
+
+    local ret = func(...)
+
+    if printedMessage:len() == 0 then
+        error("No deprecated message found")
+    end
+
+    lu.assertStrContains(printedMessage, string.format("Warning: method %s is deprecated", funcName))
+
+    return ret
+end
+
 return _G.Utilities

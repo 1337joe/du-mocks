@@ -12,8 +12,8 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-elementDefinitions["databank"] = {mass = 17.09, maxHitPoints = 50.0}
-local DEFAULT_ELEMENT = "databank"
+elementDefinitions["databank xs"] = {mass = 17.09, maxHitPoints = 50.0, itemId = 812400865}
+local DEFAULT_ELEMENT = "databank xs"
 
 local M = MockElement:new()
 M.elementClass = "DataBankUnit"
@@ -30,12 +30,12 @@ function M:new(o, id, elementName)
     return o
 end
 
---- Clear the data bank.
+--- Clear the databank.
 function M:clear()
     self.data = {}
 end
 
---- Returns the number of keys that are stored inside the data bank.
+--- Returns the number of keys that are stored inside the databank.
 -- @treturn int The number of keys.
 function M:getNbKeys()
     local count = 0
@@ -45,21 +45,48 @@ function M:getNbKeys()
     return count
 end
 
---- Returns all the keys in the data bank.
+--- <b>Deprecated:</b> Returns all the keys in the databank.
+--
+-- This method is deprecated: getKeyList should be used instead.
+-- @see getKeyList
 -- @treturn json The key list, as JSON sequence.
 function M:getKeys()
+    M.deprecated("getKeys", "getKeyList")
+
+    local quotedKeys = {}
+    for i, v in pairs(self:getKeyList()) do
+        quotedKeys[i] = string.format([["%s"]], v)
+    end
+    return "[" .. table.concat(quotedKeys, ",") .. "]"
+end
+
+--- Returns all the keys in the databank.
+-- @treturn list The key list, as a list of string.
+function M:getKeyList()
     local keysList = {}
     for key,_ in pairs(self.data) do
-        keysList[#keysList + 1] = string.format([["%s"]], key)
+        keysList[#keysList + 1] = string.format("%s", key)
     end
-    return "[" .. table.concat(keysList, ",") .. "]"
+    return keysList
 end
 
 --- Returns 1 if the key is present in the databank, 0 otherwise.
--- @treturn bool 1 if the key exists and 0 otherwise
+-- @treturn 0/1 1 if the key exists and 0 otherwise.
 function M:hasKey(key)
     key = tostring(key)
     if self.data[key] ~= nil then
+        return 1
+    end
+    return 0
+end
+
+--- Remove the given key if the key is present in the databank.
+-- @tparam string key The key used to store a value.
+-- @tparam 0/1 1 if the key has been successfully removed, 0 otherwise.
+function M:clearValue(key)
+    key = tostring(key)
+    if self.data[key] ~= nil then
+        self.data[key] = nil
         return 1
     end
     return 0
@@ -98,6 +125,12 @@ function M:setIntValue(key, val)
     -- only store if an int
     if type(val) == "number" and val % 1 == 0 then
         self.data[key] = math.floor(val)
+    elseif type(val) == "boolean" then
+        if val then
+            self.data[key] = 1
+        else
+            self.data[key] = 0
+        end
     else
         self.data[key] = 0
     end
@@ -111,8 +144,8 @@ function M:getIntValue(key)
     local value = self.data[key]
     if value == nil or type(value) ~= "number" then
         value = 0
-    else
-        value = math.floor(value)
+    elseif type(value) == "number" and value ~= math.floor(value) then
+        value = 0
     end
     return value
 end
@@ -151,7 +184,9 @@ function M:mockGetClosure()
     closure.clear = function() return self:clear() end
     closure.getNbKeys = function() return self:getNbKeys() end
     closure.getKeys = function() return self:getKeys() end
+    closure.getKeyList = function() return self:getKeyList() end
     closure.hasKey = function(key) return self:hasKey(key) end
+    closure.clearValue = function(key) return self:clearValue(key) end
     closure.setStringValue = function(key, val) return self:setStringValue(key, val) end
     closure.getStringValue = function(key) return self:getStringValue(key) end
     closure.setIntValue = function(key, val) return self:setIntValue(key, val) end

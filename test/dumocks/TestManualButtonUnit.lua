@@ -16,7 +16,7 @@ _G.TestManualButtonUnit = {}
 function _G.TestManualButtonUnit.testConstructor()
 
     -- default element:
-    -- ["manual button s"] = {mass = 13.27, maxHitPoints = 50.0}
+    -- ["manual button s"] = {mass = 13.27, maxHitPoints = 50.0, itemId = 2896791363}
 
     local button0 = mmbu:new()
     local button1 = mmbu:new(nil, 1, "Manual Button S")

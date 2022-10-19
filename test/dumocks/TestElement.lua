@@ -8,6 +8,7 @@ package.path = "src/?.lua;" .. package.path
 local lu = require("luaunit")
 
 local me = require("dumocks.Element")
+local utilities = require("test.Utilities")
 
 TestElement = {}
 
@@ -66,18 +67,21 @@ function TestElement.testFindElement()
 end
 
 --- Verify constructor passes ID through properly and that instances are independant.
-function TestElement.testGetId()
+function TestElement.testGetLocalId()
     local element1 = me:new(nil, 1)
     local element2 = me:new(nil, 2)
 
-    lu.assertEquals(element1:getId(), 1)
-    lu.assertEquals(element2:getId(), 2)
+    lu.assertEquals(element1:getLocalId(), 1)
+    lu.assertEquals(element2:getLocalId(), 2)
 
     local closure1 = element1:mockGetClosure()
     local closure2 = element2:mockGetClosure()
 
-    lu.assertEquals(closure1.getId(), 1)
-    lu.assertEquals(closure2.getId(), 2)
+    lu.assertEquals(closure1.getLocalId(), 1)
+    lu.assertEquals(closure2.getLocalId(), 2)
+
+    lu.assertEquals(utilities.verifyDeprecated("getId", closure1.getId), closure1.getLocalId())
+    lu.assertEquals(utilities.verifyDeprecated("getId", closure2.getId), closure2.getLocalId())
 end
 
 function TestElement.testGetIntegrity()
