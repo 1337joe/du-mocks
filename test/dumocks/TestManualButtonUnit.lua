@@ -8,7 +8,7 @@ package.path = "src/?.lua;" .. package.path
 local lu = require("luaunit")
 
 local mmbu = require("dumocks.ManualButtonUnit")
-require("test.Utilities")
+local utilities = require("test.Utilities")
 
 _G.TestManualButtonUnit = {}
 
@@ -47,8 +47,21 @@ function _G.TestManualButtonUnit.testConstructor()
     lu.assertNotEquals(buttonClosure3.getItemId(), defaultId)
 end
 
+function _G.TestManualButtonUnit.testIsDown()
+    local mock = mmbu:new()
+    local closure = mock:mockGetClosure()
+
+    mock.state = false
+    lu.assertEquals(closure.isDown(), 0)
+    lu.assertEquals(utilities.verifyDeprecated("getState", closure.getState), 0)
+
+    mock.state = true
+    lu.assertEquals(closure.isDown(), 1)
+    lu.assertEquals(utilities.verifyDeprecated("getState", closure.getState), 1)
+end
+
 --- Verify press works without errors.
-function _G.TestManualButtonUnit.testPress()
+function _G.TestManualButtonUnit.testOnPressed()
     local mock = mmbu:new()
     local closure = mock:mockGetClosure()
 
@@ -76,7 +89,7 @@ function _G.TestManualButtonUnit.testPress()
 end
 
 --- Verify press works with and propagates errors.
-function _G.TestManualButtonUnit.testPressError()
+function _G.TestManualButtonUnit.testOnPressedError()
     local mock = mmbu:new()
 
     local calls = 0
@@ -107,7 +120,7 @@ function _G.TestManualButtonUnit.testPressError()
 end
 
 --- Verify release works without errors.
-function _G.TestManualButtonUnit.testReleased()
+function _G.TestManualButtonUnit.testOnReleased()
     local mock = mmbu:new()
     local closure = mock:mockGetClosure()
 
@@ -136,7 +149,7 @@ function _G.TestManualButtonUnit.testReleased()
 end
 
 --- Verify release works with and propagates errors.
-function _G.TestManualButtonUnit.testReleasedError()
+function _G.TestManualButtonUnit.testOnReleasedError()
     local mock = mmbu:new()
 
     local calls = 0
@@ -259,8 +272,15 @@ function _G.TestManualButtonUnit.testGameBehavior()
 
     -- test element class and inherited methods
     assert(slot1.getClass() == "ManualButtonUnit")
-    assert(string.match(string.lower(slot1.getName()), "manual button s %[%d+%]"), slot1.getName())
-    assert(slot1.getItemId() == 2896791363, slot1.getItemId())
+    local itemId = slot1.getItemId()
+    local name = slot1.getName()
+    if itemId == 2896791363 then
+        assert(string.match(string.lower(name), "manual button s %[%d+%]"), name)
+    elseif itemId == 1550904282 then
+        assert(string.match(string.lower(name), "manual button xs %[%d+%]"), name)
+    else
+        error(string.format("Unexpected item id: %d (%s)", itemId, name))
+    end
     assert(slot1.getMass() == 13.27)
     assert(slot1.getMaxHitPoints() == 50.0)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
