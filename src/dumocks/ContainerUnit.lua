@@ -239,6 +239,12 @@ function M.EVENT_onContentUpdate()
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterStatusChanged")
 end
 
+-- Name changed to follow in-game API.
+function M:mockRegisterStorageAcquired(callback)
+    M.deprecated("mockRegisterStorageAcquired", "mockRegisterContentUpdate")
+    self:mockRegisterContentUpdate(callback)
+end
+
 --- Mock only, not in-game: Register a handler for the in-game `onContentUpdate()` event.
 -- @tparam function callback The function to call when the container content updates.
 -- @treturn int The index of the callback.
@@ -249,11 +255,20 @@ function M:mockRegisterContentUpdate(callback)
     return index
 end
 
+-- Name changed to follow in-game API, argument added to pass in the update directly.
+function M:mockDoStorageAcquired()
+    M.deprecated("mockDoStorageAcquired", "mockDoContentUpdate")
+    self:mockDoContentUpdate(nil)
+end
+
 --- Mock only, not in-game: Simulates the container content updating, calling all registered callbacks.
--- @tparam table newItems The new contents table, conforming to the table defined in getContent
+-- @tparam table newItems The new contents table, must conform to the table defined in getContent or be nil to not
+--   change storageItems.
 -- @see getContent
 function M:mockDoContentUpdate(newItems)
-    self.storageItems = newItems
+    if newItems then
+        self.storageItems = newItems
+    end
 
     -- call callbacks in order, saving exceptions until end
     local errors = ""

@@ -82,7 +82,7 @@ end
 
 --- Remove the given key if the key is present in the databank.
 -- @tparam string key The key used to store a value.
--- @tparam 0/1 1 if the key has been successfully removed, 0 otherwise.
+-- @treturn 0/1 1 if the key has been successfully removed, 0 otherwise.
 function M:clearValue(key)
     key = tostring(key)
     if self.data[key] ~= nil then

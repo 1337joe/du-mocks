@@ -18,6 +18,9 @@ function M:new(o)
     o.systemResolution2Index = 1
     o.systemResolution2Solutions = {}
 
+    o.getPointOnScreenIndex = 1
+    o.getPointOnScreenSolutions = {}
+
     return o
 end
 
@@ -31,7 +34,7 @@ function M:systemResolution3(vec_c1, vec_c2, vec_c3, vec_c0)
     -- find the next solution in the provided sequence
     local result = self.systemResolution3Solutions[self.systemResolution3Index]
     if not result then
-        error("Solution "..self.systemResolution3Index.." not loaded.")
+        error("Solution " .. self.systemResolution3Index .. " not loaded.")
     end
 
     self.systemResolution3Index = self.systemResolution3Index + 1
@@ -47,10 +50,21 @@ function M:systemResolution2(vec_c1, vec_c2, vec_c0)
     -- find the next solution in the provided sequence and increment index
     local result = self.systemResolution2Solutions[self.systemResolution2Index]
     if not result then
-        error("Solution "..self.systemResolution2Index.." not loaded.")
+        error("Solution " .. self.systemResolution2Index .. " not loaded.")
     end
 
     self.systemResolution2Index = self.systemResolution2Index + 1
+    return result
+end
+
+function M:getPointOnScreen(worldPos)
+    -- find the next solution in the provided sequence and increment index
+    local result = self.getPointOnScreenSolutions[self.getPointOnScreenIndex]
+    if not result then
+        error("Point " .. self.getPointOnScreenIndex .. " not loaded.")
+    end
+
+    self.getPointOnScreenIndex = self.getPointOnScreenIndex + 1
     return result
 end
 
@@ -64,6 +78,7 @@ function M:mockGetClosure()
     closure.systemResolution2 = function(vec_c1, vec_c2, vec_c0)
         return self:systemResolution2(vec_c1, vec_c2, vec_c0)
     end
+    closure.getPointOnScreen = function(worldPos) return self:getPointOnScreen(worldPos) end
     -- unknown use, but present in all elements
     closure.load = function() end
     return closure

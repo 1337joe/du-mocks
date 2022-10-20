@@ -221,11 +221,11 @@ end
 function _G.TestContainerUnit.testGameBehavior()
     local items = {
         [947806142] = {
-            name = "OxygenPure",
+            displayName = "Pure Oxygen",
             unitMass = 1.0
         },
         [2579672037] = {
-            name = "Nitron",
+            displayName = "Nitron",
             unitMass = 4.0
         }
     }
@@ -239,7 +239,7 @@ function _G.TestContainerUnit.testGameBehavior()
         --     quantity = 20.0
         -- },
         -- ["ammo container xs"] = {
-        --     name = "Railgun Antimatter Ammo xs",
+        --     displayName = "Railgun Antimatter Ammo xs",
         --     unitMass = 2.01,
         --     volume = 10
         -- },
@@ -432,7 +432,7 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1, items)
     local expectedQuantity = 20
     local epsilon = 0.000001
     local expectedVolume = expectedQuantity
-    if item.name == "Railgun Antimatter Ammo xs" then
+    if item.displayName == "Railgun Antimatter Ammo xs" then
         expectedVolume = 200
     end
     assert(quantity == expectedQuantity, string.format("Expected %f but was %f", expectedQuantity, quantity))
