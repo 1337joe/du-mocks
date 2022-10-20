@@ -84,7 +84,7 @@
 <div id="content">
 
 <h1>Module <code>ContainerUnit</code></h1>
-<p>Stores items.</p>
+<p>Containers are elements designed to store items and resources.</p>
 <p>
 <p> Element class:
  <ul>
@@ -109,28 +109,36 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#getSelfMass">getSelfMass ()</a></td>
+	<td class="summary">Returns the mass of the container element (as if it were empty).</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#getItemsMass">getItemsMass ()</a></td>
 	<td class="summary">Returns the container content mass (the sum of the mass of all the items it contains).</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getSelfMass">getSelfMass ()</a></td>
-	<td class="summary">Returns the container self mass.</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#getItemsVolume">getItemsVolume ()</a></td>
-	<td class="summary">Returns volume occupied by items currently inside the container.</td>
+	<td class="summary">Returns the container content volume (the sum of the volume of all items it contains).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getMaxVolume">getMaxVolume ()</a></td>
-	<td class="summary">Returns the container max volume</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#acquireStorage">acquireStorage ()</a></td>
-	<td class="summary">Initiate the acquisition of the storage in the container, required before calls to getItemsList.</td>
+	<td class="summary">Returns the maximum volume of the container.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getItemsList">getItemsList ()</a></td>
-	<td class="summary">Returns the list of items in the container, as a json string you need to parse with json.decode.</td>
+	<td class="summary"><b>Deprecated:</b> Returns the list of items in the container, as a json string you need to parse with json.decode.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getContent">getContent ()</a></td>
+	<td class="summary">Returns a table describing the contents of the container, as a pair itemId and quantity per slot.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#acquireStorage">acquireStorage ()</a></td>
+	<td class="summary"><b>Deprecated:</b>Initiate the acquisition of the storage in the container, required before calls to getItemsList.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updateContent">updateContent ()</a></td>
+	<td class="summary">Send a request to get an update of the content of the container, limited to one call allowed per 30 seconds.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getWidgetData">getWidgetData ()</a></td>
@@ -138,7 +146,11 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_storageAcquired">EVENT_storageAcquired ()</a></td>
-	<td class="summary">Event: The access to the container storage is granted.</td>
+	<td class="summary">Event: <b>Deprecated:</b> The access to the container storage is granted.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onContentUpdate">EVENT_onContentUpdate ()</a></td>
+	<td class="summary">Event: Emitted when the container content is updated (storage update or after a manual request made with updateContent()).</td>
 	</tr>
 </table>
 
@@ -149,6 +161,26 @@
     <h2 class="section-header "><a name="Functions"></a>Functions</h2>
 
     <dl class="function">
+    <dt>
+    <a name = "getSelfMass"></a>
+    <strong>getSelfMass ()</strong>
+    </dt>
+    <dd>
+    Returns the mass of the container element (as if it were empty).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The mass of the container in kilograms.
+    </ol>
+
+
+
+
+</dd>
     <dt>
     <a name = "getItemsMass"></a>
     <strong>getItemsMass ()</strong>
@@ -161,28 +193,8 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">kg</span></span>
-        The total mass of the container's content, excluding the container's own mass itself.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getSelfMass"></a>
-    <strong>getSelfMass ()</strong>
-    </dt>
-    <dd>
-    Returns the container self mass.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">kg</span></span>
-        The container self mass, as if it were empty.
+           <span class="types"><span class="type">float</span></span>
+        The total mass of the contents of the container, excluding the container's own mass, in kilograms.
     </ol>
 
 
@@ -194,15 +206,15 @@
     <strong>getItemsVolume ()</strong>
     </dt>
     <dd>
-    Returns volume occupied by items currently inside the container.
+    Returns the container content volume (the sum of the volume of all items it contains).
 
 
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">L</span></span>
-        The volume in liters.
+           <span class="types"><span class="type">float</span></span>
+        The total volume of the contents of the container in liters.
     </ol>
 
 
@@ -214,39 +226,18 @@
     <strong>getMaxVolume ()</strong>
     </dt>
     <dd>
-    Returns the container max volume
+    Returns the maximum volume of the container.
 
 
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">L</span></span>
-        The volume in liters.
+           <span class="types"><span class="type">float</span></span>
+        The maximum volume of the container in liters.
     </ol>
 
 
-
-
-</dd>
-    <dt>
-    <a name = "acquireStorage"></a>
-    <strong>acquireStorage ()</strong>
-    </dt>
-    <dd>
-    Initiate the acquisition of the storage in the container, required before calls to getItemsList.  Simply wait for the
- event 'storageAcquired' to be emitted by the container, and you can then use the storage related functions.
-<p> Note: This is rate-limited to 10 queries / 5 minutes. Attempting to call more frequently will result in console error messages.
-
-
-
-
-
-    <h3>See also:</h3>
-    <ul>
-         <li><a href="../modules/ContainerUnit.html#getItemsList">getItemsList</a></li>
-         <li><a href="../modules/ContainerUnit.html#EVENT_storageAcquired">EVENT_storageAcquired</a></li>
-    </ul>
 
 
 </dd>
@@ -255,7 +246,7 @@
     <strong>getItemsList ()</strong>
     </dt>
     <dd>
-    Returns the list of items in the container, as a json string you need to parse with json.decode.
+    <b>Deprecated:</b> Returns the list of items in the container, as a json string you need to parse with json.decode.
 
 
 
@@ -267,6 +258,81 @@
     </ol>
 
 
+
+
+</dd>
+    <dt>
+    <a name = "getContent"></a>
+    <strong>getContent ()</strong>
+    </dt>
+    <dd>
+    Returns a table describing the contents of the container, as a pair itemId and quantity per slot.
+<p> Note: You have to request the contents of the container from the server by calling updateContent first.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The contents of the container as a table with fields {[int] id, [float] quantity} per slot.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ContainerUnit.html#updateContent">updateContent</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "acquireStorage"></a>
+    <strong>acquireStorage ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b>Initiate the acquisition of the storage in the container, required before calls to getItemsList.
+ Simply wait for the event 'storageAcquired' to be emitted by the container, and you can then use the storage related
+ functions.
+<p> Note: This is rate-limited to 10 queries / 5 minutes. Attempting to call more frequently will result in console error messages.
+<p> This method is deprecated: updateContent should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../modules/ContainerUnit.html#getItemsList">getItemsList</a></li>
+         <li><a href="../modules/ContainerUnit.html#EVENT_storageAcquired">EVENT_storageAcquired</a></li>
+         <li><a href="../modules/ContainerUnit.html#updateContent">updateContent</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "updateContent"></a>
+    <strong>updateContent ()</strong>
+    </dt>
+    <dd>
+    Send a request to get an update of the content of the container, limited to one call allowed per 30 seconds.  The
+ onContentUpdate event is emitted by the container when the content is updated.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        If the request is not yet possible, returns the remaining time to wait for in seconds.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../modules/ContainerUnit.html#getContent">getContent</a></li>
+         <li><a href="../modules/ContainerUnit.html#EVENT_onContentUpdate">EVENT_onContentUpdate</a></li>
+    </ul>
 
 
 </dd>
@@ -308,8 +374,9 @@
     <strong>EVENT_storageAcquired ()</strong>
     </dt>
     <dd>
-    Event: The access to the container storage is granted.  Required before using getItemsList, for example.
-<p> Note: This is documentation on an event handler, not a callable method.
+    Event: <b>Deprecated:</b> The access to the container storage is granted.  Required before using getItemsList, for example.
+<p> Note: This is documentation of an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onContentUpdate should be used instead.
 
 
 
@@ -317,7 +384,27 @@
 
     <h3>See also:</h3>
     <ul>
-         <a href="../modules/ContainerUnit.html#acquireStorage">acquireStorage</a>
+         <li><a href="../modules/ContainerUnit.html#acquireStorage">acquireStorage</a></li>
+         <li><a href="../modules/ContainerUnit.html#EVENT_onContentUpdate">EVENT_onContentUpdate</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onContentUpdate"></a>
+    <strong>EVENT_onContentUpdate ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the container content is updated (storage update or after a manual request made with updateContent()).
+<p> Note: This is documentation of an event handler, not a callable method.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ContainerUnit.html#updateContent">updateContent</a>
     </ul>
 
 
@@ -329,7 +416,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-10-19 04:45:28 </i>
+<i style="float:right;">Last updated 2022-10-20 01:51:11 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
