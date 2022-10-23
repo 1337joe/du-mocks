@@ -127,6 +127,37 @@ function _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ign
     assert(#expectedFields == 0, "Missing expected data fields: " .. table.concat(expectedFields, ", "))
     assert(#unexpectedFields == 0, "Found unexpected data fields: " .. table.concat(unexpectedFields, ", "))
 end
+
+--- Verifies the provided tables contain the same elements.
+-- @tparam table actual The table to check.
+-- @tparam table expected The table to compare against.
+-- @treturn string trueA message des
+function _G.Utilities.assertTableEquals(actual, expected)
+    if type(actual) ~= "table" then
+        return false, "Expected type \"table\""
+    end
+
+    local actualCount = 0
+    for _, _ in pairs(actual) do
+        actualCount = actualCount + 1
+    end
+
+    local message = ""
+    local expectedCount = 0
+    for k, v in pairs(expected) do
+        if actual[k] ~= v then
+            message = string.format("Index %s: expected %s but was %s\n", k, v, actual[k])
+        end
+
+        expectedCount = expectedCount + 1
+    end
+
+    if actualCount ~= expectedCount then
+        message = string.format("Length mismatch: expected %d but found %d", expectedCount, actualCount)
+    end
+
+    return message:len() == 0, message
+end
 ---------------
 -- copy to here to library.onStart()
 ---------------

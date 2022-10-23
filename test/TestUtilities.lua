@@ -242,6 +242,47 @@ function _G.TestUtilities.testVerifyWidgetData()
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
 end
 
+function _G.TestUtilities.testAssertTableEquals()
+    local actual, expected
+
+    expected = {}
+    lu.assertFalse(_G.Utilities.assertTableEquals(nil, expected))
+    lu.assertFalse(_G.Utilities.assertTableEquals(1, expected))
+    lu.assertFalse(_G.Utilities.assertTableEquals("string", expected))
+
+    actual = {1}
+    expected = {1}
+    lu.assertTrue(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {1}
+    expected = {}
+    lu.assertFalse(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {}
+    expected = {1}
+    lu.assertFalse(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {a = 1}
+    expected = {a = 1}
+    lu.assertTrue(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {a = 2}
+    expected = {a = 1}
+    lu.assertFalse(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {b = 1}
+    expected = {a = 1}
+    lu.assertFalse(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {0, 1, 0}
+    expected = {0, 1, 0}
+    lu.assertTrue(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {0, 1, 1}
+    expected = {0, 1, 0}
+    lu.assertFalse(_G.Utilities.assertTableEquals(actual, expected))
+end
+
 --- Verify verifyDeprecated finds problems.
 function _G.TestUtilities.testVerifyDeprecated()
     local notDep = function(arg1, arg2)

@@ -33,7 +33,7 @@ jobs:
           mv doc docs/mock-codex
       
       - name: Remove mock methods
-        uses: jacobtomlinson/gha-find-replace@v2
+        uses: jacobtomlinson/gha-find-replace@v2.0.0
         with:
           find: '--- Mock'
           replace: '-- Mock'
@@ -46,7 +46,7 @@ jobs:
           mv doc docs/web-codex
       
       - name: Clean up CSS
-        uses: jacobtomlinson/gha-find-replace@v2
+        uses: jacobtomlinson/gha-find-replace@v2.0.0
         with:
           find: 'width: 700px;'
           replace: ';'

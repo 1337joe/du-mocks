@@ -57,6 +57,9 @@ function M:systemResolution2(vec_c1, vec_c2, vec_c0)
     return result
 end
 
+--- Returns the position of the given point in world coordinates system, on the game screen.
+-- @tparam vec3 worldPos The world position of the point.
+-- @treturn vec3 The position in percentage (between 0 and 1) of the screen resolution as vec3 with {x, y, depth}.
 function M:getPointOnScreen(worldPos)
     -- find the next solution in the provided sequence and increment index
     local result = self.getPointOnScreenSolutions[self.getPointOnScreenIndex]
@@ -66,6 +69,10 @@ function M:getPointOnScreen(worldPos)
 
     self.getPointOnScreenIndex = self.getPointOnScreenIndex + 1
     return result
+end
+
+--- Unknown use.
+function M:load()
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
@@ -79,8 +86,7 @@ function M:mockGetClosure()
         return self:systemResolution2(vec_c1, vec_c2, vec_c0)
     end
     closure.getPointOnScreen = function(worldPos) return self:getPointOnScreen(worldPos) end
-    -- unknown use, but present in all elements
-    closure.load = function() end
+    closure.load = function() return self:load() end
     return closure
 end
 

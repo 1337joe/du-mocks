@@ -219,7 +219,7 @@ function M:getWidgetDataId()
     return MockElement:getWidgetDataId()
 end
 
---- Event: <b>Deprecated:</b> The access to the container storage is granted. Required before using getItemsList, for example.
+--- <b>Deprecated:</b> Event: The access to the container storage is granted. Required before using getItemsList, for example.
 --
 -- Note: This is documentation of an event handler, not a callable method.
 --

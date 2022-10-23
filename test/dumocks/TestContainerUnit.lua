@@ -217,7 +217,7 @@ end
 -- 1. 1x item container or fuel tank, connected to Programming Board on slot1
 --   a. Add 20L of oxygen, 20 Railgun Antimatter Ammo xs, or appropriate fuel to container
 --
--- Exercises: getClass, getData, getMaxVolume, getItemsVolume, getItemsMass, getSelfMass, updateContent, getContent
+-- Exercises: getClass, getWidgetData, getMaxVolume, getItemsVolume, getItemsMass, getSelfMass, updateContent, getContent
 function _G.TestContainerUnit.testGameBehavior()
     local items = {
         [947806142] = {
