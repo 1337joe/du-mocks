@@ -41,7 +41,7 @@ elementDefinitions["basic container l"] = {mass = 14842.7, maxHitPoints = 17316.
 elementDefinitions["basic container xl"] = {mass = 44206.0, maxHitPoints = 34633.0, class = XL_GROUP, maxVolume = 256000}
 elementDefinitions["basic expanded container xl"] = {mass = 88413.0, maxHitPoints = 69267.0, class = EXL_GROUP, maxVolume = 512000}
 
-elementDefinitions["parcel container xs"] = {mass = 224.68, maxHitPoints = 124.0, class = CLASS_PARCEL, maxVolume = 1000}
+elementDefinitions["parcel container xs"] = {mass = 224.68, maxHitPoints = 124.0, itemId = 386276308, class = CLASS_PARCEL, maxVolume = 1000}
 elementDefinitions["parcel container s"] = {mass = 1256.17, maxHitPoints = 999.0, class = CLASS_PARCEL, maxVolume = 8000}
 elementDefinitions["parcel container m"] = {mass = 7273.75, maxHitPoints = 7997.0, class = CLASS_PARCEL, maxVolume = 64000}
 elementDefinitions["parcel container l"] = {mass = 14547.5, maxHitPoints = 17316.0, class = CLASS_PARCEL, maxVolume = 128000}

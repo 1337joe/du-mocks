@@ -222,11 +222,23 @@ function _G.TestContainerUnit.testGameBehavior()
     local items = {
         [947806142] = {
             displayName = "Pure Oxygen",
-            unitMass = 1.0
+            unitMass = 1.0,
+            unitVolume = 1.0
+        },
+        [3669030673] = {
+            displayName = "Railgun Antimatter Ammo",
+            unitMass = 2.01,
+            unitVolume = 10.0
         },
         [2579672037] = {
-            displayName = "Nitron",
-            unitMass = 4.0
+            displayName = "Nitron Fuel",
+            unitMass = 4.0,
+            unitVolume = 1.0
+        },
+        [840202980] = {
+            displayName = "Kergon-X1 Fuel",
+            unitMass = 6,
+            unitVolume = 1.0
         }
     }
     local containers = {
@@ -234,22 +246,22 @@ function _G.TestContainerUnit.testGameBehavior()
             id = 947806142,
             quantity = 20.0
         },
-        -- ["parcel container xs"] = {
-        --     id = 947806142,
-        --     quantity = 20.0
-        -- },
-        -- ["ammo container xs"] = {
-        --     displayName = "Railgun Antimatter Ammo xs",
-        --     unitMass = 2.01,
-        --     volume = 10
-        -- },
+        ["parcel container xs"] = {
+            id = 947806142,
+            quantity = 20.0
+        },
+        ["ammo container xs"] = {
+            id = 3669030673,
+            quantity = 20
+        },
         ["atmospheric fuel tank xs"] = {
             id = 2579672037,
             quantity = 20
         },
-        -- ["space fuel tank xs"] = {
-        --     unitMass = 6
-        -- },
+        ["space fuel tank xs"] = {
+            id = 840202980,
+            quantity = 20
+        },
         -- ["rocket fuel tank xs"] = {
         --     name = "Xeron Fuel",
         --     unitMass = 0.8,
@@ -331,7 +343,7 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1, items)
     elseif class == "MissionContainer" then
         isParcel = true
         expectedName = "parcel container xs %[%d+%]"
-        expectedId = 0
+        expectedId = 386276308
     elseif class == "AmmoContainerUnit" then
         isAmmo = true
         expectedName = "ammo container xs %[%d+%]"
@@ -431,10 +443,7 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1, items)
 
     local expectedQuantity = 20
     local epsilon = 0.000001
-    local expectedVolume = expectedQuantity
-    if item.displayName == "Railgun Antimatter Ammo xs" then
-        expectedVolume = 200
-    end
+    local expectedVolume = expectedQuantity * item.unitVolume
     assert(quantity == expectedQuantity, string.format("Expected %f but was %f", expectedQuantity, quantity))
     local itemsVolume = slot1.getItemsVolume()
     assert(math.abs(itemsVolume - expectedVolume) < epsilon, string.format("Expected %f L but was %f L", expectedVolume, itemsVolume))

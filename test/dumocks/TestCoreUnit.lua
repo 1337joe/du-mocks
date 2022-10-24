@@ -52,7 +52,8 @@ end
 -- Test setup:
 -- 1. core unit of any type, connected to Programming Board on slot1
 --
--- Exercises: getClass, getWidgetData g, spawnNumberSticker, spawnArrowSticker, deleteSticker, moveSticker, getPvPTimer
+-- Exercises: getClass, getItemId, getName, getWidgetData g, spawnNumberSticker, spawnArrowSticker, deleteSticker,
+--   moveSticker
 function _G.TestCoreUnit.testGameBehavior()
     local mock, closure
     local result, message

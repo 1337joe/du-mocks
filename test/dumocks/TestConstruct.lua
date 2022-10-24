@@ -18,7 +18,7 @@ _G.TestConstruct = {}
 -- Test setup:
 -- 1. 1x Programming Board, no connections
 --
--- Exercises: getPvPTimer
+-- Exercises: getPvPTimer, getForward, getRight, getUp
 function _G.TestConstruct.testGameBehavior()
     local mock = mc:new()
     local construct = mock:mockGetClosure()
@@ -59,6 +59,10 @@ function _G.TestConstruct.testGameBehavior()
     _G.Utilities.verifyExpectedFunctions(construct, expectedFunctions)
 
     assert(construct.getPvPTimer() == 0.0)
+
+    assert(_G.Utilities.assertTableEquals(construct.getForward(), {0, 1, 0}))
+    assert(_G.Utilities.assertTableEquals(construct.getRight(), {1, 0, 0}))
+    assert(_G.Utilities.assertTableEquals(construct.getUp(), {0, 0, 1}))
 
     system.print("Success")
     unit.exit()
