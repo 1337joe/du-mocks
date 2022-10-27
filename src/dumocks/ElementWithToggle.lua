@@ -45,13 +45,19 @@ function M:new(o, id, elementDefinition)
     return o
 end
 
---- Switches the element on/open.
+--- <b>Deprecated:</b> Switches the element on/open.
+--
+-- This method is deprecated: element-specific methods should be used instead.
 function M:activate()
+    M.deprecated("activate")
     self.state = true
 end
 
---- Switches the element off/open.
+--- <b>Deprecated:</b> Switches the element off/open.
+--
+-- This method is deprecated: element-specific methods should be used instead.
 function M:deactivate()
+    M.deprecated("deactivate")
     self.state = false
 end
 

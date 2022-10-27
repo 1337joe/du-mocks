@@ -96,10 +96,10 @@ function M.EVENT_onReleased()
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterReleased")
 end
 
---- Mock only, not in-game: Register a handler for the in-game `pressed()` event.
+--- Mock only, not in-game: Register a handler for the in-game `onPressed()` event.
 -- @tparam function callback The function to call when the button is pressed.
 -- @treturn int The index of the callback.
--- @see EVENT_pressed
+-- @see EVENT_onPressed
 function M:mockRegisterPressed(callback)
     local index = #self.pressedCallbacks + 1
     self.pressedCallbacks[index] = callback
