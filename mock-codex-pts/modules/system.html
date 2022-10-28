@@ -33,6 +33,7 @@
 <h2>Contents</h2>
 <ul>
 <li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
 </ul>
 
 
@@ -162,84 +163,8 @@
 	<td class="summary">Return the current value of the mouse pos Y.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getThrottleInputFromMouseWheel">getThrottleInputFromMouseWheel ()</a></td>
-	<td class="summary">Return the current value of the mouse wheel (for the throttle speedUp/speedDown action).</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getControlDeviceForwardInput">getControlDeviceForwardInput ()</a></td>
-	<td class="summary">Return the mouse input for the ship control action (forward/backward).</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getControlDeviceYawInput">getControlDeviceYawInput ()</a></td>
-	<td class="summary">Return the mouse input for the ship control action (yaw right/left).</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getControlDeviceLeftRightInput">getControlDeviceLeftRightInput ()</a></td>
-	<td class="summary">Return the mouse input for the ship control action (right/left).</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#lockView">lockView (state)</a></td>
-	<td class="summary">Lock or unlock the mouse free look.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#isViewLocked">isViewLocked ()</a></td>
-	<td class="summary">Return the lock state of the mouse free look.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#freeze">freeze (bool)</a></td>
-	<td class="summary">Freezes the character, liberating the associated movement keys to be used by the script.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#isFrozen">isFrozen ()</a></td>
-	<td class="summary">Return the frozen status of the character (see 'freeze').</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getTime">getTime ()</a></td>
-	<td class="summary"><b>Deprecated:</b> Return the current time since the arrival of the Arkship.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getArkTime">getArkTime ()</a></td>
-	<td class="summary">Return the current time since the arrival of the Arkship on September 30th, 2017.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getUtcTime">getUtcTime ()</a></td>
-	<td class="summary">Return the current time since the January 1st, 1970.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getUtcOffset">getUtcOffset ()</a></td>
-	<td class="summary">Return the time offset between local timezone and UTC.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getActionUpdateDeltaTime">getActionUpdateDeltaTime ()</a></td>
-	<td class="summary">Return delta time of action updates (to use in ActionLoop).</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getPlayerName">getPlayerName (id)</a></td>
-	<td class="summary">Return the name of the given player, if in range of visibility or broadcasted by a transponder.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getPlayerWorldPos">getPlayerWorldPos (id)</a></td>
-	<td class="summary">Return the world position of the given player, if in range of visibility.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getItem">getItem (id)</a></td>
-	<td class="summary">Return the item table corresponding to the given item ID.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getOrganizationName">getOrganizationName (id)</a></td>
-	<td class="summary">Returns the name of the given organization, if known, e.g.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getOrganizationTag">getOrganizationTag (id)</a></td>
-	<td class="summary">Returns the tag of the given organization, if known, e.g.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getWaypointFromPlayerPos">getWaypointFromPlayerPos ()</a></td>
-	<td class="summary">Return the player world position as a waypoint string, starting with ::pos (only in explicit runs).</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#setWaypoint">setWaypoint (waypointStr)</a></td>
-	<td class="summary">Set a waypoint at the destination described by the waypoint string, of the form ::pos{...}</td>
+	<td class="name" nowrap><a href="#getMouseSensitivity">getMouseSensitivity ()</a></td>
+	<td class="summary">Return the value of the mouse sensitivity game setting.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getScreenHeight">getScreenHeight ()</a></td>
@@ -302,8 +227,108 @@
 	<td class="summary">Returns the up direction vector of the active camera, in construct local coordinates.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#getThrottleInputFromMouseWheel">getThrottleInputFromMouseWheel ()</a></td>
+	<td class="summary">Return the current value of the mouse wheel (for the throttle speedUp/speedDown action).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getControlDeviceForwardInput">getControlDeviceForwardInput ()</a></td>
+	<td class="summary">Return the mouse input for the ship control action (forward/backward).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getControlDeviceYawInput">getControlDeviceYawInput ()</a></td>
+	<td class="summary">Return the mouse input for the ship control action (yaw right/left).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getControlDeviceLeftRightInput">getControlDeviceLeftRightInput ()</a></td>
+	<td class="summary">Return the mouse input for the ship control action (right/left).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lockView">lockView (state)</a></td>
+	<td class="summary">Lock or unlock the mouse free look.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isViewLocked">isViewLocked ()</a></td>
+	<td class="summary">Return the lock state of the mouse free look.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#freeze">freeze (bool)</a></td>
+	<td class="summary"><b>Deprecated:</b> Freezes the character, liberating the associated movement keys to be used by the script.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isFrozen">isFrozen ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Return the frozen status of the character (see 'freeze').</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getTime">getTime ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Return the current time since the arrival of the Arkship.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getArkTime">getArkTime ()</a></td>
+	<td class="summary">Return the current time since the arrival of the Arkship on September 30th, 2017.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getUtcTime">getUtcTime ()</a></td>
+	<td class="summary">Return the current time since the January 1st, 1970.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getUtcOffset">getUtcOffset ()</a></td>
+	<td class="summary">Return the time offset between local timezone and UTC.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getLocale">getLocale ()</a></td>
+	<td class="summary">Return the locale in which the game is currently running.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getActionUpdateDeltaTime">getActionUpdateDeltaTime ()</a></td>
+	<td class="summary">Return delta time of action updates (to use in ActionLoop).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getPlayerName">getPlayerName (id)</a></td>
+	<td class="summary">Return the name of the given player, if in range of visibility or broadcasted by a transponder.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getPlayerWorldPos">getPlayerWorldPos (id)</a></td>
+	<td class="summary">Return the world position of the given player, if in range of visibility.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getItem">getItem (id)</a></td>
+	<td class="summary">Return the item table corresponding to the given item ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getSchematic">getSchematic (schematicId)</a></td>
+	<td class="summary"><b>Deprecated:</b> Retrieves schematic details for the id provided as json.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getRecipes">getRecipes (id)</a></td>
+	<td class="summary">Returns a list of recipes producing the given item from its ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOrganizationName">getOrganizationName (id)</a></td>
+	<td class="summary"><b>Deprecated:</b> Returns the name of the given organization, if known, e.g.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOrganizationTag">getOrganizationTag (id)</a></td>
+	<td class="summary"><b>Deprecated:</b> Returns the tag of the given organization, if known, e.g.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOrganization">getOrganization (id)</a></td>
+	<td class="summary">Returns the corresponding organization to the given organization ID, if known, e.g.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWaypointFromPlayerPos">getWaypointFromPlayerPos ()</a></td>
+	<td class="summary">Return the player world position as a waypoint string, starting with '::pos'.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setWaypoint">setWaypoint (waypointStr, notify)</a></td>
+	<td class="summary">Set a waypoint at the destination described by the waypoint string, of the form '::pos'.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#clearWaypoint">clearWaypoint (notify)</a></td>
+	<td class="summary">Clear the active destination waypoint.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#print">print (msg)</a></td>
-	<td class="summary">Print a message in the Lua console.</td>
+	<td class="summary">Print the given message in the Lua chat channel.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#showHelper">showHelper (show)</a></td>
@@ -312,6 +337,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#playSound">playSound (filePath)</a></td>
 	<td class="summary">Play a sound file from your user folder (located in "My documents/NQ/DualUniverse/audio").</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isPlayingSound">isPlayingSound ()</a></td>
+	<td class="summary">Check if a sound is playing.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#stopSound">stopSound ()</a></td>
@@ -343,35 +372,70 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_actionStart">EVENT_actionStart (action)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when an action starts.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onActionStart">EVENT_onActionStart (action)</a></td>
 	<td class="summary">Event: Emitted when an action starts.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_actionStop">EVENT_actionStop (action)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when an action stops.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onActionStop">EVENT_onActionStop (action)</a></td>
 	<td class="summary">Event: Emitted when an action stops.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_actionLoop">EVENT_actionLoop (action)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted at each update as long as the action is maintained.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onActionLoop">EVENT_onActionLoop (action)</a></td>
 	<td class="summary">Event: Emitted at each update as long as the action is maintained.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_update">EVENT_update ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Game update event.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onUpdate">EVENT_onUpdate ()</a></td>
 	<td class="summary">Event: Game update event.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_flush">EVENT_flush ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Physics update.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onFlush">EVENT_onFlush ()</a></td>
 	<td class="summary">Event: Physics update.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_inputText">EVENT_inputText (text)</a></td>
-	<td class="summary">Event: Console input event.</td>
+	<td class="summary"><b>Deprecated:</b> Event: Console input event.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onInputText">EVENT_onInputText (text)</a></td>
+	<td class="summary">Event: A new message has been entered in the Lua tab of the chat, acting like a command line interface.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_cameraChanged">EVENT_cameraChanged (mode)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the player changes the camera mode.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onCameraChanged">EVENT_onCameraChanged (mode)</a></td>
 	<td class="summary">Event: Emitted when the player changes the camera mode.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#mockGetClosure">mockGetClosure ()</a></td>
 	<td class="summary">Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Action">Action</a></td>
+	<td class="summary">Action names, as used by event filters.</td>
 	</tr>
 </table>
 
@@ -393,7 +457,9 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">actionName</span>
-         (Undocumented) The action to query.
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The action name, represented as a string taken among the set of predefined Lua-available
+   actions (you can check the dropdown of an event list to see what is available).
         </li>
     </ul>
 
@@ -405,6 +471,10 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#Action">Action</a>
+    </ul>
 
 
 </dd>
@@ -421,7 +491,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">bool</span>
-            <span class="types"><span class="type">boolean</span></span>
+            <span class="types"><span class="type">0/1</span></span>
          1 show the screen, 0 hide the screen.
         </li>
     </ul>
@@ -506,7 +576,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">boolean</span></span>
+           <span class="types"><span class="type">0/1</span></span>
         1 on success, 0 on failure
     </ol>
 
@@ -548,23 +618,25 @@
        <li><span class="parameter">unit</span> (<span class="type">string</span>) The unit label.</li>
      </ul>
    </li>
-   <li><span class="parameter">???</span> The widget created by
-     anti-gravity generators.</li>
-   <li><span class="parameter">???</span> The widget created by fuel tanks.</li>
-   <li><span class="parameter">???</span> The widget created by core units.</li>
+   <li><span class="parameter"><a href="../modules/AntiGravityGeneratorUnit.html#getWidgetData">antigravity_generator</a></span> The widget
+     created by anti-gravity generators.</li>
+   <li><span class="parameter"><a href="../modules/ContainerUnit.html#getWidgetData">fuel_container</a></span> The widget created by fuel tanks.
+     </li>
+   <li><span class="parameter"><a href="../modules/CoreUnit.html#getWidgetData">core</a></span> The widget created by core units.</li>
    <li><span class="parameter">core_stress</span> Shows a meter indicating the current level of core stress and if
-       damage is being taken. Data is supported by ???.
+       damage is being taken. Data is supported by <a href="../modules/CoreUnit.html#getWidgetData">CoreUnit:getWidgetData</a>.
      <ul>
        <li><span class="parameter">currentStress</span> (<span class="type">float</span>) Current core stress.</li>
        <li><span class="parameter">maxStress</span> (<span class="type">float</span>) Max core stress.</li>
      </ul>
    </li>
-   <li><span class="parameter">???</span> The widget created by engines.</li>
-   <li><span class="parameter">???</span> The widget created by gyroscopes.</li>
-   <li><span class="parameter">???</span> The widget created by shield
-     generators.</li>
-   <li><span class="parameter">???</span> The widget created by warp drives.</li>
-   <li><span class="parameter">???</span> The widget created by weapons.</li>
+   <li><span class="parameter"><a href="../modules/EngineUnit.html#getWidgetData">engine_unit</a></span> The widget created by engines.</li>
+   <li><span class="parameter"><a href="../modules/GyroUnit.html#getWidgetData">gyro</a></span> The widget created by gyroscopes.</li>
+   <li><span class="parameter"><a href="../modules/ShieldGeneratorUnit.html#getWidgetData">shield_generator</a></span> The widget created by
+     shield generators.</li>
+   <li><span class="parameter"><a href="../modules/WarpDriveUnit.html#getWidgetData">warpdrive</a></span> The widget created by warp drives.
+     </li>
+   <li><span class="parameter"><a href="../modules/WeaponUnit.html#getWidgetData">weapon</a></span> The widget created by weapons.</li>
  </ul>
 
 
@@ -612,7 +684,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">boolean</span></span>
+           <span class="types"><span class="type">0/1</span></span>
         1 on success, 0 on failure.
     </ol>
 
@@ -681,7 +753,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">boolean</span></span>
+           <span class="types"><span class="type">0/1</span></span>
         1 on success, 0 on failure.
     </ol>
 
@@ -715,7 +787,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">boolean</span></span>
+           <span class="types"><span class="type">0/1</span></span>
         1 on success, 0 on failure.
     </ol>
 
@@ -753,7 +825,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">boolean</span></span>
+           <span class="types"><span class="type">0/1</span></span>
         1 on success, 0 on failure.
     </ol>
 
@@ -786,7 +858,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">boolean</span></span>
+           <span class="types"><span class="type">0/1</span></span>
         1 on success, 0 on failure.
     </ol>
 
@@ -806,7 +878,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">0..1</span></span>
+           <span class="types"><span class="type">float</span></span>
         The current value of the mouse wheel.
     </ol>
 
@@ -895,71 +967,11 @@
 
 </dd>
     <dt>
-    <a name = "getThrottleInputFromMouseWheel"></a>
-    <strong>getThrottleInputFromMouseWheel ()</strong>
+    <a name = "getMouseSensitivity"></a>
+    <strong>getMouseSensitivity ()</strong>
     </dt>
     <dd>
-    Return the current value of the mouse wheel (for the throttle speedUp/speedDown action).
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">0..1</span></span>
-        The current input.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getControlDeviceForwardInput"></a>
-    <strong>getControlDeviceForwardInput ()</strong>
-    </dt>
-    <dd>
-    Return the mouse input for the ship control action (forward/backward).
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">-1..1</span></span>
-        The current input.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getControlDeviceYawInput"></a>
-    <strong>getControlDeviceYawInput ()</strong>
-    </dt>
-    <dd>
-    Return the mouse input for the ship control action (yaw right/left).
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">-1..1</span></span>
-        The current input.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getControlDeviceLeftRightInput"></a>
-    <strong>getControlDeviceLeftRightInput ()</strong>
-    </dt>
-    <dd>
-    Return the mouse input for the ship control action (right/left).
+    Return the value of the mouse sensitivity game setting.
 
 
 
@@ -967,374 +979,8 @@
     <ol>
 
            <span class="types"><span class="type">float</span></span>
-        The current value of the mouse delta Y.
+        Sensitivity setting value.
     </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "lockView"></a>
-    <strong>lockView (state)</strong>
-    </dt>
-    <dd>
-    Lock or unlock the mouse free look.
-<p> Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
- vs. via a plug signal).
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">state</span>
-            <span class="types"><span class="type">boolean</span></span>
-         1 to lock and 0 to unlock.
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "isViewLocked"></a>
-    <strong>isViewLocked ()</strong>
-    </dt>
-    <dd>
-    Return the lock state of the mouse free look.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">boolean</span></span>
-        1 when locked and 0 when unlocked.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "freeze"></a>
-    <strong>freeze (bool)</strong>
-    </dt>
-    <dd>
-    Freezes the character, liberating the associated movement keys to be used by the script.
-<p> Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
- vs. via a plug signal).
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">bool</span>
-            <span class="types"><span class="type">boolean</span></span>
-         1 freeze the character, 0 unfreeze the character.
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "isFrozen"></a>
-    <strong>isFrozen ()</strong>
-    </dt>
-    <dd>
-    Return the frozen status of the character (see 'freeze').
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">boolean</span></span>
-        1 if the character is frozen, 0 otherwise
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getTime"></a>
-    <strong>getTime ()</strong>
-    </dt>
-    <dd>
-    <b>Deprecated:</b> Return the current time since the arrival of the Arkship.
-<p> This method is deprecated: getArkTime should be used instead.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">second</span></span>
-        The current time in seconds, with a microsecond precision.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getArkTime"></a>
-    <strong>getArkTime ()</strong>
-    </dt>
-    <dd>
-    Return the current time since the arrival of the Arkship on September 30th, 2017.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">float</span></span>
-        Time in seconds.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getUtcTime"></a>
-    <strong>getUtcTime ()</strong>
-    </dt>
-    <dd>
-    Return the current time since the January 1st, 1970.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">float</span></span>
-        Time in seconds.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getUtcOffset"></a>
-    <strong>getUtcOffset ()</strong>
-    </dt>
-    <dd>
-    Return the time offset between local timezone and UTC.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">float</span></span>
-        Time in seconds.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getActionUpdateDeltaTime"></a>
-    <strong>getActionUpdateDeltaTime ()</strong>
-    </dt>
-    <dd>
-    Return delta time of action updates (to use in ActionLoop).
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">second</span></span>
-        The delta time in seconds.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getPlayerName"></a>
-    <strong>getPlayerName (id)</strong>
-    </dt>
-    <dd>
-    Return the name of the given player, if in range of visibility or broadcasted by a transponder.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">id</span>
-            <span class="types"><span class="type">int</span></span>
-         The ID of the player.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        The name of the player.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getPlayerWorldPos"></a>
-    <strong>getPlayerWorldPos (id)</strong>
-    </dt>
-    <dd>
-    Return the world position of the given player, if in range of visibility.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">id</span>
-            <span class="types"><span class="type">int</span></span>
-         The ID of the player.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        The coordinates of the player in world coordinates.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getItem"></a>
-    <strong>getItem (id)</strong>
-    </dt>
-    <dd>
-    Return the item table corresponding to the given item ID.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">id</span>
-            <span class="types"><span class="type">int</span></span>
-         The ID of the item.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         An object table with fields: {[integer] id, [string] name, [string] displayName,
-   [string] locDisplayName, [string] displayNameWithSize, [string] locDisplayNameWithSize, [string] description,
-   [string] locDescription, [string] type, [number] unitMass, [number] unitVolume, [integer] tier, [string] scale,
-   [string] iconPath}.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getOrganizationName"></a>
-    <strong>getOrganizationName (id)</strong>
-    </dt>
-    <dd>
-    Returns the name of the given organization, if known, e.g.  broadcasted by a transponder.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">id</span>
-            <span class="types"><span class="type">int</span></span>
-         The ID of the organization.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        The name of the organization.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getOrganizationTag"></a>
-    <strong>getOrganizationTag (id)</strong>
-    </dt>
-    <dd>
-    Returns the tag of the given organization, if known, e.g.  broadcasted by a transponder.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">id</span>
-            <span class="types"><span class="type">int</span></span>
-         The ID of the organization.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        The tag of the organization.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getWaypointFromPlayerPos"></a>
-    <strong>getWaypointFromPlayerPos ()</strong>
-    </dt>
-    <dd>
-    Return the player world position as a waypoint string, starting with ::pos (only in explicit runs).
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        The waypoint as a string.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "setWaypoint"></a>
-    <strong>setWaypoint (waypointStr)</strong>
-    </dt>
-    <dd>
-    Set a waypoint at the destination described by the waypoint string, of the form ::pos{...}
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">waypointStr</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         The waypoint as a string.
-        </li>
-    </ul>
-
 
 
 
@@ -1398,6 +1044,10 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#getCameraHorizontalFov">getCameraHorizontalFov</a>
+    </ul>
 
 
 </dd>
@@ -1642,11 +1292,621 @@
 
 </dd>
     <dt>
+    <a name = "getThrottleInputFromMouseWheel"></a>
+    <strong>getThrottleInputFromMouseWheel ()</strong>
+    </dt>
+    <dd>
+    Return the current value of the mouse wheel (for the throttle speedUp/speedDown action).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The current input.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getControlDeviceForwardInput"></a>
+    <strong>getControlDeviceForwardInput ()</strong>
+    </dt>
+    <dd>
+    Return the mouse input for the ship control action (forward/backward).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The current input.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getControlDeviceYawInput"></a>
+    <strong>getControlDeviceYawInput ()</strong>
+    </dt>
+    <dd>
+    Return the mouse input for the ship control action (yaw right/left).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The current input.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getControlDeviceLeftRightInput"></a>
+    <strong>getControlDeviceLeftRightInput ()</strong>
+    </dt>
+    <dd>
+    Return the mouse input for the ship control action (right/left).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The current value of the mouse delta Y.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lockView"></a>
+    <strong>lockView (state)</strong>
+    </dt>
+    <dd>
+    Lock or unlock the mouse free look.
+<p> Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+ vs. via a plug signal).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">state</span>
+            <span class="types"><span class="type">0/1</span></span>
+         1 to lock and 0 to unlock.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isViewLocked"></a>
+    <strong>isViewLocked ()</strong>
+    </dt>
+    <dd>
+    Return the lock state of the mouse free look.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 when locked and 0 when unlocked.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "freeze"></a>
+    <strong>freeze (bool)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Freezes the character, liberating the associated movement keys to be used by the script.
+<p> Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit,
+ vs. via a plug signal).
+<p> This method is deprecated: player.freeze should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">bool</span>
+            <span class="types"><span class="type">boolean</span></span>
+         1 freeze the character, 0 unfreeze the character.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "isFrozen"></a>
+    <strong>isFrozen ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Return the frozen status of the character (see 'freeze').
+<p> This method is deprecated: player.isFrozen should be used instead.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        1 if the character is frozen, 0 otherwise
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getTime"></a>
+    <strong>getTime ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Return the current time since the arrival of the Arkship.
+<p> This method is deprecated: getArkTime should be used instead.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">second</span></span>
+        The current time in seconds, with a microsecond precision.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#getArkTime">getArkTime</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getArkTime"></a>
+    <strong>getArkTime ()</strong>
+    </dt>
+    <dd>
+    Return the current time since the arrival of the Arkship on September 30th, 2017.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        Time in seconds.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getUtcTime"></a>
+    <strong>getUtcTime ()</strong>
+    </dt>
+    <dd>
+    Return the current time since the January 1st, 1970.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        Time in seconds.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getUtcOffset"></a>
+    <strong>getUtcOffset ()</strong>
+    </dt>
+    <dd>
+    Return the time offset between local timezone and UTC.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        Time in seconds.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getLocale"></a>
+    <strong>getLocale ()</strong>
+    </dt>
+    <dd>
+    Return the locale in which the game is currently running.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The locale, currently one of "en-US", "fr-FR", or "de-DE"
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getActionUpdateDeltaTime"></a>
+    <strong>getActionUpdateDeltaTime ()</strong>
+    </dt>
+    <dd>
+    Return delta time of action updates (to use in ActionLoop).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The delta time in seconds.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getPlayerName"></a>
+    <strong>getPlayerName (id)</strong>
+    </dt>
+    <dd>
+    Return the name of the given player, if in range of visibility or broadcasted by a transponder.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the player.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The name of the player.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getPlayerWorldPos"></a>
+    <strong>getPlayerWorldPos (id)</strong>
+    </dt>
+    <dd>
+    Return the world position of the given player, if in range of visibility.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the player.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The coordinates of the player in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getItem"></a>
+    <strong>getItem (id)</strong>
+    </dt>
+    <dd>
+    Return the item table corresponding to the given item ID.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the item.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         An object table with fields: {[integer] id, [string] name, [string] displayName,
+   [string] locDisplayName, [string] displayNameWithSize, [string] locDisplayNameWithSize, [string] description,
+   [string] locDescription, [string] type, [number] unitMass, [number] unitVolume, [integer] tier, [string] scale,
+   [string] iconPath, [table] schematics, [table] products: {{[integer] id, [number] quantity}...}}.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getSchematic"></a>
+    <strong>getSchematic (schematicId)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Retrieves schematic details for the id provided as json.
+<p> This method is deprecated: getRecipes should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">schematicId</span>
+            <span class="types"><span class="type">int</span></span>
+         The id of the schematic to query, example: 1199082577 for Pure Aluminium refining.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">jsonstr</span></span>
+        The schematic defails as a json object with fields: id, time, level, ingredients, products; where
+ ingredients and products are lists of json objects with fields: name, quantity, type
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#getRecipes">getRecipes</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getRecipes"></a>
+    <strong>getRecipes (id)</strong>
+    </dt>
+    <dd>
+    Returns a list of recipes producing the given item from its ID.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the item.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A list of recipe table with field: {[integer] id, [integer] tier, [number] time,
+   [bool] nanocraftable, [table] products:{{[integer] id, [number] quantity},...},
+   [table] ingredients:{{[integer] id, [number] quantity},...}}.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOrganizationName"></a>
+    <strong>getOrganizationName (id)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Returns the name of the given organization, if known, e.g.  broadcasted by a transponder.
+<p> This method is deprecated: getOrganization should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the organization.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The name of the organization.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#getOrganization">getOrganization</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getOrganizationTag"></a>
+    <strong>getOrganizationTag (id)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Returns the tag of the given organization, if known, e.g.  broadcasted by a transponder.
+<p> This method is deprecated: getOrganization should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the organization.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The tag of the organization.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#getOrganization">getOrganization</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getOrganization"></a>
+    <strong>getOrganization (id)</strong>
+    </dt>
+    <dd>
+    Returns the corresponding organization to the given organization ID, if known, e.g.  broadcasted by a transponder.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the organization.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A table containing information about the given organization {[string] name, [string] tag}
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWaypointFromPlayerPos"></a>
+    <strong>getWaypointFromPlayerPos ()</strong>
+    </dt>
+    <dd>
+    Return the player world position as a waypoint string, starting with '::pos'.
+<p> Note: This function is disabled if the player is not running the script explicitly (pressing F on the Control Unit,
+ vs. via a plug signal).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The waypoint as a string.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setWaypoint"></a>
+    <strong>setWaypoint (waypointStr, notify)</strong>
+    </dt>
+    <dd>
+    Set a waypoint at the destination described by the waypoint string, of the form '::pos'.
+<p> Note: This function is disabled if the player is not running the script explicitly (pressing F on the Control Unit,
+ vs. via a plug signal).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">waypointStr</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The waypoint as a string.
+        </li>
+        <li><span class="parameter">notify</span>
+            <span class="types"><span class="type">boolean</span></span>
+         (Optional) True to display a notification on waypoint change.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "clearWaypoint"></a>
+    <strong>clearWaypoint (notify)</strong>
+    </dt>
+    <dd>
+    Clear the active destination waypoint.
+<p> Note: This function is disabled if the player is not running the script explicitly (pressing F on the Control Unit,
+ vs. via a plug signal).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">notify</span>
+            <span class="types"><span class="type">boolean</span></span>
+         (Optional) True to display a notification about the waypoint's clearing.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "print"></a>
     <strong>print (msg)</strong>
     </dt>
     <dd>
-    Print a message in the Lua console.
+    Print the given message in the Lua chat channel.
+<p> Note: This function is disabled if the player is not running the script explicitly (pressing F on the Control Unit,
+ vs. via a plug signal).
 
 
     <h3>Parameters:</h3>
@@ -1668,6 +1928,8 @@
     </dt>
     <dd>
     Set the visibility of the helper top menu.
+<p> Note: This function is disabled if the player is not running the script explicitly (pressing F on the Control Unit,
+ vs. via a plug signal).
 
 
     <h3>Parameters:</h3>
@@ -1700,6 +1962,26 @@
         </li>
     </ul>
 
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isPlayingSound"></a>
+    <strong>isPlayingSound ()</strong>
+    </dt>
+    <dd>
+    Check if a sound is playing.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if a sound is playing.
+    </ol>
 
 
 
@@ -1865,8 +2147,9 @@
     <strong>EVENT_actionStart (action)</strong>
     </dt>
     <dd>
-    Event: Emitted when an action starts.
+    <b>Deprecated:</b> Event: Emitted when an action starts.
 <p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onActionStart should be used instead.
 
 
     <h3>Parameters:</h3>
@@ -1880,12 +2163,71 @@
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#EVENT_onActionStart">EVENT_onActionStart</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onActionStart"></a>
+    <strong>EVENT_onActionStart (action)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when an action starts.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">action</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The action, represented as a string taken among the set of predefined Lua-available actions
+ (you can check the drop down list to see what is available).
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#Action">Action</a>
+    </ul>
 
 
 </dd>
     <dt>
     <a name = "EVENT_actionStop"></a>
     <strong>EVENT_actionStop (action)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Event: Emitted when an action stops.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onActionStop should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">action</span>
+            <span class="types"><span class="type">LUA_action</span></span>
+         The action, represented as a string taken among the set of predefined Lua-available actions
+ (you can check the drop down list to see what is available).
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#EVENT_onActionStop">EVENT_onActionStop</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onActionStop"></a>
+    <strong>EVENT_onActionStop (action)</strong>
     </dt>
     <dd>
     Event: Emitted when an action stops.
@@ -1895,7 +2237,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">action</span>
-            <span class="types"><span class="type">LUA_action</span></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          The action, represented as a string taken among the set of predefined Lua-available actions
  (you can check the drop down list to see what is available).
         </li>
@@ -1903,6 +2245,10 @@
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#Action">Action</a>
+    </ul>
 
 
 </dd>
@@ -1911,8 +2257,9 @@
     <strong>EVENT_actionLoop (action)</strong>
     </dt>
     <dd>
-    Event: Emitted at each update as long as the action is maintained.
+    <b>Deprecated:</b> Event: Emitted at each update as long as the action is maintained.
 <p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onActionLoop should be used instead.
 
 
     <h3>Parameters:</h3>
@@ -1926,12 +2273,64 @@
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#EVENT_onActionLoop">EVENT_onActionLoop</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onActionLoop"></a>
+    <strong>EVENT_onActionLoop (action)</strong>
+    </dt>
+    <dd>
+    Event: Emitted at each update as long as the action is maintained.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">action</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The action, represented as a string taken among the set of predefined Lua-available actions
+ (you can check the drop down list to see what is available).
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#Action">Action</a>
+    </ul>
 
 
 </dd>
     <dt>
     <a name = "EVENT_update"></a>
     <strong>EVENT_update ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Event: Game update event.  This is equivalent to a timer set at 0 seconds, as updates will go as
+ fast as the FPS can go.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onUpdate should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#EVENT_onUpdate">EVENT_onUpdate</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onUpdate"></a>
+    <strong>EVENT_onUpdate ()</strong>
     </dt>
     <dd>
     Event: Game update event.  This is equivalent to a timer set at 0 seconds, as updates will go as fast as the FPS can
@@ -1950,8 +2349,30 @@
     <strong>EVENT_flush ()</strong>
     </dt>
     <dd>
+    <b>Deprecated:</b> Event: Physics update.  Do not use to put anything else by a call to updateICC on your control
+ unit, as many functions are disabled when called from 'flush'. This is only to update the physics (engine control,
+ etc), not to setup some gameplay code.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onFlush should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#EVENT_onFlush">EVENT_onFlush</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onFlush"></a>
+    <strong>EVENT_onFlush ()</strong>
+    </dt>
+    <dd>
     Event: Physics update.  Do not use to put anything else by a call to updateICC on your control unit, as many
- functions are disabled when called from 'flush'. This is only to update the physics (engine control, etc), not to
+ functions are disabled when called from 'onFlush'. This is only to update the physics (engine control, etc), not to
  setup some gameplay code.
 <p> Note: This is documentation on an event handler, not a callable method.
 
@@ -1967,7 +2388,34 @@
     <strong>EVENT_inputText (text)</strong>
     </dt>
     <dd>
-    Event: Console input event.
+    <b>Deprecated:</b> Event: Console input event.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onInputText should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The message entered.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#EVENT_onInputText">EVENT_onInputText</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onInputText"></a>
+    <strong>EVENT_onInputText (text)</strong>
+    </dt>
+    <dd>
+    Event: A new message has been entered in the Lua tab of the chat, acting like a command line interface.
 <p> Note: This is documentation on an event handler, not a callable method.
 
 
@@ -1989,8 +2437,9 @@
     <strong>EVENT_cameraChanged (mode)</strong>
     </dt>
     <dd>
-    Event: Emitted when the player changes the camera mode.
+    <b>Deprecated:</b> Event: Emitted when the player changes the camera mode.
 <p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onCameraChanged should be used instead.
 
 
     <h3>Parameters:</h3>
@@ -1999,6 +2448,33 @@
             <span class="types"><span class="type">1/2/3</span></span>
          The camera mode, represented by an integer (1: First Person View, 2: Look Around Construct View, 3:
    Follow Construct View).
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/system.html#EVENT_onCameraChanged">EVENT_onCameraChanged</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onCameraChanged"></a>
+    <strong>EVENT_onCameraChanged (mode)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the player changes the camera mode.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">mode</span>
+            <span class="types"><span class="type">int</span></span>
+         The camera mode, represented by an integer (First Person View = 1, Look Around Construct View = 2,
+   Follow Construct View = 3).
         </li>
     </ul>
 
@@ -2028,13 +2504,131 @@
 
 </dd>
 </dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Action"></a>
+    <strong>Action</strong>
+    </dt>
+    <dd>
+    Action names, as used by event filters.
+<p> Note: These are names shown in the event filter list, grouping them in a table is purely for documentation purposes.
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">forward</span>
+
+        </li>
+        <li><span class="parameter">backward</span>
+
+        </li>
+        <li><span class="parameter">yawleft</span>
+
+        </li>
+        <li><span class="parameter">yawright</span>
+
+        </li>
+        <li><span class="parameter">strafeleft</span>
+
+        </li>
+        <li><span class="parameter">straferight</span>
+
+        </li>
+        <li><span class="parameter">left</span>
+
+        </li>
+        <li><span class="parameter">right</span>
+
+        </li>
+        <li><span class="parameter">up</span>
+
+        </li>
+        <li><span class="parameter">down</span>
+
+        </li>
+        <li><span class="parameter">groundaltitudeup</span>
+
+        </li>
+        <li><span class="parameter">groundaltitudedown</span>
+
+        </li>
+        <li><span class="parameter">lalt</span>
+
+        </li>
+        <li><span class="parameter">lshift</span>
+
+        </li>
+        <li><span class="parameter">gear</span>
+
+        </li>
+        <li><span class="parameter">light</span>
+
+        </li>
+        <li><span class="parameter">brake</span>
+
+        </li>
+        <li><span class="parameter">option1</span>
+
+        </li>
+        <li><span class="parameter">option2</span>
+
+        </li>
+        <li><span class="parameter">option3</span>
+
+        </li>
+        <li><span class="parameter">option4</span>
+
+        </li>
+        <li><span class="parameter">option5</span>
+
+        </li>
+        <li><span class="parameter">option6</span>
+
+        </li>
+        <li><span class="parameter">option7</span>
+
+        </li>
+        <li><span class="parameter">option8</span>
+
+        </li>
+        <li><span class="parameter">option9</span>
+
+        </li>
+        <li><span class="parameter">leftmouse</span>
+
+        </li>
+        <li><span class="parameter">stopengines</span>
+
+        </li>
+        <li><span class="parameter">speedup</span>
+
+        </li>
+        <li><span class="parameter">speeddown</span>
+
+        </li>
+        <li><span class="parameter">antigravity</span>
+
+        </li>
+        <li><span class="parameter">booster</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
 
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-10-27 03:17:10 </i>
+<i style="float:right;">Last updated 2022-10-28 04:08:45 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
