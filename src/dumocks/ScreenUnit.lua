@@ -362,7 +362,7 @@ end
 --
 -- Valid plug names are:
 -- <ul>
--- <li>"in" for the in signal (has no actual effect on screen state when modified this way).</li>
+-- <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
 -- </ul>
 -- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state

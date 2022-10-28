@@ -248,7 +248,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | DoorUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |
 | EmitterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |
 | EngineUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :soon: | :soon: |
-| FireworksUnit | :heavy_check_mark: :white_large_square: | :soon: | :soon: | :white_large_square: :white_large_square: | :white_large_square: |
+| FireworksUnit | :heavy_check_mark: :heavy_minus_sign: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | ForceFieldUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |
 | GyroUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :soon: | :heavy_check_mark: |
 | IndustryUnit | :heavy_check_mark: :heavy_minus_sign: | :soon: | :soon: | :soon: :soon: | :heavy_check_mark: |
