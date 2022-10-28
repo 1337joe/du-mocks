@@ -93,23 +93,55 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#activate">activate ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Fire the firework.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#fire">fire ()</a></td>
 	<td class="summary">Fire the firework.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#setExplosionDelay">setExplosionDelay (t)</a></td>
-	<td class="summary">Set the delay before the launched fireworks explodes.</td>
+	<td class="name" nowrap><a href="#setExplosionDelay">setExplosionDelay (delay)</a></td>
+	<td class="summary">Set the delay before the launched firework explodes.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#setLaunchSpeed">setLaunchSpeed (v)</a></td>
+	<td class="name" nowrap><a href="#getExplosionDelay">getExplosionDelay ()</a></td>
+	<td class="summary">Returns the delay before the launched firework explodes.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setLaunchSpeed">setLaunchSpeed (speed)</a></td>
 	<td class="summary">Set the speed at which the firework will be launched (impacts its altitude, depending on the local gravity).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getLaunchSpeed">getLaunchSpeed ()</a></td>
+	<td class="summary">Returns the speed at which the firework will be launched.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setType">setType (type)</a></td>
 	<td class="summary">Set the type of launched firework (will affect which firework is picked in the attached container).</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#getType">getType ()</a></td>
+	<td class="summary">Returns the type of launched firework.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#setColor">setColor (color)</a></td>
 	<td class="summary">Set the color of the launched firework (will affect which firework is picked in the attached container).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getColor">getColor ()</a></td>
+	<td class="summary">Returns the color of the launched firework.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setSignalIn">setSignalIn (plug, state)</a></td>
+	<td class="summary">Set the value of a signal in the specified IN plug of the element.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getSignalIn">getSignalIn (plug)</a></td>
+	<td class="summary">Return the value of a signal in the specified IN plug of the element.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onFired">EVENT_onFired ()</a></td>
+	<td class="summary">Event: Emitted when a firework has just been fired.</td>
 	</tr>
 </table>
 
@@ -125,6 +157,25 @@
     <strong>activate ()</strong>
     </dt>
     <dd>
+    <b>Deprecated:</b> Fire the firework.
+<p> This method is deprecated: fire should be used instead
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/FireworksUnit.html#fire">fire</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "fire"></a>
+    <strong>fire ()</strong>
+    </dt>
+    <dd>
     Fire the firework.
 
 
@@ -136,17 +187,17 @@
 </dd>
     <dt>
     <a name = "setExplosionDelay"></a>
-    <strong>setExplosionDelay (t)</strong>
+    <strong>setExplosionDelay (delay)</strong>
     </dt>
     <dd>
-    Set the delay before the launched fireworks explodes.  Max=5s.
+    Set the delay before the launched firework explodes.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">t</span>
-            <span class="types"><span class="type">second</span></span>
-         The delay before explosion.
+        <li><span class="parameter">delay</span>
+            <span class="types"><span class="type">float</span></span>
+         The delay before explosion in seconds (minimum 2, maximum 5).
         </li>
     </ul>
 
@@ -156,22 +207,61 @@
 
 </dd>
     <dt>
+    <a name = "getExplosionDelay"></a>
+    <strong>getExplosionDelay ()</strong>
+    </dt>
+    <dd>
+    Returns the delay before the launched firework explodes.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The delay before explosion in seconds.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "setLaunchSpeed"></a>
-    <strong>setLaunchSpeed (v)</strong>
+    <strong>setLaunchSpeed (speed)</strong>
     </dt>
     <dd>
     Set the speed at which the firework will be launched (impacts its altitude, depending on the local gravity).
- Max=200m/s.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">v</span>
-            <span class="types"><span class="type">m/s</span></span>
-         The launch speed.
+        <li><span class="parameter">speed</span>
+            <span class="types"><span class="type">float</span></span>
+         The launch speed in m/s (minimum 50, maximum 200).
         </li>
     </ul>
 
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getLaunchSpeed"></a>
+    <strong>getLaunchSpeed ()</strong>
+    </dt>
+    <dd>
+    Returns the speed at which the firework will be launched.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The launch speed in m/s.
+    </ol>
 
 
 
@@ -189,10 +279,30 @@
     <ul>
         <li><span class="parameter">type</span>
             <span class="types"><span class="type">int</span></span>
-         0=BALL, 1=PALMTREE, 2=RING, 3=SHOWER.
+         The type index of the firework (Ball = 1, Ring = 2, Palmtree = 3, Shower = 4).
         </li>
     </ul>
 
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getType"></a>
+    <strong>getType ()</strong>
+    </dt>
+    <dd>
+    Returns the type of launched firework.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The type index of the firework (Ball = 1, Ring = 2, Palmtree = 3, Shower = 4).
+    </ol>
 
 
 
@@ -210,9 +320,104 @@
     <ul>
         <li><span class="parameter">color</span>
             <span class="types"><span class="type">int</span></span>
-         0=BLUE, 1=GOLD, 2=GREEN, 3=PURPLE, 4=RED, 5=SILVER
+         The color index of the firework (Blue = 1, Gold = 2, Green = 3, Purple = 4, Red = 5, Silver = 6).
         </li>
     </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getColor"></a>
+    <strong>getColor ()</strong>
+    </dt>
+    <dd>
+    Returns the color of the launched firework.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The color index of the firework (Blue = 1, Gold = 2, Green = 3, Purple = 4, Red = 5, Silver = 6).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setSignalIn"></a>
+    <strong>setSignalIn (plug, state)</strong>
+    </dt>
+    <dd>
+    Set the value of a signal in the specified IN plug of the element.
+<p> Valid plug names are:
+ <ul>
+ <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
+ </ul>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">plug</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         A valid plug name to set.
+        </li>
+        <li><span class="parameter">state</span>
+            <span class="types"><span class="type">0/1</span></span>
+         The plug signal state
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getSignalIn"></a>
+    <strong>getSignalIn (plug)</strong>
+    </dt>
+    <dd>
+    Return the value of a signal in the specified IN plug of the element.
+<p> Valid plug names are:
+ <ul>
+ <li>"in" for the in signal.</li>
+ </ul>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">plug</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         A valid plug name to query.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        The plug signal state
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onFired"></a>
+    <strong>EVENT_onFired ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when a firework has just been fired.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
 
 
 
@@ -226,7 +431,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-10-28 04:08:47 </i>
+<i style="float:right;">Last updated 2022-10-28 20:09:03 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
