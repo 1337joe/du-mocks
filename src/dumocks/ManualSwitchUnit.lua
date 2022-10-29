@@ -13,8 +13,8 @@ local MockElement = require "dumocks.Element"
 local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
-elementDefinitions["manual switch"] = {mass = 13.27, maxHitPoints = 50.0}
-local DEFAULT_ELEMENT = "manual switch"
+elementDefinitions["manual switch xs"] = {mass = 13.27, maxHitPoints = 50.0, itemId = 4181147843}
+local DEFAULT_ELEMENT = "manual switch xs"
 
 local M = MockElementWithToggle:new()
 M.elementClass = "ManualSwitchUnit"
@@ -34,33 +34,36 @@ function M:new(o, id, elementName)
     return o
 end
 
+--- Switches the switch on.
+function M:activate()
+    self.state = true
+end
+
+--- Switches the switch off.
+function M:deactivate()
+    self.state = false
+end
+
+--- Checks if the switch is active.
+-- @treturn 0/1 1 if the switch is active.
+function M:isActive()
+    if self.state then
+        return 1
+    end
+    return 0
+end
+
 --- Set the value of a signal in the specified IN plug of the element.
 --
 -- Valid plug names are:
 -- <ul>
--- <li>"on" for the in signal.</li>
+-- <li>"on" for the in signal (seems to have no actual effect when modified this way).</li>
 -- </ul>
 -- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "on" then
-        local value = tonumber(state)
-        if type(value) ~= "number" then
-            value = 0.0
-        end
-
-        -- turns on with signal but not off
-        if value > 0.0 then
-            self:activate()
-        end
-
-        if value <= 0 then
-            self.plugOn = 0
-        elseif value >= 1.0 then
-            self.plugOn = 1.0
-        else
-            self.plugOn = value
-        end
+        -- no longer responds to setSignalIn
     end
 end
 
@@ -108,17 +111,39 @@ function M:getSignalOut(plug)
     return MockElement.getSignalOut(self, plug)
 end
 
---- Event: The button has been pressed.
+--- <b>Deprecated:</b> Event: The button has been pressed.
 --
 -- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onPressed should be used instead.
+-- @see EVENT_onPressed
 function M.EVENT_pressed()
+    M.deprecated("EVENT_pressed", "EVENT_onPressed")
+    M.EVENT_onPressed()
+end
+
+--- Event: Emitted when the button is pressed.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+function M.EVENT_onPressed()
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterPressed")
 end
 
---- Event: The button has been released.
+--- <b>Deprecated:</b> Event: The button has been released.
 --
 -- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onReleased should be used instead.
+-- @see EVENT_onReleased
 function M.EVENT_released()
+    M.deprecated("EVENT_released", "EVENT_onReleased")
+    M.EVENT_onReleased()
+end
+
+--- Event: Emitted when the button is released.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+function M.EVENT_onReleased()
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterReleased")
 end
 
@@ -205,6 +230,9 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElementWithToggle.mockGetClosure(self)
+    closure.activate = function() return self:activate() end
+    closure.deactivate = function() return self:deactivate() end
+    closure.isActive = function() return self:isActive() end
 
     closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
     closure.getSignalIn = function(plug) return self:getSignalIn(plug) end

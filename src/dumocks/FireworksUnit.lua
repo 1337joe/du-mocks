@@ -154,19 +154,7 @@ end
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
-        local value = tonumber(state)
-        if type(value) ~= "number" then
-            value = 0.0
-        end
-
-        -- none of these fire anymore either
-        if value <= 0 then
-            -- self.plugIn = 0
-        elseif value >= 1.0 then
-            -- self.plugIn = 1.0
-        else
-            -- self.plugIn = value
-        end
+        -- no longer responds to setSignalIn
     end
 end
 

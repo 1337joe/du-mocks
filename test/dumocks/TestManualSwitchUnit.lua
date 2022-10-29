@@ -9,16 +9,33 @@ local lu = require("luaunit")
 
 local mmsu = require("dumocks.ManualSwitchUnit")
 require("test.Utilities")
+local AbstractTestElementWithToggle = require("test.dumocks.AbstractTestElementWithToggle")
 
-_G.TestManualSwitchUnit = {}
+_G.TestManualSwitchUnit = AbstractTestElementWithToggle
+
+function _G.TestManualSwitchUnit.getTestElement()
+    return mmsu:new()
+end
+
+function _G.TestManualSwitchUnit.getStateFunction(closure)
+    return closure.isActive
+end
+
+function _G.TestManualSwitchUnit.getActivateFunction(closure)
+    return closure.activate
+end
+
+function _G.TestManualSwitchUnit.getDeactivateFunction(closure)
+    return closure.deactivate
+end
 
 --- Verify constructor arguments properly handled and independent between instances.
 function _G.TestManualSwitchUnit.testConstructor()
 
     -- default element:
-    -- ["manual switch"] = {mass = 13.27, maxHitPoints = 50.0}
+    -- ["manual switch xs"] = {mass = 13.27, maxHitPoints = 50.0, itemId = 4181147843}
 
-    local switch1 = mmsu:new(nil, 1, "Manual Switch")
+    local switch1 = mmsu:new(nil, 1, "Manual Switch XS")
     local switch2 = mmsu:new(nil, 2, "invalid")
     local switch3 = mmsu:new()
 
@@ -26,9 +43,9 @@ function _G.TestManualSwitchUnit.testConstructor()
     local switch2Closure = switch2:mockGetClosure()
     local switch3Closure = switch3:mockGetClosure()
 
-    lu.assertEquals(switch1Closure.getId(), 1)
-    lu.assertEquals(switch2Closure.getId(), 2)
-    lu.assertEquals(switch3Closure.getId(), 0)
+    lu.assertEquals(switch1Closure.getLocalId(), 1)
+    lu.assertEquals(switch2Closure.getLocalId(), 2)
+    lu.assertEquals(switch3Closure.getLocalId(), 0)
 
     -- prove default element is selected
     local defaultMass = 13.27
@@ -44,6 +61,11 @@ function _G.TestManualSwitchUnit.testConstructor()
     lu.assertEquals(switch1Closure.getIntegrity(), 50.0)
     lu.assertEquals(switch2Closure.getIntegrity(), 25.0)
     lu.assertEquals(switch3Closure.getIntegrity(), 0.5)
+
+    local defaultId = 4181147843
+    lu.assertEquals(switch1Closure.getItemId(), defaultId)
+    lu.assertEquals(switch2Closure.getItemId(), defaultId)
+    lu.assertEquals(switch3Closure.getItemId(), defaultId)
 end
 
 --- Verify callbacks can be registered and fire properly for `pressed()`.
@@ -52,7 +74,7 @@ function _G.TestManualSwitchUnit.testDoPressedValid()
 
     local pressed1Result = nil
     local pressed1Index = switch:mockRegisterPressed(function()
-        pressed1Result = switch:getState()
+        pressed1Result = switch:isActive()
     end)
     lu.assertNotNil(pressed1Index)
 
@@ -69,7 +91,7 @@ function _G.TestManualSwitchUnit.testDoPressedInvalid()
 
     local pressed1Result = nil
     local pressed1Index = switch:mockRegisterPressed(function()
-        pressed1Result = switch:getState()
+        pressed1Result = switch:isActive()
     end)
     lu.assertNotNil(pressed1Index)
 
@@ -130,7 +152,7 @@ function _G.TestManualSwitchUnit.testDoReleasedValid()
 
     local released1Result = nil
     local released1Index = switch:mockRegisterReleased(function()
-        released1Result = switch:getState()
+        released1Result = switch:isActive()
     end)
     lu.assertNotNil(released1Index)
 
@@ -147,7 +169,7 @@ function _G.TestManualSwitchUnit.testDoReleasedInvalid()
 
     local released1Result = nil
     local released1Index = switch:mockRegisterReleased(function()
-        released1Result = switch:getState()
+        released1Result = switch:isActive()
     end)
     lu.assertNotNil(released1Index)
 
@@ -208,14 +230,14 @@ end
 -- Test setup:
 -- 1. 1x Switch, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState, EVENT_pressed, EVENT_released, setSignalIn, getSignalIn, getSignalOut
+-- Exercises: getClass, deactivate, activate, toggle, isActive, EVENT_onPressed, EVENT_onReleased, setSignalIn, getSignalIn, getSignalOut
 function _G.TestManualSwitchUnit.testGameBehavior()
     local switch = mmsu:new(nil, 1)
     local slot1 = switch:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.getData = function()
+    unit.getWidgetData = function()
         return '"showScriptError":false'
     end
     unit.exit = function()
@@ -231,24 +253,24 @@ function _G.TestManualSwitchUnit.testGameBehavior()
     -- pressed handlers
     local pressedHandler1 = function()
         ---------------
-        -- copy from here to slot1.pressed()
+        -- copy from here to slot1.onPressed()
         ---------------
         pressedCount = pressedCount + 1
-        assert(slot1.getState() == 1) -- toggles before calling handlers
+        assert(slot1.isActive() == 1) -- toggles before calling handlers
         assert(pressedCount == 1) -- should only ever be called once, when the user presses the switch
         assert(slot1.getSignalOut("out") == 1.0)
         ---------------
-        -- copy to here to slot1.pressed()
+        -- copy to here to slot1.onPressed()
         ---------------
     end
     local pressedHandler2 = function()
         ---------------
-        -- copy from here to slot1.pressed()
+        -- copy from here to slot1.onPressed()
         ---------------
         pressedCount = pressedCount + 1
         assert(pressedCount == 2) -- called second in pressed handler list
         ---------------
-        -- copy to here to slot1.pressed()
+        -- copy to here to slot1.onPressed()
         ---------------
     end
     switch:mockRegisterPressed(pressedHandler1)
@@ -257,36 +279,36 @@ function _G.TestManualSwitchUnit.testGameBehavior()
     -- released handlers
     local releasedHandler1 = function()
         ---------------
-        -- copy from here to slot1.released()
+        -- copy from here to slot1.onReleased()
         ---------------
         releasedCount = releasedCount + 1
-        assert(slot1.getState() == 1) -- won't toggle till after handlers finished
+        assert(slot1.isActive() == 1) -- won't toggle till after handlers finished
         assert(releasedCount == 1) -- should only ever be called once, when the user releases the switch
         assert(slot1.getSignalOut("out") == 1.0)
         ---------------
-        -- copy to here to slot1.released()
+        -- copy to here to slot1.onReleased()
         ---------------
     end
     local releasedHandler2 = function()
         ---------------
-        -- copy from here to slot1.released()
+        -- copy from here to slot1.onReleased()
         ---------------
         releasedCount = releasedCount + 1
         assert(releasedCount == 2) -- called second in released handler list
 
         unit.exit() -- run stop to report final result
         ---------------
-        -- copy to here to slot1.released()
+        -- copy to here to slot1.onReleased()
         ---------------
     end
     switch:mockRegisterReleased(releasedHandler1)
     switch:mockRegisterReleased(releasedHandler2)
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getSignalOut", "setSignalIn", "getSignalIn"}
+    local expectedFunctions = {"isActive", "getSignalOut", "setSignalIn", "getSignalIn"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
@@ -296,98 +318,78 @@ function _G.TestManualSwitchUnit.testGameBehavior()
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "ManualSwitchUnit")
+    assert(slot1.getClass() == "ManualSwitchUnit")
+    assert(slot1.getItemId() == 4181147843, "ID: " .. slot1.getItemId())
+    assert(string.match(string.lower(slot1.getName()), "manual switch xs %[%d+%]"), slot1.getName())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getMass() == 13.27)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     slot1.deactivate()
 
-    -- play with set signal, reset periodically as switch cannot be turned off with the "on" signal
+    -- play with set signal, has no actual effect on state when set programmatically
+    local initialState = slot1.isActive()
     slot1.setSignalIn("on", 0.0)
     assert(slot1.getSignalIn("on") == 0.0)
-    assert(slot1.getState() == 0.0)
-    -- turns on
+    assert(slot1.isActive() == initialState)
     slot1.setSignalIn("on", 1.0)
-    assert(slot1.getSignalIn("on") == 1.0)
-    assert(slot1.getState() == 1.0)
-    -- but not back off
-    slot1.setSignalIn("on", 0.0)
     assert(slot1.getSignalIn("on") == 0.0)
-    assert(slot1.getState() == 1.0)
-    -- fractions within [0,1] work, and string numbers are cast
-    slot1.deactivate()
+    assert(slot1.isActive() == initialState)
     slot1.setSignalIn("on", 0.7)
-    assert(slot1.getSignalIn("on") == 0.7)
-    assert(slot1.getState() == 1.0)
-    slot1.deactivate()
-    slot1.setSignalIn("on", "0.5")
-    assert(slot1.getSignalIn("on") == 0.5)
-    assert(slot1.getState() == 1.0)
-    slot1.deactivate()
-    slot1.setSignalIn("on", "0.0")
     assert(slot1.getSignalIn("on") == 0.0)
-    assert(slot1.getState() == 0.0)
-    slot1.setSignalIn("on", "7.0")
-    assert(slot1.getSignalIn("on") == 1.0)
-    assert(slot1.getState() == 1.0)
-    -- invalid sets to 0
-    slot1.deactivate()
-    slot1.setSignalIn("on", "text")
+    assert(slot1.isActive() == initialState)
+    slot1.setSignalIn("on", "1.0")
     assert(slot1.getSignalIn("on") == 0.0)
-    assert(slot1.getState() == 0.0)
-    slot1.setSignalIn("on", nil)
-    assert(slot1.getSignalIn("on") == 0.0)
-    assert(slot1.getState() == 0.0)
+    assert(slot1.isActive() == initialState)
 
     -- ensure initial state
     slot1.deactivate()
-    assert(slot1.getState() == 0)
+    assert(slot1.isActive() == 0)
 
     -- ensure initial state, set up globals
     slot1.deactivate()
-    assert(slot1.getState() == 0)
+    assert(slot1.isActive() == 0)
     pressedCount = 0
     releasedCount = 0
 
     -- validate methods
     slot1.activate()
-    assert(slot1.getState() == 1)
+    assert(slot1.isActive() == 1)
     assert(slot1.getSignalOut("out") == 1.0)
     slot1.deactivate()
-    assert(slot1.getState() == 0)
+    assert(slot1.isActive() == 0)
     assert(slot1.getSignalOut("out") == 0.0)
     slot1.toggle()
-    assert(slot1.getState() == 1)
+    assert(slot1.isActive() == 1)
     assert(slot1.getSignalOut("out") == 1.0)
 
     -- prep for user interaction
     slot1.deactivate()
-    assert(slot1.getState() == 0)
+    assert(slot1.isActive() == 0)
 
     system.print("please enable and disable the switch")
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 
     switch:mockDoPressed()
     switch:mockDoReleased()
 
     ---------------
-    -- copy from here to unit.stop()
+    -- copy from here to unit.onStop()
     ---------------
-    assert(slot1.getState() == 0)
+    assert(slot1.isActive() == 0)
     assert(pressedCount == 2, "Pressed count should be 2: " .. pressedCount)
     assert(releasedCount == 2)
 
     -- multi-part script, can't just print success because end of script was reached
-    if string.find(unit.getData(), '"showScriptError":false') then
+    if string.find(unit.getWidgetData(), '"showScriptError":false') then
         system.print("Success")
     else
         system.print("Failed")
     end
     ---------------
-    -- copy to here to unit.stop()
+    -- copy to here to unit.onStop()
     ---------------
 end
 
