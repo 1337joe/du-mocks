@@ -101,11 +101,19 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#activate">activate ()</a></td>
-	<td class="summary">Switches the element on/open.</td>
+	<td class="summary">Sets this gyro as the main gyro used for ship orientation.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#deactivate">deactivate ()</a></td>
+	<td class="summary">Deselects this gyro as the main gyro used for ship orientation, using the core unit instead.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#toggle">toggle ()</a></td>
-	<td class="summary">Toggle the state of the element.</td>
+	<td class="summary">Toggle the activation state of the gyro.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isActive">isActive ()</a></td>
+	<td class="summary">Returns the activation state of the gyro.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getWidgetData">getWidgetData ()</a></td>
@@ -113,27 +121,27 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#localUp">localUp ()</a></td>
-	<td class="summary">The up vector of the gyro unit, in construct local coordinates.</td>
+	<td class="summary"><b>Deprecated:</b> The up vector of the gyro unit, in construct local coordinates.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#localForward">localForward ()</a></td>
-	<td class="summary">The forward vector of the gyro unit, in construct local coordinates.</td>
+	<td class="summary"><b>Deprecated:</b> The forward vector of the gyro unit, in construct local coordinates.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#localRight">localRight ()</a></td>
-	<td class="summary">The right vector of the gyro unit, in construct local coordinates.</td>
+	<td class="summary"><b>Deprecated:</b> The right vector of the gyro unit, in construct local coordinates.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#worldUp">worldUp ()</a></td>
-	<td class="summary">The up vector of the gyro unit, in world coordinates.</td>
+	<td class="summary"><b>Deprecated:</b> The up vector of the gyro unit, in world coordinates.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#worldForward">worldForward ()</a></td>
-	<td class="summary">The forward vector of the gyro unit, in world coordinates.</td>
+	<td class="summary"><b>Deprecated:</b> The forward vector of the gyro unit, in world coordinates.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#worldRight">worldRight ()</a></td>
-	<td class="summary">The right vector of the gyro unit, in world coordinates.</td>
+	<td class="summary"><b>Deprecated:</b> The right vector of the gyro unit, in world coordinates.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getPitch">getPitch ()</a></td>
@@ -157,8 +165,22 @@
     <strong>activate ()</strong>
     </dt>
     <dd>
-    Switches the element on/open.
+    Sets this gyro as the main gyro used for ship orientation.
 <p> Note: Has no effect when called on a static core.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "deactivate"></a>
+    <strong>deactivate ()</strong>
+    </dt>
+    <dd>
+    Deselects this gyro as the main gyro used for ship orientation, using the core unit instead.
 
 
 
@@ -172,11 +194,31 @@
     <strong>toggle ()</strong>
     </dt>
     <dd>
-    Toggle the state of the element.
+    Toggle the activation state of the gyro.
 <p> Note: Has no effect when called on a static core.
 
 
 
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isActive"></a>
+    <strong>isActive ()</strong>
+    </dt>
+    <dd>
+    Returns the activation state of the gyro.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 when the gyro is the active ship orientation, 0 otherwise.
+    </ol>
 
 
 
@@ -216,7 +258,8 @@
     <strong>localUp ()</strong>
     </dt>
     <dd>
-    The up vector of the gyro unit, in construct local coordinates.
+    <b>Deprecated:</b> The up vector of the gyro unit, in construct local coordinates.
+<p> This method is deprecated: Element.getUp should be used instead
 
 
 
@@ -227,6 +270,10 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#getUp">Element.getUp</a>
+    </ul>
 
 
 </dd>
@@ -235,7 +282,8 @@
     <strong>localForward ()</strong>
     </dt>
     <dd>
-    The forward vector of the gyro unit, in construct local coordinates.
+    <b>Deprecated:</b> The forward vector of the gyro unit, in construct local coordinates.
+<p> This method is deprecated: Element.getForward should be used instead
 
 
 
@@ -246,6 +294,10 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#getForward">Element.getForward</a>
+    </ul>
 
 
 </dd>
@@ -254,7 +306,8 @@
     <strong>localRight ()</strong>
     </dt>
     <dd>
-    The right vector of the gyro unit, in construct local coordinates.
+    <b>Deprecated:</b> The right vector of the gyro unit, in construct local coordinates.
+<p> This method is deprecated: Element.getRight should be used instead
 
 
 
@@ -265,6 +318,10 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#getRight">Element.getRight</a>
+    </ul>
 
 
 </dd>
@@ -273,7 +330,8 @@
     <strong>worldUp ()</strong>
     </dt>
     <dd>
-    The up vector of the gyro unit, in world coordinates.
+    <b>Deprecated:</b> The up vector of the gyro unit, in world coordinates.
+<p> This method is deprecated: Element.getWorldUp should be used instead
 
 
 
@@ -284,6 +342,10 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#getWorldUp">Element.getWorldUp</a>
+    </ul>
 
 
 </dd>
@@ -292,7 +354,8 @@
     <strong>worldForward ()</strong>
     </dt>
     <dd>
-    The forward vector of the gyro unit, in world coordinates.
+    <b>Deprecated:</b> The forward vector of the gyro unit, in world coordinates.
+<p> This method is deprecated: Element.getWorldForward should be used instead
 
 
 
@@ -303,6 +366,10 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#getWorldForward">Element.getWorldForward</a>
+    </ul>
 
 
 </dd>
@@ -311,7 +378,8 @@
     <strong>worldRight ()</strong>
     </dt>
     <dd>
-    The right vector of the gyro unit, in world coordinates.
+    <b>Deprecated:</b> The right vector of the gyro unit, in world coordinates.
+<p> This method is deprecated: Element.getWorldRight should be used instead
 
 
 
@@ -322,6 +390,10 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#getWorldRight">Element.getWorldRight</a>
+    </ul>
 
 
 </dd>
@@ -337,7 +409,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">deg</span></span>
+           <span class="types"><span class="type">float</span></span>
         The pitch angle in degrees, relative to the gyro orientation and the local gravity.
     </ol>
 
@@ -357,7 +429,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">deg</span></span>
+           <span class="types"><span class="type">float</span></span>
         The roll angle in degrees, relative to the gyro orientation and the local gravity.
     </ol>
 
@@ -372,7 +444,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-10-28 20:20:14 </i>
+<i style="float:right;">Last updated 2022-10-29 03:47:59 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
