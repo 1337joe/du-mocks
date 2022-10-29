@@ -16,7 +16,7 @@ local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
 elementDefinitions["airlock"] = {mass = 4197.11, maxHitPoints = 663.0}
-elementDefinitions["fuel intake xs"] = {mass = 4.12, maxHitPoints = 50.0}
+elementDefinitions["fuel intake xs"] = {mass = 4.12, maxHitPoints = 50.0, itemId = 764397251}
 elementDefinitions["gate xs"] = {mass = 122752.84, maxHitPoints = 50029.0}
 elementDefinitions["expanded gate s"] = {mass = 122752.84, maxHitPoints = 74872.0}
 elementDefinitions["gate m"] = {mass = 122752.84, maxHitPoints = 150117.0}
@@ -25,7 +25,7 @@ elementDefinitions["gate xl"] = {mass = 122752.84, maxHitPoints = 448208.0}
 elementDefinitions["hatch s"] = {mass = 98.56, maxHitPoints = 969.0}
 elementDefinitions["interior door"] = {mass = 4197.11, maxHitPoints = 560.0}
 elementDefinitions["reinforced sliding door"] = {mass = 4197.11, maxHitPoints = 969.0}
-elementDefinitions["sliding door s"] = {mass = 749.15, maxHitPoints = 56.0}
+elementDefinitions["sliding door s"] = {mass = 749.15, maxHitPoints = 56.0, itemId = 201196316}
 elementDefinitions["sliding door m"] = {mass = 1006.01, maxHitPoints = 450.0}
 local DEFAULT_ELEMENT = "sliding door s"
 
@@ -42,6 +42,25 @@ function M:new(o, id, elementName)
     self.plugIn = 0.0
 
     return o
+end
+
+--- Open the door.
+function M:open()
+    self.state = true
+end
+
+--- Close the door.
+function M:close()
+    self.state = false
+end
+
+--- Returns the opening status of the door.
+-- @treturn 0/1 1 if the door is open.
+function M:isOpen()
+    if self.state then
+        return 1
+    end
+    return 0
 end
 
 --- Set the value of a signal in the specified IN plug of the element.
@@ -66,13 +85,14 @@ function M:setSignalIn(plug, state)
             -- self:deactivate()
         end
 
-        if value <= 0 then
-            self.plugIn = 0
-        elseif value >= 1.0 then
-            self.plugIn = 1.0
-        else
-            self.plugIn = value
-        end
+        -- No longer seems to work either
+        -- if value <= 0 then
+        --     self.plugIn = 0
+        -- elseif value >= 1.0 then
+        --     self.plugIn = 1.0
+        -- else
+        --     self.plugIn = value
+        -- end
     end
 end
 
@@ -106,6 +126,9 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElementWithToggle.mockGetClosure(self)
+    closure.open = function() return self:open() end
+    closure.close = function() return self:close() end
+    closure.isOpen = function() return self:isOpen() end
 
     closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
     closure.getSignalIn = function(plug) return self:getSignalIn(plug) end

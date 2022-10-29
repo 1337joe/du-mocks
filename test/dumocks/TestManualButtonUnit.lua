@@ -8,9 +8,18 @@ package.path = "src/?.lua;" .. package.path
 local lu = require("luaunit")
 
 local mmbu = require("dumocks.ManualButtonUnit")
-local utilities = require("test.Utilities")
+require("test.Utilities")
+local TestElementWithState = require("test.dumocks.TestElementWithState")
 
-_G.TestManualButtonUnit = {}
+_G.TestManualButtonUnit = TestElementWithState
+
+function _G.TestManualButtonUnit.getTestElement()
+    return mmbu:new()
+end
+
+function _G.TestManualButtonUnit.getStateFunction(closure)
+    return closure.isDown
+end
 
 --- Verify constructor arguments properly handled.
 function _G.TestManualButtonUnit.testConstructor()
@@ -45,19 +54,6 @@ function _G.TestManualButtonUnit.testConstructor()
     lu.assertEquals(buttonClosure1.getItemId(), defaultId)
     lu.assertEquals(buttonClosure2.getItemId(), defaultId)
     lu.assertNotEquals(buttonClosure3.getItemId(), defaultId)
-end
-
-function _G.TestManualButtonUnit.testIsDown()
-    local mock = mmbu:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    lu.assertEquals(closure.isDown(), 0)
-    lu.assertEquals(utilities.verifyDeprecated("getState", closure.getState), 0)
-
-    mock.state = true
-    lu.assertEquals(closure.isDown(), 1)
-    lu.assertEquals(utilities.verifyDeprecated("getState", closure.getState), 1)
 end
 
 --- Verify press works without errors.

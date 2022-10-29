@@ -180,6 +180,8 @@ function _G.Utilities.verifyDeprecated(funcName, func, ...)
 
     lu.assertStrContains(printedMessage, string.format("Warning: method %s is deprecated", funcName))
 
+    _G.system = nil
+
     return ret
 end
 

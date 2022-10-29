@@ -84,6 +84,7 @@ function TestElement.testGetLocalId()
     lu.assertEquals(utilities.verifyDeprecated("getId", closure2.getId), closure2.getLocalId())
 end
 
+--- Verify integrity math functions properly.
 function TestElement.testGetIntegrity()
     local expected, actual
     local element = me:new()

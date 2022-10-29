@@ -6,42 +6,82 @@
 package.path = "src/?.lua;" .. package.path
 
 local lu = require("luaunit")
+local utilities = require("test.Utilities")
+local TestElementWithState = require("test.dumocks.TestElementWithState")
 
-local mewt = require("dumocks.ElementWithToggle")
+local TestElementWithToggle = TestElementWithState
 
-_G.TestElementWithToggle = {}
+--- Factory to produce the non-deprecated activate function for the element.
+-- @tparam table closure The closure to extract the function from.
+-- @treturn function The correct activate function.
+    function TestElementWithToggle.getActivateFunction(closure)
+    lu.fail("getActivateFunction must be overridden to test activate functionality.")
+end
+
+--- Factory to produce the non-deprecated deactivate function for the element.
+-- @tparam table closure The closure to extract the function from.
+-- @treturn function The correct deactivate function.
+    function TestElementWithToggle.getDeactivateFunction(closure)
+    lu.fail("getDeactivateFunction must be overridden to test deactivate functionality.")
+end
 
 --- Verify that activate leaves the element on.
-function _G.TestElementWithToggle.testActivate()
-    local mock = mewt:new()
+function TestElementWithToggle.testActivate()
+    local mock = TestElementWithToggle.getTestElement()
     local closure = mock:mockGetClosure()
+    local activateOverride = TestElementWithToggle.getActivateFunction(closure)
 
     mock.state = false
-    closure.activate()
+    activateOverride()
     lu.assertTrue(mock.state)
 
+    if activateOverride ~= closure.activate then
+        mock.state = false
+        utilities.verifyDeprecated("activate", closure.activate)
+        lu.assertTrue(mock.state)
+    end
+
     mock.state = true
-    closure.activate()
+    activateOverride()
     lu.assertTrue(mock.state)
+
+    if activateOverride ~= closure.activate then
+        mock.state = true
+        utilities.verifyDeprecated("activate", closure.activate)
+        lu.assertTrue(mock.state)
+    end
 end
 
 --- Verify that deactivate leaves the element off.
-function _G.TestElementWithToggle.testDeactivate()
-    local mock = mewt:new()
+function TestElementWithToggle.testDeactivate()
+    local mock = TestElementWithToggle.getTestElement()
     local closure = mock:mockGetClosure()
+    local deactivateOverride = TestElementWithToggle.getDeactivateFunction(closure)
 
     mock.state = false
-    closure.deactivate()
+    deactivateOverride()
     lu.assertFalse(mock.state)
 
+    if deactivateOverride ~= closure.deactivate then
+        mock.state = false
+        utilities.verifyDeprecated("deactivate", closure.deactivate)
+        lu.assertFalse(mock.state)
+    end
+
     mock.state = true
-    closure.deactivate()
+    deactivateOverride()
     lu.assertFalse(mock.state)
+
+    if deactivateOverride ~= closure.deactivate then
+        mock.state = true
+        utilities.verifyDeprecated("deactivate", closure.deactivate)
+        lu.assertFalse(mock.state)
+    end
 end
 
 --- Verify that toggle changes the state.
-function _G.TestElementWithToggle.testToggle()
-    local mock = mewt:new()
+function TestElementWithToggle.testToggle()
+    local mock = TestElementWithToggle.getTestElement()
     local closure = mock:mockGetClosure()
 
     mock.state = false
@@ -53,4 +93,4 @@ function _G.TestElementWithToggle.testToggle()
     lu.assertFalse(mock.state)
 end
 
-os.exit(lu.LuaUnit.run())
+return TestElementWithToggle

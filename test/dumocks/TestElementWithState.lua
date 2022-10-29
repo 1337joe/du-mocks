@@ -6,21 +6,36 @@
 package.path = "src/?.lua;" .. package.path
 
 local lu = require("luaunit")
+local utilities = require("test.Utilities")
 
-local mews = require("dumocks.ElementWithState")
+local TestElementWithState = {}
 
-_G.TestElementWithState = {}
-
---- Verify that get state retrieves the state properly.
-function _G.TestElementWithState.testGetState()
-    local mock = mews:new()
-    local closure = mock:mockGetClosure()
-
-    mock.state = false
-    lu.assertEquals(closure.getState(), 0)
-
-    mock.state = true
-    lu.assertEquals(closure.getState(), 1)
+--- Factory to create an element for testing. Must be overridden for tests to work.
+-- @return A mock of the element to test.
+function TestElementWithState.getTestElement()
+    lu.fail("getTestElement must be overridden for TestElementWithState to work.")
 end
 
-os.exit(lu.LuaUnit.run())
+--- Factory to produce the non-deprecated getState function for the element.
+-- @tparam table closure The closure to extract the function from.
+-- @treturn function The correct getState function.
+function TestElementWithState.getStateFunction(closure)
+    lu.fail("getStateFunction must be overridden to test getState functionality.")
+end
+
+--- Verify that get state retrieves the state properly.
+function TestElementWithState.testGetState()
+    local mock = TestElementWithState.getTestElement()
+    local closure = mock:mockGetClosure()
+    local getStateOverride = TestElementWithState.getStateFunction(closure)
+
+    mock.state = false
+    lu.assertEquals(getStateOverride(), 0)
+    lu.assertEquals(utilities.verifyDeprecated("getState", closure.getState), 0)
+
+    mock.state = true
+    lu.assertEquals(getStateOverride(), 1)
+    lu.assertEquals(utilities.verifyDeprecated("getState", closure.getState), 1)
+end
+
+return TestElementWithState
