@@ -13,8 +13,8 @@ local MockElement = require "dumocks.Element"
 local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
-elementDefinitions["gyroscope"] = {mass = 104.41, maxHitPoints = 50}
-local DEFAULT_ELEMENT = "gyroscope"
+elementDefinitions["gyroscope xs"] = {mass = 104.41, maxHitPoints = 50, itemId = 2585415184}
+local DEFAULT_ELEMENT = "gyroscope xs"
 
 local M = MockElementWithToggle:new()
 M.elementClass = "GyroUnit"
@@ -27,16 +27,8 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
-    o.localUp = {0, 0, 0}
-    o.localForward = {0, 0, 0}
-    o.localRight = {0, 0, 0}
-    o.worldUp = {0, 0, 0}
-    o.worldForward = {0, 0, 0}
-    o.worldRight = {0, 0, 0}
     o.pitch = 0 -- deg
     o.roll = 0 -- deg
-    o.yaw = 0 -- deg
-    o.yawWorldReference = {0, 0, 0}
 
     -- only activateable when on a dynamic core, this allows for testing on a static core if needed for some reason
     o.dynamicCore = true
@@ -44,18 +36,32 @@ function M:new(o, id, elementName)
     return o
 end
 
---- Switches the element on/open.
+--- Sets this gyro as the main gyro used for ship orientation.
 --
 -- Note: Has no effect when called on a static core.
 function M:activate()
     self.state = self.dynamicCore == true
 end
 
---- Toggle the state of the element.
+--- Deselects this gyro as the main gyro used for ship orientation, using the core unit instead.
+function M:deactivate()
+    self.state = false
+end
+
+--- Toggle the activation state of the gyro.
 --
 -- Note: Has no effect when called on a static core.
 function M:toggle()
     self.state = self.dynamicCore == true and not self.state
+end
+
+--- Returns the activation state of the gyro.
+-- @treturn 0/1 1 when the gyro is the active ship orientation, 0 otherwise.
+function M:isActive()
+    if self.state then
+        return 1
+    end
+    return 0
 end
 
 local DATA_TEMPLATE = '{\"helperId\":\"gyro\",\"name\":\"%s\","pitch":%.17f,"roll":%.16f,\"type\":\"%s\"}'
@@ -80,50 +86,74 @@ function M:getWidgetDataId()
     return "e123456"
 end
 
---- The up vector of the gyro unit, in construct local coordinates.
+--- <b>Deprecated:</b> The up vector of the gyro unit, in construct local coordinates.
+--
+-- This method is deprecated: Element.getUp should be used instead
+-- @see Element.getUp
 -- @return Normalized up vector of the gyro unit, in construct local coordinates.
 function M:localUp()
-    return self.localUp
+    M.deprecated("localUp", "Element.getUp")
+    return self:getUp()
 end
 
---- The forward vector of the gyro unit, in construct local coordinates.
+--- <b>Deprecated:</b> The forward vector of the gyro unit, in construct local coordinates.
+--
+-- This method is deprecated: Element.getForward should be used instead
+-- @see Element.getForward
 -- @return Normalized forward vector of the gyro unit, in construct local coordinates.
 function M:localForward()
-    return self.localForward
+    M.deprecated("localForward", "Element.getForward")
+    return self:getForward()
 end
 
---- The right vector of the gyro unit, in construct local coordinates.
+--- <b>Deprecated:</b> The right vector of the gyro unit, in construct local coordinates.
+--
+-- This method is deprecated: Element.getRight should be used instead
+-- @see Element.getRight
 -- @return Normalized right vector of the gyro unit, in construct local coordinates.
 function M:localRight()
-    return self.localRight
+    M.deprecated("localRight", "Element.getRight")
+    return self:getRight()
 end
 
---- The up vector of the gyro unit, in world coordinates.
+--- <b>Deprecated:</b> The up vector of the gyro unit, in world coordinates.
+--
+-- This method is deprecated: Element.getWorldUp should be used instead
+-- @see Element.getWorldUp
 -- @return Normalized up vector of the gyro unit, in world coordinates.
 function M:worldUp()
-    return self.worldUp
+    M.deprecated("worldUp", "Element.getWorldUp")
+    return self:getWorldUp()
 end
 
---- The forward vector of the gyro unit, in world coordinates.
+--- <b>Deprecated:</b> The forward vector of the gyro unit, in world coordinates.
+--
+-- This method is deprecated: Element.getWorldForward should be used instead
+-- @see Element.getWorldForward
 -- @return Normalized forward vector of the gyro unit, in world coordinates.
 function M:worldForward()
-    return self.worldForward
+    M.deprecated("worldForward", "Element.getWorldForward")
+    return self:getWorldForward()
 end
 
---- The right vector of the gyro unit, in world coordinates.
+--- <b>Deprecated:</b> The right vector of the gyro unit, in world coordinates.
+--
+-- This method is deprecated: Element.getWorldRight should be used instead
+-- @see Element.getWorldRight
 -- @return Normalized right vector of the gyro unit, in world coordinates.
 function M:worldRight()
-    return self.worldRight
+    M.deprecated("worldRight", "Element.getWorldRight")
+    return self:getWorldRight()
 end
 
 --- The pitch value relative to the gyro orientation and the local gravity.
--- @treturn deg The pitch angle in degrees, relative to the gyro orientation and the local gravity.
+-- @treturn float The pitch angle in degrees, relative to the gyro orientation and the local gravity.
 function M:getPitch()
     return self.pitch
 end
 
 --- The roll value relative to the gyro orientation and the local gravity.
--- @treturn deg The roll angle in degrees, relative to the gyro orientation and the local gravity.
+-- @treturn float The roll angle in degrees, relative to the gyro orientation and the local gravity.
 function M:getRoll()
     return self.roll
 end
@@ -133,6 +163,9 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElementWithToggle.mockGetClosure(self)
+    closure.activate = function() return self:activate() end
+    closure.deactivate = function() return self:deactivate() end
+    closure.isActive = function() return self:isActive() end
     closure.localUp = function() return self:localUp() end
     closure.localForward = function() return self:localForward() end
     closure.localRight = function() return self:localRight() end

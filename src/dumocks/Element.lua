@@ -89,6 +89,14 @@ function M:new(o, localId, elementDefinition)
         o.itemId = elementDefinition.itemId or 0
     end
 
+    -- element orientation vectors, named to avoid collision with deprecated GyroUnit methods
+    o.up = {0, 0, 1}
+    o.right = {1, 0, 0}
+    o.forward = {0, 1, 0}
+    o.upWorld = {0, 0, 1}
+    o.rightWorld = {1, 0, 0}
+    o.forwardWorld = {0, 1, 0}
+
     o.loaded = 1
 
     return o
@@ -277,31 +285,37 @@ end
 --- Returns the up direction vector of the element in construct local coordinates.
 -- @treturn vec3 Up direction vector of the element in construct local coordinates.
 function M:getUp()
+    return self.up
 end
 
 --- Returns the right direction vector of the element in construct local coordinates.
 -- @treturn vec3 Right direction vector of the element in construct local coordinates.
 function M:getRight()
+    return self.right
 end
 
 --- Returns the forward direction vector of the element in construct local coordinates.
 -- @treturn vec3 Forward direction vector of the element in construct local coordinates.
 function M:getForward()
+    return self.forward
 end
 
 --- Returns the up direction vector of the element in world coordinates.
 -- @treturn vec3 Up direction vector of the element in world coordinates.
 function M:getWorldUp()
+    return self.upWorld
 end
 
 --- Returns the right direction vector of the element in world coordinates.
 -- @treturn vec3 Right direction vector of the element in world coordinates.
 function M:getWorldRight()
+    return self.rightWorld
 end
 
 --- Returns the forward direction vector of the element in world coordinates.
 -- @treturn vec3 Forward direction vector of the element in world coordinates.
 function M:getWorldForward()
+    return self.forwardWorld
 end
 
 --- Set the value of a signal in the specified IN plug of the element.
