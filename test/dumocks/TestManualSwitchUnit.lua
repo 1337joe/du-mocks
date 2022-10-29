@@ -319,7 +319,7 @@ function _G.TestManualSwitchUnit.testGameBehavior()
 
     -- test element class and inherited methods
     assert(slot1.getClass() == "ManualSwitchUnit")
-    assert(slot1.getItemId() == 4181147843, "ID: " .. slot1.getItemId())
+    assert(slot1.getItemId() == 4181147843)
     assert(string.match(string.lower(slot1.getName()), "manual switch xs %[%d+%]"), slot1.getName())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getMass() == 13.27)
