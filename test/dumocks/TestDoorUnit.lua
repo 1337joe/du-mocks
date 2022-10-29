@@ -9,9 +9,9 @@ local lu = require("luaunit")
 
 local mdu = require("dumocks.DoorUnit")
 require("test.Utilities")
-local TestElementWithToggle = require("test.dumocks.TestElementWithToggle")
+local AbstractTestElementWithToggle = require("test.dumocks.AbstractTestElementWithToggle")
 
-_G.TestDoorUnit = TestElementWithToggle
+_G.TestDoorUnit = AbstractTestElementWithToggle
 
 function _G.TestDoorUnit.getTestElement()
     return mdu:new()

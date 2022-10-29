@@ -9,9 +9,9 @@ local lu = require("luaunit")
 
 local mmbu = require("dumocks.ManualButtonUnit")
 require("test.Utilities")
-local TestElementWithState = require("test.dumocks.TestElementWithState")
+local AbstractTestElementWithState = require("test.dumocks.AbstractTestElementWithState")
 
-_G.TestManualButtonUnit = TestElementWithState
+_G.TestManualButtonUnit = AbstractTestElementWithState
 
 function _G.TestManualButtonUnit.getTestElement()
     return mmbu:new()

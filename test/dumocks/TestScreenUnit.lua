@@ -9,9 +9,9 @@ local lu = require("luaunit")
 
 local msu = require("dumocks.ScreenUnit")
 require("test.Utilities")
-local TestElementWithToggle = require("test.dumocks.TestElementWithToggle")
+local AbstractTestElementWithToggle = require("test.dumocks.AbstractTestElementWithToggle")
 
-_G.TestScreenUnit = TestElementWithToggle
+_G.TestScreenUnit = AbstractTestElementWithToggle
 
 function _G.TestScreenUnit.getTestElement()
     return msu:new()

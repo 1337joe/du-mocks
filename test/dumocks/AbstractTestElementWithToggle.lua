@@ -7,29 +7,29 @@ package.path = "src/?.lua;" .. package.path
 
 local lu = require("luaunit")
 local utilities = require("test.Utilities")
-local TestElementWithState = require("test.dumocks.TestElementWithState")
+local AbstractTestElementWithState = require("test.dumocks.AbstractTestElementWithState")
 
-local TestElementWithToggle = TestElementWithState
+local AbstractTestElementWithToggle = AbstractTestElementWithState
 
 --- Factory to produce the non-deprecated activate function for the element.
 -- @tparam table closure The closure to extract the function from.
 -- @treturn function The correct activate function.
-    function TestElementWithToggle.getActivateFunction(closure)
+    function AbstractTestElementWithToggle.getActivateFunction(closure)
     lu.fail("getActivateFunction must be overridden to test activate functionality.")
 end
 
 --- Factory to produce the non-deprecated deactivate function for the element.
 -- @tparam table closure The closure to extract the function from.
 -- @treturn function The correct deactivate function.
-    function TestElementWithToggle.getDeactivateFunction(closure)
+    function AbstractTestElementWithToggle.getDeactivateFunction(closure)
     lu.fail("getDeactivateFunction must be overridden to test deactivate functionality.")
 end
 
 --- Verify that activate leaves the element on.
-function TestElementWithToggle.testActivate()
-    local mock = TestElementWithToggle.getTestElement()
+function AbstractTestElementWithToggle.testActivate()
+    local mock = AbstractTestElementWithToggle.getTestElement()
     local closure = mock:mockGetClosure()
-    local activateOverride = TestElementWithToggle.getActivateFunction(closure)
+    local activateOverride = AbstractTestElementWithToggle.getActivateFunction(closure)
 
     mock.state = false
     activateOverride()
@@ -53,10 +53,10 @@ function TestElementWithToggle.testActivate()
 end
 
 --- Verify that deactivate leaves the element off.
-function TestElementWithToggle.testDeactivate()
-    local mock = TestElementWithToggle.getTestElement()
+function AbstractTestElementWithToggle.testDeactivate()
+    local mock = AbstractTestElementWithToggle.getTestElement()
     local closure = mock:mockGetClosure()
-    local deactivateOverride = TestElementWithToggle.getDeactivateFunction(closure)
+    local deactivateOverride = AbstractTestElementWithToggle.getDeactivateFunction(closure)
 
     mock.state = false
     deactivateOverride()
@@ -80,8 +80,8 @@ function TestElementWithToggle.testDeactivate()
 end
 
 --- Verify that toggle changes the state.
-function TestElementWithToggle.testToggle()
-    local mock = TestElementWithToggle.getTestElement()
+function AbstractTestElementWithToggle.testToggle()
+    local mock = AbstractTestElementWithToggle.getTestElement()
     local closure = mock:mockGetClosure()
 
     mock.state = false
@@ -93,4 +93,4 @@ function TestElementWithToggle.testToggle()
     lu.assertFalse(mock.state)
 end
 
-return TestElementWithToggle
+return AbstractTestElementWithToggle
