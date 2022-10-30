@@ -184,7 +184,7 @@ M.Shape = {
 -- purposes only.
 -- @table AlignH
 M.AlignH = {
-    AlignH_Left = 0, -- Default: Align to the start of the text.
+    AlignH_Left = 0, -- (<b>Default</b>) Align to the start of the text.
     AlignH_Center = 1, -- Align to the middle of the text.
     AlignH_Right = 2, -- Align to the end of the text.
 }
@@ -198,7 +198,7 @@ M.AlignV = {
     AlignV_Ascender = 0, -- Align to top of ascender.
     AlignV_Top = 1, -- Align to height of capital characters.
     AlignV_Middle = 2, -- Align to middle of characters.
-    AlignV_Baseline = 3, -- Default: Align to text baseline.
+    AlignV_Baseline = 3, -- (<b>Default</b>) Align to text baseline.
     AlignV_Bottom = 4,
     AlignV_Descender = 5, -- Align to bottom of descender.
 }
@@ -238,18 +238,21 @@ end
 
 local function validateParameters(expected, ...)
     local args = table.pack(...)
-    local expectedType
+    local expectedType, value
     for i = args.n, 1, -1 do
+        value = args[i]
         expectedType = expected[i]
         if expectedType == "integer" then
             expectedType = "number"
+        elseif expectedType == "string" and type(value) == "number" then
+            value = tostring(value)
         end
 
-        assert(type(args[i]) == expectedType,
+        assert(type(value) == expectedType,
             string.format("expected %s for parameter %d", expected[i], i))
 
-        if expected[i] == "integer" then
-            assert(args[i] // 1 == args[i],
+        if expectedType == "integer" then
+            assert(value // 1 == value,
                 string.format("expected %s for parameter %d", expected[i], i))
         end
     end
@@ -599,7 +602,6 @@ end
 -- @tparam float y The y coordinate (in pixels) of the top-left baseline.
 -- @see loadFont
 function M:addText(layer, font, text, x, y)
-    -- TODO should validate text against auto-boxable strings
     validateParameters({"integer", "integer", "string", "number", "number"}
         , layer, font, text, x, y)
     local layerRef = getLayer(self, layer)
@@ -902,6 +904,7 @@ local FontData = {
         heightMultAvg = 0.921875,
     },
     ["Montserrat-Bold"] = {
+        name = "Montserrat",
         weight = "bold",
         ascenderMult = 0.96875,
         descenderMult = -0.251953125,
@@ -909,6 +912,7 @@ local FontData = {
         heightMultAvg = 0.92666330645161,
     },
     ["Montserrat-Light"] = {
+        name = "Montserrat",
         weight = "lighter",
         ascenderMult = 0.96875,
         descenderMult = -0.251953125,
@@ -922,6 +926,7 @@ local FontData = {
         heightMultAvg = 0.87525201612903,
     },
     ["Play-Bold"] = {
+        name = "Play",
         weight = "bold",
         ascenderMult = 0.9375,
         descenderMult = -0.220703125,
@@ -1045,9 +1050,7 @@ end
 -- @treturn float,float The text bounds as (width, height) in pixels.
 -- @see loadFont
 function M:getTextBounds(font, text)
-    -- TODO should validate text against auto-boxable strings
-    validateParameters({"integer"}
-        , font)
+    validateParameters({"integer", "string"}, font, text)
     local fontRef = getFont(self, font)
     local fontData = FontData[fontRef.name]
     -- using the average sizes isn't a great representation, but it's a passable initial estimate

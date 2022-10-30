@@ -125,9 +125,9 @@ function _G.TestRenderScript.testParameterValidation()
     success, result = pcall(addText, layer, font, "Success", 50, 50)
     assert(success)
 
-    -- TODO auto-boxable strings not yet implemented
-    -- success, result = pcall(addText, layer, font, 1, 50, 50)
-    -- assert(success)
+    -- auto-box number to string
+    success, result = pcall(addText, layer, font, 1, 50, 50)
+    assert(success)
 
     ---------------
     -- copy to here to renderer

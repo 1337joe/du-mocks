@@ -30,6 +30,7 @@ elementDefinitions["screen xs"] = {mass = 18.67, maxHitPoints = 50.0, itemId = 1
 elementDefinitions["screen s"] = {mass = 18.67, maxHitPoints = 50.0, itemId = 184261490, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
 elementDefinitions["screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
 elementDefinitions["screen xl"] = {mass = 12810.88, maxHitPoints = 28116.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["modern screen s"] = {mass = 7.5, maxHitPoints = 200.0, itemId = 819161538, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
 elementDefinitions["transparent screen xs"] = {mass = 18.67, maxHitPoints = 50.0, itemId = 3988665660, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
 elementDefinitions["transparent screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
 elementDefinitions["transparent screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
