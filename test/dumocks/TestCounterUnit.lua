@@ -8,7 +8,7 @@ package.path = "src/?.lua;" .. package.path
 local lu = require("luaunit")
 
 local mcu = require("dumocks.CounterUnit")
-require("test.Utilities")
+local utilities = require("test.Utilities")
 
 _G.TestCounterUnit = {}
 
@@ -16,22 +16,22 @@ _G.TestCounterUnit = {}
 function _G.TestCounterUnit.testConstructor()
 
     -- default element:
-    -- ["counter 2"] = {mass = 9.93, maxHitPoints = 50.0, maxCount = 2}
+    -- ["2 counter xs"] = {mass = 9.93, maxHitPoints = 50.0, itemId = 888062905, maxCount = 2}
 
     local counter0 = mcu:new()
-    local counter1 = mcu:new(nil, 1, "Counter 2")
+    local counter1 = mcu:new(nil, 1, "2 Counter XS")
     local counter2 = mcu:new(nil, 2, "invalid")
-    local counter3 = mcu:new(nil, 3, "Counter 3")
+    local counter3 = mcu:new(nil, 3, "3 Counter XS")
 
     local counterClosure0 = counter0:mockGetClosure()
     local counterClosure1 = counter1:mockGetClosure()
     local counterClosure2 = counter2:mockGetClosure()
     local counterClosure3 = counter3:mockGetClosure()
 
-    lu.assertEquals(counterClosure0.getId(), 0)
-    lu.assertEquals(counterClosure1.getId(), 1)
-    lu.assertEquals(counterClosure2.getId(), 2)
-    lu.assertEquals(counterClosure3.getId(), 3)
+    lu.assertEquals(counterClosure0.getLocalId(), 0)
+    lu.assertEquals(counterClosure1.getLocalId(), 1)
+    lu.assertEquals(counterClosure2.getLocalId(), 2)
+    lu.assertEquals(counterClosure3.getLocalId(), 3)
 
     -- prove default element is selected only where appropriate
     local defaultCount = 2
@@ -39,65 +39,130 @@ function _G.TestCounterUnit.testConstructor()
     lu.assertEquals(counter1.maxCount, defaultCount)
     lu.assertEquals(counter2.maxCount, defaultCount)
     lu.assertNotEquals(counter3.maxCount, defaultCount)
+
+    local defaultId = 888062905
+    lu.assertEquals(counterClosure0.getItemId(), defaultId)
+    lu.assertEquals(counterClosure1.getItemId(), defaultId)
+    lu.assertEquals(counterClosure2.getItemId(), defaultId)
+    lu.assertNotEquals(counterClosure3.getItemId(), defaultId)
 end
 
---- Verify get counter state returns a value in range.
-function _G.TestCounterUnit.testGetCounterState()
+--- Verify get index returns a value in range.
+function _G.TestCounterUnit.testGetIndex()
     local mock = mcu:new()
     local closure = mock:mockGetClosure()
 
-    lu.assertEquals(mock.maxCount, 2) -- default
+    -- + 1 for 1-indexed getIndex
 
+    mock.maxCount = 2
     mock.activeOut = 1
-    lu.assertEquals(closure.getCounterState(), 1)
+    lu.assertEquals(closure.getIndex(), 1 + 1)
+    lu.assertEquals(utilities.verifyDeprecated("getCounterState", closure.getCounterState), 1 + 1)
     mock.activeOut = 3 -- bigger than max count, will wrap around
-    lu.assertEquals(closure.getCounterState(), 1)
+    lu.assertEquals(closure.getIndex(), 1 + 1)
 
     -- not default element
     mock.maxCount = 10
     mock.activeOut = 3
-    lu.assertEquals(closure.getCounterState(), 3)
+    lu.assertEquals(closure.getIndex(), 3 + 1)
+    lu.assertEquals(utilities.verifyDeprecated("getCounterState", closure.getCounterState), 3 + 1)
 end
 
---- Verify next advances properly.
-function _G.TestCounterUnit.testNext()
+--- Verify set index functions properly.
+function _G.TestCounterUnit.testSetIndex()
     local mock = mcu:new()
     local closure = mock:mockGetClosure()
 
-    lu.assertEquals(mock.maxCount, 2) -- default
+    -- - 1 for 0-indexed activeOut
+
+    mock.maxCount = 2
+
+    closure.setIndex(1)
+    lu.assertEquals(mock.activeOut, 1 - 1)
+    closure.setIndex(2)
+    lu.assertEquals(mock.activeOut, 2 - 1)
+    closure.setIndex(3)
+    lu.assertEquals(mock.activeOut, 2 - 1)
+    closure.setIndex(100)
+    lu.assertEquals(mock.activeOut, 2 - 1)
+    closure.setIndex(0)
+    lu.assertEquals(mock.activeOut, 1 - 1)
+    closure.setIndex(-1)
+    lu.assertEquals(mock.activeOut, 1 - 1)
+
+    mock.maxCount = 10
+    closure.setIndex(3)
+    lu.assertEquals(mock.activeOut, 3 - 1)
+    closure.setIndex(100)
+    lu.assertEquals(mock.activeOut, 10 - 1)
+end
+
+--- Verify nextIndex advances properly.
+function _G.TestCounterUnit.testNextIndex()
+    local mock = mcu:new()
+    local closure = mock:mockGetClosure()
+
+    mock.maxCount = 2
     mock.activeOut = 0
 
-    closure.next()
+    closure.nextIndex()
     lu.assertEquals(mock.activeOut, 1)
 
-    closure.next()
+    closure.nextIndex()
     lu.assertEquals(mock.activeOut, 0)
 
     -- not default element
     mock.maxCount = 5
     mock.activeOut = 0
 
-    closure.next()
+    closure.nextIndex()
     lu.assertEquals(mock.activeOut, 1)
 
-    closure.next()
+    closure.nextIndex()
     lu.assertEquals(mock.activeOut, 2)
 
-    closure.next()
+    closure.nextIndex()
     lu.assertEquals(mock.activeOut, 3)
 
-    closure.next()
+    closure.nextIndex()
     lu.assertEquals(mock.activeOut, 4)
 
-    closure.next()
+    closure.nextIndex()
     lu.assertEquals(mock.activeOut, 0)
 
-    closure.next()
+    closure.nextIndex()
     lu.assertEquals(mock.activeOut, 1)
+
+    -- verify deprecated method this replaces
+    utilities.verifyDeprecated("next", closure.next)
+    lu.assertEquals(mock.activeOut, 2)
+end
+
+--- Verify results of getMaxIndex.
+function _G.TestCounterUnit.testGetMaxIndex()
+    local mock = mcu:new()
+    local closure = mock:mockGetClosure()
+
+    -- - 1 for 0-indexed getMaxIndex
+
+    local expected
+
+    expected = 2
+    mock.maxCount = expected
+    lu.assertEquals(closure.getMaxIndex(), expected - 1)
+
+    expected = 5
+    mock.maxCount = expected
+    lu.assertEquals(closure.getMaxIndex(), expected - 1)
+
+    expected = 10
+    mock.maxCount = expected
+    lu.assertEquals(closure.getMaxIndex(), expected - 1)
 end
 
 --- Verify set signal in updates state.
 function _G.TestCounterUnit.testSetSignalIn()
+    lu.skip("No longer functional")
     local mock = mcu:new()
     local closure = mock:mockGetClosure()
 
@@ -240,9 +305,9 @@ end
 --
 -- Nothing should be connected to the "in" plug.
 --
--- Exercises: getElementClass, getCounterState, next, setSignalIn, getSignalIn, getSignalOut
+-- Exercises: getClass, getCounterState, getIndex, setIndex, nextIndex, getMaxIndex, setSignalIn, getSignalIn, getSignalOut
 function _G.TestCounterUnit.testGameBehavior()
-    local mock = mcu:new(nil, 1, "counter 5")
+    local mock = mcu:new(nil, 1, "5 counter xs")
     local slot1 = mock:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
@@ -254,112 +319,91 @@ function _G.TestCounterUnit.testGameBehavior()
     end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getCounterState", "next", "getSignalOut", "setSignalIn", "getSignalIn"}
+    local expectedFunctions = {"getCounterState", "getIndex", "setIndex", "nextIndex", "next", "getMaxIndex",
+                               "getSignalOut", "setSignalIn", "getSignalIn"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "CounterUnit")
+    assert(slot1.getClass() == "CounterUnit")
+    local expectedIds = {[888062905] = true, [888062906] = true, [888062908] = true, [888062910] = true, [888063487] = true}
+    assert(expectedIds[slot1.getItemId()])
+    local maxIndex = string.match(string.lower(slot1.getName()), "(%d+) counter xs %[%d+%]")
+    assert(maxIndex, slot1.getName())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getMass() == 9.93)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
-    -- advance counter using in signal, needs to not actually be linked to set value
+    -- play with set signal, has no actual effect on state when set programmatically
+    local initialState = slot1.getIndex()
     slot1.setSignalIn("in", 0.0)
     assert(slot1.getSignalIn("in") == 0.0)
-    local oldState = slot1.getCounterState()
+    assert(slot1.getIndex() == initialState)
     slot1.setSignalIn("in", 1.0)
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(oldState ~= slot1.getCounterState())
-    oldState = slot1.getCounterState()
-    -- weirdness with assigning fractions between 0 and 1: advances and sets to fractional value
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.getIndex() == initialState)
     slot1.setSignalIn("in", 0.7)
-    assert(slot1.getSignalIn("in") == 0.7)
-    assert(oldState ~= slot1.getCounterState())
-    oldState = slot1.getCounterState()
-    -- doesn't advance if same number
-    slot1.setSignalIn("in", 0.7)
-    assert(slot1.getSignalIn("in") == 0.7)
-    assert(oldState == slot1.getCounterState())
-    oldState = slot1.getCounterState()
-    -- out of 0-1 range sets to 0 or 1 and advances according to stored value
-    slot1.setSignalIn("in", -1)
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(oldState == slot1.getCounterState())
-    oldState = slot1.getCounterState()
-    slot1.setSignalIn("in", 5)
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(oldState ~= slot1.getCounterState())
-    oldState = slot1.getCounterState()
-    -- string that can be converted to number behaves like number
-    slot1.setSignalIn("in", "-3")
+    assert(slot1.getIndex() == initialState)
+    slot1.setSignalIn("in", "1.0")
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(oldState == slot1.getCounterState())
-    oldState = slot1.getCounterState()
-    slot1.setSignalIn("in", "7")
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(oldState ~= slot1.getCounterState())
-    oldState = slot1.getCounterState()
-    slot1.setSignalIn("in", "0.7")
-    assert(slot1.getSignalIn("in") == 0.7)
-    assert(oldState ~= slot1.getCounterState())
-    oldState = slot1.getCounterState()
-    -- setting to non-numeric value sets to 0 and doesn't advance
-    slot1.setSignalIn("in", "text")
-    assert(slot1.getSignalIn("in") == 0.0)
-    assert(oldState == slot1.getCounterState())
-    slot1.setSignalIn("in", nil)
-    assert(slot1.getSignalIn("in") == 0.0)
-    assert(oldState == slot1.getCounterState())
+    assert(slot1.getIndex() == initialState)
 
-    -- verify incorrect slot names are harmless
-    slot1.setSignalIn("invalid", 1.0)
-    assert(slot1.getSignalIn("invalid") == -1.0)
-    assert(slot1.getSignalOut("invalid") == -1.0)
+    local actualMax = slot1.getMaxIndex() + 1
+    assert(actualMax == tonumber(maxIndex))
 
-    -- reset
-    while slot1.getCounterState() ~= 0 do
-        slot1.next()
+    local function checkSignals()
+        local expectedIndex = slot1.getIndex()
+        local expected, actual
+        for signalIndex = 0, slot1.getMaxIndex() do
+            if expectedIndex - 1 == signalIndex then
+                expected = 1.0
+            else
+                expected = 0.0
+            end
+            actual = slot1.getSignalOut("OUT-signal-" .. signalIndex)
+            assert(actual == expected,
+                string.format("Expected index %d, signal index %d returned %d instead of %d",
+                expectedIndex, signalIndex, actual, expected))
+        end
     end
 
-    assert(slot1.getCounterState() == 0, "Active out: " .. slot1.getCounterState())
+    slot1.setIndex(actualMax)
+    assert(slot1.getIndex() == actualMax)
+    checkSignals()
 
-    assert(slot1.getSignalOut("OUT-signal-0") == 1.0)
-    assert(slot1.getSignalOut("OUT-signal-1") == 0.0)
-    assert(slot1.getSignalOut("OUT-signal-2") == 0.0)
-    assert(slot1.getSignalOut("OUT-signal-3") == 0.0)
-    assert(slot1.getSignalOut("OUT-signal-4") == 0.0)
+    slot1.setIndex(1)
+    assert(slot1.getIndex() == 1, "Active out: " .. slot1.getIndex())
+    checkSignals()
 
-    slot1.next()
-    assert(slot1.getCounterState() == 1, "Active out: " .. slot1.getCounterState())
+    slot1.setIndex(1)
+    slot1.nextIndex()
+    assert(slot1.getIndex() == 2, "Active out: " .. slot1.getIndex())
+    checkSignals()
 
-    slot1.next()
-    assert(slot1.getCounterState() == 2, "Active out: " .. slot1.getCounterState())
+    -- wraps around
+    slot1.setIndex(actualMax)
+    slot1.nextIndex()
+    assert(slot1.getIndex() == 1)
+    checkSignals()
 
-    slot1.next()
-    assert(slot1.getCounterState() == 3, "Active out: " .. slot1.getCounterState())
-
-    assert(slot1.getSignalOut("OUT-signal-0") == 0.0)
-    assert(slot1.getSignalOut("OUT-signal-1") == 0.0)
-    assert(slot1.getSignalOut("OUT-signal-2") == 0.0)
-    assert(slot1.getSignalOut("OUT-signal-3") == 1.0)
-    assert(slot1.getSignalOut("OUT-signal-4") == 0.0)
-
-    slot1.next()
-    assert(slot1.getCounterState() == 4, "Active out: " .. slot1.getCounterState())
-
-    slot1.next()
-    assert(slot1.getCounterState() == 0, "Active out: " .. slot1.getCounterState())
+    -- out of bounds
+    slot1.setIndex(25)
+    assert(slot1.getIndex() == actualMax)
+    slot1.setIndex(-1)
+    assert(slot1.getIndex() == 1)
+    slot1.setIndex(0)
+    assert(slot1.getIndex() == 1)
 
     system.print("Success")
     unit.exit()
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 
