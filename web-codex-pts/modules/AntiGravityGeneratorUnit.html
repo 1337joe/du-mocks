@@ -100,16 +100,52 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#activate">activate ()</a></td>
+	<td class="summary">Activate the anti-gravity generator.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#deactivate">deactivate ()</a></td>
+	<td class="summary">Deactivate the anti-gravity generator.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isActive">isActive ()</a></td>
+	<td class="summary">Returns the state of activation of the anti-gravity generator.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#getWidgetData">getWidgetData ()</a></td>
 	<td class="summary">Get element data as JSON.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#getFieldStrength">getFieldStrength ()</a></td>
+	<td class="summary">Returns the field strength of the anti-gravitational field.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCompensationRate">getCompensationRate ()</a></td>
+	<td class="summary">Returns the current rate of compensation of the gravitational field.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getFieldPower">getFieldPower ()</a></td>
+	<td class="summary">Returns the current power of the gravitational field.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getPulsorCount">getPulsorCount ()</a></td>
+	<td class="summary">Returns the number of pulsors linked to the anti-gravity generator.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#setBaseAltitude">setBaseAltitude (altitude)</a></td>
-	<td class="summary">Sets the base altitude for the anti-gravity field.</td>
+	<td class="summary"><b>Deprecated:</b> Sets the base altitude for the anti-gravity field.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setTargetAltitude">setTargetAltitude (altitude)</a></td>
+	<td class="summary">Sets the target altitude for the anti-gravity field.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getTargetAltitude">getTargetAltitude ()</a></td>
+	<td class="summary">Return the target altitude defined for the anti-gravitational field.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getBaseAltitude">getBaseAltitude ()</a></td>
-	<td class="summary">Return the base altitude for the anti-gravity field.</td>
+	<td class="summary">Return the current base altitude for the anti-gravitational field.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setSignalIn">setSignalIn (plug, state)</a></td>
@@ -128,6 +164,54 @@
     <h2 class="section-header "><a name="Functions"></a>Functions</h2>
 
     <dl class="function">
+    <dt>
+    <a name = "activate"></a>
+    <strong>activate ()</strong>
+    </dt>
+    <dd>
+    Activate the anti-gravity generator.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "deactivate"></a>
+    <strong>deactivate ()</strong>
+    </dt>
+    <dd>
+    Deactivate the anti-gravity generator.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isActive"></a>
+    <strong>isActive ()</strong>
+    </dt>
+    <dd>
+    Returns the state of activation of the anti-gravity generator.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 when the anti-gravity generator is started, 0 otherwise.
+    </ol>
+
+
+
+
+</dd>
     <dt>
     <a name = "getWidgetData"></a>
     <strong>getWidgetData ()</strong>
@@ -164,11 +248,92 @@
 
 </dd>
     <dt>
+    <a name = "getFieldStrength"></a>
+    <strong>getFieldStrength ()</strong>
+    </dt>
+    <dd>
+    Returns the field strength of the anti-gravitational field.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The power of the anti-gravitational field in Es.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCompensationRate"></a>
+    <strong>getCompensationRate ()</strong>
+    </dt>
+    <dd>
+    Returns the current rate of compensation of the gravitational field.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The current rate in percentage.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getFieldPower"></a>
+    <strong>getFieldPower ()</strong>
+    </dt>
+    <dd>
+    Returns the current power of the gravitational field.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The current power in percentage.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getPulsorCount"></a>
+    <strong>getPulsorCount ()</strong>
+    </dt>
+    <dd>
+    Returns the number of pulsors linked to the anti-gravity generator.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The number of pulsors linked.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "setBaseAltitude"></a>
     <strong>setBaseAltitude (altitude)</strong>
     </dt>
     <dd>
-    Sets the base altitude for the anti-gravity field.
+    <b>Deprecated:</b> Sets the base altitude for the anti-gravity field.
+<p> This method is deprecated: setTargetAltitude should be used instead
 
 
     <h3>Parameters:</h3>
@@ -181,6 +346,51 @@
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/AntiGravityGeneratorUnit.html#setTargetAltitude">setTargetAltitude</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "setTargetAltitude"></a>
+    <strong>setTargetAltitude (altitude)</strong>
+    </dt>
+    <dd>
+    Sets the target altitude for the anti-gravity field.  Cannot be called from <a href="../modules/system.html#EVENT_onFlush">system.onFlush</a>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">altitude</span>
+            <span class="types"><span class="type">float</span></span>
+         The target altitude in meters. It will be reached with a slow acceleration (not instantaneous).
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getTargetAltitude"></a>
+    <strong>getTargetAltitude ()</strong>
+    </dt>
+    <dd>
+    Return the target altitude defined for the anti-gravitational field.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The target altitude in meters.
+    </ol>
+
+
 
 
 </dd>
@@ -189,17 +399,17 @@
     <strong>getBaseAltitude ()</strong>
     </dt>
     <dd>
-    Return the base altitude for the anti-gravity field.
+    Return the current base altitude for the anti-gravitational field.
 <p> Note: This is the altitude that the anti-gravity generator is currently trying to hold at. It will adjust slowly
- to match the altitude provided to setBaseAltitude but will not instantly reflect the value set.
+ to match the target altitude but will not instantly reflect the value set.
 
 
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">m</span></span>
-        The base altitude.
+           <span class="types"><span class="type">float</span></span>
+        The base altitude in meters.
     </ol>
 
 
@@ -214,7 +424,7 @@
     Set the value of a signal in the specified IN plug of the element.
 <p> Valid plug names are:
  <ul>
- <li>"in" for the in signal (has no actual effect on agg state when modified this way).</li>
+ <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
  </ul>
 
 
@@ -273,7 +483,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-11-03 04:06:41 </i>
+<i style="float:right;">Last updated 2022-11-03 04:40:25 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
