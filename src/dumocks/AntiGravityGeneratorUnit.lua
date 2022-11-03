@@ -13,9 +13,9 @@ local MockElement = require "dumocks.Element"
 local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
-elementDefinitions["anti-gravity generator s"] = {mass = 27134.86, maxHitPoints = 43117.0}
-elementDefinitions["anti-gravity generator m"] = {mass = 137716.32, maxHitPoints = 304568.0}
-elementDefinitions["anti-gravity generator l"] = {mass = 550865.28, maxHitPoints = 2330350.0}
+elementDefinitions["anti-gravity generator s"] = {mass = 27134.86, maxHitPoints = 43117.0, itemId = 3997343699}
+elementDefinitions["anti-gravity generator m"] = {mass = 137716.32, maxHitPoints = 304568.0, itemId = 233079829}
+elementDefinitions["anti-gravity generator l"] = {mass = 550865.28, maxHitPoints = 2330350.0, itemId = 294414265}
 local DEFAULT_ELEMENT = "anti-gravity generator s"
 
 local M = MockElementWithToggle:new()
@@ -41,6 +41,25 @@ function M:new(o, id, elementName)
     o.plugIn = 0.0
 
     return o
+end
+
+--- Activate the anti-gravity generator.
+function M:activate()
+    self.state = true
+end
+
+--- Deactivate the anti-gravity generator.
+function M:deactivate()
+    self.state = false
+end
+
+--- Returns the state of activation of the anti-gravity generator.
+-- @treturn 0/1 1 when the anti-gravity generator is started, 0 otherwise.
+function M:isActive()
+    if self.state then
+        return 1
+    end
+    return 0
 end
 
 local DATA_TEMPLATE = '{"antiGPower":%.17f,"antiGravityField":%.16f,"baseAltitude\":%f,\"helperId\":\"antigravity_generator'..
@@ -73,18 +92,56 @@ function M:getWidgetDataId()
     return "e123456"
 end
 
---- Sets the base altitude for the anti-gravity field.
+--- Returns the field strength of the anti-gravitational field.
+-- @treturn float The power of the anti-gravitational field in Es.
+function M:getFieldStrength()
+    return self.antiGravityField
+end
+
+--- Returns the current rate of compensation of the gravitational field.
+-- @treturn float The current rate in percentage.
+function M:getCompensationRate()
+end
+
+--- Returns the current power of the gravitational field.
+-- @treturn float The current power in percentage.
+function M:getFieldPower()
+    return self.antiGravityPower
+end
+
+--- Returns the number of pulsors linked to the anti-gravity generator.
+-- @treturn int The number of pulsors linked.
+function M:getPulsorCount()
+end
+
+--- <b>Deprecated:</b> Sets the base altitude for the anti-gravity field.
+--
+-- This method is deprecated: setTargetAltitude should be used instead
+-- @see setTargetAltitude
 -- @tparam m altitude The desired altitude. It will be reached with a slow acceleration (not instantaneous).
 function M:setBaseAltitude(altitude)
+    M.deprecated("setBaseAltitude", "setTargetAltitude")
+    return self:setTargetAltitude(altitude)
+end
+
+--- Sets the target altitude for the anti-gravity field. Cannot be called from @{system.EVENT_onFlush|system.onFlush}.
+-- @tparam float altitude The target altitude in meters. It will be reached with a slow acceleration (not instantaneous).
+function M:setTargetAltitude(altitude)
     altitude = math.max(AG_MIN_BASE_ALTITUDE, altitude)
     self.targetAltitude = altitude
 end
 
---- Return the base altitude for the anti-gravity field.
+--- Return the target altitude defined for the anti-gravitational field.
+-- @treturn float The target altitude in meters.
+function M:getTargetAltitude()
+    return self.targetAltitude
+end
+
+--- Return the current base altitude for the anti-gravitational field.
 --
 -- Note: This is the altitude that the anti-gravity generator is currently trying to hold at. It will adjust slowly
--- to match the altitude provided to setBaseAltitude but will not instantly reflect the value set.
--- @treturn m The base altitude.
+-- to match the target altitude but will not instantly reflect the value set.
+-- @treturn float The base altitude in meters.
 function M:getBaseAltitude()
     return self.baseAltitude
 end
@@ -93,31 +150,13 @@ end
 --
 -- Valid plug names are:
 -- <ul>
--- <li>"in" for the in signal (has no actual effect on agg state when modified this way).</li>
+-- <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
 -- </ul>
 -- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
-        local value = tonumber(state)
-        if type(value) ~= "number" then
-            value = 0.0
-        end
-
-        -- expected behavior, but in fact nothing happens in-game
-        if value > 0.0 then
-            -- self:activate()
-        else
-            -- self:deactivate()
-        end
-
-        if value <= 0 then
-            self.plugIn = 0
-        elseif value >= 1.0 then
-            self.plugIn = 1.0
-        else
-            self.plugIn = value
-        end
+        -- no longer responds to setSignalIn
     end
 end
 
@@ -163,7 +202,16 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElementWithToggle.mockGetClosure(self)
+    closure.activate = function() return self:activate() end
+    closure.deactivate = function() return self:deactivate() end
+    closure.isActive = function() return self:isActive() end
+    closure.getFieldStrength = function() return self:getFieldStrength() end
+    closure.getCompensationRate = function() return self:getCompensationRate() end
+    closure.getFieldPower = function() return self:getFieldPower() end
+    closure.getPulsorCount = function() return self:getPulsorCount() end
     closure.setBaseAltitude = function(altitude) return self:setBaseAltitude(altitude) end
+    closure.setTargetAltitude = function(altitude) return self:setTargetAltitude(altitude) end
+    closure.getTargetAltitude = function() return self:getTargetAltitude() end
     closure.getBaseAltitude = function() return self:getBaseAltitude() end
 
     closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end

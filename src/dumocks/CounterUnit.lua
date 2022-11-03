@@ -73,7 +73,7 @@ function M:nextIndex()
 end
 
 --- Sets the counter index.
--- @tparam int The index of the plug to activate (1-indexed, so valid inputs for a 2 counter are 1 and 2).
+-- @tparam int index The index of the plug to activate (1-indexed, so valid inputs for a 2 counter are 1 and 2).
 function M:setIndex(index)
     index = index - 1 -- shift to 0-indexed
     if index >= self.maxCount then
