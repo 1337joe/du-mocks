@@ -13,10 +13,10 @@ local MockElement = require "dumocks.Element"
 local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
-elementDefinitions["landing gear xs"] = {mass = 49.88, maxHitPoints = 63.0}
-elementDefinitions["landing gear s"] = {mass = 258.76, maxHitPoints = 1045.0}
-elementDefinitions["landing gear m"] = {mass = 1460.65, maxHitPoints = 9939.0}
-elementDefinitions["landing gear l"] = {mass = 8500.63, maxHitPoints = 93088.0}
+elementDefinitions["landing gear xs"] = {mass = 49.88, maxHitPoints = 1250.0, itemId = 4078067869}
+elementDefinitions["landing gear s"] = {mass = 258.76, maxHitPoints = 5000.0, itemId = 1884031929}
+elementDefinitions["landing gear m"] = {mass = 1460.65, maxHitPoints = 20000.0, itemId = 1899560165}
+elementDefinitions["landing gear l"] = {mass = 8500.63, maxHitPoints = 80000.0, itemId = 2667697870}
 local DEFAULT_ELEMENT = "landing gear s"
 
 local M = MockElementWithToggle:new()
@@ -34,35 +34,36 @@ function M:new(o, id, elementName)
     return o
 end
 
+--- Deploys the landing gear.
+function M:deploy()
+    self.state = true
+end
+
+--- Retracts the landing gear.
+function M:retract()
+    self.state = false
+end
+
+--- Checks if the landing gear is deployed.
+-- @treturn 0/1 1 if the landing gear is deployed.
+function M:isDeployed()
+    if self.state then
+        return 1
+    end
+    return 0
+end
+
 --- Set the value of a signal in the specified IN plug of the element.
 --
 -- Valid plug names are:
 -- <ul>
--- <li>"in" for the in signal (has no actual effect on gear state when modified this way).</li>
+-- <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
 -- </ul>
 -- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
-        local value = tonumber(state)
-        if type(value) ~= "number" then
-            value = 0.0
-        end
-
-        -- expected behavior, but in fact nothing happens in-game
-        if value > 0.0 then
-            -- self:activate()
-        else
-            -- self:deactivate()
-        end
-
-        if value <= 0 then
-            self.plugIn = 0
-        elseif value >= 1.0 then
-            self.plugIn = 1.0
-        else
-            self.plugIn = value
-        end
+        -- no longer responds to setSignalIn
     end
 end
 
@@ -96,6 +97,9 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElementWithToggle.mockGetClosure(self)
+    closure.deploy = function() return self:deploy() end
+    closure.retract = function() return self:retract() end
+    closure.isDeployed = function() return self:isDeployed() end
 
     closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
     closure.getSignalIn = function(plug) return self:getSignalIn(plug) end    return closure
