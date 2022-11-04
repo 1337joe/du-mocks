@@ -21,17 +21,17 @@ local CLASS_SPACE = "CoreUnitSpace"
 
 local elementDefinitions = {}
 elementDefinitions["dynamic core unit xs"] = {mass = 70.89, maxHitPoints = 50.0, itemId = 183890713, class = CLASS_DYNAMIC}
-elementDefinitions["dynamic core unit s"] = {mass = 375.97, maxHitPoints = 183.0, class = CLASS_DYNAMIC}
-elementDefinitions["dynamic core unit m"] = {mass = 1984.6, maxHitPoints = 1288.0, class = CLASS_DYNAMIC}
-elementDefinitions["dynamic core unit l"] = {mass = 12141.47, maxHitPoints = 11541.0, class = CLASS_DYNAMIC}
-elementDefinitions["space core unit xs"] = {mass = 38.99, maxHitPoints = 50.0, class = CLASS_SPACE}
-elementDefinitions["space core unit s"] = {mass = 459.57, maxHitPoints = 183.0, class = CLASS_SPACE}
-elementDefinitions["space core unit m"] = {mass = 3037.5395, maxHitPoints = 1288.0, class = CLASS_SPACE}
-elementDefinitions["space core unit l"] = {mass = 7684.51425, maxHitPoints = 11541.0, class = CLASS_SPACE}
+elementDefinitions["dynamic core unit s"] = {mass = 375.97, maxHitPoints = 183.0, itemId = 183890525, class = CLASS_DYNAMIC}
+elementDefinitions["dynamic core unit m"] = {mass = 1984.6, maxHitPoints = 1288.0, itemId = 1418170469, class = CLASS_DYNAMIC}
+elementDefinitions["dynamic core unit l"] = {mass = 12141.47, maxHitPoints = 11541.0, itemId = 1417952990, class = CLASS_DYNAMIC}
+elementDefinitions["space core unit xs"] = {mass = 38.99, maxHitPoints = 50.0, itemId = 3624942103, class = CLASS_SPACE}
+elementDefinitions["space core unit s"] = {mass = 459.57, maxHitPoints = 183.0, itemId = 3624940909, class = CLASS_SPACE}
+elementDefinitions["space core unit m"] = {mass = 3037.5395, maxHitPoints = 1288.0, itemId = 5904195, class = CLASS_SPACE}
+elementDefinitions["space core unit l"] = {mass = 7684.51425, maxHitPoints = 11541.0, itemId = 5904544, class = CLASS_SPACE}
 elementDefinitions["static core unit xs"] = {mass = 70.89, maxHitPoints = 50.0, itemId = 2738359963, class = CLASS_STATIC}
 elementDefinitions["static core unit s"] = {mass = 360.18, maxHitPoints = 167.0, itemId = 2738359893, class = CLASS_STATIC}
-elementDefinitions["static core unit m"] = {mass = 1926.91, maxHitPoints = 1184.0, class = CLASS_STATIC}
-elementDefinitions["static core unit l"] = {mass = 10066.3, maxHitPoints = 10710.0, class = CLASS_STATIC}
+elementDefinitions["static core unit m"] = {mass = 1926.91, maxHitPoints = 1184.0, itemId = 909184430, class = CLASS_STATIC}
+elementDefinitions["static core unit l"] = {mass = 10066.3, maxHitPoints = 10710.0, itemId = 910155097, class = CLASS_STATIC}
 local DEFAULT_ELEMENT = "dynamic core unit xs"
 
 local MAX_STICKERS = 10

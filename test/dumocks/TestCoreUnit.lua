@@ -85,26 +85,27 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
     -- copy from here to unit.onStart()
     ---------------
     local class = slot1.getClass()
-    local expectedName
+    local expectedName, expectedIds
     local itemId = slot1.getItemId()
     local isStatic, isSpace, isDynamic
     if class == "CoreUnitStatic" then
         isStatic = true
         expectedName = "static"
-        assert(itemId == 2738359963 or itemId == 2738359893, string.format("Unexpected item id %d", itemId))
+        expectedIds = {[2738359963] = true, [2738359893] = true, [909184430] = true, [910155097] = true}
     elseif class == "CoreUnitSpace" then
         isSpace = true
         expectedName = "space"
-        assert(itemId == 0, string.format("Unexpected item id %d", itemId))
+        expectedIds = {[3624942103] = true, [3624940909] = true, [5904195] = true, [5904544] = true}
     elseif class == "CoreUnitDynamic" then
         isDynamic = true
         expectedName = "dynamic"
-        assert(itemId == 183890713, string.format("Unexpected item id %d", itemId))
+        expectedIds = {[183890713] = true, [183890525] = true, [1418170469] = true, [1417952990] = true}
     else
         assert(false, "Unexpected class: " .. class)
     end
     expectedName = expectedName .. " core unit %w+ %[1]"
     assert(string.match(string.lower(slot1.getName()), expectedName), slot1.getName())
+    assert(expectedIds[slot1.getItemId()], "Unexpected ID: " .. slot1.getItemId())
 
     -- verify expected functions
     local expectedFunctions = {"getConstructWorldPos", "getConstructId", "getWorldAirFrictionAngularAcceleration",
