@@ -302,7 +302,7 @@ function _G.TestLightUnit.testGameBehavior()
     end
 
     ---------------
-    -- copy from here to unit.onStart
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
     local expectedFunctions = {"isActive", "setRGBColor", "setColor", "getRGBColor", "getColor", "setBlinkingState",
@@ -370,10 +370,10 @@ function _G.TestLightUnit.testGameBehavior()
 
     slot1.setBlinkingState(true)
     assert(slot1.isBlinking() == 1)
-    slot1.setBlinkingState(1)
-    assert(slot1.isBlinking() == 1)
     slot1.setBlinkingState(false)
     assert(slot1.isBlinking() == 0)
+    slot1.setBlinkingState(1)
+    assert(slot1.isBlinking() == 1)
     slot1.setBlinkingState(0)
     assert(slot1.isBlinking() == 0)
 
@@ -396,7 +396,7 @@ function _G.TestLightUnit.testGameBehavior()
     slot1.deactivate();
     unit.exit()
     ---------------
-    -- copy to here to unit.onStart
+    -- copy to here to unit.onStart()
     ---------------
 end
 
