@@ -35,7 +35,7 @@ end
 --
 -- This method is deprecated: getState should be used instead
 -- @see getState
--- @treturn string The status of the minign unit can be: "STOPPED", "RUNNING", "JAMMED_OUTPUT_FULL".
+-- @treturn string The status of the mining unit can be: "STOPPED", "RUNNING", "JAMMED_OUTPUT_FULL".
 function M:getStatus()
     M.deprecated("getStatus", "getState")
     return "STOPPED"
@@ -59,7 +59,7 @@ function M:getActiveOre()
 end
 
 --- Returns the list of available ore pools.
--- @treturn table A list of tables composed with {[int] oreId, [float] available, [float] maximum}
+-- @treturn table A list of tables composed with {[int] oreId, [float] available, [float] maximum}.
 function M:getOrePools()
 end
 

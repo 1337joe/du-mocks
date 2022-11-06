@@ -49,6 +49,7 @@ build = {
       ["dumocks.ManualSwitchUnit"] = "src/dumocks/ManualSwitchUnit.lua",
       ["dumocks.MiningUnit"] = "src/dumocks/MiningUnit.lua",
       ["dumocks.Player"] = "src/dumocks/Player.lua",
+      ["dumocks.PlasmaExtractorUnit"] = "src/dumocks/PlasmaExtractorUnit.lua",
       ["dumocks.PressureTileUnit"] = "src/dumocks/PressureTileUnit.lua",
       ["dumocks.RadarUnit"] = "src/dumocks/RadarUnit.lua",
       ["dumocks.ReceiverUnit"] = "src/dumocks/ReceiverUnit.lua",
