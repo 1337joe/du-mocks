@@ -63,6 +63,7 @@
   <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
   <li><strong>MiningUnit</strong></li>
+  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
   <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
   <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
@@ -100,7 +101,11 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#getStatus">getStatus ()</a></td>
-	<td class="summary">Returns the current status of the mining unit.</td>
+	<td class="summary"><b>Deprecated:</b> Returns the current status of the mining unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getState">getState ()</a></td>
+	<td class="summary">Returns the current state of the mining unit.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getRemainingTime">getRemainingTime ()</a></td>
@@ -112,7 +117,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getOrePools">getOrePools ()</a></td>
-	<td class="summary">Returns the list of ore pools in the territory.</td>
+	<td class="summary">Returns the list of available ore pools.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getBaseRate">getBaseRate ()</a></td>
@@ -121,10 +126,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#getEfficiency">getEfficiency ()</a></td>
 	<td class="summary">Returns the efficiency rate of the mining unit.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getAdjacencyBonus">getAdjacencyBonus ()</a></td>
-	<td class="summary">Returns the territory's adjacency bonus to the territory of the mining unit.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getCalibrationRate">getCalibrationRate ()</a></td>
@@ -137,6 +138,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#getProductionRate">getProductionRate ()</a></td>
 	<td class="summary">Returns the current production rate of the mining unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAdjacencyBonus">getAdjacencyBonus ()</a></td>
+	<td class="summary">Returns the territory's adjacency bonus to the territory of the mining unit.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getLastExtractionPosition">getLastExtractionPosition ()</a></td>
@@ -159,16 +164,36 @@
 	<td class="summary">Returns the volume of ore extracted during the last calibration excavation.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#EVENT_statusChanged">EVENT_statusChanged (status)</a></td>
-	<td class="summary">Event: Emitted when the mining unit status is changed.</td>
+	<td class="name" nowrap><a href="#EVENT_calibrated">EVENT_calibrated (oreId, amount, rate)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the mining unit is calibrated.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onCalibrated">EVENT_onCalibrated (oreId, rate, amount)</a></td>
+	<td class="summary">Event: Emitted when the mining unit is calibrated.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onStarted">EVENT_onStarted (oreId)</a></td>
+	<td class="summary">Event: Emitted when the mining unit started a new extraction process.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_completed">EVENT_completed (oreId, amount)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the mining unit completes a batch.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onCompleted">EVENT_onCompleted (oreId, amount)</a></td>
 	<td class="summary">Event: Emitted when the mining unit completes a batch.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#EVENT_calibrated">EVENT_calibrated (oreId, amount, rate)</a></td>
-	<td class="summary">Event: Emitted when the mining unit is calibrated.</td>
+	<td class="name" nowrap><a href="#EVENT_statusChanged">EVENT_statusChanged (status)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the mining unit status is changed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onStateChanged">EVENT_onStateChanged (state)</a></td>
+	<td class="summary">Event: Emitted when the mining unit state is changed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onStopped">EVENT_onStopped ()</a></td>
+	<td class="summary">Event: Emitted when the mining unit stopped the extraction process.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#mockGetClosure">mockGetClosure ()</a></td>
@@ -188,7 +213,8 @@
     <strong>getStatus ()</strong>
     </dt>
     <dd>
-    Returns the current status of the mining unit.
+    <b>Deprecated:</b> Returns the current status of the mining unit.
+<p> This method is deprecated: getState should be used instead
 
 
 
@@ -196,7 +222,32 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        The status of the minign unit can be: "STOPPED", "RUNNING", "JAMMED_OUTPUT_FULL".
+        The status of the mining unit can be: "STOPPED", "RUNNING", "JAMMED_OUTPUT_FULL".
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/MiningUnit.html#getState">getState</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getState"></a>
+    <strong>getState ()</strong>
+    </dt>
+    <dd>
+    Returns the current state of the mining unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The state of the mining unit can be (Stopped = 1, Running = 2, Jammed output full = 3, Jammed no
+   output container = 4)
     </ol>
 
 
@@ -248,7 +299,7 @@
     <strong>getOrePools ()</strong>
     </dt>
     <dd>
-    Returns the list of ore pools in the territory.
+    Returns the list of available ore pools.
 
 
 
@@ -256,7 +307,7 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-        A list of tables composed with {[integer] oreId, [number] available, [number] maximum}
+        A list of tables composed with {[int] oreId, [float] available, [float] maximum}.
     </ol>
 
 
@@ -297,26 +348,6 @@
 
            <span class="types"><span class="type">float</span></span>
         The efficiency rate.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getAdjacencyBonus"></a>
-    <strong>getAdjacencyBonus ()</strong>
-    </dt>
-    <dd>
-    Returns the territory's adjacency bonus to the territory of the mining unit.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">float</span></span>
-        The territory's adjacency bonus.
     </ol>
 
 
@@ -377,6 +408,26 @@
 
            <span class="types"><span class="type">float</span></span>
         The production rate in L/h.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAdjacencyBonus"></a>
+    <strong>getAdjacencyBonus ()</strong>
+    </dt>
+    <dd>
+    Returns the territory's adjacency bonus to the territory of the mining unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The territory's adjacency bonus.
     </ol>
 
 
@@ -484,19 +535,84 @@
 
 </dd>
     <dt>
-    <a name = "EVENT_statusChanged"></a>
-    <strong>EVENT_statusChanged (status)</strong>
+    <a name = "EVENT_calibrated"></a>
+    <strong>EVENT_calibrated (oreId, amount, rate)</strong>
     </dt>
     <dd>
-    Event: Emitted when the mining unit status is changed.
+    <b>Deprecated:</b> Event: Emitted when the mining unit is calibrated.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onCalibrated should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">oreId</span>
+            <span class="types"><span class="type">int</span></span>
+         The item ID of the ore extracted during the calibration process.
+        </li>
+        <li><span class="parameter">amount</span>
+            <span class="types"><span class="type">float</span></span>
+         Amount of ore extracted during the calibration process.
+        </li>
+        <li><span class="parameter">rate</span>
+            <span class="types"><span class="type">float</span></span>
+         The new calibration rate after calibration process.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/MiningUnit.html#EVENT_onCalibrated">EVENT_onCalibrated</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onCalibrated"></a>
+    <strong>EVENT_onCalibrated (oreId, rate, amount)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the mining unit is calibrated.
 <p> Note: This is documentation on an event handler, not a callable method.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">status</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         The new status of the mining unit, can be: "STOPPED", "RUNNING", "JAMMED_OUTPUT_FULL".
+        <li><span class="parameter">oreId</span>
+            <span class="types"><span class="type">int</span></span>
+         The item ID of the ore extracted during the calibration process.
+        </li>
+        <li><span class="parameter">rate</span>
+            <span class="types"><span class="type">float</span></span>
+         The new calibration rate after calibration process.
+        </li>
+        <li><span class="parameter">amount</span>
+            <span class="types"><span class="type">float</span></span>
+         Amount of ore extracted during the calibration process.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStarted"></a>
+    <strong>EVENT_onStarted (oreId)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the mining unit started a new extraction process.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">oreId</span>
+            <span class="types"><span class="type">int</span></span>
+         The item ID of the ore mined during the extraction process.
         </li>
     </ul>
 
@@ -508,6 +624,37 @@
     <dt>
     <a name = "EVENT_completed"></a>
     <strong>EVENT_completed (oreId, amount)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Event: Emitted when the mining unit completes a batch.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onCompleted should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">oreId</span>
+            <span class="types"><span class="type">int</span></span>
+         The item ID of the ore mined during the extraction process.
+        </li>
+        <li><span class="parameter">amount</span>
+            <span class="types"><span class="type">float</span></span>
+         Amount of ore mined.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/MiningUnit.html#EVENT_onCompleted">EVENT_onCompleted</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onCompleted"></a>
+    <strong>EVENT_onCompleted (oreId, amount)</strong>
     </dt>
     <dd>
     Event: Emitted when the mining unit completes a batch.
@@ -532,29 +679,64 @@
 
 </dd>
     <dt>
-    <a name = "EVENT_calibrated"></a>
-    <strong>EVENT_calibrated (oreId, amount, rate)</strong>
+    <a name = "EVENT_statusChanged"></a>
+    <strong>EVENT_statusChanged (status)</strong>
     </dt>
     <dd>
-    Event: Emitted when the mining unit is calibrated.
+    <b>Deprecated:</b> Event: Emitted when the mining unit status is changed.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onStateChanged should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">status</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The new status of the mining unit, can be: "STOPPED", "RUNNING", "JAMMED_OUTPUT_FULL".
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/MiningUnit.html#EVENT_onStateChanged">EVENT_onStateChanged</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStateChanged"></a>
+    <strong>EVENT_onStateChanged (state)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the mining unit state is changed.
 <p> Note: This is documentation on an event handler, not a callable method.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">oreId</span>
+        <li><span class="parameter">state</span>
             <span class="types"><span class="type">int</span></span>
-         The item ID of the ore extracted during the calibration process.
-        </li>
-        <li><span class="parameter">amount</span>
-            <span class="types"><span class="type">float</span></span>
-         Amount of ore extracted during the calibration process.
-        </li>
-        <li><span class="parameter">rate</span>
-            <span class="types"><span class="type">float</span></span>
-         The new calibration rate after calibration process.
+         The state of the mining unit can be (Stopped = 1, Running = 2, Jammed output full = 3, Jammed no
+   output container = 4)
         </li>
     </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStopped"></a>
+    <strong>EVENT_onStopped ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the mining unit stopped the extraction process.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
 
 
 
@@ -592,7 +774,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-11-05 21:41:04 </i>
+<i style="float:right;">Last updated 2022-11-06 04:04:25 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

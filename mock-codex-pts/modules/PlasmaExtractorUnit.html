@@ -48,7 +48,7 @@
   <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
   <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
   <li><a href="../modules/Element.html">Element</a></li>
-  <li><strong>ElementWithState</strong></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
   <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
   <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
   <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
@@ -63,7 +63,7 @@
   <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
   <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
-  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
+  <li><strong>PlasmaExtractorUnit</strong></li>
   <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
   <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
@@ -86,26 +86,14 @@
 
 <div id="content">
 
-<h1>Module <code>ElementWithState</code></h1>
-<p>Abstract class to define elements with a getState method.</p>
+<h1>Module <code>PlasmaExtractorUnit</code></h1>
+<p>Extracts a regular amount of plasma from the space surrounding an alien core.</p>
 <p>
-<p> Element class: <none>
-<p> Extends: Element
-<p> Extended by:
- <ul>
-   <li>ElementWithToggle</li>
-   <li>LaserDetectorUnit</li>
-   <li>ManualButtonUnit</li>
-   <li>PressureTileUnit</li>
- </ul>
-</p>
+<p> Element Class: ???
+<p> Extends: Element</p>
     <h3>See also:</h3>
     <ul>
-         <li><a href="../modules/Element.html#">Element</a></li>
-         <li><a href="../modules/ElementWithToggle.html#">ElementWithToggle</a></li>
-         <li><a href="../modules/LaserDetectorUnit.html#">LaserDetectorUnit</a></li>
-         <li><a href="../modules/ManualButtonUnit.html#">ManualButtonUnit</a></li>
-         <li><a href="../modules/PressureTileUnit.html#">PressureTileUnit</a></li>
+         <a href="../modules/Element.html#">Element</a>
     </ul>
 
 
@@ -113,7 +101,31 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#getState">getState ()</a></td>
-	<td class="summary"><b>Deprecated:</b> Returns the activation state of the element.</td>
+	<td class="summary">Returns the current state of the plasma extractor.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getRemainingTime">getRemainingTime ()</a></td>
+	<td class="summary">Returns the remaining time of the current batch extraction process.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getPlasmaPools">getPlasmaPools ()</a></td>
+	<td class="summary">Returns the list of available plasma pools.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onStarted">EVENT_onStarted ()</a></td>
+	<td class="summary">Event: Emitted when the plasma extractor started a new extraction process.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onCompleted">EVENT_onCompleted ()</a></td>
+	<td class="summary">Event: Emitted when the plasma extractor completes a batch.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onStateChanged">EVENT_onStateChanged (state)</a></td>
+	<td class="summary">Event: Emitted when the plasma extractor state is changed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onStopped">EVENT_onStopped ()</a></td>
+	<td class="summary">Event: Emitted when the plasma extractor stopped the extraction process.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#mockGetClosure">mockGetClosure ()</a></td>
@@ -133,17 +145,125 @@
     <strong>getState ()</strong>
     </dt>
     <dd>
-    <b>Deprecated:</b> Returns the activation state of the element.
-<p> This method is deprecated: element-specific methods should be used instead.
+    Returns the current state of the plasma extractor.
 
 
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">0/1</span></span>
-        1 when the element is on, 0 otherwise.
+           <span class="types"><span class="type">int</span></span>
+        The state of the plasma extractor can be (Stopped = 1, Running = 2, Jammed output full = 3, Jammed no
+   output container = 4)
     </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getRemainingTime"></a>
+    <strong>getRemainingTime ()</strong>
+    </dt>
+    <dd>
+    Returns the remaining time of the current batch extraction process.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The remaining time in seconds.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getPlasmaPools"></a>
+    <strong>getPlasmaPools ()</strong>
+    </dt>
+    <dd>
+    Returns the list of available plasma pools.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A list of tables composed with {[int] oreId, [int] quantity}.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStarted"></a>
+    <strong>EVENT_onStarted ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the plasma extractor started a new extraction process.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onCompleted"></a>
+    <strong>EVENT_onCompleted ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the plasma extractor completes a batch.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStateChanged"></a>
+    <strong>EVENT_onStateChanged (state)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the plasma extractor state is changed.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">state</span>
+            <span class="types"><span class="type">int</span></span>
+         The state of the plasma extractor can be (Stopped = 1, Running = 2, Jammed output full = 3, Jammed no
+   output container = 4)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStopped"></a>
+    <strong>EVENT_onStopped ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the plasma extractor stopped the extraction process.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+
 
 
 
