@@ -258,7 +258,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | LightUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | ManualButtonUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | ManualSwitchUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| MiningUnit | :soon: :heavy_minus_sign: | :soon: | :soon: | :soon: :soon: | :heavy_check_mark: |
+| MiningUnit | :heavy_check_mark: :heavy_minus_sign: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | PlasmaExtractor | :white_large_square: :white_large_square: | :white_large_square: | :white_large_square: | :white_large_square: :white_large_square: | :white_large_square: |
 | PressureTileUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | RadarUnit | :soon: :white_large_square: | :heavy_check_mark: | :soon: | :soon: :soon: | :soon: |
