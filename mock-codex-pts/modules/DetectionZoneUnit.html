@@ -100,16 +100,32 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#getRadius">getRadius ()</a></td>
+	<td class="summary">Returns the detection zone radius.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getPlayers">getPlayers ()</a></td>
+	<td class="summary">Returns the list of IDs of the players in the detection zone.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#getSignalOut">getSignalOut (plug)</a></td>
 	<td class="summary">Return the value of a signal in the specified OUT plug of the element.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_enter">EVENT_enter (id)</a></td>
-	<td class="summary">Event: A player just entered the zone</td>
+	<td class="summary"><b>Deprecated:</b> Event: A player just entered the zone.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onEnter">EVENT_onEnter (id)</a></td>
+	<td class="summary">Event: Emitted when a player enters the detection zone.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_leave">EVENT_leave (id)</a></td>
-	<td class="summary">Event: A player just left the zone.</td>
+	<td class="summary"><b>Deprecated:</b> Event: A player just left the zone.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onLeave">EVENT_onLeave (id)</a></td>
+	<td class="summary">Emitted when a player leaves the detection zone.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#mockRegisterEnter">mockRegisterEnter (callback, filter)</a></td>
@@ -140,6 +156,47 @@
     <h2 class="section-header "><a name="Functions"></a>Functions</h2>
 
     <dl class="function">
+    <dt>
+    <a name = "getRadius"></a>
+    <strong>getRadius ()</strong>
+    </dt>
+    <dd>
+    Returns the detection zone radius.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The detection zone radius.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getPlayers"></a>
+    <strong>getPlayers ()</strong>
+    </dt>
+    <dd>
+    Returns the list of IDs of the players in the detection zone.  Updates after events fire, so won't be correct in
+ event handling.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">list</span></span>
+        The list of player IDs.
+    </ol>
+
+
+
+
+</dd>
     <dt>
     <a name = "getSignalOut"></a>
     <strong>getSignalOut (plug)</strong>
@@ -176,7 +233,9 @@
     <strong>EVENT_enter (id)</strong>
     </dt>
     <dd>
-    Event: A player just entered the zone  Note: This is documentation on an event handler, not a callable method.
+    <b>Deprecated:</b> Event: A player just entered the zone.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onEnter should be used instead.
 
 
     <h3>Parameters:</h3>
@@ -192,8 +251,31 @@
 
     <h3>See also:</h3>
     <ul>
-         <a href="../modules/game_data_lua.database.html#getPlayer">game_data_lua.database.getPlayer</a>
+         <li><a href="../modules/DetectionZoneUnit.html#EVENT_onEnter">EVENT_onEnter</a></li>
+         <li><a href="../modules/game_data_lua.database.html#getPlayer">game_data_lua.database.getPlayer</a></li>
     </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onEnter"></a>
+    <strong>EVENT_onEnter (id)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when a player enters the detection zone.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the player. Use ??? to retrieve its name.
+        </li>
+    </ul>
+
+
+
 
 
 </dd>
@@ -202,8 +284,9 @@
     <strong>EVENT_leave (id)</strong>
     </dt>
     <dd>
-    Event: A player just left the zone.
+    <b>Deprecated:</b> Event: A player just left the zone.
 <p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onLeave should be used instead.
 
 
     <h3>Parameters:</h3>
@@ -211,6 +294,32 @@
         <li><span class="parameter">id</span>
             <span class="types"><span class="type">int</span></span>
          The ID of the player. Use database.getPlayer(ID).name to retrieve its name.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/DetectionZoneUnit.html#EVENT_onLeave">EVENT_onLeave</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onLeave"></a>
+    <strong>EVENT_onLeave (id)</strong>
+    </dt>
+    <dd>
+    Emitted when a player leaves the detection zone.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the player. Use ??? to retrieve its name.
         </li>
     </ul>
 
@@ -363,7 +472,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-11-06 19:46:16 </i>
+<i style="float:right;">Last updated 2022-11-06 20:58:37 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
