@@ -16,7 +16,7 @@ _G.TestEmitterUnit = {}
 function _G.TestEmitterUnit.testConstructor()
 
     -- default element:
-    -- ["emitter xs"] = {mass = 69.31, maxHitPoints = 50.0, range = 100.0}
+    -- ["emitter xs"] = {mass = 69.31, maxHitPoints = 50.0, itemId = 1279651501}
 
     local emitter0 = meu:new()
     local emitter1 = meu:new(nil, 1, "Emitter XS")
@@ -28,10 +28,10 @@ function _G.TestEmitterUnit.testConstructor()
     local emitterClosure2 = emitter2:mockGetClosure()
     local emitterClosure3 = emitter3:mockGetClosure()
 
-    lu.assertEquals(emitterClosure0.getId(), 0)
-    lu.assertEquals(emitterClosure1.getId(), 1)
-    lu.assertEquals(emitterClosure2.getId(), 2)
-    lu.assertEquals(emitterClosure3.getId(), 3)
+    lu.assertEquals(emitterClosure0.getLocalId(), 0)
+    lu.assertEquals(emitterClosure1.getLocalId(), 1)
+    lu.assertEquals(emitterClosure2.getLocalId(), 2)
+    lu.assertEquals(emitterClosure3.getLocalId(), 3)
 
     -- prove default element is selected only where appropriate
     local defaultMass = 69.31
@@ -39,6 +39,12 @@ function _G.TestEmitterUnit.testConstructor()
     lu.assertEquals(emitterClosure1.getMass(), defaultMass)
     lu.assertEquals(emitterClosure2.getMass(), defaultMass)
     lu.assertNotEquals(emitterClosure3.getMass(), defaultMass)
+
+    local defaultId = 1279651501
+    lu.assertEquals(emitterClosure0.getItemId(), defaultId)
+    lu.assertEquals(emitterClosure1.getItemId(), defaultId)
+    lu.assertEquals(emitterClosure2.getItemId(), defaultId)
+    lu.assertNotEquals(emitterClosure3.getItemId(), defaultId)
 end
 
 --- Verify send works properly in optimal (non-error) conditions.
@@ -137,7 +143,7 @@ end
 -- 1. 1x Emitter XS, connected to Programming Board on slot1, default channel set to duMocks
 -- 2. 1x Receiver XS, connected to Programming Board on slot2
 --
--- Exercises: getElementClass, send, getRange, setSignalIn, getSignalIn
+-- Exercises: getClass, send, getRange, setSignalIn, getSignalIn
 function _G.TestEmitterUnit.testGameBehavior()
     local mock = meu:new(nil, 1)
     local slot1 = mock:mockGetClosure()
@@ -159,7 +165,7 @@ function _G.TestEmitterUnit.testGameBehavior()
 
     -- stub this in directly to suppress print in the unit test
     local unit = {}
-    unit.getData = function()
+    unit.getWidgetData = function()
         return '"showScriptError":false'
     end
     unit.exit = function()
@@ -174,25 +180,25 @@ function _G.TestEmitterUnit.testGameBehavior()
 
     -- stub in setChannels function, not implementing this test using the receiver mock
     local slot2 = {
-        setChannels = function(_)
+        setChannelList = function(_)
         end
     }
 
     local tickFail = function()
         ---------------
-        -- copy from here to unit.tick(timerId) fail
+        -- copy from here to unit.onTimer(timerId) fail
         ---------------
         -- should hit exit call from coroutine before this ticks, indicates some call didn't get received
         system.print("Failed")
         unit.exit()
         ---------------
-        -- copy to here to unit.tick(timerId) fail
+        -- copy to here to unit.onTimer(timerId) fail
         ---------------
     end
 
     local tickResume = function()
         ---------------
-        -- copy from here to unit.tick(timerId) resume
+        -- copy from here to unit.onTimer(timerId) resume
         ---------------
         assert(_G.emitterCoroutine, "Coroutine must exist when resume is called.")
         assert(coroutine.status(_G.emitterCoroutine) ~= "dead", "Coroutine should not be dead when resume is called.")
@@ -201,7 +207,7 @@ function _G.TestEmitterUnit.testGameBehavior()
         local ok, message = coroutine.resume(_G.emitterCoroutine)
         assert(ok, string.format("Error resuming coroutine: %s", message))
         ---------------
-        -- copy to here to unit.tick(timerId) resume
+        -- copy to here to unit.onTimer(timerId) resume
         ---------------
     end
 
@@ -247,17 +253,20 @@ function _G.TestEmitterUnit.testGameBehavior()
     mock.propagateSendErrors = true
 
     ---------------
-    -- copy from here to unit.start
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"send", "broadcast", "getRange", "setSignalIn", "getSignalIn"}
+    local expectedFunctions = {"send", "getRange", "setSignalIn", "getSignalIn"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "EmitterUnit")
+    assert(slot1.getClass() == "EmitterUnit")
+    assert(string.match(string.lower(slot1.getName()), "emitter %w+ %[%d+%]"), slot1.getName())
+    local expectedIds = {[1279651501] = true, [3287187256] = true, [2809213930] = true}
+    assert(expectedIds[slot1.getItemId()], "Unexpected id: " .. slot1.getItemId())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getMass() == 69.31)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
@@ -265,23 +274,12 @@ function _G.TestEmitterUnit.testGameBehavior()
     assert(slot1.getRange() == 1000.0, "Range: " .. slot1.getRange())
 
     -- prep receiver
-    slot2.setChannels("duMocks, channel")
+    slot2.setChannelList({"duMocks, channel"})
 
     -- set flag to indicate expected, wait for receiver to reactivate coroutine
     local function awaitReceive(message)
         coroutine.yield()
         assert(not _G.expectedCall, string.format("Failed to process message: %s", message))
-    end
-
-    local function setSignalAndWait(signal, expected)
-        expected = expected or signal
-        _G.expectedSignal = expected
-        _G.expectedCall = true
-        slot1.setSignalIn("in", signal)
-        local actualSignal = slot1.getSignalIn("in")
-        assert(actualSignal == expected,
-            string.format("Set %s and expected %s but got %s", signal, expected, actualSignal))
-        awaitReceive(expected)
     end
 
     local function messagingTest()
@@ -313,60 +311,18 @@ function _G.TestEmitterUnit.testGameBehavior()
 
         _G.send = false
 
-        -- play with set signal
-        -- non-zero values will send * to the default channel
-        -- checks for repeats (used to occur on changed input value) and fails it they occur
-        _G.signals = true
-        _G.repeated = false
-        local repeatedCount = 0
-
+        -- play with set signal, has no actual effect on state when set programmatically
         slot1.setSignalIn("in", 0.0)
         assert(slot1.getSignalIn("in") == 0.0)
-
-        setSignalAndWait(1.0)
-        if _G.repeated then
-            repeatedCount = repeatedCount + 1
-        end
-        _G.repeated = false
-
-        -- fractions within [0,1] work, and string numbers are cast
-        setSignalAndWait(0.7)
-        if _G.repeated then
-            repeatedCount = repeatedCount + 1
-        end
-        _G.repeated = false
-
-        -- repeat still sends once
-        setSignalAndWait(0.7)
-        assert(not _G.repeated)
-
-        setSignalAndWait(0.5)
-        if _G.repeated then
-            repeatedCount = repeatedCount + 1
-        end
-        _G.repeated = false
-
-        slot1.setSignalIn("in", "0.0")
+        slot1.setSignalIn("in", 1.0)
         assert(slot1.getSignalIn("in") == 0.0)
-        -- doesn't send
-
-        setSignalAndWait("7.0", 1.0)
-        if _G.repeated then
-            repeatedCount = repeatedCount + 1
-        end
-        _G.repeated = false
-
-        -- invalid sets to 0 and doesn't send
-        slot1.setSignalIn("in", "text")
+        slot1.setSignalIn("in", 0.7)
         assert(slot1.getSignalIn("in") == 0.0)
-        slot1.setSignalIn("in", nil)
+        slot1.setSignalIn("in", "1.0")
         assert(slot1.getSignalIn("in") == 0.0)
-
-        assert(repeatedCount == 0, string.format("Unexpected repeats: %d", repeatedCount))
-        _G.signals = false
 
         -- multi-part script, can't just print success because end of script was reached
-        if string.find(unit.getData(), '"showScriptError":false') then
+        if string.find(unit.getWidgetData(), '"showScriptError":false') then
             system.print(string.format("Success"))
         else
             system.print("Failed")
@@ -380,15 +336,10 @@ function _G.TestEmitterUnit.testGameBehavior()
     -- report failure if coroutine has not reached success within 5 seconds
     unit.setTimer("fail", 5)
     ---------------
-    -- copy to here to unit.start
+    -- copy to here to unit.onStart()
     ---------------
 
     -- listener function called synchronously, by the time yield is called all processing is finished, so just resume
-    tickResume()
-    tickResume()
-    tickResume()
-    tickResume()
-    tickResume()
     tickResume()
     tickResume()
 

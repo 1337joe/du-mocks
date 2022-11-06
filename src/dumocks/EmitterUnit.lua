@@ -10,9 +10,9 @@
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-elementDefinitions["emitter xs"] = {mass = 69.31, maxHitPoints = 50.0}
-elementDefinitions["emitter s"] = {mass = 427.72, maxHitPoints = 133.0}
-elementDefinitions["emitter m"] = {mass = 2035.73, maxHitPoints = 13686.0}
+elementDefinitions["emitter xs"] = {mass = 69.31, maxHitPoints = 50.0, itemId = 1279651501}
+elementDefinitions["emitter s"] = {mass = 427.72, maxHitPoints = 133.0, itemId = 3287187256}
+elementDefinitions["emitter m"] = {mass = 2035.73, maxHitPoints = 13686.0, itemId = 2809213930}
 local DEFAULT_ELEMENT = "emitter xs"
 
 local M = MockElement:new()
@@ -37,31 +37,13 @@ end
 --
 -- Valid plug names are:
 -- <ul>
--- <li>"in" for the in signal. When this is non-zero "*" will be sent on the default channel, if set.</li>
+-- <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
 -- </ul>
 -- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
-        local value = tonumber(state)
-        if type(value) ~= "number" then
-            value = 0.0
-        end
-
-        local oldValue = self.plugIn
-
-        if value <= 0 then
-            self.plugIn = 0
-        elseif value >= 1.0 then
-            self.plugIn = 1.0
-        else
-            self.plugIn = value
-        end
-
-        -- send * on default channel (if set)
-        if value > 0.0 and self.defaultChannel and self.defaultChannel:len() > 0 then
-            self:send(self.defaultChannel, "*")
-        end
+        -- no longer responds to setSignalIn
     end
 end
 
@@ -130,25 +112,6 @@ function M:send(channel, message)
     end
 end
 
---- <b>Deprecated:</b> Send a message on the channel specified by the emitter.
---
--- Note: Max message string length is currently 512 characters, any additional text will be truncated.
--- @tparam string message The message to transmit.
-function M:broadcast(message)
-    local outputMessage = "Warning: method broadcast is deprecated, use send instead"
-    if _G.system and _G.system.print and type(_G.system.print) == "function" then
-        _G.system.print(outputMessage)
-    else
-        print(outputMessage)
-    end
-
-    if not (self.defaultChannel and self.defaultChannel:len() > 0) then
-        error("Define a broadcast channel on your Emitter (mock.defaultChannel)")
-    end
-
-    self:send(self.defaultChannel, message)
-end
-
 --- Returns the emitter range.
 -- @treturn meter The range.
 function M:getRange()
@@ -171,7 +134,6 @@ end
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
     closure.send = function(channel, message) return self:send(channel, message) end
-    closure.broadcast = function(message) return self:broadcast(message) end
     closure.getRange = function() return self:getRange() end
 
     closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end

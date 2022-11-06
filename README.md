@@ -246,7 +246,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | DatabankUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DetectionZoneUnit | :soon: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |
 | DoorUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :soon: |
-| EmitterUnit | :soon: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |
+| EmitterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | EngineUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :soon: | :soon: |
 | FireworksUnit | :heavy_check_mark: :heavy_minus_sign: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | ForceFieldUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
@@ -262,7 +262,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | PlasmaExtractor | :heavy_check_mark: :white_large_square: | :white_large_square: | :white_large_square: | :white_large_square: :white_large_square: | :soon: |
 | PressureTileUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | RadarUnit | :soon: :white_large_square: | :heavy_check_mark: | :soon: | :soon: :soon: | :soon: |
-| ReceiverUnit | :soon: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |
+| ReceiverUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | RenderScript | :heavy_check_mark: :heavy_minus_sign: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_minus_sign: |
 | ScreenUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark:| :soon: :heavy_check_mark: | :heavy_check_mark: |
 | ShieldGeneratorUnit | :soon: :heavy_check_mark: | :soon: | :soon: | :soon: :soon: | :soon: |
