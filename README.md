@@ -253,8 +253,8 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | GyroUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | IndustryUnit | :soon: :heavy_minus_sign: | :soon: | :soon: | :soon: :soon: | :heavy_check_mark: |
 | LandingGearUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| LaserDetectorUnit | :soon: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |
-| LaserEmitterUnit | :soon: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :soon: | :heavy_check_mark: |
+| LaserDetectorUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
+| LaserEmitterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | LightUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | ManualButtonUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | ManualSwitchUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
