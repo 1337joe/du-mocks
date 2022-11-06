@@ -16,24 +16,28 @@ _G.TestDetectionZoneUnit = {}
 function _G.TestDetectionZoneUnit.testConstructor()
 
     -- default element:
-    -- ["detection zone xs"] = {mass = 7.79, maxHitPoints = 50.0}
+    -- ["detection zone s"] = {mass = 7.79, maxHitPoints = 50.0, itemId = 485149228}
 
     local detector0 = mdzu:new()
-    local detector1 = mdzu:new(nil, 1, "Detection Zone XS")
+    local detector1 = mdzu:new(nil, 1, "Detection Zone S")
     local detector2 = mdzu:new(nil, 2, "invalid")
-    local detector3 = mdzu:new(nil, 3, "detection zone s")
+    local detector3 = mdzu:new(nil, 3, "detection zone m")
 
     local detectorClosure0 = detector0:mockGetClosure()
     local detectorClosure1 = detector1:mockGetClosure()
     local detectorClosure2 = detector2:mockGetClosure()
     local detectorClosure3 = detector3:mockGetClosure()
 
-    lu.assertEquals(detectorClosure0.getId(), 0)
-    lu.assertEquals(detectorClosure1.getId(), 1)
-    lu.assertEquals(detectorClosure2.getId(), 2)
-    lu.assertEquals(detectorClosure3.getId(), 3)
+    lu.assertEquals(detectorClosure0.getLocalId(), 0)
+    lu.assertEquals(detectorClosure1.getLocalId(), 1)
+    lu.assertEquals(detectorClosure2.getLocalId(), 2)
+    lu.assertEquals(detectorClosure3.getLocalId(), 3)
 
-    -- all detection zones share attributes, can't verify element selection
+    local defaultId = 485149228
+    lu.assertEquals(detectorClosure0.getItemId(), defaultId)
+    lu.assertEquals(detectorClosure1.getItemId(), defaultId)
+    lu.assertEquals(detectorClosure2.getItemId(), defaultId)
+    lu.assertNotEquals(detectorClosure3.getItemId(), defaultId)
 end
 
 --- Verify enter works without errors.
@@ -176,14 +180,14 @@ end
 -- Test setup:
 -- 1. 1x Detection Zone XS, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, EVENT_enter, EVENT_leave, getSignalOut
+-- Exercises: getClass, getRadius, getPlayers, EVENT_onEnter, EVENT_onLeave, getSignalOut
 function _G.TestDetectionZoneUnit.testGameBehavior()
-    local zone = mdzu:new(nil, 1)
+    local zone = mdzu:new(nil, 1, "detection zone xs")
     local slot1 = zone:mockGetClosure()
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.getData = function()
+    unit.getWidgetData = function()
         return '"showScriptError":false'
     end
     unit.exit = function()
@@ -199,24 +203,25 @@ function _G.TestDetectionZoneUnit.testGameBehavior()
     -- enter handlers
     local enterHandler1 = function(id)
         ---------------
-        -- copy from here to slot1.enter(id) *
+        -- copy from here to slot1.onEnter(id) *
         ---------------
         enterPlayer = id
         enterCount = enterCount + 1
-        assert(enterCount == 1) -- should only ever be called once, when the user presses the button
+        assert(enterCount == 1) -- should only ever be called once, when the user enters the zone
         assert(slot1.getSignalOut("out") == 1.0)
+        assert(#slot1.getPlayers() == 0)
         ---------------
-        -- copy to here to slot1.enter(id) *
+        -- copy to here to slot1.onEnter(id) *
         ---------------
     end
     local enterHandler2 = function(_)
         ---------------
-        -- copy from here to slot1.enter(id) *
+        -- copy from here to slot1.onEnter(id) *
         ---------------
         enterCount = enterCount + 1
         assert(enterCount == 2) -- called second in enter handler list
         ---------------
-        -- copy to here to slot1.enter(id) *
+        -- copy to here to slot1.onEnter(id) *
         ---------------
     end
     zone:mockRegisterEnter(enterHandler1)
@@ -225,46 +230,53 @@ function _G.TestDetectionZoneUnit.testGameBehavior()
     -- leave handlers
     local leaveHandler1 = function(id)
         ---------------
-        -- copy from here to slot1.leave(id) *
+        -- copy from here to slot1.onLeave(id) *
         ---------------
         leavePlayer = id
         leaveCount = leaveCount + 1
         assert(leaveCount == 1) -- should only ever be called once, when the user leaves the zone
         assert(slot1.getSignalOut("out") == 0.0)
+        assert(#slot1.getPlayers() == 1)
+        assert(slot1.getPlayers()[1] == id)
         ---------------
-        -- copy to here to slot1.leave(id) *
+        -- copy to here to slot1.onLeave(id) *
         ---------------
     end
     local leaveHandler2 = function(_)
         ---------------
-        -- copy from here to slot1.leave(id) *
+        -- copy from here to slot1.onLeave(id) *
         ---------------
         leaveCount = leaveCount + 1
         assert(leaveCount == 2) -- called second in leave handler list
 
         unit.exit()
         ---------------
-        -- copy to here to slot1.leave(id) *
+        -- copy to here to slot1.onLeave(id) *
         ---------------
     end
     zone:mockRegisterLeave(leaveHandler1)
     zone:mockRegisterLeave(leaveHandler2)
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getSignalOut"}
+    local expectedFunctions = {"getPlayers", "getRadius", "getSignalOut"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "DetectionZoneUnit")
+    assert(slot1.getClass() == "DetectionZoneUnit")
+    assert(string.match(string.lower(slot1.getName()), "detection zone %w+ %[%d+%]"), slot1.getName())
+    local expectedIds = {[485151209] = true, [485149228] = true, [485149481] = true, [4241228057] = true}
+    assert(expectedIds[slot1.getItemId()], "Unexpected id: " .. slot1.getItemId())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getMass() == 7.79)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
+
+    assert(slot1.getRadius() == 2, "Unexpected radius: " .. slot1.getRadius())
 
     -- ensure initial state, set up globals
     enterCount = 0
@@ -274,7 +286,7 @@ function _G.TestDetectionZoneUnit.testGameBehavior()
 
     system.print("please enter and leave the zone")
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 
     zone:mockDoEnter(10)
@@ -282,20 +294,20 @@ function _G.TestDetectionZoneUnit.testGameBehavior()
     zone:mockDoLeave(10)
 
     ---------------
-    -- copy from here to unit.stop()
+    -- copy from here to unit.onStop()
     ---------------
     assert(enterCount == 2, "Enter count should be 2: " .. enterCount)
     assert(leaveCount == 2)
     assert(enterPlayer == leavePlayer)
 
     -- multi-part script, can't just print success because end of script was reached
-    if string.find(unit.getData(), '"showScriptError":false') then
+    if string.find(unit.getWidgetData(), '"showScriptError":false') then
         system.print("Success")
     else
         system.print("Failed")
     end
     ---------------
-    -- copy to here to unit.stop()
+    -- copy to here to unit.onStop()
     ---------------
 end
 
