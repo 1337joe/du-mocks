@@ -63,7 +63,7 @@
   <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
   <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
-  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
+  <li><strong>PlasmaExtractorUnit</strong></li>
   <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
   <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
@@ -74,7 +74,7 @@
   <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
   <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
   <li><a href="../modules/construct.html">construct</a></li>
-  <li><strong>game_data_lua.database</strong></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
   <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
   <li><a href="../modules/library.html">library</a></li>
   <li><a href="../modules/player.html">player</a></li>
@@ -86,35 +86,46 @@
 
 <div id="content">
 
-<h1>Module <code>game_data_lua.database</code></h1>
-<p>The database library offers multiple useful functions to get all information
- in one object about a player, a construct, an organization or an element.</p>
+<h1>Module <code>PlasmaExtractorUnit</code></h1>
+<p>Extracts a regular amount of plasma from the space surrounding an alien core.</p>
 <p>
-<p> The database is defined by a Lua file within your Dual Universe installation, view it at:
- <code>...\Dual Universe\Game\data\lua\database.lua</code></p>
+<p> Element Class: ???
+<p> Extends: Element</p>
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#">Element</a>
+    </ul>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#getPlayer">getPlayer (id)</a></td>
-	<td class="summary">Returns all info about a given player, identified by its id.</td>
+	<td class="name" nowrap><a href="#getState">getState ()</a></td>
+	<td class="summary">Returns the current state of the plasma extractor.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getMasterPlayer">getMasterPlayer (unit)</a></td>
-	<td class="summary">Returns all informations about the player running the script.</td>
+	<td class="name" nowrap><a href="#getRemainingTime">getRemainingTime ()</a></td>
+	<td class="summary">Returns the remaining time of the current batch extraction process.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getOrganization">getOrganization (id)</a></td>
-	<td class="summary">Returns all informations about the given organization, identified by its id.</td>
+	<td class="name" nowrap><a href="#getPlasmaPools">getPlasmaPools ()</a></td>
+	<td class="summary">Returns the list of available plasma pools.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getConstruct">getConstruct (radar, id)</a></td>
-	<td class="summary">Returns all info about a given construct, identified by its id and seen from a radar.</td>
+	<td class="name" nowrap><a href="#EVENT_onStarted">EVENT_onStarted ()</a></td>
+	<td class="summary">Event: Emitted when the plasma extractor started a new extraction process.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getElement">getElement (core, id)</a></td>
-	<td class="summary">Returns all info about a given element, identified by its id and coupled to a core unit.</td>
+	<td class="name" nowrap><a href="#EVENT_onCompleted">EVENT_onCompleted ()</a></td>
+	<td class="summary">Event: Emitted when the plasma extractor completes a batch.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onStateChanged">EVENT_onStateChanged (state)</a></td>
+	<td class="summary">Event: Emitted when the plasma extractor state is changed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onStopped">EVENT_onStopped ()</a></td>
+	<td class="summary">Event: Emitted when the plasma extractor stopped the extraction process.</td>
 	</tr>
 </table>
 
@@ -126,26 +137,20 @@
 
     <dl class="function">
     <dt>
-    <a name = "getPlayer"></a>
-    <strong>getPlayer (id)</strong>
+    <a name = "getState"></a>
+    <strong>getState ()</strong>
     </dt>
     <dd>
-    Returns all info about a given player, identified by its id.
+    Returns the current state of the plasma extractor.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">id</span>
-            <span class="types"><span class="type">integer</span></span>
-         The player ID.
-        </li>
-    </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-        The player structure.
+           <span class="types"><span class="type">int</span></span>
+        The state of the plasma extractor can be (Stopped = 1, Running = 2, Jammed output full = 3, Jammed no
+   output container = 4)
     </ol>
 
 
@@ -153,26 +158,19 @@
 
 </dd>
     <dt>
-    <a name = "getMasterPlayer"></a>
-    <strong>getMasterPlayer (unit)</strong>
+    <a name = "getRemainingTime"></a>
+    <strong>getRemainingTime ()</strong>
     </dt>
     <dd>
-    Returns all informations about the player running the script.
+    Returns the remaining time of the current batch extraction process.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">unit</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         The unit object.
-        </li>
-    </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-        The player structure.
+           <span class="types"><span class="type">float</span></span>
+        The remaining time in seconds.
     </ol>
 
 
@@ -180,26 +178,19 @@
 
 </dd>
     <dt>
-    <a name = "getOrganization"></a>
-    <strong>getOrganization (id)</strong>
+    <a name = "getPlasmaPools"></a>
+    <strong>getPlasmaPools ()</strong>
     </dt>
     <dd>
-    Returns all informations about the given organization, identified by its id.
+    Returns the list of available plasma pools.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">id</span>
-            <span class="types"><span class="type">integer</span></span>
-         The organization id.
-        </li>
-    </ul>
 
     <h3>Returns:</h3>
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-        The organization structure.
+        A list of tables composed with {[int] oreId, [int] quantity}.
     </ol>
 
 
@@ -207,62 +198,68 @@
 
 </dd>
     <dt>
-    <a name = "getConstruct"></a>
-    <strong>getConstruct (radar, id)</strong>
+    <a name = "EVENT_onStarted"></a>
+    <strong>EVENT_onStarted ()</strong>
     </dt>
     <dd>
-    Returns all info about a given construct, identified by its id and seen from a radar.
+    Event: Emitted when the plasma extractor started a new extraction process.
+<p> Note: This is documentation on an event handler, not a callable method.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">radar</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         The radar object.
-        </li>
-        <li><span class="parameter">id</span>
-            <span class="types"><span class="type">integer</span></span>
-         The construct ID.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-        The construct structure.
-    </ol>
 
 
 
 
 </dd>
     <dt>
-    <a name = "getElement"></a>
-    <strong>getElement (core, id)</strong>
+    <a name = "EVENT_onCompleted"></a>
+    <strong>EVENT_onCompleted ()</strong>
     </dt>
     <dd>
-    Returns all info about a given element, identified by its id and coupled to a core unit.
+    Event: Emitted when the plasma extractor completes a batch.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStateChanged"></a>
+    <strong>EVENT_onStateChanged (state)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the plasma extractor state is changed.
+<p> Note: This is documentation on an event handler, not a callable method.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">core</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         The core unit object.
-        </li>
-        <li><span class="parameter">id</span>
-            <span class="types"><span class="type">integer</span></span>
-         The element ID.
+        <li><span class="parameter">state</span>
+            <span class="types"><span class="type">int</span></span>
+         The state of the plasma extractor can be (Stopped = 1, Running = 2, Jammed output full = 3, Jammed no
+   output container = 4)
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-        The construct structure.
-    </ol>
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStopped"></a>
+    <strong>EVENT_onStopped ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the plasma extractor stopped the extraction process.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+
 
 
 
