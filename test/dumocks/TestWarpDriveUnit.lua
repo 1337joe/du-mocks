@@ -18,7 +18,7 @@ TestWarpDriveUnit = {}
 -- Test setup:
 -- 1. 1x Warp Drive, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, getData
+-- Exercises: getClass, getData
 function _G.TestWarpDriveUnit.testGameBehavior()
     local mock = mwdu:new(nil, 1)
     local slot1 = mock:mockGetClosure()
@@ -32,19 +32,22 @@ function _G.TestWarpDriveUnit.testGameBehavior()
     end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {}
+    local expectedFunctions = {"initiate", "getStatus", "getDistance", "getDestination", "getDestinationName",
+                               "getContainerId", "getAvailableWarpCells", "getRequiredWarpCells"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "WarpDriveUnit")
+    assert(slot1.getClass() == "WarpDriveUnit")
+    assert(string.match(string.lower(slot1.getName()), "warp drive l %[%d+%]"), slot1.getName())
+    assert(slot1.getItemId() == 4015850440, "Unexpected id: " .. slot1.getItemId())
 
-    local data = slot1.getData()
+    local data = slot1.getWidgetData()
     local expectedFields = {"buttonText", "cellCount", "destination", "distance", "elementId", "showError",
                             "helperId", "name", "type", "enableButton", "statusText"}
     local expectedValues = {}
@@ -59,7 +62,7 @@ function _G.TestWarpDriveUnit.testGameBehavior()
     system.print("Success")
     unit.exit()
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 
