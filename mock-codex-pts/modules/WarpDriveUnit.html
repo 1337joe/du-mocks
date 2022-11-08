@@ -105,6 +105,38 @@
 	<td class="summary">Get element data as JSON.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#initiate">initiate ()</a></td>
+	<td class="summary">Initiate the warp jump process.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getStatus">getStatus ()</a></td>
+	<td class="summary">Returns the current status of the warp drive.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getDistance">getDistance ()</a></td>
+	<td class="summary">Returns the distance to the current warp destination.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getDestination">getDestination ()</a></td>
+	<td class="summary">Returns the construct ID of the current warp destination.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getDestinationName">getDestinationName ()</a></td>
+	<td class="summary">Returns the name of the current warp destination construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getContainerId">getContainerId ()</a></td>
+	<td class="summary">Returns the local ID of the container linked to the warp drive.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAvailableWarpCells">getAvailableWarpCells ()</a></td>
+	<td class="summary">Returns the quantity of warp cells available in the linked container.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getRequiredWarpCells">getRequiredWarpCells ()</a></td>
+	<td class="summary">Returns the quantity of warp cells required to warp to the warp destination set.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#mockGetClosure">mockGetClosure ()</a></td>
 	<td class="summary">Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".</td>
 	</tr>
@@ -161,6 +193,178 @@
 
 </dd>
     <dt>
+    <a name = "initiate"></a>
+    <strong>initiate ()</strong>
+    </dt>
+    <dd>
+    Initiate the warp jump process.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getStatus"></a>
+    <strong>getStatus ()</strong>
+    </dt>
+    <dd>
+    Returns the current status of the warp drive.
+<p> Possible states:
+ <ul>
+   <li>1: NoWarpDrive</li>
+   <li>2: Broken</li>
+   <li>3: Warping</li>
+   <li>4: ParentWarping</li>
+   <li>5: NotAnchored</li>
+   <li>6: WarpCooldown</li>
+   <li>7: PvPCooldown</li>
+   <li>8: MovingChild</li>
+   <li>9: NoContainer</li>
+   <li>10: PlanetTooClose</li>
+   <li>11: DestinationNotSet</li>
+   <li>12: DestinationTooClose</li>
+   <li>13: DestinationTooFar</li>
+   <li>14: NotEnoughWarpCells</li>
+   <li>15: Ready</li>
+ </ul>
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The current status of the warp drive.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getDistance"></a>
+    <strong>getDistance ()</strong>
+    </dt>
+    <dd>
+    Returns the distance to the current warp destination.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The distance to the current warp destination.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getDestination"></a>
+    <strong>getDestination ()</strong>
+    </dt>
+    <dd>
+    Returns the construct ID of the current warp destination.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The construct ID of the warp destination.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getDestinationName"></a>
+    <strong>getDestinationName ()</strong>
+    </dt>
+    <dd>
+    Returns the name of the current warp destination construct.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The warp destination name.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getContainerId"></a>
+    <strong>getContainerId ()</strong>
+    </dt>
+    <dd>
+    Returns the local ID of the container linked to the warp drive.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The local ID of the container.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAvailableWarpCells"></a>
+    <strong>getAvailableWarpCells ()</strong>
+    </dt>
+    <dd>
+    Returns the quantity of warp cells available in the linked container.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The quantity of warp cells.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getRequiredWarpCells"></a>
+    <strong>getRequiredWarpCells ()</strong>
+    </dt>
+    <dd>
+    Returns the quantity of warp cells required to warp to the warp destination set.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The quantity of warp cells.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "mockGetClosure"></a>
     <strong>mockGetClosure ()</strong>
     </dt>
@@ -191,7 +395,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-11-06 20:58:37 </i>
+<i style="float:right;">Last updated 2022-11-08 04:20:48 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
