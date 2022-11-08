@@ -88,7 +88,7 @@ end
 --- Event: Emitted when a player enters the detection zone.
 --
 -- Note: This is documentation on an event handler, not a callable method.
--- @tparam int id The ID of the player. Use @{system.getPlayerName(id)} to retrieve its name.
+-- @tparam int id The ID of the player. Use @{system.getPlayerName|system.getPlayerName(id)} to retrieve its name.
 function M.EVENT_onEnter(id)
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterEnter")
 end
@@ -108,7 +108,7 @@ end
 --- Emitted when a player leaves the detection zone.
 --
 -- Note: This is documentation on an event handler, not a callable method.
--- @tparam int id The ID of the player. Use @{system.getPlayerName(id)} to retrieve its name.
+-- @tparam int id The ID of the player. Use @{system.getPlayerName|system.getPlayerName(id)} to retrieve its name.
 function M.EVENT_onLeave(id)
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterLeave")
 end
