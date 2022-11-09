@@ -102,6 +102,18 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#activate">activate ()</a></td>
+	<td class="summary">Activate the shield.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#deactivate">deactivate ()</a></td>
+	<td class="summary">Deactivate the shield.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isActive">isActive ()</a></td>
+	<td class="summary">Returns the activation state of the shield.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#getShieldHitpoints">getShieldHitpoints ()</a></td>
 	<td class="summary">Returns the current hit points of the shield.</td>
 	</tr>
@@ -166,23 +178,47 @@
 	<td class="summary">Set hour since midnight for preferred lockdown exit.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#EVENT_onToggled">EVENT_onToggled (active)</a></td>
+	<td class="summary">Event: Emitted when we started or stopped the shield generator.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#EVENT_absorbed">EVENT_absorbed (hitpoints, rawHitpoints)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the shield absorbed incoming damage.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onAbsorbed">EVENT_onAbsorbed (hitpoints, rawHitpoints)</a></td>
 	<td class="summary">Event: Emitted when the shield absorbed incoming damage.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_down">EVENT_down ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the shield hit points reached 0 due to damages.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onDown">EVENT_onDown ()</a></td>
 	<td class="summary">Event: Emitted when the shield hit points reached 0 due to damages.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_restored">EVENT_restored ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the shield hit points were fully restored.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onRestored">EVENT_onRestored ()</a></td>
 	<td class="summary">Event: Emitted when the shield hit points were fully restored.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_enterLockdown">EVENT_enterLockdown ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the shield enters lockdown.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onEnterLockdown">EVENT_onEnterLockdown ()</a></td>
 	<td class="summary">Event: Emitted when the shield enters lockdown.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_leaveLockdown">EVENT_leaveLockdown ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the shield exits the lockdown.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onLeaveLockdown">EVENT_onLeaveLockdown ()</a></td>
 	<td class="summary">Event: Emitted when the shield exits the lockdown.</td>
 	</tr>
 	<tr>
@@ -222,6 +258,54 @@
     <h2 class="section-header "><a name="Functions"></a>Functions</h2>
 
     <dl class="function">
+    <dt>
+    <a name = "activate"></a>
+    <strong>activate ()</strong>
+    </dt>
+    <dd>
+    Activate the shield.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "deactivate"></a>
+    <strong>deactivate ()</strong>
+    </dt>
+    <dd>
+    Deactivate the shield.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isActive"></a>
+    <strong>isActive ()</strong>
+    </dt>
+    <dd>
+    Returns the activation state of the shield.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 when the shield is active, 0 otherwise.
+    </ol>
+
+
+
+
+</dd>
     <dt>
     <a name = "getShieldHitpoints"></a>
     <strong>getShieldHitpoints ()</strong>
@@ -274,8 +358,8 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">vec4</span></span>
-        Resistance to damage type (antimatter, electromagnetic, kinetic, thermic).
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        Resistance to damage type {antimatter, electromagnetic, kinetic, thermic}.
     </ol>
 
 
@@ -413,8 +497,8 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">vec4</span></span>
-        Stress ratio due to damage type (antimatter, electromagnetic, kinetic, thermic).
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        Stress ratio due to damage type {antimatter, electromagnetic, kinetic, thermic}.
     </ol>
 
 
@@ -433,8 +517,8 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">vec4</span></span>
-        Stress ratio due to damage type (antimatter, electromagnetic, kinetic, thermic).
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        Stress ratio due to damage type {antimatter, electromagnetic, kinetic, thermic}.
     </ol>
 
 
@@ -569,8 +653,61 @@
 
 </dd>
     <dt>
+    <a name = "EVENT_onToggled"></a>
+    <strong>EVENT_onToggled (active)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when we started or stopped the shield generator.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">active</span>
+            <span class="types"><span class="type">0/1</span></span>
+         1 if the element was activated, 0 otherwise.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "EVENT_absorbed"></a>
     <strong>EVENT_absorbed (hitpoints, rawHitpoints)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Event: Emitted when the shield absorbed incoming damage.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onAbsorbed should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">hitpoints</span>
+            <span class="types"><span class="type">float</span></span>
+         Hit points the shield lost.
+        </li>
+        <li><span class="parameter">rawHitpoints</span>
+            <span class="types"><span class="type">float</span></span>
+         Total damage without taking resistances into account.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/BaseShieldGeneratorUnit.html#EVENT_onAbsorbed">EVENT_onAbsorbed</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onAbsorbed"></a>
+    <strong>EVENT_onAbsorbed (hitpoints, rawHitpoints)</strong>
     </dt>
     <dd>
     Event: Emitted when the shield absorbed incoming damage.
@@ -599,6 +736,26 @@
     <strong>EVENT_down ()</strong>
     </dt>
     <dd>
+    <b>Deprecated:</b> Event: Emitted when the shield hit points reached 0 due to damages.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onDown should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/BaseShieldGeneratorUnit.html#EVENT_onDown">EVENT_onDown</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onDown"></a>
+    <strong>EVENT_onDown ()</strong>
+    </dt>
+    <dd>
     Event: Emitted when the shield hit points reached 0 due to damages.
 <p> Note: This is documentation on an event handler, not a callable method.
 
@@ -612,6 +769,26 @@
     <dt>
     <a name = "EVENT_restored"></a>
     <strong>EVENT_restored ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Event: Emitted when the shield hit points were fully restored.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onRestored should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/BaseShieldGeneratorUnit.html#EVENT_onRestored">EVENT_onRestored</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onRestored"></a>
+    <strong>EVENT_onRestored ()</strong>
     </dt>
     <dd>
     Event: Emitted when the shield hit points were fully restored.
@@ -629,6 +806,26 @@
     <strong>EVENT_enterLockdown ()</strong>
     </dt>
     <dd>
+    <b>Deprecated:</b> Event: Emitted when the shield enters lockdown.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onEnterLockdown should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/BaseShieldGeneratorUnit.html#EVENT_onEnterLockdown">EVENT_onEnterLockdown</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onEnterLockdown"></a>
+    <strong>EVENT_onEnterLockdown ()</strong>
+    </dt>
+    <dd>
     Event: Emitted when the shield enters lockdown.
 <p> Note: This is documentation on an event handler, not a callable method.
 
@@ -642,6 +839,26 @@
     <dt>
     <a name = "EVENT_leaveLockdown"></a>
     <strong>EVENT_leaveLockdown ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Event: Emitted when the shield exits the lockdown.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onLeaveLockdown should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/BaseShieldGeneratorUnit.html#EVENT_onLeaveLockdown">EVENT_onLeaveLockdown</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onLeaveLockdown"></a>
+    <strong>EVENT_onLeaveLockdown ()</strong>
     </dt>
     <dd>
     Event: Emitted when the shield exits the lockdown.
@@ -842,7 +1059,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-11-08 04:43:29 </i>
+<i style="float:right;">Last updated 2022-11-09 03:43:52 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
