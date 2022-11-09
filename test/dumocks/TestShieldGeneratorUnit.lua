@@ -9,14 +9,32 @@ local lu = require("luaunit")
 
 local msgu = require("dumocks.ShieldGeneratorUnit")
 require("test.Utilities")
+local AbstractTestElementWithToggle = require("test.dumocks.AbstractTestElementWithToggle")
 
-_G.TestShieldGeneratorUnit = {}
+_G.TestShieldGeneratorUnit = AbstractTestElementWithToggle
+
+function _G.TestShieldGeneratorUnit.getTestElement()
+    return msgu:new()
+end
+
+function _G.TestShieldGeneratorUnit.getStateFunction(closure)
+    return closure.isActive
+end
+
+function _G.TestShieldGeneratorUnit.getActivateFunction(closure)
+    return closure.activate
+end
+
+function _G.TestShieldGeneratorUnit.getDeactivateFunction(closure)
+    return closure.deactivate
+end
 
 --- Verify constructor arguments properly handled and independent between instances.
 function _G.TestShieldGeneratorUnit.testConstructor()
 
     -- default element:
-    -- ["shield generator xs"] = {mass = 670.0, maxHitpoints = 1400.0, maxShieldHitpoints = 300000.0}
+    -- ["shield generator xs"] = {mass = 670.0, maxHitPoints = 1400.0, itemId = 2882830295,
+    -- class = CLASS .. EXTRA_SMALL_GROUP, maxShieldHitpoints = 450000.0, ventingMaxCooldown = 60.0}
 
     local mock0 = msgu:new()
     local mock1 = msgu:new(nil, 1, "Shield Generator XS")
@@ -28,10 +46,10 @@ function _G.TestShieldGeneratorUnit.testConstructor()
     local mockClosure2 = mock2:mockGetClosure()
     local mockClosure3 = mock3:mockGetClosure()
 
-    lu.assertEquals(mockClosure0.getId(), 0)
-    lu.assertEquals(mockClosure1.getId(), 1)
-    lu.assertEquals(mockClosure2.getId(), 2)
-    lu.assertEquals(mockClosure3.getId(), 3)
+    lu.assertEquals(mockClosure0.getLocalId(), 0)
+    lu.assertEquals(mockClosure1.getLocalId(), 1)
+    lu.assertEquals(mockClosure2.getLocalId(), 2)
+    lu.assertEquals(mockClosure3.getLocalId(), 3)
 
     -- prove default element is selected only where appropriate
     local defaultMass = 670.0
@@ -39,6 +57,12 @@ function _G.TestShieldGeneratorUnit.testConstructor()
     lu.assertEquals(mockClosure1.getMass(), defaultMass)
     lu.assertEquals(mockClosure2.getMass(), defaultMass)
     lu.assertNotEquals(mockClosure3.getMass(), defaultMass)
+
+    local defaultId = 2882830295
+    lu.assertEquals(mockClosure0.getItemId(), defaultId)
+    lu.assertEquals(mockClosure1.getItemId(), defaultId)
+    lu.assertEquals(mockClosure2.getItemId(), defaultId)
+    lu.assertNotEquals(mockClosure3.getItemId(), defaultId)
 end
 
 --- Verify behavior of autoCallback.
@@ -50,48 +74,48 @@ function _G.TestShieldGeneratorUnit.testAutoCallback()
     mock.autoCallback = true
 
     mock.state = false
-    lu.assertEquals(closure.getState(), 0)
+    lu.assertEquals(closure.isActive(), 0)
     closure.toggle()
-    lu.assertEquals(closure.getState(), 1)
+    lu.assertEquals(closure.isActive(), 1)
 
     mock.state = false
-    lu.assertEquals(closure.getState(), 0)
+    lu.assertEquals(closure.isActive(), 0)
     closure.activate()
-    lu.assertEquals(closure.getState(), 1)
+    lu.assertEquals(closure.isActive(), 1)
 
     mock.state = true
-    lu.assertEquals(closure.getState(), 1)
+    lu.assertEquals(closure.isActive(), 1)
     closure.deactivate()
-    lu.assertEquals(closure.getState(), 0)
+    lu.assertEquals(closure.isActive(), 0)
 
     -- waits to apply state change until requested
     mock.autoCallback = false
 
     mock.state = false
-    lu.assertEquals(closure.getState(), 0)
+    lu.assertEquals(closure.isActive(), 0)
     mock:mockTriggerCallback()
-    lu.assertEquals(closure.getState(), 0)
+    lu.assertEquals(closure.isActive(), 0)
 
     mock.state = false
-    lu.assertEquals(closure.getState(), 0)
+    lu.assertEquals(closure.isActive(), 0)
     closure.toggle()
-    lu.assertEquals(closure.getState(), 0)
+    lu.assertEquals(closure.isActive(), 0)
     mock:mockTriggerCallback()
-    lu.assertEquals(closure.getState(), 1)
+    lu.assertEquals(closure.isActive(), 1)
 
     mock.state = false
-    lu.assertEquals(closure.getState(), 0)
+    lu.assertEquals(closure.isActive(), 0)
     closure.activate()
-    lu.assertEquals(closure.getState(), 0)
+    lu.assertEquals(closure.isActive(), 0)
     mock:mockTriggerCallback()
-    lu.assertEquals(closure.getState(), 1)
+    lu.assertEquals(closure.isActive(), 1)
 
     mock.state = true
-    lu.assertEquals(closure.getState(), 1)
+    lu.assertEquals(closure.isActive(), 1)
     closure.deactivate()
-    lu.assertEquals(closure.getState(), 1)
+    lu.assertEquals(closure.isActive(), 1)
     mock:mockTriggerCallback()
-    lu.assertEquals(closure.getState(), 0)
+    lu.assertEquals(closure.isActive(), 0)
 end
 
 --- Verify shield hitpoints considers state.
@@ -115,7 +139,7 @@ function _G.TestShieldGeneratorUnit.testToggled()
     local called, calledOn, calledOff, state, actualActive
     local callback = function(active)
         called = true
-        state = closure.getState()
+        state = closure.isActive()
         actualActive = active
     end
     mock:mockRegisterToggled(callback, "*")
@@ -206,7 +230,7 @@ function _G.TestShieldGeneratorUnit.testAbsorbed()
     local called, state, actualDamage, actualDamageRaw
     local callback = function(hitpoints, rawHitpoints)
         called = true
-        state = closure.getState()
+        state = closure.isActive()
         actualDamage = hitpoints
         actualDamageRaw = rawHitpoints
     end
@@ -295,7 +319,7 @@ function _G.TestShieldGeneratorUnit.testDown()
     local called, state
     local callback = function()
         called = true
-        state = closure.getState()
+        state = closure.isActive()
     end
     mock:mockRegisterDown(callback)
 
@@ -356,7 +380,7 @@ function _G.TestShieldGeneratorUnit.testRestored()
     local called, state
     local callback = function()
         called = true
-        state = closure.getState()
+        state = closure.isActive()
     end
     mock:mockRegisterRestored(callback)
 
@@ -415,7 +439,7 @@ end
 -- Test setup:
 -- 1. 1x Shield Generator, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState, getShieldHitpoints, getMaxShieldHitpoints
+-- Exercises: getClass, deactivate, activate, toggle, isActive, getShieldHitpoints, getMaxShieldHitpoints
 function _G.TestShieldGeneratorUnit.testGameBehavior()
     local mock = msgu:new(nil, 1)
     mock.autoCallback = false
@@ -454,103 +478,103 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
     -- not called by mock
     local tickFail = function()
         ---------------
-        -- copy from here to unit.tick(timerId) fail
+        -- copy from here to unit.onTimer(timerId) fail
         ---------------
         -- should hit exit call from coroutine before this ticks
         system.print("Failed")
         unit.exit()
         ---------------
-        -- copy to here to unit.tick(timerId) fail
+        -- copy to here to unit.onTimer(timerId) fail
         ---------------
     end
     local tickDelay = function()
         ---------------
-        -- copy from here to unit.tick(timerId) delay
+        -- copy from here to unit.onTimer(timerId) delay
         ---------------
         unit.stopTimer("delay")
         _G.resumeCoroutine()
         ---------------
-        -- copy to here to unit.tick(timerId) delay
+        -- copy to here to unit.onTimer(timerId) delay
         ---------------
     end
 
     local absorbedListener = function()
         ---------------
-        -- copy from here to slot1.absorbed(hitpoints,rawHitpoints) * *
+        -- copy from here to slot1.onAbsorbed(hitpoints,rawHitpoints) * *
         ---------------
         assert(false, "Not expecting absorbed to be called outside of combat.")
         ---------------
-        -- copy to here to slot1.absorbed(hitpoints,rawHitpoints) * *
+        -- copy to here to slot1.onAbsorbed(hitpoints,rawHitpoints) * *
         ---------------
     end
     mock:mockRegisterAbsorbed(absorbedListener)
 
     local downListener = function()
         ---------------
-        -- copy from here to slot1.down()
+        -- copy from here to slot1.onDown()
         ---------------
         assert(false, "Not expecting down to be called outside of combat.")
         ---------------
-        -- copy to here to slot1.down()
+        -- copy to here to slot1.onDown()
         ---------------
     end
     mock:mockRegisterDown(downListener)
 
     local restoredListener = function()
         ---------------
-        -- copy from here to slot1.restored()
+        -- copy from here to slot1.onRestored()
         ---------------
         assert(false, "Not expecting restored to be called outside of combat.")
         ---------------
-        -- copy to here to slot1.restored()
+        -- copy to here to slot1.onRestored()
         ---------------
     end
     mock:mockRegisterRestored(restoredListener)
 
     local toggledListener = function(active)
         ---------------
-        -- copy from here to slot1.toggled(active) *
+        -- copy from here to slot1.onToggled(active) *
         ---------------
         _G.toggleCount = _G.toggleCount + 1
 
-        local state = slot1.getState()
+        local state = slot1.isActive()
         assert(state == active,
             string.format("Expected state to match toggle argument: active=%d, state=%d.", active, state))
 
         -- give element time to settle before changing
         unit.setTimer("delay", 0.25)
         ---------------
-        -- copy to here to slot1.toggled(active) *
+        -- copy to here to slot1.onToggled(active) *
         ---------------
     end
     mock:mockRegisterToggled(toggledListener, "*")
     local toggledListenerActive = function(active)
         ---------------
-        -- copy from here to slot1.toggled(active) 1
+        -- copy from here to slot1.onToggled(active) 1
         ---------------
         _G.toggleOnCount = _G.toggleOnCount + 1
-        assert(slot1.getState() == 1, "Expected state 1 when toggled active.")
+        assert(slot1.isActive() == 1, "Expected state 1 when toggled active.")
         assert(slot1.getShieldHitpoints() == slot1.getMaxShieldHitpoints(), "Expected max HP when on")
         ---------------
-        -- copy to here to slot1.toggled(active) 1
+        -- copy to here to slot1.onToggled(active) 1
         ---------------
     end
     mock:mockRegisterToggled(toggledListenerActive, 1)
     local toggledListenerInactive = function(active)
         ---------------
-        -- copy from here to slot1.toggled(active) 0
+        -- copy from here to slot1.onToggled(active) 0
         ---------------
         _G.toggleOffCount = _G.toggleOffCount + 1
-        assert(slot1.getState() == 0, "Expected state 0 when toggled inactive.")
+        assert(slot1.isActive() == 0, "Expected state 0 when toggled inactive.")
         -- assert(slot1.getShieldHitpoints() == 0, "Expected 0 HP when off") -- inconsistent
         ---------------
-        -- copy to here to slot1.toggled(active) 0
+        -- copy to here to slot1.onToggled(active) 0
         ---------------
     end
     mock:mockRegisterToggled(toggledListenerInactive, 0)
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
     local expectedFunctions = {"getShieldHitpoints", "getMaxShieldHitpoints", "getStressHitpoints",
@@ -558,7 +582,7 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
                                "setResistances", "getResistancesRemaining", "getResistancesPool",
                                "getResistancesCooldown", "getResistancesMaxCooldown", "isVenting", "startVenting",
                                "getVentingCooldown", "getVentingMaxCooldown", "setSignalIn", "getSignalIn",
-                               "stopVenting"}
+                               "stopVenting", "isActive"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
@@ -568,9 +592,12 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "ShieldGeneratorExtraSmallGroup")
+    assert(slot1.getClass() == "ShieldGeneratorExtraSmallGroup")
+    assert(string.match(string.lower(slot1.getName()), "shield generator %w+ %[%d+%]"), slot1.getName())
+    local expectedIds = {[2882830295] = true, [3696387320] = true, [254923774] = true, [2034818941] = true}
+    assert(expectedIds[slot1.getItemId()], "Unexpected id: " .. slot1.getItemId())
 
-    local data = slot1.getData()
+    local data = slot1.getWidgetData()
     local expectedFields = {"elementId", "helperId", "isActive", "isVenting", "ventingCooldown", "ventingMaxCooldown",
         "ventingStartHp", "ventingTargetHp", "resistances", "antimatter", "stress", "value", "electromagnetic",
         "stress", "value", "kinetic", "stress", "value", "thermic", "stress", "value", "name", "shieldHp",
@@ -584,35 +611,20 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
     assert(slot1.getMass() >= 670.0)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3, "shield_generator")
 
-    local initialState = slot1.getState()
-
     -- play with set signal, has no actual effect on state when set programmatically
+    local initialState = slot1.isActive()
     slot1.setSignalIn("in", 0.0)
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
+    assert(slot1.isActive() == initialState)
     slot1.setSignalIn("in", 1.0)
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(slot1.getState() == initialState)
-    -- fractions within [0,1] work, and string numbers are cast
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.isActive() == initialState)
     slot1.setSignalIn("in", 0.7)
-    assert(slot1.getSignalIn("in") == 0.7)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", "0.5")
-    assert(slot1.getSignalIn("in") == 0.5)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", "0.0")
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", "7.0")
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(slot1.getState() == initialState)
-    -- invalid sets to 0
-    slot1.setSignalIn("in", "text")
+    assert(slot1.isActive() == initialState)
+    slot1.setSignalIn("in", "1.0")
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", nil)
-    assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
+    assert(slot1.isActive() == initialState)
 
     assert(slot1.getMaxShieldHitpoints() >= 300000)
 
@@ -622,10 +634,10 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
 
     local function stateChangeTest()
         -- ensure initial state on
-        if slot1.getState() == 0 then
+        if slot1.isActive() == 0 then
             slot1.activate()
             coroutine.yield()
-            assert(slot1.getState() == 1)
+            assert(slot1.isActive() == 1)
         end
 
         -- full hp when on
@@ -639,13 +651,13 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
         -- validate methods
         slot1.deactivate()
         coroutine.yield()
-        assert(slot1.getState() == 0)
+        assert(slot1.isActive() == 0)
         slot1.activate()
         coroutine.yield()
-        assert(slot1.getState() == 1)
+        assert(slot1.isActive() == 1)
         slot1.toggle()
         coroutine.yield()
-        assert(slot1.getState() == 0)
+        assert(slot1.isActive() == 0)
 
         -- assert(slot1.getShieldHitpoints() == 0, "Expected 0 HP when off") -- inconsistent
 
@@ -673,7 +685,7 @@ function _G.TestShieldGeneratorUnit.testGameBehavior()
     -- report failure if coroutine has not reached success within 5 seconds
     unit.setTimer("fail", 5)
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 
     -- autoCallback disabled, manually call each time
