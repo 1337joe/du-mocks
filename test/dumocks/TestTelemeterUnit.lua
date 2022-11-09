@@ -99,7 +99,7 @@ function _G.TestTelemeterUnit.testGameBehavior()
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     -- set ranges measured in test setup

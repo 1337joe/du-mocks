@@ -193,7 +193,7 @@ function _G.TestDetectionZoneUnit.testGameBehavior()
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     -- use locals here since all code is in this method

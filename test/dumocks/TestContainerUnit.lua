@@ -299,7 +299,7 @@ function _G.TestContainerUnit.gameBehaviorHelper(mock, slot1, items)
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
     system.getItem = function(id)
         return items[id]

@@ -123,7 +123,7 @@ function _G.TestLibrary.testGameBehavior()
     local unit = {}
     unit.exit = function() end
     local system = {}
-    system.print = function() end
+    system.print = function(_) end
 
     ---------------
     -- copy from here to unit.onStart()

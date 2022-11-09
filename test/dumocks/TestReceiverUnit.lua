@@ -320,7 +320,7 @@ function _G.TestReceiverUnit.testGameBehavior()
     unit.getWidgetData = function()
         return '"showScriptError":false'
     end
-    unit.setTimer = function()
+    unit.setTimer = function(_, _)
     end
     unit.exit = function()
     end
@@ -438,8 +438,7 @@ function _G.TestReceiverUnit.testGameBehavior()
     -- test messaging
     local channels = {"unexpected", "filtered", "duMocks"}
     slot1.setChannelList(channels)
-    _G.Utilities.assertTableEquals(slot1.getChannelList(), channels,
-        string.format("Expected <%s> but got <%s>", table.concat(channels, ","), table.concat(slot1.getChannelList(), ",")))
+    _G.Utilities.assertTableEquals(slot1.getChannelList(), channels)
 
     local function messagingTest()
         slot2.send("unexpected", "unexpected") -- hits all listener only

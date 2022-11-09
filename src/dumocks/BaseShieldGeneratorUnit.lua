@@ -11,6 +11,7 @@
 -- @alias M
 
 local MockElement = require "dumocks.Element"
+local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
 elementDefinitions["base shield generator xl"] = {mass = 138000.0, maxHitPoints = 47250.0, itemId = 1430252067, maxShieldHitpoints = 450000.0, ventingMaxCooldown = 60.0}

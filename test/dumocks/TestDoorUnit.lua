@@ -94,7 +94,7 @@ function _G.TestDoorUnit.testGameBehavior()
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------

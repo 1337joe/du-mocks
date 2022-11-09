@@ -146,7 +146,7 @@ end
 -- @tparam 0/1 active 1 if the element was activated, 0 otherwise.
 function M.EVENT_toggled()
     M.deprecated("EVENT_toggled", "EVENT_onToggled")
-    self.EVENT_onToggled()
+    M.EVENT_onToggled()
 end
 
 --- Event: Emitted when the transponder is started or stopped.

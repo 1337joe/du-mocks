@@ -261,12 +261,12 @@ function _G.TestTransponderUnit.testGameBehavior()
     unit.exit = function()
         finished = true
     end
-    unit.setTimer = function()
+    unit.setTimer = function(_, _)
     end
-    unit.stopTimer = function()
+    unit.stopTimer = function(_)
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     -- not called by mock

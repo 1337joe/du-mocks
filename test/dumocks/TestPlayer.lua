@@ -29,7 +29,7 @@ function _G.TestPlayer.testGameBehavior()
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------

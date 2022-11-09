@@ -136,7 +136,7 @@ function _G.TestAntiGravityGeneratorUnit.testGameBehavior()
 
     -- stub this in directly to supress print in the unit test
     local unit = {}
-    unit.setTimer = function()
+    unit.setTimer = function(_, _)
     end
     unit.getWidgetData = function()
         return '"showScriptError":false'
@@ -144,7 +144,7 @@ function _G.TestAntiGravityGeneratorUnit.testGameBehavior()
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------

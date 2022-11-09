@@ -78,7 +78,7 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------
@@ -86,7 +86,6 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
     ---------------
     local class = slot1.getClass()
     local expectedName, expectedIds
-    local itemId = slot1.getItemId()
     local isStatic, isSpace, isDynamic
     if class == "CoreUnitStatic" then
         isStatic = true

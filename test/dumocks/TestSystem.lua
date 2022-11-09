@@ -24,7 +24,7 @@ function _G.TestSystem.testGameBehavior()
     local system = mock:mockGetClosure()
 
     -- override to prevent console output
-    system.print = function()
+    system.print = function(_)
     end
 
     -- stub this in directly to supress print in the unit test

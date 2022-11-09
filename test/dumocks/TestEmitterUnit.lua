@@ -170,7 +170,7 @@ function _G.TestEmitterUnit.testGameBehavior()
     end
     unit.exit = function()
     end
-    unit.setTimer = function()
+    unit.setTimer = function(_, _)
     end
     local system = {}
     system.print = function(msg)
