@@ -261,7 +261,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | MiningUnit | :heavy_check_mark: :heavy_minus_sign: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | PlasmaExtractor | :heavy_check_mark: :white_large_square: | :white_large_square: | :white_large_square: | :white_large_square: :white_large_square: | :soon: |
 | PressureTileUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| RadarUnit | :soon: :white_large_square: | :heavy_check_mark: | :soon: | :soon: :soon: | :soon: |
+| RadarUnit | :heavy_check_mark: :white_large_square: | :heavy_check_mark: | :soon: | :soon: :heavy_check_mark: | :soon: |
 | ReceiverUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | RenderScript | :heavy_check_mark: :heavy_minus_sign: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_minus_sign: |
 | ScreenUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark:| :soon: :heavy_check_mark: | :heavy_check_mark: |
