@@ -16,22 +16,22 @@ _G.TestControlUnit = {}
 function _G.TestControlUnit.testConstructor()
 
     -- default element:
-    -- ["programming board"] = {mass = 27.74, maxHitPoints = 50.0, class = "Generic"}
+    -- ["programming board"] = {mass = 27.74, maxHitPoints = 50.0, itemId = 3415128439, class = CLASS_GENERIC}
 
     local control0 = mcu:new()
-    local control1 = mcu:new(nil, 1, "Programming Board")
+    local control1 = mcu:new(nil, 1, "Programming Board XS")
     local control2 = mcu:new(nil, 2, "invalid")
-    local control3 = mcu:new(nil, 3, "Hovercraft Seat")
+    local control3 = mcu:new(nil, 3, "hovercraft seat controller s")
 
     local controlClosure0 = control0:mockGetClosure()
     local controlClosure1 = control1:mockGetClosure()
     local controlClosure2 = control2:mockGetClosure()
     local controlClosure3 = control3:mockGetClosure()
 
-    lu.assertEquals(controlClosure0.getId(), 0)
-    lu.assertEquals(controlClosure1.getId(), 1)
-    lu.assertEquals(controlClosure2.getId(), 2)
-    lu.assertEquals(controlClosure3.getId(), 3)
+    lu.assertEquals(controlClosure0.getLocalId(), 0)
+    lu.assertEquals(controlClosure1.getLocalId(), 1)
+    lu.assertEquals(controlClosure2.getLocalId(), 2)
+    lu.assertEquals(controlClosure3.getLocalId(), 3)
 
     -- prove default element is selected only where appropriate
     local defaultMass = 27.74
@@ -39,27 +39,23 @@ function _G.TestControlUnit.testConstructor()
     lu.assertEquals(controlClosure1.getMass(), defaultMass)
     lu.assertEquals(controlClosure2.getMass(), defaultMass)
     lu.assertNotEquals(controlClosure3.getMass(), defaultMass)
+
+    local defaultId = 3415128439
+    lu.assertEquals(controlClosure0.getItemId(), defaultId)
+    lu.assertEquals(controlClosure1.getItemId(), defaultId)
+    lu.assertEquals(controlClosure2.getItemId(), defaultId)
+    lu.assertNotEquals(controlClosure3.getItemId(), defaultId)
 end
 
 --- Verify timers can be started.
 function _G.TestControlUnit.testStartTimer()
+    lu.skip("NYI")
     local mock = mcu:new()
     local closure = mock:mockGetClosure()
 
     -- non-string timerId
     -- negative duration
     -- TODO
-    -- lu.fail("NYI")
-end
-
---- Verify getMasterPlayerId.
-function _G.TestControlUnit.testGetMasterPlayerId()
-    local mock = mcu:new()
-    local closure = mock:mockGetClosure()
-
-    local expected = 10
-    mock.masterPlayerId = expected
-    lu.assertEquals(closure.getMasterPlayerId(), expected)
 end
 
 --- Verify isRemoteControlled translates to numbers.
@@ -147,12 +143,12 @@ end
 -- Test setup:
 -- 1. control unit of any type, cockpit/remote controller must be on a dynamic construct
 --
--- Exercises: getElementClass, getData, isRemoteControlled, getMasterPlayerMass
+-- Exercises: getClass, getWidgetData, isRemoteControlled
 function _G.TestControlUnit.testGameBehavior()
     local mock, closure
     local result, message
-    for _, element in pairs({"programming board", "remote controller", "hovercraft seat", "cockpit controller",
-                             "command seat controller", "gunner module s", "emergency controller"}) do
+    for _, element in pairs({"programming board xs", "remote controller xs", "hovercraft seat controller s",
+                             "cockpit m", "command seat controller s", "gunner module s", "emergency controller xs"}) do
         mock = mcu:new(nil, 1, element)
         closure = mock:mockGetClosure()
 
@@ -168,65 +164,70 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
 
     -- stub this in directly to supress print in the unit test
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
-    local class = unit.getElementClass()
+    local class = unit.getClass()
+    local expectedName, expectedIds
     local isGeneric, isRemote, isCockpit, isPvp, isEcu
     if class == "Generic" then
         isGeneric = true
+        expectedName = "programming board xs"
+        expectedIds = {[3415128439] = true}
     elseif class == "RemoteControlUnit" then
         isRemote = true
-    elseif class == "CockpitHovercraftUnit" or class == "CockpitFighterUnit" or class == "CockpitCommandmentUnit" then
+        expectedName = "remote controller xs"
+        expectedIds = {[1866437084] = true}
+    elseif class == "CockpitHovercraftUnit" then
         isCockpit = true
+        expectedName = "hovercraft seat controller s"
+        expectedIds = {[1744160618] = true}
+    elseif class == "CockpitFighterUnit" then
+        isCockpit = true
+        expectedName = "cockpit m"
+        expectedIds = {[3640291983] = true}
+    elseif class == "CockpitCommandmentUnit" then
+        isCockpit = true
+        expectedName = "command seat controller s"
+        expectedIds = {[3655856020] = true}
     elseif class == "PVPSeatUnit" then
         isPvp = true
+        expectedName = "gunner module %w"
+        expectedIds = {[1373443625] = true, [564736657] = true, [3327293642] = true}
     elseif class == "ECU" then
         isEcu = true
+        expectedName = "emergency controller xs"
+        expectedIds = {[286542481] = true}
     else
         assert(false, "Unexpected class: " .. class)
     end
+    expectedName = expectedName .. " %[%d+%]"
+    assert(string.match(string.lower(unit.getName()), expectedName), unit.getName())
+    assert(expectedIds[unit.getItemId()], "Unexpected ID: " .. unit.getItemId())
 
     -- verify expected functions
-    local expectedFunctions = {}
-    if isGeneric then
-        expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
-                             "getMasterPlayerRelativePosition", "getMasterPlayerRelativeOrientation",
-                             "getMasterPlayerId", "getMasterPlayerOrgIds", "getMasterPlayerPosition",
-                             "getMasterPlayerWorldPosition", "getMasterPlayerForward", "getMasterPlayerUp",
-                             "getMasterPlayerRight", "getMasterPlayerWorldForward", "getMasterPlayerWorldUp",
-                             "getMasterPlayerWorldRight", "setSignalIn", "getSignalIn", "isMasterPlayerSeated",
-                             "getMasterPlayerSeatId"}
-    elseif isPvp then
-        expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
-                             "getMasterPlayerRelativePosition", "getMasterPlayerRelativeOrientation",
-                             "getMasterPlayerId", "getMasterPlayerOrgIds", "getMasterPlayerPosition",
-                             "getMasterPlayerWorldPosition", "getMasterPlayerForward", "getMasterPlayerUp",
-                             "getMasterPlayerRight", "getMasterPlayerWorldForward", "getMasterPlayerWorldUp",
-                             "getMasterPlayerWorldRight", "isMasterPlayerSeated", "getMasterPlayerSeatId"}
-    else
-        expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
-                             "getMasterPlayerRelativePosition", "getMasterPlayerRelativeOrientation",
-                             "getMasterPlayerId", "getMasterPlayerOrgIds", "setEngineCommand", "setEngineThrust",
-                             "setAxisCommandValue", "getAxisCommandValue", "setupAxisCommandProperties",
-                             "getControlMasterModeId", "cancelCurrentControlMasterMode", "isAnyLandingGearExtended",
-                             "extendLandingGears", "retractLandingGears", "isMouseControlActivated",
-                             "isMouseDirectControlActivated", "getMasterPlayerPosition", "getMasterPlayerWorldPosition",
-                             "getMasterPlayerForward", "getMasterPlayerUp", "getMasterPlayerRight",
-                             "getMasterPlayerWorldForward", "getMasterPlayerWorldUp", "getMasterPlayerWorldRight",
-                             "isMouseVirtualJoystickActivated", "isAnyHeadlightSwitchedOn", "switchOnHeadlights",
-                             "switchOffHeadlights", "isRemoteControlled", "activateGroundEngineAltitudeStabilization",
-                             "getSurfaceEngineAltitudeStabilization", "deactivateGroundEngineAltitudeStabilization",
-                             "computeGroundEngineAltitudeStabilizationCapabilities", "getThrottle",
-                             "setupControlMasterModeProperties", "getMasterPlayerMass", "getMasterPlayerParent",
-                             "isMasterPlayerSeated", "getMasterPlayerSeatId"}
-        if isEcu then
-            table.insert(expectedFunctions, "setSignalIn")
-            table.insert(expectedFunctions, "getSignalIn")
-        end
+    local expectedFunctions = {"exit", "setTimer", "stopTimer", "getAtmosphereDensity", "getClosestPlanetInfluence",
+                               "getMasterPlayerId", "getMasterPlayerOrgIds", "setEngineCommand", "setEngineThrust",
+                               "setAxisCommandValue", "getAxisCommandValue", "setupAxisCommandProperties",
+                               "getControlMasterModeId", "cancelCurrentControlMasterMode", "isAnyLandingGearExtended",
+                               "extendLandingGears", "retractLandingGears", "isMouseControlActivated",
+                               "isMouseDirectControlActivated", "getMasterPlayerPosition", "getMasterPlayerWorldPosition",
+                               "getMasterPlayerForward", "getMasterPlayerUp", "getMasterPlayerRight",
+                               "getMasterPlayerWorldForward", "getMasterPlayerWorldUp", "getMasterPlayerWorldRight",
+                               "isMouseVirtualJoystickActivated", "isAnyHeadlightSwitchedOn", "switchOnHeadlights",
+                               "switchOffHeadlights", "isRemoteControlled", "activateGroundEngineAltitudeStabilization",
+                               "getSurfaceEngineAltitudeStabilization", "deactivateGroundEngineAltitudeStabilization",
+                               "computeGroundEngineAltitudeStabilizationCapabilities", "getThrottle",
+                               "setupControlMasterModeProperties", "getMasterPlayerMass", "getMasterPlayerParent",
+                               "isMasterPlayerSeated", "getMasterPlayerSeatId", "isAnyLandingGearDeployed",
+                               "deployLandingGears", "setWidgetControlModeLabel", "getControlMode", "hasDRM",
+                               "getEngineThrust"}
+    if isGeneric or isEcu then
+        table.insert(expectedFunctions, "setSignalIn")
+        table.insert(expectedFunctions, "getSignalIn")
     end
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
@@ -234,7 +235,7 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
     _G.Utilities.verifyExpectedFunctions(unit, expectedFunctions)
 
     -- test inherited methods
-    local data = unit.getData()
+    local data = unit.getWidgetData()
     local expectedFields = {"helperId", "name", "type", "showScriptError", "elementId", "controlMasterModeId"}
     local expectedValues = {}
     local ignoreFields = {}
@@ -301,30 +302,19 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
     assert(unit.getMass() > 7.0)
     _G.Utilities.verifyBasicElementFunctions(unit, 3, widgetType)
 
-    if isGeneric then
+    if isGeneric or isEcu then
         -- play with set signal, has no actual effect on state when set programmatically
         unit.setSignalIn("in", 0.0)
         assert(unit.getSignalIn("in") == 0.0)
         unit.setSignalIn("in", 1.0)
-        assert(unit.getSignalIn("in") == 1.0)
-        -- fractions within [0,1] work, and string numbers are cast
+        assert(unit.getSignalIn("in") == 0.0)
         unit.setSignalIn("in", 0.7)
-        assert(unit.getSignalIn("in") == 0.7)
-        unit.setSignalIn("in", "0.5")
-        assert(unit.getSignalIn("in") == 0.5)
-        unit.setSignalIn("in", "0.0")
         assert(unit.getSignalIn("in") == 0.0)
-        unit.setSignalIn("in", "7.0")
-        assert(unit.getSignalIn("in") == 1.0)
-        -- invalid sets to 0
-        unit.setSignalIn("in", "text")
-        assert(unit.getSignalIn("in") == 0.0)
-        unit.setSignalIn("in", nil)
+        unit.setSignalIn("in", "1.0")
         assert(unit.getSignalIn("in") == 0.0)
     end
 
     if not (isGeneric or isPvp) then
-        assert(unit.getMasterPlayerMass() >= 90)
         if isRemote then
             assert(unit.isRemoteControlled() == 1)
         else
@@ -333,11 +323,11 @@ function _G.TestControlUnit.gameBehaviorHelper(mock, unit)
     end
 
     system.print("Success")
-    if isGeneric or isRemote then
+    if isGeneric or isRemote or isEcu then
         unit.exit()
     end
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 

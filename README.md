@@ -240,7 +240,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | AntiGravityGeneratorUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :soon: :soon: | :heavy_check_mark: |
 | BaseShieldGeneratorUnit | :heavy_check_mark: :white_large_square: | :white_large_square: | :white_large_square: | :white_large_square: :white_large_square: | :white_large_square: |
 | ContainerUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :soon: |
-| ControlUnit | :soon: :white_large_square: | :soon: | :soon: | :soon: :soon: | :heavy_check_mark: |
+| ControlUnit | :heavy_check_mark: :white_large_square: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | CoreUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | CounterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DatabankUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
