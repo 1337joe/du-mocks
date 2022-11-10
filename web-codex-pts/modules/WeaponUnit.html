@@ -87,7 +87,7 @@
 <div id="content">
 
 <h1>Module <code>WeaponUnit</code></h1>
-<p>A unit capable of doing damage in construct PVP.</p>
+<p>Displays information about the weapon's state.</p>
 <p>
 <p> Element class: Weapon<Type><Size>
 <p> Extends: Element</p>
@@ -102,6 +102,106 @@
 	<tr>
 	<td class="name" nowrap><a href="#getWidgetData">getWidgetData ()</a></td>
 	<td class="summary">Get element data as JSON.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAmmo">getAmmo ()</a></td>
+	<td class="summary">Returns the item ID of the currently equipped ammo.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAmmoCount">getAmmoCount ()</a></td>
+	<td class="summary">Returns the current amount of remaining ammunition.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxAmmo">getMaxAmmo ()</a></td>
+	<td class="summary">Returns the maximum amount of ammunition the weapon can carry.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isOutOfAmmo">isOutOfAmmo ()</a></td>
+	<td class="summary">Checks if the weapon is out of ammo.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isOperational">isOperational ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Returns 1 if the wapon is not broken and compatible with the construct size.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOperationalState">getOperationalState ()</a></td>
+	<td class="summary">Returns 1 if the wapon is not broken and compatible with the construct size.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getStatus">getStatus ()</a></td>
+	<td class="summary">Returns the current weapon status.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getContainerId">getContainerId ()</a></td>
+	<td class="summary">Returns the local ID of the container linked to the weapon.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getHitProbability">getHitProbability ()</a></td>
+	<td class="summary">Returns the current hit probability of the weapon for the current target.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getBaseDamage">getBaseDamage ()</a></td>
+	<td class="summary">Returns the base weapon damage.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOptimalAimingCone">getOptimalAimingCone ()</a></td>
+	<td class="summary">Returns the optimal aim cone.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOptimalDistance">getOptimalDistance ()</a></td>
+	<td class="summary">Returns the optimal distance to target.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxDistance">getMaxDistance ()</a></td>
+	<td class="summary">Returns the maximum distance to target.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOptimalTracking">getOptimalTracking ()</a></td>
+	<td class="summary">Returns the optimal tracking rate.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMagazineVolume">getMagazineVolume ()</a></td>
+	<td class="summary">Returns the magazine volume.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCycleTime">getCycleTime ()</a></td>
+	<td class="summary">Returns the weapon cycle time.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getReloadTime">getReloadTime ()</a></td>
+	<td class="summary">Returns the weapon reload time.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getUnloadTime">getUnloadTime ()</a></td>
+	<td class="summary">Returns the weapon unload time.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getTargetId">getTargetId ()</a></td>
+	<td class="summary">Returns the ID of the current target construct of the weapon.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onReload">EVENT_onReload (ammoId)</a></td>
+	<td class="summary">Event: Emitted when the weapon starts reloading.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onReloaded">EVENT_onReloaded (ammoId)</a></td>
+	<td class="summary">Event: Emitted when the weapon has reloaded.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onMissed">EVENT_onMissed (targetId)</a></td>
+	<td class="summary">Event: Emitted when the weapon has missed its target.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onDestroyed">EVENT_onDestroyed (targetId)</a></td>
+	<td class="summary">Event: Emitted when the weapon target has been destroyed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onElementDestroyed">EVENT_onElementDestroyed (targetId, itemId)</a></td>
+	<td class="summary">Event: Emitted when an element on the weapon target has been destroyed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onHit">EVENT_onHit (targetId, damage)</a></td>
+	<td class="summary">Event: Emitted when the weapon has hit.</td>
 	</tr>
 </table>
 
@@ -127,13 +227,21 @@
        <li><b><span class="parameter">ammoMax</span></b> (<span class="type">int</span>) Max capacity for current ammo. Not present while reloading.</li>
        <li><b><span class="parameter">ammoName</span></b> (<span class="type">int</span>) Name of current ammo.</li>
        <li><span class="parameter">ammoTypeId</span> (<span class="type">int</span>) Type id of current ammo.</li>
+       <li><span class="parameter">baseDamage</span> (<span class="type">float</span>) (?).</li>
        <li><b><span class="parameter">cycleAnimationRemainingTime</span></b> (<span class="type">float</span>) Remaining time for current action (s), only appears to affect status codes 3 and 4.</li>
+       <li><span class="parameter">disableFire</span> (<span class="type">int</span>) (?).</li>
        <li><span class="parameter">fireBlocked</span> (<span class="type">boolean</span>) Indicates weapon is blocked (?).</li>
        <li><span class="parameter">fireCounter</span> (<span class="type">int</span>) Number of shots fired (?).</li>
        <li><span class="parameter">fireReady</span> (<span class="type">boolean</span>) Indicates weapon is ready to fire (?).</li>
        <li><span class="parameter">hitProbability</span> (<span class="type">float</span>) Likelyhood of hitting target (?).</li>
        <li><span class="parameter">hitResult</span> (<span class="type">int</span>) (?).</li>
+       <li><span class="parameter">impactCounter</span> (<span class="type">int</span>) (?).</li>
+       <li><span class="parameter">maxDistance</span> (<span class="type">float</span>) (?).</li>
+       <li><span class="parameter">missCounter</span> (<span class="type">int</span>) (?).</li>
        <li><span class="parameter">operationalStatus</span> (<span class="type">int</span>) (?).</li>
+       <li><span class="parameter">optimalAimingCone</span> (<span class="type">float</span>) Optimal aim cone (deg).</li>
+       <li><span class="parameter">optimalDistance</span> (<span class="type">float</span>) Optimal distance (m).</li>
+       <li><span class="parameter">optimalTracking</span> (<span class="type">float</span>) Optimal tracking rate (deg/s).</li>
        <li><span class="parameter">outOfZone</span> (<span class="type">boolean</span>) Indicates out of PVP zone (?).</li>
        <li><span class="parameter">repeatedFire</span> (<span class="type">boolean</span>) Indicates weapon will fire repeatedly (?).</li>
        <li><b><span class="parameter">weaponStatus</span></b> (<span class="type">int</span>) Status code:
@@ -148,9 +256,6 @@
    <li><span class="parameter">staticProperties</span> (<span class="type">table</span>) Weapon attributes.
      <ul>
        <li><span class="parameter">baseDamage</span> (<span class="type">float</span>) Weapon base damage.</li>
-       <li><span class="parameter">optimalAimingCone</span> (<span class="type">float</span>) Optimal aim cone (deg).</li>
-       <li><span class="parameter">optimalDistance</span> (<span class="type">float</span>) Optimal distance (m).</li>
-       <li><span class="parameter">optimalTracking</span> (<span class="type">float</span>) Optimal tracking rate (deg/s).</li>
        <li><span class="parameter">magazineVolume</span> (<span class="type">float</span>) Magazine volume (L).</li>
        <li><span class="parameter">cycleTime</span> (<span class="type">float</span>) Weapon rate of fire (s).</li>
        <li><span class="parameter">reloadTime</span> (<span class="type">float</span>) Weapon reload time (s).</li>
@@ -183,6 +288,538 @@
 
 
 </dd>
+    <dt>
+    <a name = "getAmmo"></a>
+    <strong>getAmmo ()</strong>
+    </dt>
+    <dd>
+    Returns the item ID of the currently equipped ammo.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The item ID of the ammunition in the weapon.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAmmoCount"></a>
+    <strong>getAmmoCount ()</strong>
+    </dt>
+    <dd>
+    Returns the current amount of remaining ammunition.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The remaining ammunition count (0 when reloading).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxAmmo"></a>
+    <strong>getMaxAmmo ()</strong>
+    </dt>
+    <dd>
+    Returns the maximum amount of ammunition the weapon can carry.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The maximum amount of ammunition.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isOutOfAmmo"></a>
+    <strong>isOutOfAmmo ()</strong>
+    </dt>
+    <dd>
+    Checks if the weapon is out of ammo.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the weapon is out of ammo.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isOperational"></a>
+    <strong>isOperational ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Returns 1 if the wapon is not broken and compatible with the construct size.
+<p> This method is deprecated: getOperationalState should be used instead
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the weapon is operational, otherwise 0.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/WeaponUnit.html#getOperationalState">getOperationalState</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getOperationalState"></a>
+    <strong>getOperationalState ()</strong>
+    </dt>
+    <dd>
+    Returns 1 if the wapon is not broken and compatible with the construct size.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        1 if the weapon is operational, otherwise 0 = broken, -1 = incompatible size.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getStatus"></a>
+    <strong>getStatus ()</strong>
+    </dt>
+    <dd>
+    Returns the current weapon status.
+<p> Possible status:
+ <ul>
+   <li>1: Idle</li>
+   <li>2: Firing</li>
+   <li>3: Reloading</li>
+   <li>4: Unloading</li>
+ </ul>
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The current status of the weapon.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getContainerId"></a>
+    <strong>getContainerId ()</strong>
+    </dt>
+    <dd>
+    Returns the local ID of the container linked to the weapon.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The local ID of the container.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getHitProbability"></a>
+    <strong>getHitProbability ()</strong>
+    </dt>
+    <dd>
+    Returns the current hit probability of the weapon for the current target.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The hit probability of the weapon.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getBaseDamage"></a>
+    <strong>getBaseDamage ()</strong>
+    </dt>
+    <dd>
+    Returns the base weapon damage.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The base weapon damage in hitpoints.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOptimalAimingCone"></a>
+    <strong>getOptimalAimingCone ()</strong>
+    </dt>
+    <dd>
+    Returns the optimal aim cone.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The optimal aim cone in degrees.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOptimalDistance"></a>
+    <strong>getOptimalDistance ()</strong>
+    </dt>
+    <dd>
+    Returns the optimal distance to target.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The optimal distance in meters.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxDistance"></a>
+    <strong>getMaxDistance ()</strong>
+    </dt>
+    <dd>
+    Returns the maximum distance to target.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The optimal distance in meters.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOptimalTracking"></a>
+    <strong>getOptimalTracking ()</strong>
+    </dt>
+    <dd>
+    Returns the optimal tracking rate.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The optimal tracking rate in degrees per second.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMagazineVolume"></a>
+    <strong>getMagazineVolume ()</strong>
+    </dt>
+    <dd>
+    Returns the magazine volume.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The magazine volume in liters.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCycleTime"></a>
+    <strong>getCycleTime ()</strong>
+    </dt>
+    <dd>
+    Returns the weapon cycle time.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The weapon cycle time in seconds.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getReloadTime"></a>
+    <strong>getReloadTime ()</strong>
+    </dt>
+    <dd>
+    Returns the weapon reload time.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The weapon reload time in seconds.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getUnloadTime"></a>
+    <strong>getUnloadTime ()</strong>
+    </dt>
+    <dd>
+    Returns the weapon unload time.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The weapon unload time in seconds.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getTargetId"></a>
+    <strong>getTargetId ()</strong>
+    </dt>
+    <dd>
+    Returns the ID of the current target construct of the weapon.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The target construct ID.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onReload"></a>
+    <strong>EVENT_onReload (ammoId)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the weapon starts reloading.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">ammoId</span>
+            <span class="types"><span class="type">int</span></span>
+         The item ID of the ammo.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onReloaded"></a>
+    <strong>EVENT_onReloaded (ammoId)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the weapon has reloaded.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">ammoId</span>
+            <span class="types"><span class="type">int</span></span>
+         The item ID of the ammo.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onMissed"></a>
+    <strong>EVENT_onMissed (targetId)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the weapon has missed its target.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">targetId</span>
+            <span class="types"><span class="type">int</span></span>
+         The construct ID of the target.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onDestroyed"></a>
+    <strong>EVENT_onDestroyed (targetId)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the weapon target has been destroyed.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">targetId</span>
+            <span class="types"><span class="type">int</span></span>
+         The construct ID of the target.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onElementDestroyed"></a>
+    <strong>EVENT_onElementDestroyed (targetId, itemId)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when an element on the weapon target has been destroyed.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">targetId</span>
+            <span class="types"><span class="type">int</span></span>
+         The construct ID of the target.
+        </li>
+        <li><span class="parameter">itemId</span>
+            <span class="types"><span class="type">int</span></span>
+         The item ID of the destroyed element.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onHit"></a>
+    <strong>EVENT_onHit (targetId, damage)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the weapon has hit.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">targetId</span>
+            <span class="types"><span class="type">int</span></span>
+         The construct ID of the target.
+        </li>
+        <li><span class="parameter">damage</span>
+            <span class="types"><span class="type">float</span></span>
+         The damage amount dealt by the hit.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
 </dl>
 
 
@@ -190,7 +827,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-11-09 22:07:53 </i>
+<i style="float:right;">Last updated 2022-11-10 03:35:04 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
