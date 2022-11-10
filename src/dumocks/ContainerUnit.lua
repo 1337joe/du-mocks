@@ -14,8 +14,7 @@
 --   <li>RocketFuelTank</li>
 -- </ul>
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module ContainerUnit
 -- @alias M
 

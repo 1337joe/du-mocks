@@ -2,8 +2,7 @@
 --
 -- Element class: TelemeterUnit
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module TelemeterUnit
 -- @alias M
 

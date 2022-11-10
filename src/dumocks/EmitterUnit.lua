@@ -2,8 +2,7 @@
 --
 -- Element class: EmitterUnit
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module EmitterUnit
 -- @alias M
 

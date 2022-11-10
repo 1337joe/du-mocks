@@ -2,39 +2,24 @@
 --
 -- Extended by:
 -- <ul>
---   <li>BaseShieldGeneratorUnit</li>
---   <li>ContainerUnit</li>
---   <li>ControlUnit</li>
---   <li>CoreUnit</li>
---   <li>CounterUnit</li>
---   <li>DatabankUnit</li>
---   <li>DetectionZoneUnit</li>
---   <li>ElementWithState</li>
---   <li>EmitterUnit</li>
---   <li>MiningUnit</li>
---   <li>IndustryUnit</li>
---   <li>RadarUnit</li>
---   <li>ReceiverUnit</li>
---   <li>TelemeterUnit</li>
---   <li>WarpDriveUnit</li>
---   <li>WeaponUnit</li>
+--   <li>@{ContainerUnit}</li>
+--   <li>@{ControlUnit}</li>
+--   <li>@{CoreUnit}</li>
+--   <li>@{CounterUnit}</li>
+--   <li>@{DatabankUnit}</li>
+--   <li>@{DetectionZoneUnit}</li>
+--   <li>@{ElementWithState}</li>
+--   <li>@{EmitterUnit}</li>
+--   <li>@{FireworksUnit}</li>
+--   <li>@{IndustryUnit}</li>
+--   <li>@{MiningUnit}</li>
+--   <li>@{PlasmaExtractorUnit}</li>
+--   <li>@{RadarUnit}</li>
+--   <li>@{ReceiverUnit}</li>
+--   <li>@{TelemeterUnit}</li>
+--   <li>@{WarpDriveUnit}</li>
+--   <li>@{WeaponUnit}</li>
 -- </ul>
--- @see BaseShieldGeneratorUnit
--- @see ContainerUnit
--- @see ControlUnit
--- @see CoreUnit
--- @see CounterUnit
--- @see DatabankUnit
--- @see DetectionZoneUnit
--- @see ElementWithState
--- @see EmitterUnit
--- @see IndustryUnit
--- @see MiningUnit
--- @see RadarUnit
--- @see ReceiverUnit
--- @see TelemeterUnit
--- @see WarpDriveUnit
--- @see WeaponUnit
 -- @module Element
 -- @alias M
 

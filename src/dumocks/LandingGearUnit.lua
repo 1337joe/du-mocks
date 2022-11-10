@@ -1,11 +1,8 @@
 --- A landing gear that can be opened or closed.
 --
--- Element Class: LandingGearUnit
+-- Element class: LandingGearUnit
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
--- @see ElementWithState
--- @see ElementWithToggle
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @module LandingGearUnit
 -- @alias M
 

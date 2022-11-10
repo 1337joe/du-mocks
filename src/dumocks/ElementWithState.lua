@@ -2,21 +2,15 @@
 --
 -- Element class: <none>
 --
--- Extends: Element
+-- Extends: @{Element}
 --
 -- Extended by:
 -- <ul>
---   <li>ElementWithToggle</li>
---   <li>LaserDetectorUnit</li>
---   <li>ManualButtonUnit</li>
---   <li>PressureTileUnit</li>
+--   <li>@{ElementWithToggle}</li>
+--   <li>@{LaserDetectorUnit}</li>
+--   <li>@{ManualButtonUnit}</li>
+--   <li>@{PressureTileUnit}</li>
 -- </ul>
---
--- @see Element
--- @see ElementWithToggle
--- @see LaserDetectorUnit
--- @see ManualButtonUnit
--- @see PressureTileUnit
 -- @module ElementWithState
 -- @alias M
 

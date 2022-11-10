@@ -1,10 +1,12 @@
 --- Based on the principle of the Alcubierre drive, this unit creates a powerful negative energy-density field capable
 -- to distort space-time and transport your ship at hyper speeds through space.
 --
+-- <p style="color:red;">Note: This is generated from patch notes and in-game codex and has not yet been tested
+--   against the actual element. Accuracy not guaranteed.</p>
+--
 -- Element class: WarpDriveUnit
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module WarpDriveUnit
 -- @alias M
 

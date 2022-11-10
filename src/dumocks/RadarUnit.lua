@@ -17,8 +17,7 @@
 --   <li>staticProperties</li>
 -- </ul>
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module RadarUnit
 -- @alias M
 

@@ -40,8 +40,7 @@
 --   <li>maxBrake (not always shown)</li>
 -- </ul>
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
+-- Extends: @{Element} &gt
 -- @module ControlUnit
 -- @alias M
 

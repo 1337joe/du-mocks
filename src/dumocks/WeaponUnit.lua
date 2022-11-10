@@ -2,8 +2,7 @@
 --
 -- Element class: Weapon<Type><Size>
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module WeaponUnit
 -- @alias M
 
@@ -263,7 +262,7 @@ end
 --
 -- Note: This is documentation on an event handler, not a callable method.
 -- @tparam int ammoId The item ID of the ammo.
-function M.EVENT_onReloaded(id)
+function M.EVENT_onReloaded(ammoId)
     assert(false, "This is implemented for documentation purposes only.")
 end
 

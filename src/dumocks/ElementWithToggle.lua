@@ -1,35 +1,25 @@
 --- Abstract class to define elements with activate, deactivate, toggle, and getState method.
 --
--- Extends: Element &gt; ElementWithState
+-- Extends: @{Element} &gt; @{ElementWithState}
 --
 -- Extended by:
 -- <ul>
---   <li>AntiGravityGeneratorUnit</li>
---   <li>DoorUnit</li>
---   <li>EngineUnit</li>
---   <li>ForceFieldUnit</li>
---   <li>GyroUnit</li>
---   <li>LandingGearUnit</li>
---   <li>LaserEmitterUnit</li>
---   <li>LightUnit</li>
---   <li>ManualSwitchUnit</li>
---   <li>ScreenUnit</li>
---   <li>ShieldGeneratorUnit</li>
+--   <li>@{AntiGravityGeneratorUnit}</li>
+--   <li>@{BaseShieldGeneratorUnit}</li>
+--   <li>@{DoorUnit}</li>
+--   <li>@{EngineUnit}</li>
+--   <li>@{ForceFieldUnit}</li>
+--   <li>@{GyroUnit}</li>
+--   <li>@{LandingGearUnit}</li>
+--   <li>@{LaserEmitterUnit}</li>
+--   <li>@{LightUnit}</li>
+--   <li>@{ManualSwitchUnit}</li>
+--   <li>@{ScreenUnit}</li>
+--   <li>@{ShieldGeneratorUnit}</li>
+--   <li>@{TransponderUnit}</li>
 -- </ul>
 -- @see Element
 -- @see ElementWithState
--- @see AntiGravityGeneratorUnit
--- @see DoorUnit
--- @see EngineUnit
--- @see ForceFieldUnit
--- @see GyroUnit
--- @see LandingGearUnit
--- @see LaserEmitterUnit
--- @see LightUnit
--- @see ManualSwitchUnit
--- @see TransponderUnit
--- @see ScreenUnit
--- @see ShieldGeneratorUnit
 -- @module ElementWithToggle
 -- @alias M
 

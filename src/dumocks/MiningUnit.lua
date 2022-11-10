@@ -1,9 +1,8 @@
 --- Extracts a regular amount of resources from the ground.
 --
--- Element Class: MiningUnit
+-- Element class: MiningUnit
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module MiningUnit
 -- @alias M
 

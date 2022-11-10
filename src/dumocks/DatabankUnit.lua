@@ -4,8 +4,7 @@
 --
 -- Element class: DataBankUnit
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module DatabankUnit
 -- @alias M
 

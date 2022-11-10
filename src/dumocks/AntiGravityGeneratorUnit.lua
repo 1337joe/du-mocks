@@ -1,11 +1,11 @@
 --- Generates graviton condensates to power anti-gravity pulsors.
 --
+-- <p style="color:red;">Note: This is generated from patch notes and in-game codex and has not yet been tested
+--   against the actual element. Accuracy not guaranteed.</p>
+--
 -- Element class: AntiGravityGeneratorUnit
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
--- @see ElementWithState
--- @see ElementWithToggle
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @module AntiGravityGeneratorUnit
 -- @alias M
 

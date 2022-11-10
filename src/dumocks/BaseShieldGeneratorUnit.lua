@@ -1,12 +1,11 @@
 --- Generates a protective shield around the space construct.
 --
--- <h1 style="color:red;">Note: This is generated from patch notes and in-game codex and has not yet been tested
---   against the actual element. Accuracy not guaranteed.</h1>
+-- <p style="color:red;">Note: This is generated from patch notes and in-game codex and has not yet been tested
+--   against the actual element. Accuracy not guaranteed.</p>
 --
 -- Element class: BaseShieldGeneratorUnit
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @module BaseShieldGeneratorUnit
 -- @alias M
 

@@ -2,9 +2,7 @@
 --
 -- Element class: PressureTileUnit
 --
--- Extends: Element &gt; ElementWithState
--- @see Element
--- @see ElementWithState
+-- Extends: @{Element} &gt; @{ElementWithState}
 -- @module PressureTileUnit
 -- @alias M
 

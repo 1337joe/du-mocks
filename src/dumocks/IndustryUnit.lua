@@ -9,8 +9,7 @@
 --   <li>Industry4: Rare Industry Units</li>
 -- </ul>
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module IndustryUnit
 -- @alias M
 

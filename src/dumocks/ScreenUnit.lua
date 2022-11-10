@@ -12,10 +12,7 @@
 -- Note: The max size of screen content is 50,000 characters. Any calls to set or add content that result in the screen
 -- exceeding this will silently fail.
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
--- @see ElementWithState
--- @see ElementWithToggle
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @see renderScript
 -- @module ScreenUnit
 -- @alias M

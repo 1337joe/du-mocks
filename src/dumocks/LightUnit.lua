@@ -2,10 +2,7 @@
 --
 -- Element class: LightUnit
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
--- @see ElementWithState
--- @see ElementWithToggle
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @module LightUnit
 -- @alias M
 

@@ -1,10 +1,9 @@
 --- Cycle its output signal over a set of n-plugs, incrementing the activate plug by one step at each impulse received
 -- on its IN plug.
 --
--- Element Class: CounterUnit
+-- Element class: CounterUnit
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module CounterUnit
 -- @alias M
 

@@ -1,4 +1,8 @@
 --- A unit capable to launch fireworks that are stored in the attached container.
+--
+-- Element class: FireworksUnit
+--
+-- Extends: @{Element}
 -- @module FireworksUnit
 -- @alias M
 

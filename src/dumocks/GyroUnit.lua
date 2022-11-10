@@ -2,10 +2,7 @@
 --
 -- Element class: GyroUnit
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
--- @see ElementWithState
--- @see ElementWithToggle
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @module GyroUnit
 -- @alias M
 

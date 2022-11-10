@@ -1,9 +1,11 @@
 --- Extracts a regular amount of plasma from the space surrounding an alien core.
 --
--- Element Class: ???
+-- <p style="color:red;">Note: This is generated from patch notes and in-game codex and has not yet been tested
+--   against the actual element. Accuracy not guaranteed.</p>
 --
--- Extends: Element
--- @see Element
+-- Element class: ???
+--
+-- Extends: @{Element}
 -- @module PlasmaExtractorUnit
 -- @alias M
 

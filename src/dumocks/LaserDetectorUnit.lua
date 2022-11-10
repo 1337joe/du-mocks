@@ -2,9 +2,7 @@
 --
 -- Element class: LaserDetectorUnit
 --
--- Extends: Element &gt; ElementWithState
--- @see Element
--- @see ElementWithState
+-- Extends: @{Element} &gt; @{ElementWithState}
 -- @module LaserDetectorUnit
 -- @alias M
 

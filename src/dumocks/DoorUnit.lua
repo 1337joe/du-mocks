@@ -2,12 +2,9 @@
 --
 -- Applies to doors, hatches, gates, etc.
 --
--- Element Class: DoorUnit
+-- Element class: DoorUnit
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
--- @see ElementWithState
--- @see ElementWithToggle
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @module DoorUnit
 -- @alias M
 

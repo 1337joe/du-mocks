@@ -2,10 +2,7 @@
 --
 -- Element class: ForceFieldUnit
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
--- @see ElementWithState
--- @see ElementWithToggle
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @module ForceFieldUnit
 -- @alias M
 

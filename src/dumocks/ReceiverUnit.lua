@@ -2,8 +2,7 @@
 --
 -- Element class: ReceiverUnit
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module ReceiverUnit
 -- @alias M
 

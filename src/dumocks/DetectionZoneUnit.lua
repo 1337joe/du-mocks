@@ -1,9 +1,8 @@
 --- Detect the intrusion of any player inside the effect zone.
 --
--- Element Class: DetectionZoneUnit
+-- Element class: DetectionZoneUnit
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module DetectionZoneUnit
 -- @alias M
 
