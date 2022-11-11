@@ -33,6 +33,7 @@
 <h2>Contents</h2>
 <ul>
 <li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
 </ul>
 
 
@@ -87,7 +88,7 @@
 <div id="content">
 
 <h1>Module <code>IndustryUnit</code></h1>
-<p>Can mass-produce produce any item/element.</p>
+<p>An industry unit is a machine designed to produce different types of elements.</p>
 <p>
 <p> Element class: IndustryUnit
  <ul>
@@ -104,30 +105,58 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#start">start ()</a></td>
-	<td class="summary">Start the production, and it will run unless it is stopped or the input resources run out.</td>
+	<td class="summary"><b>Deprecated:</b> Start the production, and it will run unless it is stopped or the input resources run out.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#startRun">startRun ()</a></td>
+	<td class="summary">Start the production, will run unless it is stopped or the input resources run out.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#startAndMaintain">startAndMaintain (quantity)</a></td>
+	<td class="summary"><b>Deprecated:</b> Start maintaining the specified quantity.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#startMaintain">startMaintain (quantity)</a></td>
 	<td class="summary">Start maintaining the specified quantity.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#batchStart">batchStart (numBatches)</a></td>
+	<td class="summary"><b>Deprecated:</b> Start the production of numBatches and then stop.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#startFor">startFor (numBatches)</a></td>
 	<td class="summary">Start the production of numBatches and then stop.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#softStop">softStop ()</a></td>
-	<td class="summary">End the job and stop.</td>
+	<td class="summary"><b>Deprecated:</b> End the job and stop.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#hardStop">hardStop (allowIngredientLoss)</a></td>
-	<td class="summary">Stop production immediately.</td>
+	<td class="summary"><b>Deprecated:</b> Stop production immediately.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#stop">stop (force, allowLoss)</a></td>
+	<td class="summary">Stop the production of the industry unit.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getStatus">getStatus ()</a></td>
-	<td class="summary">Get the status of the industry.</td>
+	<td class="summary"><b>Deprecated:</b> Get the status of the industry.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getState">getState ()</a></td>
+	<td class="summary">Returns the current running state of the industry.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getInfo">getInfo ()</a></td>
+	<td class="summary">Returns the complete information of the industry.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getCycleCountSinceStartup">getCycleCountSinceStartup ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Get the count of completed cycles since the player started the unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCyclesCompleted">getCyclesCompleted ()</a></td>
 	<td class="summary">Get the count of completed cycles since the player started the unit.</td>
 	</tr>
 	<tr>
@@ -136,23 +165,62 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getUptime">getUptime ()</a></td>
-	<td class="summary">Get the time elapsed in seconds since the player started the unit for the latest time.</td>
+	<td class="summary">Returns the time elapsed in seconds since the player started the unit for the latest time.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setCurrentSchematic">setCurrentSchematic (id)</a></td>
-	<td class="summary">Set the loaded schematic, based on its id.</td>
+	<td class="summary"><b>Deprecated:</b> Set the loaded schematic, based on its id.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setOutput">setOutput (itemId)</a></td>
+	<td class="summary">Set the item to produce from its ID.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getCurrentSchematic">getCurrentSchematic ()</a></td>
-	<td class="summary">Get the id of the currently loaded schematic.</td>
+	<td class="summary"><b>Deprecated:</b> Get the id of the currently loaded schematic.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOutputs">getOutputs ()</a></td>
+	<td class="summary">Returns the list of IDs of the items currently produced.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getInputs">getInputs ()</a></td>
+	<td class="summary">Returns the list of items required to run the selected output product.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updateBank">updateBank ()</a></td>
+	<td class="summary">Send a request to get an update of the contents of the schematic bank, limited to one call allowed per 30 seconds.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getBank">getBank ()</a></td>
+	<td class="summary">Returns a table describing the contents of the schematic bank, as a pair itemId and quantity per slot.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onStarted">EVENT_onStarted (id, quantity)</a></td>
+	<td class="summary">Event: Emitted when the industry unit has started a new production process per product.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_completed">EVENT_completed ()</a></td>
-	<td class="summary">Event: Emitted when the industry unit has completed a run.</td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the industry unit has completed a run.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onCompleted">EVENT_onCompleted (id, quantity)</a></td>
+	<td class="summary">Event: Emitted when the industry unit has completed a run per product.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_statusChanged">EVENT_statusChanged (status)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the industry status has changed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onStatusChanged">EVENT_onStatusChanged (status)</a></td>
 	<td class="summary">Event: Emitted when the industry status has changed.</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#State">State</a></td>
+	<td class="summary">State labels.</td>
 	</tr>
 </table>
 
@@ -168,7 +236,26 @@
     <strong>start ()</strong>
     </dt>
     <dd>
-    Start the production, and it will run unless it is stopped or the input resources run out.
+    <b>Deprecated:</b> Start the production, and it will run unless it is stopped or the input resources run out.
+<p> This method is deprecated: startRun should be used instead
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#startRun">startRun</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "startRun"></a>
+    <strong>startRun ()</strong>
+    </dt>
+    <dd>
+    Start the production, will run unless it is stopped or the input resources run out.
 
 
 
@@ -180,6 +267,33 @@
     <dt>
     <a name = "startAndMaintain"></a>
     <strong>startAndMaintain (quantity)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Start maintaining the specified quantity.  Resumes production when the quantity in the output container is too low,
+ and pauses production when it is equal or higher.
+<p> This method is deprecated: startMaintain should be used instead
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">quantity</span>
+            <span class="types"><span class="type">int</span></span>
+         Quantity to maintain inside output containers.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#startMaintain">startMaintain</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "startMaintain"></a>
+    <strong>startMaintain (quantity)</strong>
     </dt>
     <dd>
     Start maintaining the specified quantity.  Resumes production when the quantity in the output container is too low,
@@ -204,6 +318,32 @@
     <strong>batchStart (numBatches)</strong>
     </dt>
     <dd>
+    <b>Deprecated:</b> Start the production of numBatches and then stop.
+<p> This method is deprecated: startFor should be used instead
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">numBatches</span>
+            <span class="types"><span class="type">int</span></span>
+         Number of batches to run before unit stops.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#startFor">startFor</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "startFor"></a>
+    <strong>startFor (numBatches)</strong>
+    </dt>
+    <dd>
     Start the production of numBatches and then stop.
 
 
@@ -225,13 +365,18 @@
     <strong>softStop ()</strong>
     </dt>
     <dd>
-    End the job and stop.  The production keeps going until it is complete, then it switches to "STOPPED" status. If the
+    <b>Deprecated:</b> End the job and stop.  The production keeps going until it is complete, then it switches to "STOPPED" status. If the
  output container is full, then it switches to "JAMMED".
+<p> This method is deprecated: stop should be used instead
 
 
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#stop">stop</a>
+    </ul>
 
 
 </dd>
@@ -240,9 +385,10 @@
     <strong>hardStop (allowIngredientLoss)</strong>
     </dt>
     <dd>
-    Stop production immediately.  The resources are given back to the input container. If there is not enough room in the
+    <b>Deprecated:</b> Stop production immediately.  The resources are given back to the input container. If there is not enough room in the
  input containers, production stoppage is skipped if `allowIngredientLoss` is set to 0, or ingredients are lost if set
  to 1.
+<p> This method is deprecated: stop should be used instead
 
 
     <h3>Parameters:</h3>
@@ -250,6 +396,36 @@
         <li><span class="parameter">allowIngredientLoss</span>
             <span class="types"><span class="type">0/1</span></span>
          0 = forbid loss, 1 = enable loss.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#stop">stop</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "stop"></a>
+    <strong>stop (force, allowLoss)</strong>
+    </dt>
+    <dd>
+    Stop the production of the industry unit.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">force</span>
+            <span class="types"><span class="type">bool</span></span>
+         True if you want to force the production to stop immediately (optional, defaults to false).
+        </li>
+        <li><span class="parameter">allowLoss</span>
+            <span class="types"><span class="type">bool</span></span>
+         True if you want to allow the industry unit to lose components when recovering in-use
+   components (optional, defaults to false).
         </li>
     </ul>
 
@@ -263,7 +439,8 @@
     <strong>getStatus ()</strong>
     </dt>
     <dd>
-    Get the status of the industry.
+    <b>Deprecated:</b> Get the status of the industry.
+<p> This event is deprecated: getState should be used instead.
 
 
 
@@ -276,12 +453,88 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#getState">getState</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getState"></a>
+    <strong>getState ()</strong>
+    </dt>
+    <dd>
+    Returns the current running state of the industry.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The current running state of the industry. See <a href="../modules/IndustryUnit.html#State">State</a> for possible values.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#State">State</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getInfo"></a>
+    <strong>getInfo ()</strong>
+    </dt>
+    <dd>
+    Returns the complete information of the industry.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The complete state of the industry, a table with fields {[integer] state, [bool] stopRequested,
+   [integer] schematicsRemaining, [integer] unitsProduced, [integer] remainingTime, [integer] batchesRequested,
+   [integer] batchesRemaining, [number] maintainProductAmount, [integer] currentProductAmmount,
+   [table] currentProducts:{{[integer] id, [number] quantity},...}}
+    </ol>
+
+
 
 
 </dd>
     <dt>
     <a name = "getCycleCountSinceStartup"></a>
     <strong>getCycleCountSinceStartup ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Get the count of completed cycles since the player started the unit.
+<p> This method is deprecated: getCyclesCompleted should be used instead
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The count of completed cycles since startup.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#getCyclesCompleted">getCyclesCompleted</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getCyclesCompleted"></a>
+    <strong>getCyclesCompleted ()</strong>
     </dt>
     <dd>
     Get the count of completed cycles since the player started the unit.
@@ -311,7 +564,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">0..1</span></span>
+           <span class="types"><span class="type">float</span></span>
         The efficiency rate between 0 and 1.
     </ol>
 
@@ -324,14 +577,14 @@
     <strong>getUptime ()</strong>
     </dt>
     <dd>
-    Get the time elapsed in seconds since the player started the unit for the latest time.
+    Returns the time elapsed in seconds since the player started the unit for the latest time.
 
 
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">s</span></span>
+           <span class="types"><span class="type">float</span></span>
         The time elapsed in seconds.
     </ol>
 
@@ -344,8 +597,9 @@
     <strong>setCurrentSchematic (id)</strong>
     </dt>
     <dd>
-    Set the loaded schematic, based on its id.  Use getCurrentSchematic to learn about your schematic id. Does not work
+    <b>Deprecated:</b> Set the loaded schematic, based on its id.  Use getCurrentSchematic to learn about your schematic id. Does not work
  while the industry unit is running.
+<p> This method is deprecated: setOutput should be used instead
 
 
     <h3>Parameters:</h3>
@@ -360,8 +614,36 @@
 
     <h3>See also:</h3>
     <ul>
-         <a href="../modules/IndustryUnit.html#getCurrentSchematic">getCurrentSchematic</a>
+         <li><a href="../modules/IndustryUnit.html#setOutput">setOutput</a></li>
+         <li><a href="../modules/IndustryUnit.html#getCurrentSchematic">getCurrentSchematic</a></li>
     </ul>
+
+
+</dd>
+    <dt>
+    <a name = "setOutput"></a>
+    <strong>setOutput (itemId)</strong>
+    </dt>
+    <dd>
+    Set the item to produce from its ID.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">itemId</span>
+            <span class="types"><span class="type">int</span></span>
+         The item ID of the item to produce.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The result of the operation: 0 for a success, -1 if the industry is running.
+    </ol>
+
+
 
 
 </dd>
@@ -370,7 +652,8 @@
     <strong>getCurrentSchematic ()</strong>
     </dt>
     <dd>
-    Get the id of the currently loaded schematic.
+    <b>Deprecated:</b> Get the id of the currently loaded schematic.
+<p> This method is deprecated: getOutputs should be used instead
 
 
 
@@ -382,6 +665,116 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#getOutputs">getOutputs</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getOutputs"></a>
+    <strong>getOutputs ()</strong>
+    </dt>
+    <dd>
+    Returns the list of IDs of the items currently produced.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The first entry in the table is always the main product produced.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getInputs"></a>
+    <strong>getInputs ()</strong>
+    </dt>
+    <dd>
+    Returns the list of items required to run the selected output product.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        Returns the list of inputs.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "updateBank"></a>
+    <strong>updateBank ()</strong>
+    </dt>
+    <dd>
+    Send a request to get an update of the contents of the schematic bank, limited to one call allowed per 30 seconds.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        If the request is not yet possible, returns the remaining time to wait for.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getBank"></a>
+    <strong>getBank ()</strong>
+    </dt>
+    <dd>
+    Returns a table describing the contents of the schematic bank, as a pair itemId and quantity per slot.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The content of the schematic bank as a table with fields {[integer] id, [number] quantity} per slot.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStarted"></a>
+    <strong>EVENT_onStarted (id, quantity)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the industry unit has started a new production process per product.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The item ID of the product.
+        </li>
+        <li><span class="parameter">quantity</span>
+            <span class="types"><span class="type">float</span></span>
+         The quantity to be produced.
+        </li>
+    </ul>
+
+
+
 
 
 </dd>
@@ -390,10 +783,41 @@
     <strong>EVENT_completed ()</strong>
     </dt>
     <dd>
-    Event: Emitted when the industry unit has completed a run.
+    <b>Deprecated:</b> Event: Emitted when the industry unit has completed a run.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onCompleted should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#EVENT_onCompleted">EVENT_onCompleted</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onCompleted"></a>
+    <strong>EVENT_onCompleted (id, quantity)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the industry unit has completed a run per product.
 <p> Note: This is documentation on an event handler, not a callable method.
 
 
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The item ID of the product.
+        </li>
+        <li><span class="parameter">quantity</span>
+            <span class="types"><span class="type">float</span></span>
+         The quantity produced.
+        </li>
+    </ul>
 
 
 
@@ -405,8 +829,9 @@
     <strong>EVENT_statusChanged (status)</strong>
     </dt>
     <dd>
-    Event: Emitted when the industry status has changed.
+    <b>Deprecated:</b> Event: Emitted when the industry status has changed.
 <p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onStatusChanged should be used instead.
 
 
     <h3>Parameters:</h3>
@@ -415,6 +840,79 @@
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          The status of the industry can be: STOPPED, RUNNING, JAMMED_MISSING_INGREDIENT,
  JAMMED_OUTPUT_FULL, JAMMED_NO_OUTPUT_CONTAINER.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#EVENT_onStatusChanged">EVENT_onStatusChanged</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStatusChanged"></a>
+    <strong>EVENT_onStatusChanged (status)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the industry status has changed.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">status</span>
+            <span class="types"><span class="type">int</span></span>
+         The state of the industry. See <a href="../modules/IndustryUnit.html#State">State</a> for possible values.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/IndustryUnit.html#State">State</a>
+    </ul>
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "State"></a>
+    <strong>State</strong>
+    </dt>
+    <dd>
+    State labels.
+<p> Note: These are grouped in a table for documentation purposes only, this table doesn't exist in-game.
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">[1]</span>
+        Stopped
+        </li>
+        <li><span class="parameter">[2]</span>
+        Running
+        </li>
+        <li><span class="parameter">[3]</span>
+        Jammed missing ingredient
+        </li>
+        <li><span class="parameter">[4]</span>
+        Jammed output full
+        </li>
+        <li><span class="parameter">[5]</span>
+        Jammed no output container
+        </li>
+        <li><span class="parameter">[6]</span>
+        Pending
+        </li>
+        <li><span class="parameter">[7]</span>
+        Jammed missing schematics
         </li>
     </ul>
 
@@ -430,7 +928,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-11-10 04:20:37 </i>
+<i style="float:right;">Last updated 2022-11-11 06:15:14 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
