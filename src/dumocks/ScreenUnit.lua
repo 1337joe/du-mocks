@@ -12,10 +12,7 @@
 -- Note: The max size of screen content is 50,000 characters. Any calls to set or add content that result in the screen
 -- exceeding this will silently fail.
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
--- @see ElementWithState
--- @see ElementWithToggle
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @see renderScript
 -- @module ScreenUnit
 -- @alias M
@@ -26,15 +23,16 @@ local MockElementWithToggle = require "dumocks.ElementWithToggle"
 local RenderScript = require("dumocks.RenderScript")
 
 local elementDefinitions = {}
-elementDefinitions["screen xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
-elementDefinitions["screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["screen xs"] = {mass = 18.67, maxHitPoints = 50.0, itemId = 184261427, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["screen s"] = {mass = 18.67, maxHitPoints = 50.0, itemId = 184261490, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
 elementDefinitions["screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
 elementDefinitions["screen xl"] = {mass = 12810.88, maxHitPoints = 28116.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
-elementDefinitions["transparent screen xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["modern screen s"] = {mass = 7.5, maxHitPoints = 200.0, itemId = 819161538, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
+elementDefinitions["transparent screen xs"] = {mass = 18.67, maxHitPoints = 50.0, itemId = 3988665660, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
 elementDefinitions["transparent screen s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
 elementDefinitions["transparent screen m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
 elementDefinitions["transparent screen l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenUnit", resolutionX = 1024.0, resolutionY = 613.0}
-elementDefinitions["sign xs"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 512.0}
+elementDefinitions["sign xs"] = {mass = 18.67, maxHitPoints = 50.0, itemId = 166656023, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 512.0}
 elementDefinitions["sign s"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 1024.0}
 elementDefinitions["sign m"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 512.0}
 elementDefinitions["sign l"] = {mass = 18.67, maxHitPoints = 50.0, class = "ScreenSignUnit", resolutionX = 1024.0, resolutionY = 256.0}
@@ -134,11 +132,30 @@ local function validateFloat(value)
     return value
 end
 
+--- Switch on the screen.
+function M:activate()
+    self.state = true
+end
+
+--- Switch off the screen.
+function M:deactivate()
+    self.state = false
+end
+
+--- Checks if the screen is on.
+-- @treturn 0/1 1 if the screen is on.
+function M:isActive()
+    if self.state then
+        return 1
+    end
+    return 0
+end
+
 local ADD_TEXT_TEMPLATE = '<div style="font-size:%.6fvw">%s</div>'
 --- Displays the given text at the given coordinates in the screen, and returns an ID to move it later.
--- @tparam 0..100 x Horizontal position, as a percentage of the screen width.
--- @tparam 0..100 y Vertical position, as a percentage of the screen height.
--- @tparam 0..100 fontSize Text font size, as a percentage of the screen width.
+-- @tparam float x Horizontal position, as a percentage (between 0 and 100) of the screen width.
+-- @tparam float y Vertical position, as a percentage (between 0 and 100) of the screen height.
+-- @tparam float fontSize Text font size, as a percentage (between 0 and 100) of the screen width.
 -- @tparam string text The text to display.
 -- @return An integer ID that can be used later to update/remove the added element.
 function M:addText(x, y, fontSize, text)
@@ -167,7 +184,7 @@ function M:setCenteredText(text)
 end
 
 --- Set the whole screen HTML content (overrides anything already set).
--- @tparam html html The HTML content to display.
+-- @tparam string html The HTML content to display.
 function M:setHTML(html)
     self.contentList = {}
     self.directHtml = validateText(html)
@@ -181,7 +198,7 @@ function M:setRenderScript(script)
     self.renderScript = script
 end
 
---- Set the screen render script parameters, which will be automatically set during the Lua execution.
+--- Defines the input of the screen rendering script, which will be automatically defined during the execution of Lua.
 -- @tparam string params A string that can be retrieved by calling getInput in a render script.
 -- @see renderScript:getInput
 function M:setScriptInput(params)
@@ -202,9 +219,9 @@ function M:getScriptOutput()
 end
 
 --- Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
--- @tparam 0..100 x Horizontal position, as a percentage of the screen width.
--- @tparam 0..100 y Vertical position, as a percentage of the screen height.
--- @tparam html html The HTML content to display, which can contain SVG elements to make drawings.
+-- @tparam float x Horizontal position, as a percentage (between 0 and 100) of the screen width.
+-- @tparam float y Vertical position, as a percentage (between 0 and 100) of the screen height.
+-- @tparam string html The HTML content to display, which can contain SVG elements to make drawings.
 -- @return An integer ID that can be used later to update/remove the added element.
 function M:addContent(x, y, html)
     x = validateFloat(x)
@@ -229,7 +246,7 @@ end
 
 local SVG_TEMPLATE = '<svg class="bootstrap" viewBox="0 0 1920 1080" style="width:100%%; height:100%%">%s</svg>'
 --- Displays SVG code (anything that fits within a &lt;svg&gt; section), which overrides any preexisting content.
--- @tparam svg svg The SVG content to display, which fits inside a 1920x1080 canvas.
+-- @tparam string svg The SVG content to display, which fits inside a 1920x1080 canvas.
 function M:setSVG(svg)
     if svg == nil then
         svg = ""
@@ -241,19 +258,21 @@ function M:setSVG(svg)
     self:setHTML(string.format(SVG_TEMPLATE, svg))
 end
 
---- Update the element with the given ID (returned by setContent) with a new HTML content.
--- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+--- Update the element with the given ID (returned by addContent) with a new HTML content.
+-- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as addContent return the ID
 -- that you can store to use later here.
--- @tparam html html The HTML content to display, which can contain SVG elements to make drawings.
+-- @tparam string html The HTML content to display, which can contain SVG elements to make drawings.
+-- @see addContent
 function M:resetContent(id, html)
     self.contentList[id].html = html
 
     generateHtml(self)
 end
 
---- Delete the element with the given ID (returned by setContent).
--- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+--- Delete the element with the given ID (returned by addContent).
+-- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as addContent return the ID
 -- that you can store to use later here.
+-- @see addContent
 function M:deleteContent(id)
     -- deleting non-existent index is no-op
     if not self.contentList[id] then
@@ -265,10 +284,11 @@ function M:deleteContent(id)
     generateHtml(self)
 end
 
---- Update the visibility of the element with the given ID (returned by setContent).
--- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+--- Update the visibility of the element with the given ID (returned by addContent).
+-- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as addContent return the ID
 -- that you can store to use later here.
 -- @tparam 0/1 state 0 = invisible, 1 = visible.
+-- @see addContent
 function M:showContent(id, state)
     -- showing non-existent index is no-op
     if not self.contentList[id] then
@@ -280,11 +300,12 @@ function M:showContent(id, state)
     generateHtml(self)
 end
 
---- Move the element with the given id (returned by setContent) to a new position in the screen.
--- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+--- Move the element with the given id (returned by addContent) to a new position in the screen.
+-- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as addContent return the ID
 -- that you can store to use later here.
--- @tparam 0..100 x Horizontal position, as a percentage of the screen width.
--- @tparam 0..100 y Vertical position, as a percentage of the screen height.
+-- @tparam float x Horizontal position, as a percentage (between 0 and 1) of the screen width.
+-- @tparam float y Vertical position, as a percentage (between 0 and 1) of the screen height.
+-- @see addContent
 function M:moveContent(id, x, y)
     -- moving non-existent index is no-op
     if not self.contentList[id] then
@@ -301,7 +322,7 @@ function M:moveContent(id, x, y)
 end
 
 --- Returns the x-coordinate of the position pointed at in the screen.
--- @treturn 0..1 The x-position as a percentage of screen width; -1 if nothing is pointed at.
+-- @treturn float The x-position as a percentage (between 0 and 1) of screen width; -1 if nothing is pointed at.
 function M:getMouseX()
     if self.mouseX < 0 or self.mouseX > 1 then
         return -1
@@ -310,7 +331,7 @@ function M:getMouseX()
 end
 
 --- Returns the y-coordinate of the position pointed at in the screen.
--- @treturn 0..1 The y-position as a percentage of screen height; -1 if nothing is pointed at.
+-- @treturn float The y-position as a percentage (between 0 and 1) of screen height; -1 if nothing is pointed at.
 function M:getMouseY()
     if self.mouseY < 0 or self.mouseY > 1 then
         return -1
@@ -319,7 +340,7 @@ function M:getMouseY()
 end
 
 --- Returns the state of the mouse click.
--- @treturn 0/1 0 when the mouse is not clicked and 1 otherwise.
+-- @treturn 0/1 1 if the mouse is pressed, otherwise 0.
 function M:getMouseState()
     if self.mouseState then
         return 1
@@ -339,31 +360,13 @@ end
 --
 -- Valid plug names are:
 -- <ul>
--- <li>"in" for the in signal (has no actual effect on screen state when modified this way).</li>
+-- <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
 -- </ul>
 -- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
-        local value = tonumber(state)
-        if type(value) ~= "number" then
-            value = 0.0
-        end
-
-        -- expected behavior, but in fact nothing happens in-game
-        if value > 0.0 then
-            -- self:activate()
-        else
-            -- self:deactivate()
-        end
-
-        if value <= 0 then
-            self.plugIn = 0
-        elseif value >= 1.0 then
-            self.plugIn = 1.0
-        else
-            self.plugIn = value
-        end
+        -- no longer responds to setSignalIn
     end
 end
 
@@ -392,30 +395,64 @@ function M:getSignalIn(plug)
     return MockElement.getSignalIn(self)
 end
 
---- Event: Emitted when the player starts a click on the screen unit.
+--- <b>Deprecated:</b> Event: Emitted when the player starts a click on the screen unit.
 --
 -- Note: This is documentation on an event handler, not a callable method.
--- @tparam 0..1 x X-coordinate of the click in percentage of the screen width.
--- @tparam 0..1 y Y-coordinate of the click in percentage of the screen height.
+--
+-- This event is deprecated: EVENT_onMouseDown should be used instead.
+-- @see EVENT_onMouseDown
+-- @tparam float x X-coordinate of the click in percentage of the screen width.
+-- @tparam float y Y-coordinate of the click in percentage of the screen height.
 function M.EVENT_mouseDown(x, y)
+    M.deprecated("EVENT_mouseDown", "EVENT_onMouseDown")
+    assert(false, "This is implemented for documentation purposes only.")
+end
+
+--- Event: Emitted when the player starts a click on the screen.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam float x X-coordinate of the click in percentage (between 0 and 1) of the screen width.
+-- @tparam float y Y-coordinate of the click in percentage (between 0 and 1) of the screen height.
+function M.EVENT_onMouseDown(x, y)
+    assert(false, "This is implemented for documentation purposes only.")
+end
+
+--- <b>Deprecated:</b> Event: Emitted when the player releases a click on the screen unit.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onMouseUp should be used instead.
+-- @see EVENT_onMouseUp
+-- @tparam float x X-coordinate of the click in percentage of the screen width.
+-- @tparam float y Y-coordinate of the click in percentage of the screen height.
+function M.EVENT_mouseUp(x, y)
+    M.deprecated("EVENT_mouseUp", "EVENT_onMouseUp")
     assert(false, "This is implemented for documentation purposes only.")
 end
 
 --- Event: Emitted when the player releases a click on the screen unit.
 --
 -- Note: This is documentation on an event handler, not a callable method.
--- @tparam 0..1 x X-coordinate of the click in percentage of the screen width.
--- @tparam 0..1 y Y-coordinate of the click in percentage of the screen height.
-function M.EVENT_mouseUp(x, y)
+-- @tparam float x X-coordinate of the click in percentage (between 0 and 1) of the screen width.
+-- @tparam float y Y-coordinate of the click in percentage (between 0 and 1) of the screen height.
+function M.EVENT_onMouseUp(x, y)
     assert(false, "This is implemented for documentation purposes only.")
 end
 
---- Mock only, not in-game: Register a handler for the in-game `mouseDown(x,y)` event.
+--- Event: Emitted when the output of the screen is changed.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam string output The output string of the screen.
+function M.EVENT_onOutputChanged(output)
+    assert(false, "This is implemented for documentation purposes only.")
+end
+
+--- Mock only, not in-game: Register a handler for the in-game `onMouseDown(x,y)` event.
 -- @tparam function callback The function to call when the mouse button is pressed.
 -- @tparam string x The x to filter on, or "*" for all.
 -- @tparam string y The y to filter for, or "*" for all.
 -- @treturn int The index of the callback.
--- @see EVENT_mouseDown
+-- @see EVENT_onMouseDown
 function M:mockRegisterMouseDown(callback, x, y)
     -- default to all
     x = x or "*"
@@ -427,8 +464,8 @@ function M:mockRegisterMouseDown(callback, x, y)
 end
 
 --- Mock only, not in-game: Simulates a mouse press on the screen.
--- @tparam float x X-coordinate of the click in percentage of the screen width.
--- @tparam float y Y-coordinate of the click in percentage of the screen width.
+-- @tparam float x X-coordinate of the click in percentage (between 0 and 1) of the screen width.
+-- @tparam float y Y-coordinate of the click in percentage (between 0 and 1) of the screen width.
 function M:mockDoMouseDown(x, y)
     assert(x > 0 and x < 1, "Mouse X value out of range: " .. x)
     assert(y > 0 and y < 1, "Mouse Y value out of range: " .. y)
@@ -452,12 +489,12 @@ function M:mockDoMouseDown(x, y)
     end
 end
 
---- Mock only, not in-game: Register a handler for the in-game `mouseUp(x,y)` event.
+--- Mock only, not in-game: Register a handler for the in-game `onMouseUp(x,y)` event.
 -- @tparam function callback The function to call when the mouse button is released.
 -- @tparam string x The x to filter on, or "*" for all.
 -- @tparam string y The y to filter for, or "*" for all.
 -- @treturn int The index of the callback.
--- @see EVENT_mouseUp
+-- @see EVENT_onMouseUp
 function M:mockRegisterMouseUp(callback, x, y)
     -- default to all
     x = x or "*"
@@ -469,8 +506,8 @@ function M:mockRegisterMouseUp(callback, x, y)
 end
 
 --- Mock only, not in-game: Simulates a mouse release on the screen.
--- @tparam float x X-coordinate of the click in percentage of the screen width.
--- @tparam float y Y-coordinate of the click in percentage of the screen width.
+-- @tparam float x X-coordinate of the click in percentage (between 0 and 1) of the screen width.
+-- @tparam float y Y-coordinate of the click in percentage (between 0 and 1) of the screen width.
 function M:mockDoMouseUp(x, y)
     assert(x > 0 and x < 1, "Mouse X value out of range: " .. x)
     assert(y > 0 and y < 1, "Mouse Y value out of range: " .. y)
@@ -525,6 +562,9 @@ end
 function M:mockGetClosure()
     local closure = MockElementWithToggle.mockGetClosure(self)
     -- codex-documented methods
+    closure.activate = function() return self:activate() end
+    closure.deactivate = function() return self:deactivate() end
+    closure.isActive = function() return self:isActive() end
     closure.addText = function(x, y, fontSize, text) return self:addText(x, y, fontSize, text) end
     closure.setCenteredText = function(text) return self:setCenteredText(text) end
     closure.setHTML = function(html) return self:setHTML(html) end

@@ -8,7 +8,7 @@ package.path = "src/?.lua;" .. package.path
 local lu = require("luaunit")
 
 local mdu = require("dumocks.DatabankUnit")
-require("test.Utilities")
+local utilities = require("test.Utilities")
 
 _G.TestDatabankUnit = {}
 
@@ -16,9 +16,9 @@ _G.TestDatabankUnit = {}
 function _G.TestDatabankUnit.testConstructor()
 
     -- default element:
-    -- ["databank"] = {mass = 17.09, maxHitPoints = 50.0}
+    -- ["databank xs"] = {mass = 17.09, maxHitPoints = 50.0, itemId = 812400865}
 
-    local databank1 = mdu:new(nil, 1, "Databank")
+    local databank1 = mdu:new(nil, 1, "Databank XS")
     local databank2 = mdu:new(nil, 2, "invalid")
     local databank3 = mdu:new()
 
@@ -26,9 +26,9 @@ function _G.TestDatabankUnit.testConstructor()
     local databank2Closure = databank2:mockGetClosure()
     local databank3Closure = databank3:mockGetClosure()
 
-    lu.assertEquals(databank1Closure.getId(), 1)
-    lu.assertEquals(databank2Closure.getId(), 2)
-    lu.assertEquals(databank3Closure.getId(), 0)
+    lu.assertEquals(databank1Closure.getLocalId(), 1)
+    lu.assertEquals(databank2Closure.getLocalId(), 2)
+    lu.assertEquals(databank3Closure.getLocalId(), 0)
 
     -- prove default element is selected
     local defaultMass = 17.09
@@ -44,6 +44,11 @@ function _G.TestDatabankUnit.testConstructor()
     lu.assertEquals(databank1Closure.getIntegrity(), 50.0)
     lu.assertEquals(databank2Closure.getIntegrity(), 25.0)
     lu.assertEquals(databank3Closure.getIntegrity(), 0.5)
+
+    local defaultId = 812400865
+    lu.assertEquals(databank1Closure.getItemId(), defaultId)
+    lu.assertEquals(databank2Closure.getItemId(), defaultId)
+    lu.assertEquals(databank3Closure.getItemId(), defaultId)
 end
 
 --- Verify that clear empties the databank.
@@ -83,31 +88,32 @@ function _G.TestDatabankUnit.testGetNbKeys()
 end
 
 --- Verify keys can be retrieved in the proper format.
-function _G.TestDatabankUnit.testGetKeys()
+function _G.TestDatabankUnit.testGetKeyList()
     local actual, expected
     local databank = mdu:new()
     local closure = databank:mockGetClosure()
 
     databank.data = {}
-    expected = '[]'
-    actual = closure.getKeys()
-    lu.assertEquals(actual, expected)
+    expected = {}
+    actual = closure.getKeyList()
+    lu.assertItemsEquals(actual, expected)
+    lu.assertEquals(utilities.verifyDeprecated("getKeys", closure.getKeys), '[]')
 
     databank.data = {
         key = "value"
     }
-    expected = '["key"]'
-    actual = closure.getKeys()
-    lu.assertEquals(actual, expected)
+    expected = {"key"}
+    actual = closure.getKeyList()
+    lu.assertItemsEquals(actual, expected)
+    lu.assertEquals(utilities.verifyDeprecated("getKeys", closure.getKeys), '["key"]')
 
     databank.data = {
         key1 = "value1",
         key2 = 8
     }
-    actual = closure.getKeys()
-    -- order of iterating table keys not deterministic
-    lu.assertStrContains(actual, '"key1"')
-    lu.assertStrContains(actual, '"key2"')
+    expected = {"key1", "key2"}
+    actual = closure.getKeyList()
+    lu.assertItemsEquals(actual, expected)
 end
 
 --- Verify keys are detected and indicated with 0 or 1.
@@ -131,6 +137,21 @@ function _G.TestDatabankUnit.testHasKey()
     expected = 1
     actual = closure.hasKey(key)
     lu.assertEquals(actual, expected)
+end
+
+--- Verify keys are deleted as expected.
+function _G.TestDatabankUnit.testClearValue()
+    local actual, expected
+    local databank = mdu:new()
+    local closure = databank:mockGetClosure()
+
+    databank.data["found"] = 1
+
+    lu.assertEquals(closure.clearValue("not found"), 0)
+    lu.assertEquals(closure.clearValue("found"), 1)
+
+    lu.assertEquals({}, databank.data)
+    lu.assertEquals(closure.clearValue("found"), 0)
 end
 
 --- Verify storage as string works. In-game storage not visible, simply test that the key is set, not what's in storage.
@@ -312,7 +333,7 @@ function _G.TestDatabankUnit.testGetIntValue()
 
     -- float value
     key = "key3"
-    expected = 3
+    expected = 0
     databank.data[key] = 3.1
     actual = closure.getIntValue(key)
     lu.assertEquals(actual, expected)
@@ -445,7 +466,7 @@ end
 -- Test setup:
 -- 1. 1x Databank, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, hasKey, getKeys, getNbKeys, clear, setStringValue, getStringValue, setIntValue,
+-- Exercises: getClass, hasKey, getKeyList, getNbKeys, clear, setStringValue, getStringValue, setIntValue,
 -- getIntValue, setFloatValue, getFloatValue
 function _G.TestDatabankUnit.testGameBehavior()
     local databank = mdu:new(nil, 1)
@@ -456,29 +477,31 @@ function _G.TestDatabankUnit.testGameBehavior()
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"hasKey", "getKeys", "getNbKeys", "clear", "setStringValue", "getStringValue",
-                               "setIntValue", "getIntValue", "setFloatValue", "getFloatValue"}
+    local expectedFunctions = {"clear", "getNbKeys", "getKeys", "getKeyList", "hasKey", "clearValue", "setStringValue",
+                               "getStringValue", "setIntValue", "getIntValue", "setFloatValue", "getFloatValue"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "DataBankUnit")
+    assert(slot1.getClass() == "DataBankUnit")
+    assert(string.match(string.lower(slot1.getName()), "databank xs %[%d+%]"), slot1.getName())
+    assert(slot1.getItemId() == 812400865, slot1.getItemId())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getMass() == 17.09)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     slot1.clear()
 
-    local key
+    local key, keyList
 
     key = "key1"
     slot1.setStringValue(key, "string")
@@ -487,9 +510,15 @@ function _G.TestDatabankUnit.testGameBehavior()
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
 
-    assert(slot1.getKeys() == '["key1"]')
+    keyList = slot1.getKeyList()
+    assert(#keyList == 1)
+    assert(keyList[1] == "key1")
     assert(slot1.getNbKeys() == 1, "Number of keys: " .. slot1.getNbKeys())
-    slot1.clear()
+
+    assert(slot1.clearValue("key0"), 0)
+    assert(slot1.clearValue("key1"), 1)
+    assert(slot1.clearValue("key0"), 0)
+
     assert(slot1.getNbKeys() == 0)
 
     key = "key1.5"
@@ -506,7 +535,9 @@ function _G.TestDatabankUnit.testGameBehavior()
     assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 0.0)
 
-    assert(slot1.getKeys() == '["key1.5","key2"]' or slot1.getKeys() == '["key2","key1.5"]')
+    keyList = slot1.getKeyList()
+    assert(#keyList == 2)
+    assert((keyList[1] == "key1.5" and keyList[2] == "key2") or (keyList[2] == "key1.5" and keyList[1] == "key2"))
     assert(slot1.getNbKeys() == 2, "Number of keys: " .. slot1.getNbKeys())
 
     key = "key3"
@@ -534,7 +565,7 @@ function _G.TestDatabankUnit.testGameBehavior()
     slot1.setStringValue(key, 5.5)
     assert(slot1.hasKey(key) == 1)
     assert(slot1.getStringValue(key) == "5.5")
-    assert(slot1.getIntValue(key) == 5)
+    assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 5.5)
 
     key = "key5.5"
@@ -567,6 +598,13 @@ function _G.TestDatabankUnit.testGameBehavior()
 
     key = "key8"
     slot1.setIntValue(key, true)
+    assert(slot1.hasKey(key) == 1)
+    assert(slot1.getStringValue(key) == "1")
+    assert(slot1.getIntValue(key) == 1)
+    assert(slot1.getFloatValue(key) == 1.0)
+
+    key = "key8.5"
+    slot1.setIntValue(key, false)
     assert(slot1.hasKey(key) == 1)
     assert(slot1.getStringValue(key) == "0")
     assert(slot1.getIntValue(key) == 0)
@@ -646,7 +684,7 @@ function _G.TestDatabankUnit.testGameBehavior()
     slot1.setFloatValue(key, 15.15)
     assert(slot1.hasKey(key) == 1)
     assert(slot1.getStringValue(key) == "15.15")
-    assert(slot1.getIntValue(key) == 15)
+    assert(slot1.getIntValue(key) == 0)
     assert(slot1.getFloatValue(key) == 15.15)
 
     key = "key15.5"
@@ -677,7 +715,7 @@ function _G.TestDatabankUnit.testGameBehavior()
     unit.exit()
 
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 

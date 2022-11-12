@@ -9,14 +9,31 @@ local lu = require("luaunit")
 
 local mdu = require("dumocks.DoorUnit")
 require("test.Utilities")
+local AbstractTestElementWithToggle = require("test.dumocks.AbstractTestElementWithToggle")
 
-_G.TestDoorUnit = {}
+_G.TestDoorUnit = AbstractTestElementWithToggle
+
+function _G.TestDoorUnit.getTestElement()
+    return mdu:new()
+end
+
+function _G.TestDoorUnit.getStateFunction(closure)
+    return closure.isOpen
+end
+
+function _G.TestDoorUnit.getActivateFunction(closure)
+    return closure.open
+end
+
+function _G.TestDoorUnit.getDeactivateFunction(closure)
+    return closure.close
+end
 
 --- Verify constructor arguments properly handled and independent between instances.
 function _G.TestDoorUnit.testConstructor()
 
     -- default element:
-    -- ["sliding door s"] = {mass = 749.15, maxHitPoints = 56.0}
+    -- ["sliding door s"] = {mass = 749.15, maxHitPoints = 56.0, itemId = 201196316}
 
     local door0 = mdu:new()
     local door1 = mdu:new(nil, 1, "Sliding Door S")
@@ -28,10 +45,10 @@ function _G.TestDoorUnit.testConstructor()
     local doorClosure2 = door2:mockGetClosure()
     local doorClosure3 = door3:mockGetClosure()
 
-    lu.assertEquals(doorClosure0.getId(), 0)
-    lu.assertEquals(doorClosure1.getId(), 1)
-    lu.assertEquals(doorClosure2.getId(), 2)
-    lu.assertEquals(doorClosure3.getId(), 3)
+    lu.assertEquals(doorClosure0.getLocalId(), 0)
+    lu.assertEquals(doorClosure1.getLocalId(), 1)
+    lu.assertEquals(doorClosure2.getLocalId(), 2)
+    lu.assertEquals(doorClosure3.getLocalId(), 3)
 
     -- prove default element is selected only where appropriate
     local defaultMass = 749.15
@@ -39,6 +56,26 @@ function _G.TestDoorUnit.testConstructor()
     lu.assertEquals(doorClosure1.getMass(), defaultMass)
     lu.assertEquals(doorClosure2.getMass(), defaultMass)
     lu.assertNotEquals(doorClosure3.getMass(), defaultMass)
+
+    local defaultId = 201196316
+    lu.assertEquals(doorClosure0.getItemId(), defaultId)
+    lu.assertEquals(doorClosure1.getItemId(), defaultId)
+    lu.assertEquals(doorClosure2.getItemId(), defaultId)
+    lu.assertNotEquals(doorClosure3.getItemId(), defaultId)
+end
+
+--- Tests to verify the inherited functionality of ElementWithToggle.
+function _G.TestDoorUnit.testElementWithToggle()
+    local mock = mdu:new()
+    local closure = mock:mockGetClosure()
+
+    mock.state = false
+    closure.open()
+    lu.assertTrue(mock.state)
+
+    mock.state = true
+    closure.open()
+    lu.assertTrue(mock.state)
 end
 
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
@@ -47,7 +84,7 @@ end
 -- Test setup:
 -- 1. 1x Sliding Door S, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState, setSignalIn, getSignalIn
+-- Exercises: getElementClass, open, close, toggle, isOpen, setSignalIn, getSignalIn
 function _G.TestDoorUnit.testGameBehavior()
     local mock = mdu:new(nil, 1)
     local slot1 = mock:mockGetClosure()
@@ -57,14 +94,14 @@ function _G.TestDoorUnit.testGameBehavior()
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"setSignalIn", "getSignalIn"}
+    local expectedFunctions = {"open", "close", "isOpen", "setSignalIn", "getSignalIn"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
@@ -74,56 +111,44 @@ function _G.TestDoorUnit.testGameBehavior()
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "DoorUnit")
+    assert(slot1.getClass() == "DoorUnit")
+    assert(string.match(string.lower(slot1.getName()), "sliding door s %[%d+%]"), slot1.getName())
+    assert(slot1.getItemId() == 201196316, slot1.getItemId())
     assert(slot1.getMaxHitPoints() == 56.0)
     assert(slot1.getMass() == 749.15)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     -- play with set signal, has no actual effect on state when set programmatically
-    local initialState = slot1.getState()
+    local initialState = slot1.isOpen()
     slot1.setSignalIn("in", 0.0)
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
+    assert(slot1.isOpen() == initialState)
     slot1.setSignalIn("in", 1.0)
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(slot1.getState() == initialState)
-    -- fractions within [0,1] work, and string numbers are cast
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.isOpen() == initialState)
     slot1.setSignalIn("in", 0.7)
-    assert(slot1.getSignalIn("in") == 0.7)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", "0.5")
-    assert(slot1.getSignalIn("in") == 0.5)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", "0.0")
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", "7.0")
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(slot1.getState() == initialState)
-    -- invalid sets to 0
-    slot1.setSignalIn("in", "text")
+    assert(slot1.isOpen() == initialState)
+    slot1.setSignalIn("in", "1.0")
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", nil)
-    assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
+    assert(slot1.isOpen() == initialState)
 
     -- ensure initial state
-    slot1.deactivate()
-    assert(slot1.getState() == 0)
+    slot1.close()
+    assert(slot1.isOpen() == 0)
 
     -- validate methods
-    slot1.activate()
-    assert(slot1.getState() == 1)
-    slot1.deactivate()
-    assert(slot1.getState() == 0)
+    slot1.open()
+    assert(slot1.isOpen() == 1)
+    slot1.close()
+    assert(slot1.isOpen() == 0)
     slot1.toggle()
-    assert(slot1.getState() == 1)
+    assert(slot1.isOpen() == 1)
 
     system.print("Success")
     unit.exit()
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 

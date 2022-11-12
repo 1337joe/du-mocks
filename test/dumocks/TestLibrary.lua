@@ -76,6 +76,38 @@ function _G.TestLibrary.testSystemResolution2Error()
     lu.assertErrorMsgContains("Solution 1 not loaded.", closure.systemResolution2, {1, 2, 3}, {4, 5, 6}, {7, 8, 9})
 end
 
+--- Verify results pre-load properly for getPointOnScreen.
+function _G.TestLibrary.testGetPointOnScreen()
+    local library = ml:new()
+    local closure = library:mockGetClosure()
+    local expected, actual
+
+    local resultSequence = {}
+    resultSequence[1] = {1, 2, 3}
+    resultSequence[2] = {2, 3, 4}
+
+    -- load results in order into solutions list
+    table.insert(library.getPointOnScreenSolutions, resultSequence[1])
+    table.insert(library.getPointOnScreenSolutions, resultSequence[2])
+
+    expected = resultSequence[1]
+    actual = closure.getPointOnScreen({1, 2, 3})
+    lu.assertEquals(actual, expected)
+
+    expected = resultSequence[2]
+    actual = closure.getPointOnScreen({1, 2, 3})
+    lu.assertEquals(actual, expected)
+end
+
+--- Verify error when attempting to run without loading results.
+function _G.TestLibrary.testGetPointOnScreenError()
+    local library = ml:new()
+    local closure = library:mockGetClosure()
+
+    -- no results primed
+    lu.assertErrorMsgContains("Point 1 not loaded.", closure.getPointOnScreen, {1, 2, 3})
+end
+
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --
@@ -91,19 +123,19 @@ function _G.TestLibrary.testGameBehavior()
     local unit = {}
     unit.exit = function() end
     local system = {}
-    system.print = function() end
+    system.print = function(_) end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"systemResolution3", "systemResolution2", "load"}
+    local expectedFunctions = {"systemResolution3", "systemResolution2", "getPointOnScreen", "load"}
     _G.Utilities.verifyExpectedFunctions(library, expectedFunctions)
 
     system.print("Success")
     unit.exit()
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 

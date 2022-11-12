@@ -9,14 +9,32 @@ local lu = require("luaunit")
 
 local msu = require("dumocks.ScreenUnit")
 require("test.Utilities")
+local AbstractTestElementWithToggle = require("test.dumocks.AbstractTestElementWithToggle")
 
-_G.TestScreenUnit = {}
+_G.TestScreenUnit = AbstractTestElementWithToggle
+
+function _G.TestScreenUnit.getTestElement()
+    return msu:new()
+end
+
+function _G.TestScreenUnit.getStateFunction(closure)
+    return closure.isActive
+end
+
+function _G.TestScreenUnit.getActivateFunction(closure)
+    return closure.activate
+end
+
+function _G.TestScreenUnit.getDeactivateFunction(closure)
+    return closure.deactivate
+end
 
 --- Verify constructor arguments properly handled and independent between instances.
 function _G.TestScreenUnit.testConstructor()
 
     -- default element:
-    -- ["screen xs"] = {mass = 18.67, maxHitPoints = 50.0}
+    -- ["screen xs"] = {mass = 18.67, maxHitPoints = 50.0, itemId = 184261427, class = "ScreenUnit",
+    --                  resolutionX = 1024.0, resolutionY = 613.0}
 
     local screen0 = msu:new()
     local screen1 = msu:new(nil, 1, "Screen XS")
@@ -30,10 +48,10 @@ function _G.TestScreenUnit.testConstructor()
     local screenClosure3 = screen3:mockGetClosure()
     local screenClosure4 = screen4:mockGetClosure()
 
-    lu.assertEquals(screenClosure0.getId(), 0)
-    lu.assertEquals(screenClosure1.getId(), 1)
-    lu.assertEquals(screenClosure2.getId(), 2)
-    lu.assertEquals(screenClosure3.getId(), 3)
+    lu.assertEquals(screenClosure0.getLocalId(), 0)
+    lu.assertEquals(screenClosure1.getLocalId(), 1)
+    lu.assertEquals(screenClosure2.getLocalId(), 2)
+    lu.assertEquals(screenClosure3.getLocalId(), 3)
 
     -- prove default element is selected only where appropriate
     local defaultMass = 18.67
@@ -42,8 +60,14 @@ function _G.TestScreenUnit.testConstructor()
     lu.assertEquals(screenClosure2.getMass(), defaultMass)
     lu.assertNotEquals(screenClosure3.getMass(), defaultMass)
 
+    local defaultId = 184261427
+    lu.assertEquals(screenClosure0.getItemId(), defaultId)
+    lu.assertEquals(screenClosure1.getItemId(), defaultId)
+    lu.assertEquals(screenClosure2.getItemId(), defaultId)
+    lu.assertNotEquals(screenClosure3.getItemId(), defaultId)
+
     -- verify different classes for different types
-    lu.assertNotEquals(screenClosure3.getElementClass(), screenClosure4.getElementClass())
+    lu.assertNotEquals(screenClosure3.getClass(), screenClosure4.getClass())
 end
 
 --- Verify listener is registered and notified on non-error updates.
@@ -820,7 +844,7 @@ end
 -- Test setup:
 -- 1. 1x Screen or Sign (not XL), connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState
+-- Exercises: getElementClass, deactivate, activate, toggle, isActive, setSignalIn, getSignalIn
 function _G.TestScreenUnit.testGameBehavior()
     local mock = msu:new(nil, 1)
     local slot1 = mock:mockGetClosure()
@@ -830,17 +854,17 @@ function _G.TestScreenUnit.testGameBehavior()
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
     local expectedFunctions = {"addText", "setCenteredText", "setHTML", "addContent", "setSVG", "resetContent",
                                "deleteContent", "showContent", "moveContent", "getMouseX", "getMouseY", "getMouseState",
                                "clear", "setRenderScript", "setScriptInput", "getScriptOutput", "clearScriptOutput",
-                               "getSignalIn", "setSignalIn"}
+                               "getSignalIn", "setSignalIn", "isActive"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
@@ -850,64 +874,55 @@ function _G.TestScreenUnit.testGameBehavior()
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    local class = slot1.getElementClass()
-    local isScreen
+    local class = slot1.getClass()
+    local expectedName
+    local expectedId
     if class == "ScreenUnit" then
-        isScreen = true
+        expectedName = "screen %w+ %[%d+%]"
+        expectedId = { [184261427] = true, [184261490] = true, [3988665660] = true }
     elseif class == "ScreenSignUnit" then
-        isScreen = false
+        expectedName = "sign %w+ %[%d+%]"
+        expectedId = { [166656023] = true }
     else
         assert(false, "Unexpected class: " .. class)
     end
+    assert(string.match(string.lower(slot1.getName()), expectedName), slot1.getName())
+    assert(expectedId[slot1.getItemId()], "Unexpected id: " .. slot1.getItemId())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getMass() == 18.67)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
     -- play with set signal, has no actual effect on state when set programmatically
-    local initialState = slot1.getState()
+    local initialState = slot1.isActive()
     slot1.setSignalIn("in", 0.0)
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
+    assert(slot1.isActive() == initialState)
     slot1.setSignalIn("in", 1.0)
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(slot1.getState() == initialState)
-    -- fractions within [0,1] work, and string numbers are cast
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.isActive() == initialState)
     slot1.setSignalIn("in", 0.7)
-    assert(slot1.getSignalIn("in") == 0.7)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", "0.5")
-    assert(slot1.getSignalIn("in") == 0.5)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", "0.0")
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", "7.0")
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(slot1.getState() == initialState)
-    -- invalid sets to 0
-    slot1.setSignalIn("in", "text")
+    assert(slot1.isActive() == initialState)
+    slot1.setSignalIn("in", "1.0")
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", nil)
-    assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
+    assert(slot1.isActive() == initialState)
 
     -- ensure initial state
     slot1.deactivate()
-    assert(slot1.getState() == 0)
+    assert(slot1.isActive() == 0)
 
     -- validate methods
     slot1.activate()
-    assert(slot1.getState() == 1)
+    assert(slot1.isActive() == 1)
     slot1.deactivate()
-    assert(slot1.getState() == 0)
+    assert(slot1.isActive() == 0)
     slot1.toggle()
-    assert(slot1.getState() == 1)
+    assert(slot1.isActive() == 1)
 
     system.print("Success")
     unit.exit()
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 

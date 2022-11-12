@@ -18,13 +18,13 @@ jobs:
         luaVersion: [ "5.3", "5.4" ]
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3.1.0
 
-      - uses: leafo/gh-actions-lua@v9
+      - uses: leafo/gh-actions-lua@v9.1.0
         with:
           luaVersion: ${{ matrix.luaVersion }}
 
-      - uses: leafo/gh-actions-luarocks@v4
+      - uses: leafo/gh-actions-luarocks@v4.3.0
 
       - name: Setup
         run: |
@@ -40,22 +40,22 @@ jobs:
         run: ./test/runTests.sh -o junit
 
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: EnricoMi/publish-unit-test-result-action@v2.1.0
         if: always()
         with:
-          files: "test/results/**/*.xml"
+          junit_files: "test/results/**/*.xml"
 
       - run: luacov
 
       - name: Upload to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v3.1.1
         if: ${{ matrix.luaVersion == '5.3' }}
 
       - name: Export In-Game Tests
         run: ./test/exportAll.sh
 
       - name: Upload Test Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.0
         if: ${{ matrix.luaVersion == '5.3' }}
         with:
           name: test_configs
@@ -66,7 +66,7 @@ jobs:
       - run: rm -f test/results/*.xml
 
       - name: Deploy Screen Renderer Output
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
         if: ${{ matrix.luaVersion == '5.3' && (github.event_name == 'push' && github.ref_name == 'main') }}
         with:
           branch: codex

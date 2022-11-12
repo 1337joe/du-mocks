@@ -17,10 +17,7 @@
 --   <li>RocketEngine</li>
 -- </ul>
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
--- @see ElementWithState
--- @see ElementWithToggle
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @module EngineUnit
 -- @alias M
 
@@ -92,7 +89,7 @@ local DATA_TEMPLATE =
 --   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>engine_unit</code></li>
 -- </ul>
 -- @treturn string Data as JSON.
-function M:getData()
+function M:getWidgetData()
     local currentMaxThrust = 0
     local currentThrust = 0
     local maxThrustBase = 0
@@ -101,7 +98,7 @@ function M:getData()
 end
 
 -- Override default with realistic patten to id.
-function M:getDataId()
+function M:getWidgetDataId()
     return "e123456"
 end
 
@@ -172,12 +169,7 @@ end
 -- @see getCurrentFuelRate
 -- @treturn m3/(N.s) How many litres of fuel per newton per second.
 function M:getFuelRate()
-    local message = "Warning: method getFuelRate is deprecated, use getCurrentFuelRate instead"
-    if _G.system and _G.system.print and type(_G.system.print) == "function" then
-        _G.system.print(message)
-    else
-        print(message)
-    end
+    M.deprecated("getFuelRate", "getCurrentFuelRate")
     return self:getCurrentFuelRate()
 end
 

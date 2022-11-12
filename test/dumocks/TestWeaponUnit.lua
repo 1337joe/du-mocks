@@ -20,7 +20,7 @@ TestWeaponUnit = {}
 --
 -- Note: Must be run on a dynamic core.
 --
--- Exercises: getElementClass, getData
+-- Exercises: getClass, getWidgetData
 function _G.TestWeaponUnit.testGameBehavior()
     local mock, closure
     local result, message
@@ -42,30 +42,37 @@ function _G.TestWeaponUnit.gameBehaviorHelper(mock, slot11)
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {}
+    local expectedFunctions = {"getReloadTime", "getUnloadTime", "getMaxDistance", "getTargetId", "getMaxAmmo",
+                               "getOptimalTracking", "getOperationalState", "getOptimalDistance", "getMagazineVolume",
+                               "isOperational", "isOutOfAmmo", "getContainerId", "getStatus", "getHitProbability",
+                               "getCycleTime", "getAmmoCount", "getAmmo", "getOptimalAimingCone", "getBaseDamage"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
     _G.Utilities.verifyExpectedFunctions(slot11, expectedFunctions)
 
     -- test element class and inherited methods
-    local class = slot11.getElementClass()
+    local class = slot11.getClass()
     assert(string.match(class, "Weapon.+"), "Unexpected class: " .. class)
+    assert(string.match(string.lower(slot11.getName()), "railgun %w+ %[%d+%]"), slot11.getName())
+    local expectedIds = {[31327772] = true}
+    assert(expectedIds[slot11.getItemId()], "Unexpected id: " .. slot11.getItemId())
 
-    local data = slot11.getData()
+    local data = slot11.getWidgetData()
     local expectedFields = {"helperId", "name", "type", "fireCounter", "fireReady", "hitProbability", "hitResult",
                             "operationalStatus", "outOfZone", "repeatedFire", "weaponStatus", "staticProperties",
                             "cycleTime", "magazineVolume", "optimalAimingCone", "optimalDistance", "optimalTracking",
                             "reloadTime", "size", "unloadTime", "targetConstruct", "elementId", "properties",
                             "ammoMax", "ammoName", "ammoTypeId", "cycleAnimationRemainingTime", "fireBlocked",
-                            "ammoCount", "baseDamage", "constructId"}
+                            "ammoCount", "baseDamage", "constructId", "disableFire", "impactCounter", "maxDistance",
+                            "missCounter"}
     local expectedValues = {}
     local ignoreFields = {}
     expectedValues["helperId"] = '"weapon"'
@@ -73,14 +80,14 @@ function _G.TestWeaponUnit.gameBehaviorHelper(mock, slot11)
     expectedValues["size"] = '"xs"'
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ignoreFields)
 
-    assert(string.match(slot11.getDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. slot11.getDataId())
+    assert(string.match(slot11.getWidgetDataId(), "e%d+"), "Expected dataId to match e%d pattern: " .. slot11.getWidgetDataId())
     assert(slot11.getMaxHitPoints() >= 300)
-    assert(slot11.getMass() == 232.02)
+    assert(slot11.getMass() == 232.0)
     _G.Utilities.verifyBasicElementFunctions(slot11, 3, "weapon")
 
     system.print("Success")
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 

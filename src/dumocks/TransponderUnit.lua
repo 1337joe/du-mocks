@@ -2,10 +2,7 @@
 --
 -- Element class: CombatDefense
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
--- @see ElementWithState
--- @see ElementWithToggle
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @module TransponderUnit
 -- @alias M
 
@@ -13,8 +10,8 @@ local MockElement = require "dumocks.Element"
 local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
-elementDefinitions["transponder"] = {mass = 340, maxHitPoints = 50.0}
-local DEFAULT_ELEMENT = "transponder"
+elementDefinitions["transponder xs"] = {mass = 340, maxHitPoints = 50.0, itemId = 63667997}
+local DEFAULT_ELEMENT = "transponder xs"
 
 local M = MockElementWithToggle:new()
 M.elementClass = "CombatDefense"
@@ -35,12 +32,12 @@ function M:new(o, id, elementName)
     return o
 end
 
--- Behavior override to trigger event.
+--- Activate the transponder.
 function M:activate()
     self:mockDoToggled(1)
 end
 
--- Behavior override to trigger event.
+--- Deactivate the transponder.
 function M:deactivate()
     self:mockDoToggled(0)
 end
@@ -54,11 +51,20 @@ function M:toggle()
     end
 end
 
+--- Checks if the transponder is active.
+-- @treturn 0/1 1 if the transponder is active, 0 otherwise.
+function M:isActive()
+    if self.state then
+        return 1
+    end
+    return 0
+end
+
 local BAD_TAG_PATTERN = "%s"
 --- Set the tags list with up to 8 entries. Returns 1 if the application was successful, 0 if the tag format is invalid.
 --
--- Note: Calling too frequently (< 0.5 seconds between calls) will display an "Invalid request timing" message. Also,
---   providing too many tags truncates the list instead of returning 0, but spaces in tags aren't allowed.
+-- Note: It can take half a second or more for an update to apply. Also, providing too many tags truncates the list
+--   instead of returning 0, but spaces in tags aren't allowed.
 -- @tparam list tags List of up to 8 transponder tag strings.
 -- @treturn 0/1 1 if transponder tags were set, 0 if an error occurred.
 function M:setTags(tags)
@@ -93,31 +99,13 @@ end
 --
 -- Valid plug names are:
 -- <ul>
--- <li>"in" for the in signal (has no actual effect on agg state when modified this way).</li>
+-- <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
 -- </ul>
 -- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
-        local value = tonumber(state)
-        if type(value) ~= "number" then
-            value = 0.0
-        end
-
-        -- expected behavior, but in fact nothing happens in-game
-        if value > 0.0 then
-            -- self:activate()
-        else
-            -- self:deactivate()
-        end
-
-        if value <= 0 then
-            self.plugIn = 0
-        elseif value >= 1.0 then
-            self.plugIn = 1.0
-        else
-            self.plugIn = value
-        end
+        -- no longer responds to setSignalIn
     end
 end
 
@@ -146,11 +134,23 @@ function M:getSignalIn(plug)
     return MockElement.getSignalIn(self)
 end
 
+--- <b>Deprecated:</b> Event: Emitted when the transponder is started or stopped.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onToggled should be used instead.
+-- @see EVENT_onToggled
+-- @tparam 0/1 active 1 if the element was activated, 0 otherwise.
+function M.EVENT_toggled()
+    M.deprecated("EVENT_toggled", "EVENT_onToggled")
+    M.EVENT_onToggled()
+end
+
 --- Event: Emitted when the transponder is started or stopped.
 --
 -- Note: This is documentation on an event handler, not a callable method.
 -- @tparam 0/1 active 1 if the element was activated, 0 otherwise.
-function M.EVENT_toggled()
+function M.EVENT_onToggled()
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterToggled")
 end
 
@@ -204,6 +204,9 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElementWithToggle.mockGetClosure(self)
+    closure.activate = function() return self:activate() end
+    closure.deactivate = function() return self:deactivate() end
+    closure.isActive = function() return self:isActive() end
     closure.setTags = function(tags) return self:setTags(tags) end
     closure.getTags = function() return self:getTags() end
 

@@ -1,11 +1,11 @@
---- The database library offers multiple useful functions to get all information in one object about a player, a
--- construct, an organization or an element.
+--- The database library offers multiple useful functions to get all information
+-- in one object about a player, a construct, an organization or an element.
 --
 -- The database is defined by a Lua file within your Dual Universe installation, view it at:
 -- <code>...\Dual Universe\Game\data\lua\database.lua</code>
 -- @module game_data_lua.database
 
-database = {}
+local database = {}
 
 --- Returns all info about a given player, identified by its id.
 -- @tparam integer id The player ID.
@@ -13,13 +13,13 @@ database = {}
 function database.getPlayer(id)
 end
 
----Returns all informations about the player running the script.
+--- Returns all informations about the player running the script.
 -- @tparam table unit The unit object.
--- @treturn table The player structure
+-- @treturn table The player structure.
 function database.getMasterPlayer(unit)
 end
 
----Returns all informations about the given organization, identified by its id.
+--- Returns all informations about the given organization, identified by its id.
 -- @tparam integer id The organization id.
 -- @treturn table The organization structure.
 function database.getOrganization(id)

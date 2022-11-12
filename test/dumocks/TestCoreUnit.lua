@@ -8,7 +8,7 @@ package.path = "src/?.lua;" .. package.path
 local lu = require("luaunit")
 
 local mcu = require("dumocks.CoreUnit")
-require("test.Utilities")
+local utilities = require("test.Utilities")
 
 _G.TestCoreUnit = {}
 
@@ -16,7 +16,7 @@ _G.TestCoreUnit = {}
 function _G.TestCoreUnit.testConstructor()
 
     -- default element:
-    -- ["dynamic core unit xs"] = {mass = 70.89, maxHitPoints = 50.0, class = "CoreUnitDynamic"}
+    -- ["dynamic core unit xs"] = {mass = 70.89, maxHitPoints = 50.0, itemId = 183890713, class = "CoreUnitDynamic"}
 
     local control0 = mcu:new()
     local control1 = mcu:new(nil, 1, "Dynamic Core Unit XS")
@@ -28,10 +28,10 @@ function _G.TestCoreUnit.testConstructor()
     local controlClosure2 = control2:mockGetClosure()
     local controlClosure3 = control3:mockGetClosure()
 
-    lu.assertEquals(controlClosure0.getId(), 1)
-    lu.assertEquals(controlClosure1.getId(), 1)
-    lu.assertEquals(controlClosure2.getId(), 2)
-    lu.assertEquals(controlClosure3.getId(), 3)
+    lu.assertEquals(controlClosure0.getLocalId(), 1)
+    lu.assertEquals(controlClosure1.getLocalId(), 1)
+    lu.assertEquals(controlClosure2.getLocalId(), 2)
+    lu.assertEquals(controlClosure3.getLocalId(), 3)
 
     -- prove default element is selected only where appropriate
     local defaultMass = 70.89
@@ -39,6 +39,12 @@ function _G.TestCoreUnit.testConstructor()
     lu.assertEquals(controlClosure1.getMass(), defaultMass)
     lu.assertEquals(controlClosure2.getMass(), defaultMass)
     lu.assertNotEquals(controlClosure3.getMass(), defaultMass)
+
+    local defaultId = 183890713
+    lu.assertEquals(controlClosure0.getItemId(), defaultId)
+    lu.assertEquals(controlClosure1.getItemId(), defaultId)
+    lu.assertEquals(controlClosure2.getItemId(), defaultId)
+    lu.assertNotEquals(controlClosure3.getItemId(), defaultId)
 end
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
@@ -46,7 +52,8 @@ end
 -- Test setup:
 -- 1. core unit of any type, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, g, spawnNumberSticker, spawnArrowSticker, deleteSticker, moveSticker, getPvPTimer
+-- Exercises: getClass, getItemId, getName, getWidgetData g, spawnNumberSticker, spawnArrowSticker, deleteSticker,
+--   moveSticker
 function _G.TestCoreUnit.testGameBehavior()
     local mock, closure
     local result, message
@@ -71,23 +78,33 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
-    local class = slot1.getElementClass()
+    local class = slot1.getClass()
+    local expectedName, expectedIds
     local isStatic, isSpace, isDynamic
     if class == "CoreUnitStatic" then
         isStatic = true
+        expectedName = "static"
+        expectedIds = {[2738359963] = true, [2738359893] = true, [909184430] = true, [910155097] = true}
     elseif class == "CoreUnitSpace" then
         isSpace = true
+        expectedName = "space"
+        expectedIds = {[3624942103] = true, [3624940909] = true, [5904195] = true, [5904544] = true}
     elseif class == "CoreUnitDynamic" then
         isDynamic = true
+        expectedName = "dynamic"
+        expectedIds = {[183890713] = true, [183890525] = true, [1418170469] = true, [1417952990] = true}
     else
         assert(false, "Unexpected class: " .. class)
     end
+    expectedName = expectedName .. " core unit %w+ %[1]"
+    assert(string.match(string.lower(slot1.getName()), expectedName), slot1.getName())
+    assert(expectedIds[slot1.getItemId()], "Unexpected ID: " .. slot1.getItemId())
 
     -- verify expected functions
     local expectedFunctions = {"getConstructWorldPos", "getConstructId", "getWorldAirFrictionAngularAcceleration",
@@ -95,14 +112,14 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
                                "deleteSticker", "moveSticker", "rotateSticker", "getElementIdList",
                                "getElementNameById", "getElementTypeById", "getElementHitPointsById",
                                "getElementMaxHitPointsById", "getElementMassById", "getElementPositionById",
-                               "getElementRotationById", "getElementTagsById", "getAltitude", "g", "getWorldGravity",
+                               "getElementTagsById", "getAltitude", "g", "getWorldGravity",
                                "getWorldVertical", "getAngularVelocity", "getWorldAngularVelocity",
                                "getAngularAcceleration", "getWorldAngularAcceleration", "getVelocity",
                                "getWorldVelocity", "getWorldAcceleration", "getAcceleration",
                                "getConstructOrientationUp", "getConstructOrientationRight",
                                "getConstructOrientationForward", "getConstructWorldOrientationUp",
                                "getConstructWorldOrientationRight", "getConstructWorldOrientationForward",
-                               "getSchematicInfo", "getElementIndustryStatus", "getPvPTimer", "getPlayersOnBoard",
+                               "getSchematicInfo", "getElementIndustryStatusById", "getPvPTimer", "getPlayersOnBoard",
                                "getDockedConstructs", "isPlayerBoarded", "isConstructDocked", "forceDeboard",
                                "forceUndock", "getBoardedPlayerMass", "getDockedConstructMass", "getParent",
                                "getCloseParents", "getClosestParent", "dock", "undock", "setDockingMode",
@@ -114,7 +131,7 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
                                "getOrientationUnitId", "getElementForwardById", "getConstructWorldUp",
                                "getCurrentPlanetId", "getConstructWorldForward", "getPlayersOnBoardInVRStation",
                                "isPlayerBoardedInVRStation", "getBoardedInVRStationAvatarMass",
-                               "forceInterruptVRSession", "getMaxSpeedPerAxis", "getMaxAngularSpeed", "getMaxSpeed"}
+                               "forceInterruptVRSession", "getMaxSpeedPerAxis", "getMaxAngularSpeed", "getMaxSpeed", "getElementIndustryInfoById", "getGravityIntensity", "getElementClassById", "getElementItemIdById", "getElementDisplayNameById"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
@@ -127,7 +144,7 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test inherited methods
-    local data = slot1.getData()
+    local data = slot1.getWidgetData()
     local expectedFields = {"helperId", "name", "type", "altitude", "gravity", "currentStress", "maxStress"}
     local expectedValues = {}
     expectedValues["type"] = '"core"'
@@ -143,9 +160,9 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
     _G.Utilities.verifyBasicElementFunctions(slot1, 0, "core")
 
     if isDynamic then
-        assert(slot1.g() > 0)
+        assert(slot1.getGravityIntensity() > 0)
     else
-        assert(slot1.g() == 0.0)
+        assert(slot1.getGravityIntensity() == 0.0)
     end
 
     local stickerIds = {}
@@ -176,12 +193,10 @@ function _G.TestCoreUnit.gameBehaviorHelper(mock, slot1)
     assert(slot1.moveSticker(firstSticker, 1, 2, 3) == 0) -- success
     assert(slot1.moveSticker(-1, 1, 2, 3) == -1) -- failure
 
-    assert(slot1.getPvPTimer() == 0.0)
-
     system.print("Success")
     unit.exit()
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 

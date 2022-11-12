@@ -2,9 +2,7 @@
 --
 -- Element class: PressureTileUnit
 --
--- Extends: Element &gt; ElementWithState
--- @see Element
--- @see ElementWithState
+-- Extends: @{Element} &gt; @{ElementWithState}
 -- @module PressureTileUnit
 -- @alias M
 
@@ -12,8 +10,8 @@ local MockElement = require "dumocks.Element"
 local MockElementWithState = require "dumocks.ElementWithState"
 
 local elementDefinitions = {}
-elementDefinitions["pressure tile"] = {mass = 50.63, maxHitPoints = 50.0}
-local DEFAULT_ELEMENT = "pressure tile"
+elementDefinitions["pressure tile xs"] = {mass = 50.63, maxHitPoints = 50.0, itemId = 2012928469}
+local DEFAULT_ELEMENT = "pressure tile xs"
 
 local M = MockElementWithState:new()
 M.elementClass = "PressureTileUnit"
@@ -29,6 +27,15 @@ function M:new(o, id, elementName)
     o.releasedCallbacks = {}
 
     return o
+end
+
+--- Checks if the pressure is down.
+-- @treturn 0/1 1 when the tile is down, 0 otherwise.
+function M:isDown()
+    if self.state then
+        return 1
+    end
+    return 0
 end
 
 --- Return the value of a signal in the specified OUT plug of the element.
@@ -50,17 +57,39 @@ function M:getSignalOut(plug)
     return MockElement.getSignalOut(self, plug)
 end
 
---- Event: Someone stepped on the tile.
+--- <b>Deprecated:</b> Event: Someone stepped on the tile.
 --
 -- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onPressed should be used instead.
+-- @see EVENT_onPressed
 function M.EVENT_pressed()
+    M.deprecated("EVENT_pressed", "EVENT_onPressed")
+    M.EVENT_onReleased()
+end
+
+--- Event: Emitted when the pressure tile is pressed.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+function M.EVENT_onPressed()
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterPressed")
 end
 
---- Event: Someone left the tile.
+--- <b>Deprecated:</b> Event: Someone left the tile.
 --
 -- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onReleased should be used instead.
+-- @see EVENT_onReleased
 function M.EVENT_released()
+    M.deprecated("EVENT_released", "EVENT_onReleased")
+    M.EVENT_onReleased()
+end
+
+--- Event: Emitted when the pressure tile is released.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+function M.EVENT_onReleased()
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterReleased")
 end
 
@@ -145,6 +174,7 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElementWithState.mockGetClosure(self)
+    closure.isDown = function() return self:isDown() end
 
     closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
     return closure

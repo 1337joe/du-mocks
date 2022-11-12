@@ -15,7 +15,8 @@ function _G.TestUtilities.testVerifyExpectedFunctions()
     -- unexpected
     expected = {}
     actual = {
-        activate = function() end
+        activate = function()
+        end
     }
     local result, message = pcall(_G.Utilities.verifyExpectedFunctions, actual, expected)
     lu.assertFalse(result)
@@ -33,7 +34,8 @@ function _G.TestUtilities.testVerifyExpectedFunctions()
     -- both unexpected and missing
     expected = {"deactivate"}
     actual = {
-        activate = function() end
+        activate = function()
+        end
     }
     local result, message = pcall(_G.Utilities.verifyExpectedFunctions, actual, expected)
     lu.assertFalse(result)
@@ -43,7 +45,8 @@ function _G.TestUtilities.testVerifyExpectedFunctions()
     -- no error
     expected = {"activate"}
     actual = {
-        activate = function() end
+        activate = function()
+        end
     }
     _G.Utilities.verifyExpectedFunctions(actual, expected)
 end
@@ -55,7 +58,7 @@ function _G.TestUtilities.testVerifyBasicElementFunctions()
 
     local function createSampleElement()
         local sample = {}
-        sample.id = 1
+        sample.localId = 1
         sample.integrity = 50
         sample.hitPoints = 75
         sample.maxHitPoints = 150
@@ -65,8 +68,8 @@ function _G.TestUtilities.testVerifyBasicElementFunctions()
         sample.dataId = ""
         sample.data = "{}"
 
-        sample.getId = function()
-            return sample.id
+        sample.getLocalId = function()
+            return sample.localId
         end
         sample.getIntegrity = function()
             return sample.integrity
@@ -86,25 +89,25 @@ function _G.TestUtilities.testVerifyBasicElementFunctions()
         sample.getWidgetType = function()
             return sample.widgetType
         end
-        sample.getDataId = function()
+        sample.getWidgetDataId = function()
             return sample.dataId
         end
-        sample.getData = function()
+        sample.getWidgetData = function()
             return sample.data
         end
-        sample.show = function()
+        sample.showWidget = function()
         end
-        sample.hide = function()
+        sample.hideWidget = function()
         end
         return sample
     end
 
     -- id not set
     element = createSampleElement()
-    element.id = nil
+    element.localId = nil
     result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
     lu.assertFalse(result)
-    lu.assertStrIContains(message, "invalid id")
+    lu.assertStrIContains(message, "invalid local id")
 
     -- integrity/hp/max hp relationship broken
     element = createSampleElement()
@@ -176,7 +179,7 @@ function _G.TestUtilities.testVerifyBasicElementFunctions()
 
     -- show fails
     element = createSampleElement()
-    element.show = function()
+    element.showWidget = function()
         error("bad show")
     end
     result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
@@ -184,7 +187,7 @@ function _G.TestUtilities.testVerifyBasicElementFunctions()
 
     -- hide fails
     element = createSampleElement()
-    element.hide = function()
+    element.hideWidget = function()
         error("bad hide")
     end
     result, message = pcall(_G.Utilities.verifyBasicElementFunctions, element, 3, nil)
@@ -206,21 +209,24 @@ function _G.TestUtilities.testVerifyWidgetData()
     local expectedFields = {"helperId"}
     local expectedValues = {}
     expectedValues["helperId"] = '"gyro"'
-    lu.assertErrorMsgContains("Missing expected data fields: helperId", _G.Utilities.verifyWidgetData, data, expectedFields, expectedValues)
+    lu.assertErrorMsgContains("Missing expected data fields: helperId", _G.Utilities.verifyWidgetData, data,
+        expectedFields, expectedValues)
 
     -- wrong value
     local data = '{"helperId":"something else"}'
     local expectedFields = {"helperId"}
     local expectedValues = {}
     expectedValues["helperId"] = '"gyro"'
-    lu.assertErrorMsgContains("Unexpected value for helperId, expected \"gyro\"", _G.Utilities.verifyWidgetData, data, expectedFields, expectedValues)
+    lu.assertErrorMsgContains("Unexpected value for helperId, expected \"gyro\"", _G.Utilities.verifyWidgetData, data,
+        expectedFields, expectedValues)
 
     -- unexpected field
     local data = '{"helperId":"gyro","type":"gyro"}'
     local expectedFields = {"helperId"}
     local expectedValues = {}
     expectedValues["helperId"] = '"gyro"'
-    lu.assertErrorMsgContains("Found unexpected data fields: type", _G.Utilities.verifyWidgetData, data, expectedFields, expectedValues)
+    lu.assertErrorMsgContains("Found unexpected data fields: type", _G.Utilities.verifyWidgetData, data, expectedFields,
+        expectedValues)
 
     -- no error, all checks hit
     local data = '{"helperId":"gyro"}'
@@ -234,6 +240,66 @@ function _G.TestUtilities.testVerifyWidgetData()
     local expectedFields = {"parentingInfo", "autoParentingMode", "closestConstructName"}
     local expectedValues = {}
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues)
+end
+
+function _G.TestUtilities.testAssertTableEquals()
+    local actual, expected
+
+    expected = {}
+    lu.assertFalse(_G.Utilities.assertTableEquals(nil, expected))
+    lu.assertFalse(_G.Utilities.assertTableEquals(1, expected))
+    lu.assertFalse(_G.Utilities.assertTableEquals("string", expected))
+
+    actual = {1}
+    expected = {1}
+    lu.assertTrue(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {1}
+    expected = {}
+    lu.assertFalse(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {}
+    expected = {1}
+    lu.assertFalse(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {a = 1}
+    expected = {a = 1}
+    lu.assertTrue(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {a = 2}
+    expected = {a = 1}
+    lu.assertFalse(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {b = 1}
+    expected = {a = 1}
+    lu.assertFalse(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {0, 1, 0}
+    expected = {0, 1, 0}
+    lu.assertTrue(_G.Utilities.assertTableEquals(actual, expected))
+
+    actual = {0, 1, 1}
+    expected = {0, 1, 0}
+    lu.assertFalse(_G.Utilities.assertTableEquals(actual, expected))
+end
+
+--- Verify verifyDeprecated finds problems.
+function _G.TestUtilities.testVerifyDeprecated()
+    local notDep = function(arg1, arg2)
+        return arg1 + arg2
+    end
+
+    lu.assertEquals(3, notDep(1, 2))
+
+    local dep = function(arg1, arg2)
+        _G.system.print("Warning: method dep is deprecated")
+        return notDep(arg1, arg2)
+    end
+
+    _G.Utilities.verifyDeprecated("dep", dep, 1, 2)
+
+    lu.assertErrorMsgContains("Could not find substring", _G.Utilities.verifyDeprecated, "wrong name", dep, 1, 2)
+    lu.assertErrorMsgContains("No deprecated message found", _G.Utilities.verifyDeprecated, "notDep", notDep, 1, 2)
 end
 
 os.exit(lu.LuaUnit.run())

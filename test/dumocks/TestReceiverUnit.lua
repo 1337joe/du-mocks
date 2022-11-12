@@ -8,7 +8,7 @@ package.path = "src/?.lua;" .. package.path
 local lu = require("luaunit")
 
 local mru = require("dumocks.ReceiverUnit")
-require("test.Utilities")
+local utilities = require("test.Utilities")
 
 _G.TestReceiverUnit = {}
 
@@ -16,7 +16,7 @@ _G.TestReceiverUnit = {}
 function _G.TestReceiverUnit.testConstructor()
 
     -- default element:
-    -- ["receiver xs"] = {mass = 13.27, maxHitPoints = 50.0, range = 100.0}
+    -- ["receiver xs"] = {mass = 13.27, maxHitPoints = 50.0, itemId = 3732634076}
 
     local receiver0 = mru:new()
     local receiver1 = mru:new(nil, 1, "Receiver XS")
@@ -28,10 +28,10 @@ function _G.TestReceiverUnit.testConstructor()
     local receiverClosure2 = receiver2:mockGetClosure()
     local receiverClosure3 = receiver3:mockGetClosure()
 
-    lu.assertEquals(receiverClosure0.getId(), 0)
-    lu.assertEquals(receiverClosure1.getId(), 1)
-    lu.assertEquals(receiverClosure2.getId(), 2)
-    lu.assertEquals(receiverClosure3.getId(), 3)
+    lu.assertEquals(receiverClosure0.getLocalId(), 0)
+    lu.assertEquals(receiverClosure1.getLocalId(), 1)
+    lu.assertEquals(receiverClosure2.getLocalId(), 2)
+    lu.assertEquals(receiverClosure3.getLocalId(), 3)
 
     -- prove default element is selected only where appropriate
     local defaultMass = 13.27
@@ -39,6 +39,12 @@ function _G.TestReceiverUnit.testConstructor()
     lu.assertEquals(receiverClosure1.getMass(), defaultMass)
     lu.assertEquals(receiverClosure2.getMass(), defaultMass)
     lu.assertNotEquals(receiverClosure3.getMass(), defaultMass)
+
+    local defaultId = 3732634076
+    lu.assertEquals(receiverClosure0.getItemId(), defaultId)
+    lu.assertEquals(receiverClosure1.getItemId(), defaultId)
+    lu.assertEquals(receiverClosure2.getItemId(), defaultId)
+    lu.assertNotEquals(receiverClosure3.getItemId(), defaultId)
 end
 
 --- Verify get range retrieves range properly.
@@ -53,10 +59,57 @@ function _G.TestReceiverUnit.testGetRange()
     lu.assertEquals(closure.getRange(), 100.0)
 end
 
+--- Verify functionality of set channels.
+function _G.TestReceiverUnit.testSetChannelList()
+    local mock = mru:new()
+    local closure = mock:mockGetClosure()
+
+    local input, expected
+
+    input = {"channel"}
+    expected = "channel,"
+    lu.assertEquals(closure.setChannelList(input), 1)
+    lu.assertEquals(mock.channelList, expected)
+    utilities.verifyDeprecated("setChannels", closure.setChannels, input[1])
+    lu.assertEquals(mock.channelList, expected)
+
+    input = {"l1", "l2"}
+    expected = table.concat(input, ",") .. ","
+    lu.assertEquals(closure.setChannelList(input), 1)
+    lu.assertEquals(mock.channelList, expected)
+    utilities.verifyDeprecated("setChannels", closure.setChannels, table.concat(input, ","))
+    lu.assertEquals(mock.channelList, expected)
+
+    -- currently throws a sandbox exception in-game
+    -- input = {"l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8", "l9"}
+    -- lu.assertEquals(closure.setChannelList(input), 0)
+    -- lu.assertEquals(mock.channelList, expected)
+    -- utilities.verifyDeprecated("setChannels", closure.setChannels, table.concat(input, ","))
+    -- lu.assertEquals(mock.channelList, expected)
+end
+
+--- Verify functionality of get channels.
+function _G.TestReceiverUnit.testGetChannelList()
+    local mock = mru:new()
+    local closure = mock:mockGetClosure()
+
+    local input, expected
+
+    expected = {"channel"}
+    mock.channelList = table.concat(expected, ",") .. ","
+    lu.assertEquals(closure.getChannelList(), expected)
+    lu.assertEquals(utilities.verifyDeprecated("getChannels", closure.getChannels), expected[1] .. ",")
+
+    expected = {"l1", "l2"}
+    mock.channelList = table.concat(expected, ",") .. ","
+    lu.assertEquals(closure.getChannelList(), expected)
+    lu.assertEquals(utilities.verifyDeprecated("getChannels", closure.getChannels), table.concat(expected, ",") .. ",")
+end
+
 --- Verify receive calls all callbacks and propagates errors.
 function _G.TestReceiverUnit.testReceiveError()
     local mock = mru:new()
-    mock.channelList = "channel"
+    mock:setChannelList({"channel"})
 
     local calls = 0
     local callback1Order, callback2Order
@@ -84,7 +137,7 @@ end
 --- Verify unfiltered receive gets all messages on channels the receiver is listening to.
 function _G.TestReceiverUnit.testReceiveAll()
     local mock = mru:new()
-    mock.channelList = "channel, blah"
+    mock:setChannelList({"channel", "blah"})
 
     local expectedChannel, actualChannel
     local expectedMessage, actualMessage
@@ -137,7 +190,7 @@ end
 --- Verify filtering on channel works.
 function _G.TestReceiverUnit.testReceiveFilterChannel()
     local mock = mru:new()
-    mock.channelList = "channel, filter"
+    mock:setChannelList({"channel", "filter"})
 
     local expectedChannel, actualChannel
     local expectedMessage, actualMessage
@@ -181,7 +234,7 @@ end
 --- Verify filtering on messages works.
 function _G.TestReceiverUnit.testReceiveFilterMessage()
     local mock = mru:new()
-    mock.channelList = "channel"
+    mock:setChannelList({"channel"})
 
     local expectedChannel, actualChannel
     local expectedMessage, actualMessage
@@ -214,7 +267,7 @@ end
 --- Verify filtering on channel and message at the same time works.
 function _G.TestReceiverUnit.testReceiveFilterBoth()
     local mock = mru:new()
-    mock.channelList = "channel, filter"
+    mock:setChannelList({"channel", "filter"})
 
     local expectedChannel, actualChannel
     local expectedMessage, actualMessage
@@ -257,17 +310,17 @@ end
 -- 1. 1x Receiver XS, connected to Programming Board on slot1, default channel set to duMocks
 -- 2. 1x Emitter XS, connected to Programming Board on slot2
 --
--- Exercises: getElementClass, receive, getRange, setSignalOut, setChannels, getChannels
+-- Exercises: getClass, receive, getRange, setSignalOut, setChannelList, getChannelList, hasChannel
 function _G.TestReceiverUnit.testGameBehavior()
     local mock = mru:new(nil, 1)
     local slot1 = mock:mockGetClosure()
 
-    -- stub this in directly to supress print in the unit test
+    -- stub this in directly to suppress print in the unit test
     local unit = {}
-    unit.getData = function()
+    unit.getWidgetData = function()
         return '"showScriptError":false'
     end
-    unit.setTimer = function()
+    unit.setTimer = function(_, _)
     end
     unit.exit = function()
     end
@@ -282,18 +335,18 @@ function _G.TestReceiverUnit.testGameBehavior()
 
     local tickEnd = function()
         ---------------
-        -- copy from here to unit.tick(timerId) stop
+        -- copy from here to unit.onTimer(timerId) stop
         ---------------
         -- exit to report status
         unit.exit()
         ---------------
-        -- copy to here to unit.tick(timerId) stop
+        -- copy to here to unit.onTimer(timerId) stop
         ---------------
     end
 
     local tickResume = function()
         ---------------
-        -- copy from here to unit.tick(timerId) resume
+        -- copy from here to unit.onTimer(timerId) resume
         ---------------
         assert(_G.receiverCoroutine, "Coroutine must exist when resume is called.")
         assert(coroutine.status(_G.receiverCoroutine) ~= "dead", "Coroutine should not be dead when resume is called.")
@@ -302,7 +355,7 @@ function _G.TestReceiverUnit.testGameBehavior()
         local ok, message = coroutine.resume(_G.receiverCoroutine)
         assert(ok, string.format("Error resuming coroutine: %s", message))
         ---------------
-        -- copy to here to unit.tick(timerId) resume
+        -- copy to here to unit.onTimer(timerId) resume
         ---------------
     end
 
@@ -345,17 +398,21 @@ function _G.TestReceiverUnit.testGameBehavior()
     mock:mockRegisterReceive(receiveMessageListener, "*", "message")
 
     ---------------
-    -- copy from here to unit.start
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getRange", "getChannels", "setChannels", "getSignalOut"}
+    local expectedFunctions = {"getRange", "hasChannel", "getChannels", "getChannelList", "setChannels",
+                               "setChannelList", "getSignalOut"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "ReceiverUnit")
+    assert(slot1.getClass() == "ReceiverUnit")
+    assert(string.match(string.lower(slot1.getName()), "receiver %w+ %[%d+%]"), slot1.getName())
+    local expectedIds = {[3732634076] = true, [2082095499] = true, [736740615] = true}
+    assert(expectedIds[slot1.getItemId()], "Unexpected id: " .. slot1.getItemId())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getMass() == 13.27)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
@@ -366,10 +423,22 @@ function _G.TestReceiverUnit.testGameBehavior()
     messageFilterCount = 0
     channelFilterCount = 0
 
-    local channelList = "unexpected, filtered, duMocks"
-    slot1.setChannels(channelList)
-    assert(slot1.getChannels() == channelList,
-        string.format("Expected <%s> but got <%s>", channelList, slot1.getChannels()))
+    -- test channel interface
+    assert(slot1.setChannelList({"channel1, channel 2 "}) == 1)
+    assert(#slot1.getChannelList() == 2)
+    assert(slot1.hasChannel("channel1") == 1)
+    assert(slot1.hasChannel(" channel 2 ") == 1)
+    assert(slot1.setChannelList({"c1", "c2"}) == 1)
+    assert(#slot1.getChannelList() == 2)
+    assert(slot1.hasChannel("channel1") == 0)
+    assert(slot1.hasChannel(" channel 2 ") == 0)
+    assert(slot1.hasChannel("c1") == 1)
+    assert(slot1.hasChannel("c2") == 1)
+
+    -- test messaging
+    local channels = {"unexpected", "filtered", "duMocks"}
+    slot1.setChannelList(channels)
+    _G.Utilities.assertTableEquals(slot1.getChannelList(), channels)
 
     local function messagingTest()
         slot2.send("unexpected", "unexpected") -- hits all listener only
@@ -395,7 +464,7 @@ function _G.TestReceiverUnit.testGameBehavior()
     -- all messages should be processed easily within 2 seconds
     unit.setTimer("stop", 2)
     ---------------
-    -- copy to here to unit.start
+    -- copy to here to unit.onStart()
     ---------------
 
     -- listener function called synchronously, by the time yield is called all processing is finished, so just resume
@@ -405,20 +474,20 @@ function _G.TestReceiverUnit.testGameBehavior()
     tickResume()
 
     ---------------
-    -- copy from here to unit.stop()
+    -- copy from here to unit.onStop()
     ---------------
     assert(allCount == 3, allCount)
     assert(messageFilterCount == 1, messageFilterCount)
     assert(channelFilterCount == 1)
 
     -- multi-part script, can't just print success because end of script was reached
-    if string.find(unit.getData(), '"showScriptError":false') then
+    if string.find(unit.getWidgetData(), '"showScriptError":false') then
         system.print("Success")
     else
         system.print("Failed")
     end
     ---------------
-    -- copy to here to unit.stop()
+    -- copy to here to unit.onStop()
     ---------------
 end
 

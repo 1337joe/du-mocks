@@ -18,6 +18,9 @@ function M:new(o)
     o.systemResolution2Index = 1
     o.systemResolution2Solutions = {}
 
+    o.getPointOnScreenIndex = 1
+    o.getPointOnScreenSolutions = {}
+
     return o
 end
 
@@ -31,7 +34,7 @@ function M:systemResolution3(vec_c1, vec_c2, vec_c3, vec_c0)
     -- find the next solution in the provided sequence
     local result = self.systemResolution3Solutions[self.systemResolution3Index]
     if not result then
-        error("Solution "..self.systemResolution3Index.." not loaded.")
+        error("Solution " .. self.systemResolution3Index .. " not loaded.")
     end
 
     self.systemResolution3Index = self.systemResolution3Index + 1
@@ -47,11 +50,29 @@ function M:systemResolution2(vec_c1, vec_c2, vec_c0)
     -- find the next solution in the provided sequence and increment index
     local result = self.systemResolution2Solutions[self.systemResolution2Index]
     if not result then
-        error("Solution "..self.systemResolution2Index.." not loaded.")
+        error("Solution " .. self.systemResolution2Index .. " not loaded.")
     end
 
     self.systemResolution2Index = self.systemResolution2Index + 1
     return result
+end
+
+--- Returns the position of the given point in world coordinates system, on the game screen.
+-- @tparam vec3 worldPos The world position of the point.
+-- @treturn vec3 The position in percentage (between 0 and 1) of the screen resolution as vec3 with {x, y, depth}.
+function M:getPointOnScreen(worldPos)
+    -- find the next solution in the provided sequence and increment index
+    local result = self.getPointOnScreenSolutions[self.getPointOnScreenIndex]
+    if not result then
+        error("Point " .. self.getPointOnScreenIndex .. " not loaded.")
+    end
+
+    self.getPointOnScreenIndex = self.getPointOnScreenIndex + 1
+    return result
+end
+
+--- Unknown use.
+function M:load()
 end
 
 --- Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
@@ -64,8 +85,8 @@ function M:mockGetClosure()
     closure.systemResolution2 = function(vec_c1, vec_c2, vec_c0)
         return self:systemResolution2(vec_c1, vec_c2, vec_c0)
     end
-    -- unknown use, but present in all elements
-    closure.load = function() end
+    closure.getPointOnScreen = function(worldPos) return self:getPointOnScreen(worldPos) end
+    closure.load = function() return self:load() end
     return closure
 end
 

@@ -9,3 +9,4 @@ full_description = [[
 file = {
     "src",
 }
+sort_modules=true

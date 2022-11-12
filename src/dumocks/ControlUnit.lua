@@ -40,8 +40,7 @@
 --   <li>maxBrake (not always shown)</li>
 -- </ul>
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
+-- Extends: @{Element}
 -- @module ControlUnit
 -- @alias M
 
@@ -53,16 +52,16 @@ local CLASS_REMOTE = "RemoteControlUnit"
 local CLASS_ECU = "ECU"
 
 local elementDefinitions = {}
-elementDefinitions["programming board"] = {mass = 27.74, maxHitPoints = 50.0, class = CLASS_GENERIC}
-elementDefinitions["remote controller"] = {mass = 7.79, maxHitPoints = 50.0, class = CLASS_REMOTE}
-elementDefinitions["hovercraft seat"] = {mass = 110.33, maxHitPoints = 187.0, class = "CockpitHovercraftUnit"}
-elementDefinitions["cockpit controller"] = {mass = 1208.13, maxHitPoints = 1125.0, class = "CockpitFighterUnit"}
-elementDefinitions["command seat controller"] = {mass = 3500.0, maxHitPoints = 250.0, class = "CockpitCommandmentUnit"}
-elementDefinitions["gunner module s"] = {mass = 427.9, maxHitPoints = 250.0, class = CLASS_PVP} -- id: 1373443625
-elementDefinitions["gunner module m"] = {mass = 4250.0, maxHitPoints = 250.0, class = CLASS_PVP} -- id: 564736657
-elementDefinitions["gunner module l"] = {mass = 16000.0, maxHitPoints = 250.0, class = CLASS_PVP} -- id: 3327293642
-elementDefinitions["emergency controller"] = {mass = 9.35, maxHitPoints = 50.0, class = CLASS_ECU}
-local DEFAULT_ELEMENT = "programming board"
+elementDefinitions["programming board xs"] = {mass = 27.74, maxHitPoints = 50.0, itemId = 3415128439, class = CLASS_GENERIC}
+elementDefinitions["remote controller xs"] = {mass = 7.79, maxHitPoints = 50.0, itemId = 1866437084, class = CLASS_REMOTE}
+elementDefinitions["hovercraft seat controller s"] = {mass = 110.33, maxHitPoints = 187.0, itemId = 1744160618, class = "CockpitHovercraftUnit"}
+elementDefinitions["cockpit m"] = {mass = 1208.13, maxHitPoints = 1125.0, itemId = 3640291983, class = "CockpitFighterUnit"}
+elementDefinitions["command seat controller s"] = {mass = 3500.0, maxHitPoints = 250.0, itemId = 3655856020, class = "CockpitCommandmentUnit"}
+elementDefinitions["gunner module s"] = {mass = 427.9, maxHitPoints = 250.0, itemId = 1373443625, class = CLASS_PVP}
+elementDefinitions["gunner module m"] = {mass = 4250.0, maxHitPoints = 250.0, itemId = 564736657, class = CLASS_PVP}
+elementDefinitions["gunner module l"] = {mass = 16000.0, maxHitPoints = 250.0, itemId = 3327293642, class = CLASS_PVP}
+elementDefinitions["emergency controller xs"] = {mass = 9.35, maxHitPoints = 50.0, itemId = 286542481, class = CLASS_ECU}
+local DEFAULT_ELEMENT = "programming board xs"
 
 local M = MockElement:new()
 
@@ -84,8 +83,6 @@ function M:new(o, id, elementName)
     o.exitCalled = false
     o.timers = {} -- map: "timer name"=>timerDurationSeconds
     o.tickCallbacks = {}
-    o.masterPlayerId = nil
-    o.masterPlayerMass = 90
     o.remoteControlled = o.elementClass == CLASS_REMOTE
     o.planetInfluence = 1.0
 
@@ -108,7 +105,7 @@ local SPEED_EFFECTS_TEMPLATE = '{"boostCount":%d,"boostSpeedModifier":%f,"boostS
                                 '"stasisTimeRemaining":%f}'
 local PARENTING_DATA_TEMPLATE = ',"parentingInfo":{"autoParentingMode":%d,"closestConstructName":"%s","parentName":"%s",' ..
                                 '"parentingState":%d}'
-function M:getData()
+function M:getWidgetData()
     local formatString = GENERIC_DATA_TEMPLATE
     local controllerId = 123456789
     local type = self:getWidgetType()
@@ -146,13 +143,14 @@ function M:getData()
 end
 
 -- Override default with realistic patten to id.
-function M:getDataId()
+function M:getWidgetDataId()
     return "e123456"
 end
 
---- Stops the control unit's Lua code and exits. Warning: calling this might cause your ship to fall from the sky, use
--- it with care. It is typically used in the coding of emergency control unit scripts to stop control once the ECU
--- thinks that the ship has safely landed.
+--- Stops the control unit's Lua code and exits.
+--
+-- Warning: calling this might cause your ship to fall from the sky, use it with care. It is typically used in the
+-- coding of emergency control unit scripts to stop control once the ECU thinks that the ship has safely landed.
 function M:exit()
     if self.exitCalled then
         error("Exit called multiple times.")
@@ -164,221 +162,145 @@ function M:exit()
     end
 end
 
---- Set up a timer with a given tag ID in a given period. This will start to trigger the 'tick' event with the
--- corresponding ID as an argument, to help you identify what is ticking, and when.
--- @tparam string timerTagId The ID of the timer, as a string, which will be used in the 'tick' event to identify this
+--- Set up a timer with a given tag in a given period. This will start to trigger the 'onTimer' event with the
+-- corresponding tag as an argument, to help you identify what is ticking, and when.
+-- @tparam string tag The tag of the timer, as a string, which will be used in the 'onTimer' event to identify this
 -- particular timer.
 -- @tparam second period The period of the timer, in seconds. The time resolution is limited by the framerate here, so
 -- you cannot set arbitrarily fast timers.
-function M:setTimer(timerTagId, period)
-    self.timers[timerTagId] = period
+function M:setTimer(tag, period)
+    self.timers[tag] = period
 end
 
---- Stop the timer with the given ID.
--- @tparam string timerTagId The ID of the timer to stop, as a string.
-function M:stopTimer(timerTagId)
-    self.timers[timerTagId] = nil
+--- Stop the timer with the given tag.
+-- @tparam string tag The tag of the timer to stop, as a string.
+function M:stopTimer(tag)
+    self.timers[tag] = nil
 end
 
---- Returns the local atmosphere density, between 0 and 1.
--- @treturn 0..1 The atmosphere density (0 = in space).
+--- Returns the ambient atmosphere density.
+-- @treturn float The atmosphere density (between 0 and 1).
 function M:getAtmosphereDensity()
 end
 
---- Returns the closest planet influence, between 0 and 1.
--- @treturn 0..1 The closest planet influence. 0 = in space, 1 = on the ground.
+--- Returns the influence rate of the closest planet.
+-- @treturn float The closest planet influence rate (between 0 and 1).
 function M:getClosestPlanetInfluence()
     return self.planetInfluence
 end
 
---- <b>Deprecated:</b> Return the relative position (in world coordinates) of the player currently running the control unit.
+--- <b>Deprecated:</b> Return the position of the player currently running the control unit, in construct local coordinates.
 --
--- This method is deprecated: getMasterPlayerWorldPosition should be used instead
--- @see getMasterPlayerWorldPosition
--- @treturn vec3 Relative position in world coordinates.
-function M:getMasterPlayerRelativePosition()
-end
-
---- Return the position of the player currently running the control unit, in construct local coordinates.
+-- This method is deprecated: player.getPosition should be used instead
+-- @see player.getPosition
 -- @treturn vec3 Master player position in construct local coordinates.
 function M:getMasterPlayerPosition()
+    M.deprecated("getMasterPlayerPosition", "player.getPosition")
 end
 
---- Return the position of the player currently running the control unit, in construct local coordinates.
+--- <b>Deprecated:</b> Return the position of the player currently running the control unit, in construct local coordinates.
+--
+-- This method is deprecated: player.getWorldPosition should be used instead
+-- @see player.getWorldPosition
 -- @treturn vec3 Master player position in world coordinates.
 function M:getMasterPlayerWorldPosition()
+    M.deprecated("getMasterPlayerWorldPosition", "player.getWorldPosition")
 end
 
---- <b>Deprecated:</b> Return the relative orientation with respect to the control unit (in world coordinates) of the
--- player currently running the control unit.
+--- <b>Deprecated:</b> Returns the forward direction vector of the player currently running the control unit, in construct local coordinates.
 --
--- This method is deprecated: getMasterPlayerWorldForward, getMasterPlayerWorldUp, getMasterPlayerWorldRight should be
--- used instead.
--- @see getMasterPlayerWorldForward
--- @see getMasterPlayerWorldUp
--- @see getMasterPlayerWorldRight
--- @treturn quat Relative orientation in world coordinates, as a quaternion.
-function M:getMasterPlayerRelativeOrientation()
-end
-
---- Returns the forward direction vector of the player currently running the control unit, in construct local coordinates.
+-- This method is deprecated: player.getForward should be used instead
+-- @see player.getForward
 -- @treturn vec3 Master player forward direction vector in construct local coordinates.
 function M:getMasterPlayerForward()
+    M.deprecated("getMasterPlayerForward", "player.getForward")
 end
 
---- Returns the up direction vector of the player currently running the control unit, in construct local coordinates.
+--- <b>Deprecated:</b> Returns the up direction vector of the player currently running the control unit, in construct local coordinates.
+--
+-- This method is deprecated: player.getUp should be used instead
+-- @see player.getUp
 -- @treturn vec3 Master player up direction vector in construct local coordinates.
 function M:getMasterPlayerUp()
+    M.deprecated("getMasterPlayerUp", "player.getUp")
 end
 
---- Returns the right direction vector of the player currently running the control unit, in construct local coordinates.
+--- <b>Deprecated:</b> Returns the right direction vector of the player currently running the control unit, in construct local coordinates.
+--
+-- This method is deprecated: player.getRight should be used instead
+-- @see player.getRight
 -- @treturn vec3 Master player right direction vector in construct local coordinates.
 function M:getMasterPlayerRight()
+    M.deprecated("getMasterPlayerRight", "player.getRight")
 end
 
---- Returns the forward direction vector of the player currently running the control unit, in world coordinates.
+--- <b>Deprecated:</b> Returns the forward direction vector of the player currently running the control unit, in world coordinates.
+--
+-- This method is deprecated: player.getWorldForward should be used instead
+-- @see player.getWorldForward
 -- @treturn vec3 Master player forward direction vector in world coordinates.
 function M:getMasterPlayerWorldForward()
+    M.deprecated("getMasterPlayerWorldForward", "player.getWorldForward")
 end
 
---- Returns the up direction vector of the player currently running the control unit, in world coordinates.
+--- <b>Deprecated:</b> Returns the up direction vector of the player currently running the control unit, in world coordinates.
+--
+-- This method is deprecated: player.getWorldUp should be used instead
+-- @see player.getWorldUp
 -- @treturn vec3 Master player up direction vector in world coordinates.
 function M:getMasterPlayerWorldUp()
+    M.deprecated("getMasterPlayerWorldUp", "player.getWorldUp")
 end
 
---- Returns the right direction vector of the player currently running the control unit, in world coordinates.
+--- <b>Deprecated:</b> Returns the right direction vector of the player currently running the control unit, in world coordinates.
+--
+-- This method is deprecated: player.getWorldRight should be used instead
+-- @see player.getWorldRight
 -- @treturn vec3 Master player right direction vector in world coordinates.
 function M:getMasterPlayerWorldRight()
+    M.deprecated("getMasterPlayerWorldRight", "player.getWorldRight")
 end
 
---- Return the ID of the player currently running the control unit.
+--- <b>Deprecated:</b> Return the ID of the player currently running the control unit.
+--
+-- This method is deprecated: player.getId should be used instead
+-- @see player.getId
 -- @treturn int ID of the player running the control unit.
 function M:getMasterPlayerId()
-    return self.masterPlayerId
+    M.deprecated("getMasterPlayerId", "player.getId")
 end
 
---- Returns the list of organization IDs of the player running the control unit.
+--- <b>Deprecated:</b> Returns the list of organization IDs of the player running the control unit.
+--
+-- This method is deprecated: player.getOrgIds should be used instead
+-- @see player.getOrgIds
 -- @treturn list Organization IDs of the player running the control unit.
 function M:getMasterPlayerOrgIds()
+    M.deprecated("getMasterPlayerOrgIds", "player.getOrgIds")
 end
 
---- Returns the mass of the active player.
+--- <b>Deprecated:</b> Returns the mass of the active player.
+--
+-- This method is deprecated: player.getMass should be used instead
+-- @see player.getMass
 -- @treturn float The mass of the player in kilograms.
 function M:getMasterPlayerMass()
-    return self.masterPlayerMass
+    M.deprecated("getMasterPlayerMass", "player.getMass")
 end
 
---- Returns the id of the construct on which the active player is boarded.
+--- <b>Deprecated:</b> Returns the id of the construct on which the active player is boarded.
+--
+-- This method is deprecated: player.getParent should be used instead
+-- @see player.getParent
 -- @treturn int The parent id.
 function M:getMasterPlayerParent()
+    M.deprecated("getMasterPlayerParent", "player.getParent")
 end
 
---- Automatically assign the engines within the taglist to result in the given acceleration and angular acceleration
--- provided. Can only be called within the system.flush event. If engines designated by the tags are not capable of
--- producing the desired command, setEngineCommand will try to do its best to approximate it.
--- @tparam csv taglist Comma (for union) or space (for intersection) separated list of tags. You can set tags directly
--- on the engines in the right-click menu.
--- @tparam m/s2 acceleration The desired acceleration expressed in world coordinates.
--- @tparam rad/s2 angularAcceleration The desired angular acceleration expressed in world coordinates.
--- @tparam bool keepForceCollinearity Forces the resulting acceleration vector to be collinear to the acceleration
--- parameter.
--- @tparam bool keepTorqueCollinearity Forces the resulting angular acceleration vector to be collinear to the angular
--- acceleration parameter.
--- @tparam priority1SubTag priority1SubTags Comma (for union) or space (for intersection) separated list of tags of
--- included engines to use as priority 1.
--- @tparam priority2SubTag priority2SubTags Comma (for union) or space (for intersection) separated list of tags of
--- included engines to use as priority 2.
--- @tparam priority3SubTag priority3SubTags Comma (for union) or space (for intersection) separated list of tags of
--- included engines to use as priority 3.
--- @tparam 0,1 toleranceRatioToStopCommand When going through with priorities, if we reach a command that is achieved
--- within this tolerance, we will stop there.
-function M:setEngineCommand(taglist, acceleration, angularAcceleration, keepForceCollinearity, keepTorqueCollinearity,
-    priority1SubTags, priority2SubTags, priority3SubTags, toleranceRatioToStopCommand)
-end
-
---- Force the thrust values for all the engines within the tag list.
--- @tparam csv taglist Comma separated list of tags. You can set tags directly on the engines in the right-click menu.
--- @tparam N thrust The desired thrust in newtons (note that for boosters, any non zero value here will set them to
--- 100%).
-function M:setEngineThrust(taglist, thrust)
-end
-
---- Set the value of the throttle in the cockpit, which will be displayed in the cockpit widget when flying.
--- @tparam 0,1,2 axis Longitudinal = 0, lateral = 1, vertical = 2.
--- @tparam -1..1 commandValue In 'by throttle', the value of the throttle position: -1 = full reverse, 1 = full forward.
--- Or In 'By Target Speed', the value of the target speed in km/h.
-function M:setAxisCommandValue(axis, commandValue)
-end
-
---- Get the value of the throttl in the cockpit.
--- @tparam 0,1,2 axis Longitudinal = 0, lateral = 1, vertical = 2.
--- @treturn -1..1/float In travel mode, return the value of the throttle position: -1 = full reverse, 1 = full
--- forward, or in cruise mode, return the value of the target speed.
-function M:getAxisCommandValue(axis)
-end
-
---- Set the properties of an axis command. These properties will be used to display the command in UI.
--- @tparam 0,1,2 axis Longitudinal = 0, lateral = 1, vertical = 2.
--- @tparam 0,1 commandType By throttle = 0, by target speed = 1, hidden = 2.
--- @tparam list targetSpeedRanges This is to specify the cruise control target speed ranges (for now, only for the
--- longitudinal axis).
-function M:setupAxisCommandProperties(axis, commandType, targetSpeedRanges)
-end
-
---- Set the display name of a master mode as shown in the UI.
--- @tparam int controlMasterModeId The master mode, 0=Travel Mode, 1=Cruise Control.
--- @tparam string displayName The name of the master mode.
-function M:setupControlMasterModeProperties(controlMasterModeId, displayName)
-end
-
---- Get the current master mode in use. The mode is set by clicking the UI button or using the associated keybinding.
--- @treturn int The current master mode (for now, only 2 are available, 0 and 1).
-function M:getControlMasterModeId()
-end
-
---- Cancel the current master mode in used.
-function M:cancelCurrentControlMasterMode()
-end
-
---- Check landing gear status.
--- @treturn 0/1 1 if any landing gear is extended.
-function M:isAnyLandingGearExtended()
-end
-
---- Extend/activate/drop the landing gears.
-function M:extendLandingGears()
-end
-
---- Retract/deactivate the landing gears.
-function M:retractLandingGears()
-end
-
---- Check if a mouse control scheme is selected.
--- @treturn 0/1 1 if a mouse control scheme is selected.
-function M:isMouseControlActivated()
-end
-
---- Check if the mouse control direct scheme is selected.
--- @treturn 0/1 1 if a mouse control direct scheme is selected.
-function M:isMouseDirectControlActivated()
-end
-
---- Check if the mouse control virtual joystick scheme is selected.
--- @treturn 0/1 1 if a mouse control virtual joystick scheme is selected.
-function M:isMouseVirtualJoystickActivated()
-end
-
---- Check lights status.
--- @treturn 0/1 1 if any headlight is switched on.
-function M:isAnyHeadlightSwitchedOn()
-end
-
---- switchOn the lights.
-function M:switchOnHeadlights()
-end
-
---- switchOff the lights.
-function M:switchOffHeadlights()
+--- Checks if the control unit is protected by DRM.
+-- @treturn 0/1 1 if the control unit is protected by DRM.
+function M:hasDRM()
+    return 0
 end
 
 --- Check if the construct is remote controlled.
@@ -390,39 +312,237 @@ function M:isRemoteControlled()
     return 0
 end
 
+--- Automatically assign the engines within the taglist to result in the given acceleration and angular acceleration
+-- provided. Can only be called within the system.onFlush event. If engines designated by the tags are not capable of
+-- producing the desired command, setEngineCommand will try to do its best to approximate it.
+--
+-- Note: This function must be used on a piloting controller in @{system.EVENT_onFlush|system.onFlush} event.
+-- @tparam string taglist Comma (for union) or space (for intersection) separated list of tags. You can set tags directly
+-- on the engines in the right-click menu.
+-- @tparam vec3 acceleration The desired acceleration expressed in world coordinates in m/s2.
+-- @tparam vec3 angularAcceleration The desired angular acceleration expressed in world coordinates in rad/s2.
+-- @tparam bool keepForceCollinearity Forces the resulting acceleration vector to be collinear to the acceleration
+-- parameter.
+-- @tparam bool keepTorqueCollinearity Forces the resulting angular acceleration vector to be collinear to the angular
+-- acceleration parameter.
+-- @tparam string priority1SubTags Comma (for union) or space (for intersection) separated list of tags of
+-- included engines to use as priority 1.
+-- @tparam string priority2SubTags Comma (for union) or space (for intersection) separated list of tags of
+-- included engines to use as priority 2.
+-- @tparam string priority3SubTags Comma (for union) or space (for intersection) separated list of tags of
+-- included engines to use as priority 3.
+-- @tparam float toleranceRatioToStopCommand When going through with priorities, if we reach a command that is achieved
+-- within this tolerance, we will stop there.
+function M:setEngineCommand(taglist, acceleration, angularAcceleration, keepForceCollinearity, keepTorqueCollinearity,
+    priority1SubTags, priority2SubTags, priority3SubTags, toleranceRatioToStopCommand)
+end
+
+--- Sets the thrust values for all engines in the tag list.
+--
+-- Note: This function must be used on a piloting controller.
+-- @tparam string taglist Comma separated list of tags. You can set tags directly on the engines in the right-click menu.
+-- @tparam float thrust The desired thrust in newtons (note that for boosters, any non zero value here will set them to
+-- 100%).
+function M:setEngineThrust(taglist, thrust)
+end
+
+--- Returns the total thrust values of all engines in the tag list.
+--
+-- Note: This function must be used on a piloting controller.
+-- @tparam string taglist Comma separated list of tags. You can set tags directly on the engines in the right-click menu.
+-- @treturn vec3 The total thrust in newtons.
+function M:getEngineThrust(taglist)
+end
+
+--- Set the value of the throttle in the cockpit, which will be displayed in the cockpit widget when flying.
+--
+-- Note: This function must be used on a piloting controller.
+-- @tparam int axis Longitudinal = 0, lateral = 1, vertical = 2.
+-- @tparam float commandValue In 'By Throttle', the value of the throttle position: -1 = full reverse, 1 = full
+--   forward. Or in 'By Target Speed', the value of the target speed in km/h.
+function M:setAxisCommandValue(axis, commandValue)
+end
+
+--- Get the value of the throttle in the cockpit.
+--
+-- Note: This function must be used on a piloting controller.
+-- @tparam int axis Longitudinal = 0, lateral = 1, vertical = 2.
+-- @treturn float In travel mode, return the value of the throttle position: -1 = full reverse, 1 = full forward, or in
+--   cruise mode, return the value of the target speed.
+function M:getAxisCommandValue(axis)
+end
+
+--- Set the properties of an axis command. These properties will be used to display the command in UI.
+--
+-- Note: This function must be used on a piloting controller.
+-- @tparam int axis Longitudinal = 0, lateral = 1, vertical = 2.
+-- @tparam int commandType By throttle = 0, by target speed = 1, hidden = 2.
+-- @tparam list targetSpeedRanges This is to specify the cruise control target speed ranges (for now, only for the
+-- longitudinal axis) in m/s.
+function M:setupAxisCommandProperties(axis, commandType, targetSpeedRanges)
+end
+
+--- <b>Deprecated:</b> Set the display name of a master mode as shown in the UI.
+--
+-- This method is deprecated: setWidgetControlModeLabel should be used instead
+-- @see setWidgetControlModeLabel
+-- @tparam int controlMasterModeId The master mode, 0=Travel Mode, 1=Cruise Control.
+-- @tparam string displayName The name of the master mode.
+function M:setupControlMasterModeProperties(controlMasterModeId, displayName)
+    M.deprecated("setupControlMasterModeProperties", "setWidgetControlModeLabel")
+    return self:setWidgetControlModeLabel(controlMasterModeId, displayName)
+end
+
+---  <b>Deprecated:</b> Get the current master mode in use. The mode is set by clicking the UI button or using the
+-- associated keybinding.
+--
+-- This method is deprecated: getControlMode should be used instead
+-- @see getControlMode
+-- @treturn int The current master mode (for now, only 2 are available, 0 and 1).
+function M:getControlMasterModeId()
+    M.deprecated("getControlMasterModeId", "getControlMode")
+    return self:getControlMode()
+end
+
+--- Returns the current control mode. The mode is set by clicking the UI button or using the associated keybinding.
+--
+-- Note: This function must be used on a piloting controller.
+-- @treturn int The current control mode (for now, only 2 are available, 0 and 1).
+function M:getControlMode()
+end
+
+--- Cancel the current master mode in used.
+--
+-- Note: This function must be used on a piloting controller.
+    function M:cancelCurrentControlMasterMode()
+end
+
+--- Check if a mouse control scheme is selected.
+--
+-- Note: This function must be used on a piloting controller.
+-- @treturn 0/1 1 if a mouse control scheme is selected.
+function M:isMouseControlActivated()
+end
+
+--- Check if the mouse control direct scheme is selected.
+--
+-- Note: This function must be used on a piloting controller.
+-- @treturn 0/1 1 if a mouse control direct scheme is selected.
+function M:isMouseDirectControlActivated()
+end
+
+--- Check if the mouse control virtual joystick scheme is selected.
+--
+-- Note: This function must be used on a piloting controller.
+-- @treturn 0/1 1 if a mouse control virtual joystick scheme is selected.
+function M:isMouseVirtualJoystickActivated()
+end
+
 --- The ground engines will stabilize to this altitude within their limits. THe stabilization will be done by adjusting
 -- thrust to never go over the target altitude. This includes VerticalBooster and HoverEngine.
+--
+-- Note: This function must be used on a piloting controller.
+-- @tparam float targetAltitude The stabilization target altitude in m.
 function M:activateGroundEngineAltitudeStabilization(targetAltitude)
 end
 
 --- Return the ground engines stabilization altitude.
--- @treturn float The stab altitude (m) or 0 if none is set.
+--
+-- Note: This function must be used on a piloting controller.
+-- @treturn float The stabilization altitude in meters or 0 if none is set.
 function M:getSurfaceEngineAltitudeStabilization()
 end
 
---- THe ground engines will behave like regular engine. This includes VerticalBooster and HoverEngine.
+--- The ground engines will behave like regular engine. This includes VerticalBooster and HoverEngine.
+--
+-- Note: This function must be used on a piloting controller.
 function M:deactivateGroundEngineAltitudeStabilization()
 end
 
 --- Returns ground engine stabilization altitude capabilities (lower and upper ranges).
+--
+-- Note: This function must be used on a piloting controller.
 -- @treturn vec2 Stabilization altitude capabilities for the least powerful engine and the most powerful engine.
 function M:computeGroundEngineAltitudeStabilizationCapabilities()
 end
 
 --- Return the current throttle value.
+--
+-- Note: This function must be used on a piloting controller.
 -- @treturn float The throttle value between -100 and 100.
 function M:getThrottle()
 end
 
---- Checks if the player currently running the control unit is seated.
+--- Set the label of a control mode button shown in the control unit widget.
+--
+-- Note: This function must be used on a piloting controller.
+-- @tparam int modeId The control mode: 0 = Travel Mode, 1 = Cruise Control by default.
+-- @tparam string label The display name of the control mode, displayed on the widget button.
+function M:setWidgetControlModeLabel(modeId, label)
+end
+
+--- <b>Deprecated:</b> Check landing gear status.
+--
+-- This method is deprecated: isAnyLandingGearDeployed should be used instead
+-- @see isAnyLandingGearDeployed
+-- @treturn 0/1 1 if any landing gear is extended.
+function M:isAnyLandingGearExtended()
+    M.deprecated("isAnyLandingGearExtended", "isAnyLandingGearDeployed")
+    return self:isAnyLandingGearDeployed()
+end
+
+--- Checks if any landing gear is deployed.
+-- @treturn 0/1 1 if any landing gear is deployed.
+function M:isAnyLandingGearDeployed()
+end
+
+--- <b>Deprecated:</b> Extend/activate/drop the landing gears.
+--
+-- This method is deprecated: deployLandingGear should be used instead
+-- @see deployLandingGear
+function M:extendLandingGears()
+    M.deprecated("extendLandingGears", "deployLandingGear")
+    return self:deployLandingGear()
+end
+
+--- Deploy all landing gears.
+function M:deployLandingGear()
+end
+
+--- Retract all landing gears.
+function M:retractLandingGears()
+end
+
+--- Check construct lights status.
+-- @treturn 0/1 1 if any headlight is switched on.
+function M:isAnyHeadlightSwitchedOn()
+end
+
+--- Turn on the construct's headlights.
+function M:switchOnHeadlights()
+end
+
+--- Turn off the construct's headlights.
+function M:switchOffHeadlights()
+end
+
+--- <b>Deprecated:</b> Checks if the player currently running the control unit is seated.
+--
+-- This method is deprecated: player.isSeated should be used instead
+-- @see player.isSeated
 -- @treturn 0/1 1 if the player is seated.
 function M:isMasterPlayerSeated()
+    M.deprecated("isMasterPlayerSeated", "player.isSeated")
     return 0
 end
 
---- Returns the UID of the seat on which the player currently running the control unit is sitting.
+--- <b>Deprecated:</b> Returns the UID of the seat on which the player currently running the control unit is sitting.
+--
+-- This method is deprecated: player.getSeatId should be used instead
+-- @see player.getSeatId
 -- @treturn int The UID of the seat, or 0 if not seated.
 function M:getMasterPlayerSeatId()
+    M.deprecated("getMasterPlayerSeatId", "player.getSeatId")
     return 0
 end
 
@@ -430,28 +550,13 @@ end
 --
 -- Valid plug names are:
 -- <ul>
--- <li>"in" for the in signal (has no actual effect on controller state when modified this way).</li>
+-- <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
 -- </ul>
---
--- Note: Only defined for Programming Board and ECU.
 -- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
-        local value = tonumber(state)
-        if type(value) ~= "number" then
-            value = 0.0
-        end
-
-        -- has no impact on state when set programmatically
-
-        if value <= 0 then
-            self.plugIn = 0
-        elseif value >= 1.0 then
-            self.plugIn = 1.0
-        else
-            self.plugIn = value
-        end
+        -- no longer responds to setSignalIn
     end
 end
 
@@ -482,11 +587,24 @@ function M:getSignalIn(plug)
     return MockElement.getSignalIn(self)
 end
 
---- Event: Emitted when the timer with id 'timerId' is ticking.
+--- <b>Deprecated:</b> Event: Emitted when the timer with id 'timerId' is ticking.
 --
 -- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onTimer should be used instead.
+-- @see EVENT_onTimer
 -- @tparam string timerId The ID (int) of the timer that just ticked (see setTimer to set a timer with a given ID)
 function M.EVENT_tick(timerId)
+    M.deprecated("EVENT_tick", "EVENT_onTimer")
+    M.EVENT_onTimer()
+end
+
+--- Event: Emitted when the timer with id 'tag' is ticking.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam string tag The tag of the timer that just ticked (see setTimer to set a timer with a given tag).
+-- @see setTimer
+function M.EVENT_onTimer(tag)
     assert(false, "This is implemented for documentation purposes only.")
 end
 
@@ -538,10 +656,8 @@ function M:mockGetClosure()
     closure.getClosestPlanetInfluence = function() return self:getClosestPlanetInfluence() end
     closure.getMasterPlayerId = function() return self:getMasterPlayerId() end
     closure.getMasterPlayerOrgIds = function() return self:getMasterPlayerOrgIds() end
-    closure.getMasterPlayerRelativePosition = function() return self:getMasterPlayerRelativePosition() end
     closure.getMasterPlayerPosition = function() return self:getMasterPlayerPosition() end
     closure.getMasterPlayerWorldPosition = function() return self:getMasterPlayerWorldPosition() end
-    closure.getMasterPlayerRelativeOrientation = function() return self:getMasterPlayerRelativeOrientation() end
     closure.getMasterPlayerForward = function() return self:getMasterPlayerForward() end
     closure.getMasterPlayerUp = function() return self:getMasterPlayerUp() end
     closure.getMasterPlayerRight = function() return self:getMasterPlayerRight() end
@@ -550,12 +666,25 @@ function M:mockGetClosure()
     closure.getMasterPlayerWorldRight = function() return self:getMasterPlayerWorldRight() end
     closure.isMasterPlayerSeated = function() return self:isMasterPlayerSeated() end
     closure.getMasterPlayerSeatId = function() return self:getMasterPlayerSeatId() end
+    closure.hasDRM = function() return self:hasDRM() end
+    closure.isRemoteControlled = function() return self:isRemoteControlled() end
 
-    if self.elementClass == CLASS_GENERIC then
+    if self.elementClass == CLASS_GENERIC or self.elementClass == CLASS_ECU then
         closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
         closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
-    elseif self.elementClass ~= CLASS_PVP then
-        closure.setEngineCommand = function(
+    end
+
+    closure.setEngineCommand = function(
+        taglist,
+        acceleration,
+        angularAcceleration,
+        keepForceCollinearity,
+        keepTorqueCollinearity,
+        priority1SubTags,
+        priority2SubTags,
+        priority3SubTags,
+        toleranceRatioToStopCommand)
+        return self:setEngineCommand(
             taglist,
             acceleration,
             angularAcceleration,
@@ -564,48 +693,37 @@ function M:mockGetClosure()
             priority1SubTags,
             priority2SubTags,
             priority3SubTags,
-            toleranceRatioToStopCommand)
-            return self:setEngineCommand(
-                taglist,
-                acceleration,
-                angularAcceleration,
-                keepForceCollinearity,
-                keepTorqueCollinearity,
-                priority1SubTags,
-                priority2SubTags,
-                priority3SubTags,
-                toleranceRatioToStopCommand
-            )
-        end
-        closure.setEngineThrust = function(tagList, thrust) return self:setEngineThrust(tagList, thrust) end
-        closure.setAxisCommandValue = function(axis, commandValue) return self:setAxisCommandValue(axis, commandValue) end
-        closure.getAxisCommandValue = function(axis) return self:getAxisCommandValue(axis) end
-        closure.setupAxisCommandProperties = function(axis, commandType) return self:setupAxisCommandProperties(axis, commandType) end
-        closure.setupControlMasterModeProperties = function(controlMasterModeId, displayName) return self:setupControlMasterModeProperties(controlMasterModeId, displayName) end
-        closure.getControlMasterModeId = function() return self:getControlMasterModeId() end
-        closure.cancelCurrentControlMasterMode = function() return self:cancelCurrentControlMasterMode() end
-        closure.isAnyLandingGearExtended = function() return self:isAnyLandingGearExtended() end
-        closure.extendLandingGears = function() return self:extendLandingGears() end
-        closure.retractLandingGears = function() return self:retractLandingGears() end
-        closure.isMouseControlActivated = function() return self:isMouseControlActivated() end
-        closure.isMouseDirectControlActivated = function() return self:isMouseDirectControlActivated() end
-        closure.isMouseVirtualJoystickActivated = function() return self:isMouseVirtualJoystickActivated() end
-        closure.isAnyHeadlightSwitchedOn = function() return self:isAnyHeadlightSwitchedOn() end
-        closure.switchOnHeadlights = function() return self:switchOnHeadlights() end
-        closure.switchOffHeadlights = function() return self:switchOffHeadlights() end
-        closure.isRemoteControlled = function() return self:isRemoteControlled() end
-        closure.activateGroundEngineAltitudeStabilization = function(targetAltitude) return self:activateGroundEngineAltitudeStabilization(targetAltitude) end
-        closure.getSurfaceEngineAltitudeStabilization = function() return self:getSurfaceEngineAltitudeStabilization() end
-        closure.deactivateGroundEngineAltitudeStabilization = function() return self:deactivateGroundEngineAltitudeStabilization() end
-        closure.computeGroundEngineAltitudeStabilizationCapabilities = function() return self:computeGroundEngineAltitudeStabilizationCapabilities() end
-        closure.getThrottle = function() return self:getThrottle() end
-        closure.getMasterPlayerMass = function() return self:getMasterPlayerMass() end
-        closure.getMasterPlayerParent = function() return self:getMasterPlayerParent() end
-        if self.elementClass == CLASS_ECU then
-            closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
-            closure.getSignalIn = function(plug) return self:getSignalIn(plug) end
-        end
+            toleranceRatioToStopCommand
+        )
     end
+    closure.setEngineThrust = function(tagList, thrust) return self:setEngineThrust(tagList, thrust) end
+    closure.getEngineThrust = function(tagList) return self:getEngineThrust(tagList) end
+    closure.setAxisCommandValue = function(axis, commandValue) return self:setAxisCommandValue(axis, commandValue) end
+    closure.getAxisCommandValue = function(axis) return self:getAxisCommandValue(axis) end
+    closure.setupAxisCommandProperties = function(axis, commandType) return self:setupAxisCommandProperties(axis, commandType) end
+    closure.setupControlMasterModeProperties = function(controlMasterModeId, displayName) return self:setupControlMasterModeProperties(controlMasterModeId, displayName) end
+    closure.getControlMasterModeId = function() return self:getControlMasterModeId() end
+    closure.getControlMode = function() return self:getControlMode() end
+    closure.cancelCurrentControlMasterMode = function() return self:cancelCurrentControlMasterMode() end
+    closure.isMouseControlActivated = function() return self:isMouseControlActivated() end
+    closure.isMouseDirectControlActivated = function() return self:isMouseDirectControlActivated() end
+    closure.isMouseVirtualJoystickActivated = function() return self:isMouseVirtualJoystickActivated() end
+    closure.switchOnHeadlights = function() return self:switchOnHeadlights() end
+    closure.switchOffHeadlights = function() return self:switchOffHeadlights() end
+    closure.activateGroundEngineAltitudeStabilization = function(targetAltitude) return self:activateGroundEngineAltitudeStabilization(targetAltitude) end
+    closure.getSurfaceEngineAltitudeStabilization = function() return self:getSurfaceEngineAltitudeStabilization() end
+    closure.deactivateGroundEngineAltitudeStabilization = function() return self:deactivateGroundEngineAltitudeStabilization() end
+    closure.computeGroundEngineAltitudeStabilizationCapabilities = function() return self:computeGroundEngineAltitudeStabilizationCapabilities() end
+    closure.getThrottle = function() return self:getThrottle() end
+    closure.setWidgetControlModeLabel = function(modeId, label) return self:setWidgetControlModeLabel(modeId, label) end
+    closure.isAnyLandingGearExtended = function() return self:isAnyLandingGearExtended() end
+    closure.isAnyLandingGearDeployed = function() return self:isAnyLandingGearDeployed() end
+    closure.extendLandingGears = function() return self:extendLandingGears() end
+    closure.deployLandingGears = function() return self:deployLandingGears() end
+    closure.retractLandingGears = function() return self:retractLandingGears() end
+    closure.isAnyHeadlightSwitchedOn = function() return self:isAnyHeadlightSwitchedOn() end
+    closure.getMasterPlayerMass = function() return self:getMasterPlayerMass() end
+    closure.getMasterPlayerParent = function() return self:getMasterPlayerParent() end
 
     -- add in fields to match the game
 

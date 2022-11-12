@@ -9,14 +9,31 @@ local lu = require("luaunit")
 
 local mtu = require("dumocks.TransponderUnit")
 require("test.Utilities")
+local AbstractTestElementWithToggle = require("test.dumocks.AbstractTestElementWithToggle")
 
-_G.TestTransponderUnit = {}
+_G.TestTransponderUnit = AbstractTestElementWithToggle
+
+function _G.TestTransponderUnit.getTestElement()
+    return mtu:new()
+end
+
+function _G.TestTransponderUnit.getStateFunction(closure)
+    return closure.isActive
+end
+
+function _G.TestTransponderUnit.getActivateFunction(closure)
+    return closure.activate
+end
+
+function _G.TestTransponderUnit.getDeactivateFunction(closure)
+    return closure.deactivate
+end
 
 --- Verify constructor arguments properly handled and independent between instances.
 function _G.TestTransponderUnit.testConstructor()
 
     -- default element:
-    -- ["transponder"] = {mass = 340, maxHitPoints = 50.0}
+    -- ["transponder xs"] = {mass = 340, maxHitPoints = 50.0, itemId = 63667997}
 
     local trans1 = mtu:new(nil, 1, "Transponder")
     local trans2 = mtu:new(nil, 2, "invalid")
@@ -26,9 +43,9 @@ function _G.TestTransponderUnit.testConstructor()
     local trans2Closure = trans2:mockGetClosure()
     local trans3Closure = trans3:mockGetClosure()
 
-    lu.assertEquals(trans1Closure.getId(), 1)
-    lu.assertEquals(trans2Closure.getId(), 2)
-    lu.assertEquals(trans3Closure.getId(), 0)
+    lu.assertEquals(trans1Closure.getLocalId(), 1)
+    lu.assertEquals(trans2Closure.getLocalId(), 2)
+    lu.assertEquals(trans3Closure.getLocalId(), 0)
 
     -- prove default element is selected
     local defaultMass = 340
@@ -44,6 +61,11 @@ function _G.TestTransponderUnit.testConstructor()
     lu.assertEquals(trans1Closure.getIntegrity(), 50.0)
     lu.assertEquals(trans2Closure.getIntegrity(), 25.0)
     lu.assertEquals(trans3Closure.getIntegrity(), 0.5)
+
+    local defaultId = 63667997
+    lu.assertEquals(trans1Closure.getItemId(), defaultId)
+    lu.assertEquals(trans2Closure.getItemId(), defaultId)
+    lu.assertEquals(trans3Closure.getItemId(), defaultId)
 end
 
 --- Verify setting tags follows spec.
@@ -135,7 +157,7 @@ function _G.TestTransponderUnit.testToggled()
     local called, calledOn, calledOff, state, actualActive
     local callback = function(active)
         called = true
-        state = closure.getState()
+        state = closure.isActive()
         actualActive = active
     end
     mock:mockRegisterToggled(callback, "*")
@@ -224,7 +246,7 @@ end
 -- Test setup:
 -- 1. 1x Transponder, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState, EVENT_toggled, setSignalIn, getSignalIn
+-- Exercises: getClass, deactivate, activate, toggle, isActive, EVENT_toggled, setSignalIn, getSignalIn
 function _G.TestTransponderUnit.testGameBehavior()
     local mock = mtu:new(nil, 1)
     local slot1 = mock:mockGetClosure()
@@ -239,12 +261,12 @@ function _G.TestTransponderUnit.testGameBehavior()
     unit.exit = function()
         finished = true
     end
-    unit.setTimer = function()
+    unit.setTimer = function(_, _)
     end
-    unit.stopTimer = function()
+    unit.stopTimer = function(_)
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     -- not called by mock
@@ -277,7 +299,7 @@ function _G.TestTransponderUnit.testGameBehavior()
         ---------------
         _G.toggleCount = _G.toggleCount + 1
 
-        local state = slot1.getState()
+        local state = slot1.isActive()
         assert(state ~= active,
             string.format("Expected state to NOT match toggle argument: active=%d, state=%d.", active, state))
         ---------------
@@ -307,10 +329,10 @@ function _G.TestTransponderUnit.testGameBehavior()
     mock:mockRegisterToggled(toggledListenerInactive, 0)
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"setTags", "getTags", "setSignalIn", "getSignalIn"}
+    local expectedFunctions = {"isActive", "setTags", "getTags", "setSignalIn", "getSignalIn"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
@@ -320,40 +342,28 @@ function _G.TestTransponderUnit.testGameBehavior()
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "CombatDefense")
+    assert(slot1.getClass() == "CombatDefense")
+    assert(slot1.getItemId() == 63667997)
+    assert(string.match(string.lower(slot1.getName()), "transponder xs %[%d+%]"), slot1.getName())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getMass() == 340)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
-    _G.initialState = slot1.getState()
+    _G.initialState = slot1.isActive()
 
     -- play with set signal, has no actual effect on state when set programmatically
     slot1.setSignalIn("in", 0.0)
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
+    assert(slot1.isActive() == initialState)
     slot1.setSignalIn("in", 1.0)
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(slot1.getState() == initialState)
-    -- fractions within [0,1] work, and string numbers are cast
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.isActive() == initialState)
     slot1.setSignalIn("in", 0.7)
-    assert(slot1.getSignalIn("in") == 0.7)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", "0.5")
-    assert(slot1.getSignalIn("in") == 0.5)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", "0.0")
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", "7.0")
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(slot1.getState() == initialState)
-    -- invalid sets to 0
-    slot1.setSignalIn("in", "text")
+    assert(slot1.isActive() == initialState)
+    slot1.setSignalIn("in", "1.0")
     assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
-    slot1.setSignalIn("in", nil)
-    assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == initialState)
+    assert(slot1.isActive() == initialState)
 
     local function coroutineTest()
         local delay = 0.5
@@ -429,10 +439,10 @@ function _G.TestTransponderUnit.testGameBehavior()
         _G.toggleOffCount = 0
 
         -- ensure initial state on
-        if slot1.getState() == 0 then
+        if slot1.isActive() == 0 then
             slot1.toggle()
             yieldWithDelay()
-            assert(slot1.getState() == 1)
+            assert(slot1.isActive() == 1)
         end
 
         -- reset counters in case initial state was off
@@ -442,13 +452,13 @@ function _G.TestTransponderUnit.testGameBehavior()
 
         slot1.deactivate()
         yieldWithDelay()
-        assert(slot1.getState() == 0)
+        assert(slot1.isActive() == 0)
         slot1.activate()
         yieldWithDelay()
-        assert(slot1.getState() == 1)
+        assert(slot1.isActive() == 1)
         slot1.toggle()
         yieldWithDelay()
-        assert(slot1.getState() == 0)
+        assert(slot1.isActive() == 0)
 
         assert(_G.toggleCount == 3, "Total toggle count: " .. _G.toggleCount)
         assert(_G.toggleOnCount == 1, "Total toggle on count: " .. _G.toggleOnCount)
@@ -474,7 +484,7 @@ function _G.TestTransponderUnit.testGameBehavior()
     -- report failure if coroutine has not reached success within 5 seconds
     unit.setTimer("fail", 10)
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 
     -- tags

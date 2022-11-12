@@ -3,10 +3,7 @@
 --
 -- Element class: LaserEmitterUnit
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
--- @see ElementWithState
--- @see ElementWithToggle
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @module LaserEmitterUnit
 -- @alias M
 
@@ -14,9 +11,9 @@ local MockElement = require "dumocks.Element"
 local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
-elementDefinitions["laser emitter"] = {mass = 7.47, maxHitPoints = 50.0}
-elementDefinitions["infrared laser emitter"] = {mass = 9.93, maxHitPoints = 50.0}
-local DEFAULT_ELEMENT = "laser emitter"
+elementDefinitions["laser emitter xs"] = {mass = 7.47, maxHitPoints = 50.0, itemId = 1784722190}
+elementDefinitions["infrared laser emitter xs"] = {mass = 9.93, maxHitPoints = 50.0, itemId = 609676854}
+local DEFAULT_ELEMENT = "laser emitter xs"
 
 local M = MockElementWithToggle:new()
 M.elementClass = "LaserEmitterUnit"
@@ -31,35 +28,36 @@ function M:new(o, id, elementName)
     return o
 end
 
+--- Activates the laser emitter.
+function M:activate()
+    self.state = true
+end
+
+--- Deactivates the laser emitter.
+function M:deactivate()
+    self.state = false
+end
+
+--- Checks if the laser emitter is active.
+-- @treturn 0/1 1 if the laser emitter is active.
+function M:isActive()
+    if self.state then
+        return 1
+    end
+    return 0
+end
+
 --- Set the value of a signal in the specified IN plug of the element.
 --
 -- Valid plug names are:
 -- <ul>
--- <li>"in" for the in signal.</li>
+-- <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
 -- </ul>
 -- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
-        local value = tonumber(state)
-        if type(value) ~= "number" then
-            value = 0.0
-        end
-
-        -- expected behavior
-        if value > 0.0 then
-            self:activate()
-        else
-            self:deactivate()
-        end
-
-        if value <= 0 then
-            self.plugIn = 0
-        elseif value >= 1.0 then
-            self.plugIn = 1.0
-        else
-            self.plugIn = value
-        end
+        -- no longer responds to setSignalIn
     end
 end
 
@@ -93,6 +91,9 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElementWithToggle.mockGetClosure(self)
+    closure.activate = function() return self:activate() end
+    closure.deactivate = function() return self:deactivate() end
+    closure.isActive = function() return self:isActive() end
 
     closure.setSignalIn = function(plug, state) return self:setSignalIn(plug, state) end
     closure.getSignalIn = function(plug) return self:getSignalIn(plug) end

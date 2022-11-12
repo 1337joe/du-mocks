@@ -184,7 +184,7 @@ M.Shape = {
 -- purposes only.
 -- @table AlignH
 M.AlignH = {
-    AlignH_Left = 0, -- Default: Align to the start of the text.
+    AlignH_Left = 0, -- (<b>Default</b>) Align to the start of the text.
     AlignH_Center = 1, -- Align to the middle of the text.
     AlignH_Right = 2, -- Align to the end of the text.
 }
@@ -198,12 +198,12 @@ M.AlignV = {
     AlignV_Ascender = 0, -- Align to top of ascender.
     AlignV_Top = 1, -- Align to height of capital characters.
     AlignV_Middle = 2, -- Align to middle of characters.
-    AlignV_Baseline = 3, -- Default: Align to text baseline.
+    AlignV_Baseline = 3, -- (<b>Default</b>) Align to text baseline.
     AlignV_Bottom = 4,
     AlignV_Descender = 5, -- Align to bottom of descender.
 }
 
-function M:new(o, xRes, yRes)
+function M:new(o, xRes, yRes, prefix)
     -- define default instance fields
     o = o or {
     }
@@ -215,6 +215,9 @@ function M:new(o, xRes, yRes)
         y = yRes or 613,
     }
 
+    -- prefix applied to svg defs to allow multiple SVGs to be rendered in the same html document
+    o.prefix = prefix
+
     o.input = ""
     o.mouseX, o.mouseY = -1, -1
     o.cursorDown, o.cursorPressed, o.cursorReleased = false, false, false
@@ -225,9 +228,11 @@ function M:new(o, xRes, yRes)
     o.layers = {}
     o.fonts = {}
     o.backgroundColor = {0, 0, 0}
-    o.renderCost = 589824
+    o.renderCost = 0
 
     o.output = ""
+
+    o.fontStrings = {}
 
     return o
 end
@@ -238,18 +243,21 @@ end
 
 local function validateParameters(expected, ...)
     local args = table.pack(...)
-    local expectedType
+    local expectedType, value
     for i = args.n, 1, -1 do
+        value = args[i]
         expectedType = expected[i]
         if expectedType == "integer" then
             expectedType = "number"
+        elseif expectedType == "string" and type(value) == "number" then
+            value = tostring(value)
         end
 
-        assert(type(args[i]) == expectedType,
+        assert(type(value) == expectedType,
             string.format("expected %s for parameter %d", expected[i], i))
 
-        if expected[i] == "integer" then
-            assert(args[i] // 1 == args[i],
+        if expectedType == "integer" then
+            assert(value // 1 == value,
                 string.format("expected %s for parameter %d", expected[i], i))
         end
     end
@@ -394,6 +402,8 @@ function M:addBox(layer, x, y, width, height)
     end
     local layerShape = layerRef.box
 
+    local shadow = getPropertyValue(layerRef, Property.Shadow, M.Shape.Shape_Box)
+    local strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Box)
     layerShape[#layerShape + 1] = {
         x = x,
         y = y,
@@ -401,12 +411,16 @@ function M:addBox(layer, x, y, width, height)
         height = height,
         fillColor = getPropertyValue(layerRef, Property.FillColor, M.Shape.Shape_Box),
         rotation = getPropertyValue(layerRef, Property.Rotation, M.Shape.Shape_Box),
-        shadow = getPropertyValue(layerRef, Property.Shadow, M.Shape.Shape_Box),
+        shadow = shadow,
         strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_Box),
-        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Box)
+        strokeWidth = strokeWidth
     }
 
     clearNext(layerRef)
+
+    -- cost equal to the size of the screen area changed
+    local sizeBump = ((shadow and shadow[1] or 0) + (strokeWidth or 0)) * 2
+    self.renderCost = self.renderCost + math.max(16, (width + sizeBump) * (height + sizeBump))
 end
 
 --- Add a rectangle to the given layer with top-left corner (x,y) and dimensions width x height with each corner
@@ -599,7 +613,6 @@ end
 -- @tparam float y The y coordinate (in pixels) of the top-left baseline.
 -- @see loadFont
 function M:addText(layer, font, text, x, y)
-    -- TODO should validate text against auto-boxable strings
     validateParameters({"integer", "integer", "string", "number", "number"}
         , layer, font, text, x, y)
     local layerRef = getLayer(self, layer)
@@ -609,6 +622,8 @@ function M:addText(layer, font, text, x, y)
     local layerShape = layerRef.text
     local fontRef = getFont(self, font)
 
+    local shadow = getPropertyValue(layerRef, Property.Shadow, M.Shape.Shape_Box)
+    local strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Box)
     layerShape[#layerShape + 1] = {
         x = x,
         y = y,
@@ -616,13 +631,18 @@ function M:addText(layer, font, text, x, y)
         font = fontRef.name,
         size = fontRef.size,
         fillColor = getPropertyValue(layerRef, Property.FillColor, M.Shape.Shape_Text),
-        shadow = getPropertyValue(layerRef, Property.Shadow, M.Shape.Shape_Text),
+        shadow = shadow,
         strokeColor = getPropertyValue(layerRef, Property.StrokeColor, M.Shape.Shape_Text),
-        strokeWidth = getPropertyValue(layerRef, Property.StrokeWidth, M.Shape.Shape_Text),
+        strokeWidth = strokeWidth,
         textAlign = getPropertyValue(layerRef, Property.TextAlign, M.Shape.Shape_Text)
     }
 
     clearNext(layerRef)
+
+    -- cost equal to the size of the getTextBounds box with decimal truncated
+    local width, height = self:getTextBounds(font, text)
+    local sizeBump = ((shadow and shadow[1] or 0) + (strokeWidth or 0)) * 2
+    self.renderCost = self.renderCost + math.floor((width + sizeBump) * (height + sizeBump))
 end
 
 --- Add a triangle to the given layer with vertices (x1, y1), (x2, y2), (x3, y3).
@@ -679,6 +699,9 @@ function M:createLayer()
         },
         defaultTextAlign = {}
     }
+
+    self.renderCost = self.renderCost + 75000
+
     return #self.layers
 end
 
@@ -699,6 +722,8 @@ function M:setLayerClipRect(layer, x, y, sx, sy)
         y = y,
         width = sx,
         height = sy}
+
+    self.renderCost = self.renderCost + 0
 end
 
 --- Set the transform origin of a layer; layer scaling and rotation are applied relative to this origin.
@@ -720,6 +745,8 @@ function M:setLayerRotation(layer, rotation)
         , layer, rotation)
     local layerRef = getLayer(self, layer)
     layerRef.rotation = math.deg(rotation)
+
+    self.renderCost = self.renderCost + 0
 end
 
 --- Set a scale factor applied to the layer as a whole, relative to the layer's transform origin. Scale factors are
@@ -902,6 +929,7 @@ local FontData = {
         heightMultAvg = 0.921875,
     },
     ["Montserrat-Bold"] = {
+        name = "Montserrat",
         weight = "bold",
         ascenderMult = 0.96875,
         descenderMult = -0.251953125,
@@ -909,6 +937,7 @@ local FontData = {
         heightMultAvg = 0.92666330645161,
     },
     ["Montserrat-Light"] = {
+        name = "Montserrat",
         weight = "lighter",
         ascenderMult = 0.96875,
         descenderMult = -0.251953125,
@@ -922,6 +951,7 @@ local FontData = {
         heightMultAvg = 0.87525201612903,
     },
     ["Play-Bold"] = {
+        name = "Play",
         weight = "bold",
         ascenderMult = 0.9375,
         descenderMult = -0.220703125,
@@ -1045,12 +1075,17 @@ end
 -- @treturn float,float The text bounds as (width, height) in pixels.
 -- @see loadFont
 function M:getTextBounds(font, text)
-    -- TODO should validate text against auto-boxable strings
-    validateParameters({"integer"}
-        , font)
+    validateParameters({"integer", "string"}, font, text)
     local fontRef = getFont(self, font)
+
+    -- if matching string data is found use it
+    if self.fontStrings and self.fontStrings[fontRef.name] and self.fontStrings[fontRef.name][text] then
+        local stringData = self.fontStrings[fontRef.name][text]
+        return stringData[1] * fontRef.size, stringData[2] * fontRef.size
+    end
+
+    -- otherwise fall back to average size for the font
     local fontData = FontData[fontRef.name]
-    -- using the average sizes isn't a great representation, but it's a passable initial estimate
     local length = string.len(text)
     return fontData.widthMultAvg * fontRef.size * length, fontData.heightMultAvg * fontRef.size
 end
@@ -1506,7 +1541,7 @@ function M:mockGenerateSvg()
     for id, layer in pairs(self.layers) do
         clipPath = getClipPath(layer)
         if string.len(clipPath) > 0 then
-            svg[#svg + 1] = string.format([[        <clipPath id="layer%d">%s</clipPath>]], id, clipPath)
+            svg[#svg + 1] = string.format([[        <clipPath id="%slayer%d">%s</clipPath>]], self.prefix, id, clipPath)
         end
     end
     svg[#svg + 1] = [[    </defs>]]
@@ -1517,7 +1552,7 @@ function M:mockGenerateSvg()
     local clipPathString, transformString, fillString, rotationString, shadowString, strokeString
     for id, layer in pairs(self.layers) do
         if layer.clipRect then
-            clipPathString = string.format([[ clip-path="url(#layer%d)"]], id)
+            clipPathString = string.format([[ clip-path="url(#%slayer%d)"]], self.prefix, id)
         else
             clipPathString = ""
         end

@@ -1,19 +1,19 @@
 --- Generates a protective shield around the space construct.
 --
--- <h1 style="color:red;">Note: This is generated from patch notes and in-game codex and has not yet been tested
---   against the actual element. Accuracy not guaranteed.</h1>
+-- <p style="color:red;">Note: This is generated from patch notes and in-game codex and has not yet been tested
+--   against the actual element. Accuracy not guaranteed.</p>
 --
 -- Element class: BaseShieldGeneratorUnit
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @module BaseShieldGeneratorUnit
 -- @alias M
 
 local MockElement = require "dumocks.Element"
+local MockElementWithToggle = require "dumocks.ElementWithToggle"
 
 local elementDefinitions = {}
-elementDefinitions["base shield generator xl"] = {mass = 138000.0, maxHitPoints = 47250.0, maxShieldHitpoints = 450000.0, ventingMaxCooldown = 60.0}
+elementDefinitions["base shield generator xl"] = {mass = 138000.0, maxHitPoints = 47250.0, itemId = 1430252067, maxShieldHitpoints = 450000.0, ventingMaxCooldown = 60.0}
 local DEFAULT_ELEMENT = "base shield generator xl"
 
 local M = MockElement:new()
@@ -38,6 +38,25 @@ function M:new(o, id, elementName)
     return o
 end
 
+--- Activate the shield.
+function M:activate()
+    self.state = true
+end
+
+--- Deactivate the shield.
+function M:deactivate()
+    self.state = false
+end
+
+--- Returns the activation state of the shield.
+-- @treturn 0/1 1 when the shield is active, 0 otherwise.
+function M:isActive()
+    if self.state then
+        return 1
+    end
+    return 0
+end
+
 --- Returns the current hit points of the shield.
 -- @treturn float The current hit points of the shield.
 function M:getShieldHitpoints()
@@ -51,7 +70,7 @@ function M:getMaxShieldHitpoints()
 end
 
 --- Returns distribution of resistance pool over resistance types.
--- @treturn vec4 Resistance to damage type (antimatter, electromagnetic, kinetic, thermic).
+-- @treturn table Resistance to damage type {antimatter, electromagnetic, kinetic, thermic}.
 function M:getResistances()
 end
 
@@ -85,12 +104,12 @@ function M:getResistancesRemaining()
 end
 
 --- Returns ratio per damage type of recent weapon impacts after applying resistances.
--- @treturn vec4 Stress ratio due to damage type (antimatter, electromagnetic, kinetic, thermic).
+-- @treturn table Stress ratio due to damage type {antimatter, electromagnetic, kinetic, thermic}.
 function M:getStressRatio()
 end
 
 --- Returns ratio per damage type of recent weapon impacts without resistance.
--- @treturn vec4 Stress ratio due to damage type (antimatter, electromagnetic, kinetic, thermic).
+-- @treturn table Stress ratio due to damage type {antimatter, electromagnetic, kinetic, thermic}.
 function M:getStressRatioRaw()
 end
 
@@ -125,40 +144,105 @@ end
 function M:setLockdownExitTime(hour)
 end
 
+--- Event: Emitted when we started or stopped the shield generator.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+-- @tparam 0/1 active 1 if the element was activated, 0 otherwise.
+function M.EVENT_onToggled(active)
+    assert(false, "This is implemented for documentation purposes.")
+end
+
+--- <b>Deprecated:</b> Event: Emitted when the shield absorbed incoming damage.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onAbsorbed should be used instead.
+-- @see EVENT_onAbsorbed
+-- @tparam float hitpoints Hit points the shield lost.
+-- @tparam float rawHitpoints Total damage without taking resistances into account.
+function M.EVENT_absorbed(hitpoints, rawHitpoints)
+    M.deprecated("EVENT_absorbed", "EVENT_onAbsorbed")
+    M.EVENT_onAbsorbed(hitpoints, rawHitpoints)
+end
+
 --- Event: Emitted when the shield absorbed incoming damage.
 --
 -- Note: This is documentation on an event handler, not a callable method.
 -- @tparam float hitpoints Hit points the shield lost.
 -- @tparam float rawHitpoints Total damage without taking resistances into account.
-function M.EVENT_absorbed(hitpoints, rawHitpoints)
+function M.EVENT_onAbsorbed(hitpoints, rawHitpoints)
     assert(false, "This is implemented for documentation purposes.")
+end
+
+--- <b>Deprecated:</b> Event: Emitted when the shield hit points reached 0 due to damages.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onDown should be used instead.
+-- @see EVENT_onDown
+function M.EVENT_down()
+    M.deprecated("EVENT_down", "EVENT_onDown")
+    M.EVENT_onDown()
 end
 
 --- Event: Emitted when the shield hit points reached 0 due to damages.
 --
 -- Note: This is documentation on an event handler, not a callable method.
-function M.EVENT_down()
+function M.EVENT_onDown()
     assert(false, "This is implemented for documentation purposes.")
+end
+
+--- <b>Deprecated:</b> Event: Emitted when the shield hit points were fully restored.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onRestored should be used instead.
+-- @see EVENT_onRestored
+function M.EVENT_restored()
+    M.deprecated("EVENT_restored", "EVENT_onRestored")
+    M.EVENT_onRestored()
 end
 
 --- Event: Emitted when the shield hit points were fully restored.
 --
 -- Note: This is documentation on an event handler, not a callable method.
-function M.EVENT_restored()
+function M.EVENT_onRestored()
     assert(false, "This is implemented for documentation purposes.")
+end
+
+--- <b>Deprecated:</b> Event: Emitted when the shield enters lockdown.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onEnterLockdown should be used instead.
+-- @see EVENT_onEnterLockdown
+function M.EVENT_enterLockdown()
+    M.deprecated("EVENT_enterLockdown", "EVENT_onEnterLockdown")
+    M.EVENT_onEnterLockdown()
 end
 
 --- Event: Emitted when the shield enters lockdown.
 --
 -- Note: This is documentation on an event handler, not a callable method.
-function M.EVENT_enterLockdown()
+function M.EVENT_onEnterLockdown()
     assert(false, "This is implemented for documentation purposes.")
+end
+
+--- <b>Deprecated:</b> Event: Emitted when the shield exits the lockdown.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onLeaveLockdown should be used instead.
+-- @see EVENT_onLeaveLockdown
+function M.EVENT_leaveLockdown()
+    M.deprecated("EVENT_leaveLockdown", "EVENT_onLeaveLockdown")
+    M.EVENT_onLeaveLockdown()
 end
 
 --- Event: Emitted when the shield exits the lockdown.
 --
 -- Note: This is documentation on an event handler, not a callable method.
-function M.EVENT_leaveLockdown()
+function M.EVENT_onLeaveLockdown()
     assert(false, "This is implemented for documentation purposes.")
 end
 

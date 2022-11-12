@@ -8,10 +8,7 @@
 --   <li>ShieldGeneratorLargeGroup</li>
 -- </ul>
 --
--- Extends: Element &gt; ElementWithState &gt; ElementWithToggle
--- @see Element
--- @see ElementWithState
--- @see ElementWithToggle
+-- Extends: @{Element} &gt; @{ElementWithState} &gt; @{ElementWithToggle}
 -- @module ShieldGeneratorUnit
 -- @alias M
 
@@ -25,10 +22,10 @@ local MEDIUM_GROUP = "MediumGroup"
 local LARGE_GROUP = "LargeGroup"
 
 local elementDefinitions = {}
-elementDefinitions["shield generator xs"] = {mass = 670.0, maxHitPoints = 1400.0, class = CLASS .. EXTRA_SMALL_GROUP, maxShieldHitpoints = 450000.0, ventingMaxCooldown = 60.0}
-elementDefinitions["shield generator s"] = {mass = 5000.0, maxHitPoints = 4500.0, class = CLASS .. SMALL_GROUP, maxShieldHitpoints = 1750000.0, ventingMaxCooldown = 120.0}
-elementDefinitions["shield generator m"] = {mass = 30000.0, maxHitPoints = 6750.0, class = CLASS .. MEDIUM_GROUP, maxShieldHitpoints = 5000000.0, ventingMaxCooldown = 240.0}
-elementDefinitions["shield generator l"] = {mass = 125000.0, maxHitPoints = 31500.0, class = CLASS .. LARGE_GROUP, maxShieldHitpoints = 10000000.0, ventingMaxCooldown = 480.0}
+elementDefinitions["shield generator xs"] = {mass = 670.0, maxHitPoints = 1400.0, itemId = 2882830295, class = CLASS .. EXTRA_SMALL_GROUP, maxShieldHitpoints = 450000.0, ventingMaxCooldown = 60.0}
+elementDefinitions["shield generator s"] = {mass = 5000.0, maxHitPoints = 4500.0, itemId = 3696387320, class = CLASS .. SMALL_GROUP, maxShieldHitpoints = 1750000.0, ventingMaxCooldown = 120.0}
+elementDefinitions["shield generator m"] = {mass = 30000.0, maxHitPoints = 6750.0, itemId = 254923774, class = CLASS .. MEDIUM_GROUP, maxShieldHitpoints = 5000000.0, ventingMaxCooldown = 240.0}
+elementDefinitions["shield generator l"] = {mass = 125000.0, maxHitPoints = 31500.0, itemId = 2034818941, class = CLASS .. LARGE_GROUP, maxShieldHitpoints = 10000000.0, ventingMaxCooldown = 480.0}
 local DEFAULT_ELEMENT = "shield generator xs"
 
 local M = MockElementWithToggle:new()
@@ -63,7 +60,7 @@ function M:new(o, id, elementName)
     return o
 end
 
--- Behavior override to allow for delayed state change.
+--- Activate the shield.
 function M:activate()
     self.newState = true
     if self.autoCallback then
@@ -71,7 +68,7 @@ function M:activate()
     end
 end
 
--- Behavior override to allow for delayed state change.
+--- Deactivate the shield.
 function M:deactivate()
     self.newState = false
     if self.autoCallback then
@@ -85,6 +82,15 @@ function M:toggle()
     if self.autoCallback then
         self:mockTriggerCallback()
     end
+end
+
+--- Returns the activation state of the shield.
+-- @treturn 0/1 1 when the shield is active, 0 otherwise.
+function M:isActive()
+    if self.state then
+        return 1
+    end
+    return 0
 end
 
 local DATA_TEMPLATE = '{"elementId":%d,"helperId":"shield_generator","isActive":%s,"isVenting":%s,' ..
@@ -126,7 +132,7 @@ local RESISTANCE_TEMPLATE = '{"%s":{"stress":%f,"value":%f}'
 --   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>shield_generator</code></li>
 -- </ul>
 -- @treturn string Data as JSON.
-function M:getData()
+function M:getWidgetData()
     local generatorId = 123456789
     local ventingStartHp = 0.0
     local ventingTargetHp = self.maxShieldHitpoints
@@ -143,7 +149,7 @@ function M:getData()
 end
 
 -- Override default with realistic patten to id.
-function M:getDataId()
+function M:getWidgetDataId()
     return "e123456"
 end
 
@@ -210,7 +216,7 @@ function M:getVentingMaxCooldown()
 end
 
 --- Returns distribution of resistance pool over resistance types.
--- @treturn vec4 Resistance to damage type (antimatter, electromagnetic, kinetic, thermic).
+-- @treturn table Resistance to damage type {antimatter, electromagnetic, kinetic, thermic}.
 function M:getResistances()
 end
 
@@ -244,12 +250,12 @@ function M:getResistancesRemaining()
 end
 
 --- Returns ratio per damage type of recent weapon impacts after applying resistances.
--- @treturn vec4 Stress ratio due to damage type (antimatter, electromagnetic, kinetic, thermic).
+-- @treturn table Stress ratio due to damage type {antimatter, electromagnetic, kinetic, thermic}.
 function M:getStressRatio()
 end
 
 --- Returns ratio per damage type of recent weapon impacts without resistance.
--- @treturn vec4 Stress ratio due to damage type (antimatter, electromagnetic, kinetic, thermic).
+-- @treturn table Stress ratio due to damage type {antimatter, electromagnetic, kinetic, thermic}.
 function M:getStressRatioRaw()
 end
 
@@ -268,31 +274,13 @@ end
 --
 -- Valid plug names are:
 -- <ul>
--- <li>"in" for the in signal (has no actual effect on agg state when modified this way).</li>
+-- <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
 -- </ul>
 -- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
-        local value = tonumber(state)
-        if type(value) ~= "number" then
-            value = 0.0
-        end
-
-        -- expected behavior, but in fact nothing happens in-game
-        if value > 0.0 then
-            -- self:activate()
-        else
-            -- self:deactivate()
-        end
-
-        if value <= 0 then
-            self.plugIn = 0
-        elseif value >= 1.0 then
-            self.plugIn = 1.0
-        else
-            self.plugIn = value
-        end
+        -- no longer responds to setSignalIn
     end
 end
 
@@ -321,12 +309,37 @@ function M:getSignalIn(plug)
     return MockElement.getSignalIn(self)
 end
 
+--- <b>Deprecated:</b> Event: Emitted when we started or stopped the shield generator.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onToggled should be used instead.
+-- @see EVENT_onToggled
+-- @tparam 0/1 active 1 if the element was activated, 0 otherwise.
+function M.EVENT_toggled(active)
+    M.deprecated("EVENT_toggled", "EVENT_onToggled")
+    M.EVENT_onToggled(active)
+end
+
 --- Event: Emitted when we started or stopped the shield generator.
 --
 -- Note: This is documentation on an event handler, not a callable method.
 -- @tparam 0/1 active 1 if the element was activated, 0 otherwise.
-function M.EVENT_toggled(active)
+function M.EVENT_onToggled(active)
     assert(false, "This is implemented for documentation purposes.")
+end
+
+--- <b>Deprecated:</b> Event: Emitted when the shield absorbed incoming damage.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onAbsorbed should be used instead.
+-- @see EVENT_onAbsorbed
+-- @tparam float hitpoints Hit points the shield lost.
+-- @tparam float rawHitpoints Total damage without taking resistances into account.
+function M.EVENT_absorbed(hitpoints, rawHitpoints)
+    M.deprecated("EVENT_absorbed", "EVENT_onAbsorbed")
+    M.EVENT_onAbsorbed(hitpoints, rawHitpoints)
 end
 
 --- Event: Emitted when the shield absorbed incoming damage.
@@ -334,8 +347,21 @@ end
 -- Note: This is documentation on an event handler, not a callable method.
 -- @tparam float hitpoints Hit points the shield lost.
 -- @tparam float rawHitpoints Total damage without taking resistances into account.
-function M.EVENT_absorbed(hitpoints, rawHitpoints)
+function M.EVENT_onAbsorbed(hitpoints, rawHitpoints)
     assert(false, "This is implemented for documentation purposes.")
+end
+
+--- <b>Deprecated:</b> Event: Emitted when venting started, stopped or restored some hitpoints.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onVenting should be used instead.
+-- @see EVENT_onVenting
+-- @tparam 0/1 active 1 when venting is active, 0 otherwise.
+-- @tparam float restoredHitpoints Hitpoints restored since last venting step.
+function M.EVENT_venting(active, restoredHitpoints)
+    M.deprecated("EVENT_venting", "EVENT_onVenting")
+    M.EVENT_onVenting(active, restoredHitpoints)
 end
 
 --- Event: Emitted when venting started, stopped or restored some hitpoints.
@@ -343,25 +369,47 @@ end
 -- Note: This is documentation on an event handler, not a callable method.
 -- @tparam 0/1 active 1 when venting is active, 0 otherwise.
 -- @tparam float restoredHitpoints Hitpoints restored since last venting step.
-function M.EVENT_venting(active, restoredHitpoints)
+function M.EVENT_onVenting(active, restoredHitpoints)
     assert(false, "This is implemented for documentation purposes.")
+end
+
+--- <b>Deprecated:</b> Event: Emitted when the shield hit points reached 0 due to damages.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onDown should be used instead.
+-- @see EVENT_onDown
+function M.EVENT_down()
+    M.deprecated("EVENT_down", "EVENT_onDown")
+    M.EVENT_onDown()
 end
 
 --- Event: Emitted when the shield hit points reached 0 due to damages.
 --
 -- Note: This is documentation on an event handler, not a callable method.
-function M.EVENT_down()
+function M.EVENT_onDown()
     assert(false, "This is implemented for documentation purposes.")
+end
+
+--- <b>Deprecated:</b> Event: Emitted when the shield hit points were fully restored.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onRestored should be used instead.
+-- @see EVENT_onRestored
+function M.EVENT_restored()
+    M.deprecated("EVENT_restored", "EVENT_onRestored")
+    M.EVENT_onRestored()
 end
 
 --- Event: Emitted when the shield hit points were fully restored.
 --
 -- Note: This is documentation on an event handler, not a callable method.
-function M.EVENT_restored()
+function M.EVENT_onRestored()
     assert(false, "This is implemented for documentation purposes.")
 end
 
---- Mock only, not in-game: Register a handler for the in-game `toggled(active)` event.
+--- Mock only, not in-game: Register a handler for the in-game `onToggled(active)` event.
 -- @tparam function callback The function to call when the shield state changes.
 -- @tparam string active The state to filter for or "*" for all.
 -- @treturn int The index of the callback.
@@ -406,7 +454,7 @@ function M:mockDoToggled(active)
     end
 end
 
---- Mock only, not in-game: Register a handler for the in-game `absorbed(hitpoints, rawHitpoints)` event.
+--- Mock only, not in-game: Register a handler for the in-game `onAbsorbed(hitpoints, rawHitpoints)` event.
 -- @tparam function callback The function to call when the shield absorbs damage.
 -- @tparam string hitpoints The hit points to filter for or "*" for all.
 -- @tparam string rawHitpoints The raw hit points to filter for or "*" for all.
@@ -458,7 +506,7 @@ function M:mockDoAbsorbed(hitpoints, rawHitpoints)
     end
 end
 
---- Mock only, not in-game: Register a handler for the in-game `down()` event.
+--- Mock only, not in-game: Register a handler for the in-game `onDown()` event.
 -- @tparam function callback The function to call when the shield goes down.
 -- @treturn int The index of the callback.
 -- @see EVENT_down
@@ -495,7 +543,7 @@ function M:mockDoDown()
     end
 end
 
---- Mock only, not in-game: Register a handler for the in-game `restored()` event.
+--- Mock only, not in-game: Register a handler for the in-game `onRestored()` event.
 -- @tparam function callback The function to call when the shield comes up.
 -- @treturn int The index of the callback.
 -- @see EVENT_restored
@@ -553,7 +601,9 @@ end
 -- @see Element:mockGetClosure
 function M:mockGetClosure()
     local closure = MockElementWithToggle.mockGetClosure(self)
-
+    closure.activate = function() return self:activate() end
+    closure.deactivate = function() return self:deactivate() end
+    closure.isActive = function() return self:isActive() end
     closure.getShieldHitpoints = function() return self:getShieldHitpoints() end
     closure.getMaxShieldHitpoints = function() return self:getMaxShieldHitpoints() end
     closure.startVenting = function() return self:startVenting() end

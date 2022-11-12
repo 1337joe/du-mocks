@@ -44,13 +44,13 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
-    local class = slot1.getElementClass()
+    local class = slot1.getClass()
     local validClasses = {"Hovercraft", "VerticalBooster", "Spacebrake", "Airbrake", "Wing2", "Aileron2", "Stabilizer",
                           "Adjustor", "AtmosphericEngine.+Group", "SpaceEngine.+Group", "RocketEngine"}
     local valid = false
@@ -60,6 +60,7 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
             break
         end
     end
+    -- TODO itemId/name
     assert(valid, "Unexpected class: " .. class)
 
     -- verify expected functions
@@ -77,7 +78,7 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test inherited methods
-    local data = slot1.getData()
+    local data = slot1.getWidgetData()
     local expectedFields = {"helperId", "name", "type", "currentMaxThrust", "currentThrust", "maxThrustBase"}
     local expectedValues = {}
     expectedValues["type"] = '"engine_unit"'
@@ -91,7 +92,7 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
     system.print("Success")
     unit.exit()
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 

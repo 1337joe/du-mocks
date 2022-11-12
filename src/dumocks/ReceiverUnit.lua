@@ -2,17 +2,16 @@
 --
 -- Element class: ReceiverUnit
 --
--- Extends: Element
--- @see Element
+-- Extends: @{Element}
 -- @module ReceiverUnit
 -- @alias M
 
 local MockElement = require "dumocks.Element"
 
 local elementDefinitions = {}
-elementDefinitions["receiver xs"] = {mass = 13.27, maxHitPoints = 50.0}
-elementDefinitions["receiver s"] = {mass = 475.87, maxHitPoints = 191.0}
-elementDefinitions["receiver m"] = {mass = 12664.06, maxHitPoints = 15326.0}
+elementDefinitions["receiver xs"] = {mass = 13.27, maxHitPoints = 50.0, itemId = 3732634076}
+elementDefinitions["receiver s"] = {mass = 475.87, maxHitPoints = 191.0, itemId = 2082095499}
+elementDefinitions["receiver m"] = {mass = 12664.06, maxHitPoints = 15326.0, itemId = 736740615}
 local DEFAULT_ELEMENT = "receiver xs"
 
 local M = MockElement:new()
@@ -33,21 +32,70 @@ function M:new(o, id, elementName)
 end
 
 --- Returns the receiver range.
--- @treturn meter The range.
+-- @treturn float The range in m (meters).
 function M:getRange()
     return self.range
 end
 
---- Set the channels list.
+--- Checks if the given channel exists in the receiver channels list.
+-- @tparam string channel The channel to check for.
+-- @treturn 0/1 1 if the channels list contains the given channel.
+function M:hasChannel(channel)
+    for _, c in pairs(self:getChannelList()) do
+        if c == channel then
+            return 1
+        end
+    end
+    return 0
+end
+
+--- <b>Deprecated:</b> Set the channels list.
+--
+-- This method is deprecated: setChannelList should be used instead
+-- @see setChannelList
 -- @tparam string channelList The channels list separated by commas.
 function M:setChannels(channelList)
-    self.channelList = channelList
+    M.deprecated("setChannels", "setChannelList")
+    local channels = {}
+    for channel in string.gmatch(channelList, "([^,]+)") do
+        channels[#channels + 1] = channel
+    end
+    self:setChannelList(channels)
+end
+
+--- Set the channels list.
+-- @tparam list channels The channels list as a Lua table. At most 8 channels may be set, but a comma-separated string
+--   in the table will be split on the commas into multiple channels.
+-- @treturn 0/1 1 if the channels list has been successfully set.
+function M:setChannelList(channels)
+    if #channels > 8 then
+        error("Too many channels set")
+        -- return 0
+    end
+
+    -- trailing , to match in-game behavior
+    self.channelList = table.concat(channels, ",") .. ","
+    return 1
+end
+
+--- <b>Deprecated:</b> Returns the channels list.
+--
+-- This method is deprecated: getChannelList should be used instead
+-- @see getChannelList
+-- @treturn string The channels list separated by commas.
+function M:getChannels()
+    M.deprecated("getChannels", "getChannelList")
+    return table.concat(self:getChannelList(), ",") .. ","
 end
 
 --- Returns the channels list.
--- @treturn string The channels list separated by commas.
-function M:getChannels()
-    return self.channelList
+-- @treturn list The channels list as a Lua table.
+function M:getChannelList()
+    local channels = {}
+    for channel in string.gmatch(self.channelList, "([^,]+)") do
+        channels[#channels + 1] = channel
+    end
+    return channels
 end
 
 --- Return the value of a signal in the specified OUT plug of the element.
@@ -69,12 +117,25 @@ function M:getSignalOut(plug)
     return MockElement.getSignalOut(self, plug)
 end
 
+--- <b>Deprecated:</b> Event: Emitted when a message is received on any channel defined on the element.
+--
+-- Note: This is documentation on an event handler, not a callable method.
+--
+-- This event is deprecated: EVENT_onReceived should be used instead.
+-- @see EVENT_onReceived
+-- @tparam string channel The channel; can be used as a filter.
+-- @tparam string message The message received.
+function M.EVENT_receive(channel, message)
+    M.deprecated("EVENT_receive", "EVENT_onReceived")
+    M.EVENT_onReceived()
+end
+
 --- Event: Emitted when a message is received on any channel defined on the element.
 --
 -- Note: This is documentation on an event handler, not a callable method.
 -- @tparam string channel The channel; can be used as a filter.
 -- @tparam string message The message received.
-function M.EVENT_receive(channel, message)
+function M.EVENT_onReceived(channel, message)
     assert(false, "This is implemented for documentation purposes. For test usage see mockRegisterReceive")
 end
 
@@ -99,17 +160,10 @@ function M:mockRegisterReceive(callback, channel, message)
 end
 
 --- Mock only, not in-game: Simulates a message reaching the receiver.
--- @tparam string channel The channel a message was sent on, must match a channel in channelList to be received.
+-- @tparam string channel The channel a message was sent on, receiver must have channel to be received.
 -- @tparam string message The message received.
 function M:mockDoReceive(channel, message)
-    local processMessage = false
-    for listenChannel in string.gmatch(self.channelList, "%s*([^,]+)%s*") do
-        if listenChannel == channel then
-            processMessage = true
-            break
-        end
-    end
-    if not processMessage then
+    if self:hasChannel(channel) ~= 1 then
         return
     end
 
@@ -143,8 +197,11 @@ end
 function M:mockGetClosure()
     local closure = MockElement.mockGetClosure(self)
     closure.getRange = function() return self:getRange() end
+    closure.hasChannel = function(channel) return self:hasChannel(channel) end
     closure.setChannels = function(channelList) return self:setChannels(channelList) end
+    closure.setChannelList = function(channelList) return self:setChannelList(channelList) end
     closure.getChannels = function() return self:getChannels() end
+    closure.getChannelList = function() return self:getChannelList() end
 
     closure.getSignalOut = function(plug) return self:getSignalOut(plug) end
     return closure

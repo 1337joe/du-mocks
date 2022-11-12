@@ -18,13 +18,13 @@ _G.TestSystem = {}
 -- Test setup:
 -- 1. 1x Programming Board, no connections
 --
--- Exercises: getScreenHeight, getScreenWidth, getFov
+-- Exercises: getScreenHeight, getScreenWidth, getFov, getLocale
 function _G.TestSystem.testGameBehavior()
     local mock = ms:new()
     local system = mock:mockGetClosure()
 
     -- override to prevent console output
-    system.print = function()
+    system.print = function(_)
     end
 
     -- stub this in directly to supress print in the unit test
@@ -33,7 +33,7 @@ function _G.TestSystem.testGameBehavior()
     end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
     local expectedFunctions = {"getActionKeyName", "showScreen", "setScreen", "createWidgetPanel", "destroyWidgetPanel",
@@ -50,18 +50,21 @@ function _G.TestSystem.testGameBehavior()
                                "isFirstPerson", "getCameraForward", "getCameraUp", "getCameraMode",
                                "getCameraVerticalFov", "getCameraWorldRight", "getCameraHorizontalFov",
                                "getCameraWorldPos", "getCameraPos", "getArkTime", "getUtcTime", "getUtcOffset",
-                               "getItem"}
+                               "getItem", "getMouseSensitivity", "getOrganization", "getLocale", "isPlayingSound",
+                               "clearWaypoint", "getRecipes", "getSchematic"}
     _G.Utilities.verifyExpectedFunctions(system, expectedFunctions)
 
     assert(system.getScreenHeight() > 0, "Screen height: " .. system.getScreenHeight())
     assert(system.getScreenWidth() > 0, "Screen width: " .. system.getScreenWidth())
     local fov = system.getCameraHorizontalFov()
     assert(fov >= 60 and fov <= 120, "Fov: " .. fov)
+    local locales = {["en-US"] = true, ["fr-FR"] = true, ["de-DE"] = true}
+    assert(locales[system.getLocale()], "Unexpected locale: " .. system.getLocale())
 
     system.print("Success")
     unit.exit()
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 

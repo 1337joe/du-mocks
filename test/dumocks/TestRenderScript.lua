@@ -125,9 +125,9 @@ function _G.TestRenderScript.testParameterValidation()
     success, result = pcall(addText, layer, font, "Success", 50, 50)
     assert(success)
 
-    -- TODO auto-boxable strings not yet implemented
-    -- success, result = pcall(addText, layer, font, 1, 50, 50)
-    -- assert(success)
+    -- auto-box number to string
+    success, result = pcall(addText, layer, font, 1, 50, 50)
+    assert(success)
 
     ---------------
     -- copy to here to renderer
@@ -213,7 +213,7 @@ function _G.TestRenderScript.testRequire()
     lu.assertNotNil(mlu)
     lu.assertEquals(type(mlu), "table")
     local mock = mlu:new(nil, 1, "long light m")
-    lu.assertEquals(mock:mockGetClosure().getElementClass(), "LightUnit")
+    lu.assertEquals(mock:mockGetClosure().getClass(), "LightUnit")
 
     -- non-working case - target module not on path
     lu.assertErrorMsgContains("no file", environment.require, "missing")
@@ -305,17 +305,26 @@ end
 -- Test setup:
 -- 1. 1x Screen or Sign, paste relevent bit directly into render script
 --
--- Exercises: ??TODO??
+-- Exercises: see verifyEnvironment.lua
 function _G.TestRenderScript:testGameBehavior()
-    local screenRenderer = sr:new()
-    local closure = screenRenderer:mockGetEnvironment()
+    local renderScript = sr:new()
+
+    renderScript.fontStrings = {
+        Play = {
+            ["."] = {10.78125 / 30, 10.3125 / 30},
+            ["%"] = {1, 27.1875 / 30},
+            ["%%%"] = {81.328125 / 30, 27.1875 / 30},
+        }
+    }
+
+    local closure = renderScript:mockGetEnvironment()
 
     local script = assert(loadfile(INPUT_DIR .. "verifyEnvironment.lua", "t", closure))
 
     script()
-    self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Verify Environment", screenRenderer:mockGenerateSvg())
+    self.allSvg[#self.allSvg + 1] = string.format(SVG_WRAPPER_TEMPLATE, "Verify Environment", renderScript:mockGenerateSvg())
 
-    lu.assertEquals(screenRenderer.output, "")
+    lu.assertEquals(renderScript.output, "")
 end
 
 os.exit(lu.LuaUnit.run())

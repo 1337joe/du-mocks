@@ -9,14 +9,31 @@ local lu = require("luaunit")
 
 local mffu = require("dumocks.ForceFieldUnit")
 require("test.Utilities")
+local AbstractTestElementWithToggle = require("test.dumocks.AbstractTestElementWithToggle")
 
-_G.TestForceFieldUnit = {}
+_G.TestForceFieldUnit = AbstractTestElementWithToggle
+
+function _G.TestForceFieldUnit.getTestElement()
+    return mffu:new()
+end
+
+function _G.TestForceFieldUnit.getStateFunction(closure)
+    return closure.isDeployed
+end
+
+function _G.TestForceFieldUnit.getActivateFunction(closure)
+    return closure.deploy
+end
+
+function _G.TestForceFieldUnit.getDeactivateFunction(closure)
+    return closure.retract
+end
 
 --- Verify constructor arguments properly handled and independent between instances.
 function _G.TestForceFieldUnit.testConstructor()
 
     -- default element:
-    -- ["force field xs"] = {mass = 110.62, maxHitPoints = 50.0}
+    -- ["force field xs"] = {mass = 110.62, maxHitPoints = 50.0, itemId = 3686074288}
 
     local field0 = mffu:new()
     local field1 = mffu:new(nil, 1, "Force Field XS")
@@ -28,12 +45,16 @@ function _G.TestForceFieldUnit.testConstructor()
     local fieldClosure2 = field2:mockGetClosure()
     local fieldClosure3 = field3:mockGetClosure()
 
-    lu.assertEquals(fieldClosure0.getId(), 0)
-    lu.assertEquals(fieldClosure1.getId(), 1)
-    lu.assertEquals(fieldClosure2.getId(), 2)
-    lu.assertEquals(fieldClosure3.getId(), 3)
+    lu.assertEquals(fieldClosure0.getLocalId(), 0)
+    lu.assertEquals(fieldClosure1.getLocalId(), 1)
+    lu.assertEquals(fieldClosure2.getLocalId(), 2)
+    lu.assertEquals(fieldClosure3.getLocalId(), 3)
 
-    -- all force fields share attributes, can't verify element selection
+    local defaultId = 3686074288
+    lu.assertEquals(fieldClosure0.getItemId(), defaultId)
+    lu.assertEquals(fieldClosure1.getItemId(), defaultId)
+    lu.assertEquals(fieldClosure2.getItemId(), defaultId)
+    lu.assertNotEquals(fieldClosure3.getItemId(), defaultId)
 end
 
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
@@ -42,7 +63,7 @@ end
 -- Test setup:
 -- 1. 1x Force Field, connected to Programming Board on slot1
 --
--- Exercises: getElementClass, deactivate, activate, toggle, getState, setSignalIn, getSignalIn
+-- Exercises: getClass, retract, deploy, toggle, isDeployed, setSignalIn, getSignalIn
 function _G.TestForceFieldUnit.testGameBehavior()
     local mock = mffu:new(nil, 1)
     local slot1 = mock:mockGetClosure()
@@ -52,14 +73,14 @@ function _G.TestForceFieldUnit.testGameBehavior()
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"setSignalIn", "getSignalIn"}
+    local expectedFunctions = {"deploy", "retract", "isDeployed", "setSignalIn", "getSignalIn"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
@@ -69,55 +90,55 @@ function _G.TestForceFieldUnit.testGameBehavior()
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "ForceFieldUnit")
+    assert(slot1.getClass() == "ForceFieldUnit")
+    assert(string.match(string.lower(slot1.getName()), "force field %w+ %[%d+%]"), slot1.getName())
+    local expectedId = {[3686074288] = true, [3685998465] = true, [3686006062] = true, [3685982092] = true}
+    assert(expectedId[slot1.getItemId()], "Unexpected id: " .. slot1.getItemId())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getMass() == 110.62)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
 
-    -- play with set signal
-    slot1.setSignalIn("in", 0.0)
-    assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == 0)
-    slot1.setSignalIn("in", 1.0)
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(slot1.getState() == 1)
-    -- fractions within [0,1] work, and string numbers are cast
-    slot1.setSignalIn("in", 0.7)
-    assert(slot1.getSignalIn("in") == 0.7)
-    assert(slot1.getState() == 1)
-    slot1.setSignalIn("in", "0.5")
-    assert(slot1.getSignalIn("in") == 0.5)
-    assert(slot1.getState() == 1)
-    slot1.setSignalIn("in", "0.0")
-    assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == 0)
-    slot1.setSignalIn("in", "7.0")
-    assert(slot1.getSignalIn("in") == 1.0)
-    assert(slot1.getState() == 1)
-    -- invalid sets to 0
-    slot1.setSignalIn("in", "text")
-    assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == 0)
-    slot1.setSignalIn("in", nil)
-    assert(slot1.getSignalIn("in") == 0.0)
-    assert(slot1.getState() == 0)
-
     -- ensure initial state
-    slot1.deactivate()
-    assert(slot1.getState() == 0)
+    slot1.retract()
+    assert(slot1.isDeployed() == 0)
 
     -- validate methods
-    slot1.activate()
-    assert(slot1.getState() == 1)
-    slot1.deactivate()
-    assert(slot1.getState() == 0)
+    slot1.deploy()
+    assert(slot1.isDeployed() == 1)
+    slot1.retract()
+    assert(slot1.isDeployed() == 0)
     slot1.toggle()
-    assert(slot1.getState() == 1)
+    assert(slot1.isDeployed() == 1)
+
+    -- play with set signal, appears to cause the element to refresh state to match actual input signal when it doesn't already
+    slot1.deploy()
+    assert(slot1.isDeployed() == 1)
+    slot1.setSignalIn("in", 0.0)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.isDeployed() == 0)
+    slot1.setSignalIn("in", 1.0)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.isDeployed() == 0)
+
+    slot1.deploy()
+    slot1.setSignalIn("in", 1.0)
+    assert(slot1.getSignalIn("in") == 0.0)
+    assert(slot1.isDeployed() == 0)
+
+    slot1.deploy()
+    assert(slot1.isDeployed() == 1)
+    slot1.setSignalIn("in", 0.7)
+    assert(slot1.getSignalIn("in") == 0.0)
+
+    slot1.deploy()
+    assert(slot1.isDeployed() == 1)
+    slot1.setSignalIn("in", "1.0")
+    assert(slot1.getSignalIn("in") == 0.0)
 
     system.print("Success")
     unit.exit()
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 

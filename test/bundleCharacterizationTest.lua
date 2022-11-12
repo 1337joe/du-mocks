@@ -74,8 +74,10 @@ local BOILERPLATE_START = [[
         "8":{"name":"slot9","type":{"events":[],"methods":[]}},
         "9":{"name":"slot10","type":{"events":[],"methods":[]}},
         "-1":{"name":"unit","type":{"events":[],"methods":[]}},
-        "-2":{"name":"system","type":{"events":[],"methods":[]}},
-        "-3":{"name":"library","type":{"events":[],"methods":[]}}
+        "-2":{"name":"construct","type":{"events":[],"methods":[]}},
+        "-3":{"name":"player","type":{"events":[],"methods":[]}},
+        "-4":{"name":"system","type":{"events":[],"methods":[]}},
+        "-5":{"name":"library","type":{"events":[],"methods":[]}}
     },
     "handlers":[]]
 local BOILERPLATE_END = [[
@@ -126,9 +128,9 @@ for _,block in pairs(blocks) do
     if slot == "unit" then
         slotKey = -1
     elseif slot == "system" then
-        slotKey = -2
+        slotKey = -4
     elseif slot == "library" then
-        slotKey = -3
+        slotKey = -5
     else
         slotKey = tonumber(string.sub(slot, 5)) - 1
     end

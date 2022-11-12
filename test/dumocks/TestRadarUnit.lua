@@ -20,7 +20,7 @@ TestRadarUnit = {}
 --
 -- Note: Must be run on a dynamic core.
 --
--- Exercises: getElementClass, getData
+-- Exercises: getClass, getWidgetData
 function _G.TestRadarUnit.testGameBehavior()
     local mock, closure
     local result, message
@@ -42,44 +42,54 @@ function _G.TestRadarUnit.gameBehaviorHelper(mock, slot1)
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getEntries", "getConstructSize", "getConstructType", "getConstructPos",
+    local expectedFunctions = {"getConstructSize", "getConstructType", "getConstructPos",
                                "getConstructName", "getRange", "hasMatchingTransponder", "isConstructAbandoned",
                                "isOperational", "isConstructIdentified", "getConstructIds", "getIdentifyRanges",
                                "getConstructAngularSpeed", "getTargetId", "getConstructDistance",
                                "getConstructCoreSize", "getConstructInfos", "getConstructRadialSpeed",
                                "getConstructSpeed", "getIdentifiedConstructIds", "getConstructWorldVelocity",
                                "getConstructVelocity", "getConstructOwner", "getConstructWorldPos", "getThreatFrom",
-                               "getThreatTo", "getConstructMass"}
+                               "getThreatTo", "getConstructMass", "getConstructOwnerEntity", "setSortMethod",
+                               "getConstructKind", "getThreatRateTo", "getOperationalState", "getThreatRateFrom",
+                               "getSortMethod", "getConstructs"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    local class = slot1.getElementClass()
+    local class = slot1.getClass()
+    local expectedName, expectedIds
     local isAtmo, isSpace
     if string.match(class, "RadarPvPAtmospheric") then
         isAtmo = true
+        expectedName = "atmospheric"
+        expectedIds = {[4213791403] = true, [612626034] = true, [3094514782] = true}
     elseif string.match(class, "RadarPVPSpace") then
         isSpace = true
+        expectedName = "space"
+        expectedIds = {[4118496992] = true, [3831485995] = true, [2802863920] = true}
     else
         assert(false, "Unexpected class: " .. class)
     end
+    expectedName = expectedName .. " radar %w+ %[%d+%]"
+    assert(string.match(string.lower(slot1.getName()), expectedName), slot1.getName())
+    assert(expectedIds[slot1.getItemId()], "Unexpected ID: " .. slot1.getItemId())
 
-    local data = slot1.getData()
+    local data = slot1.getWidgetData()
     local expectedFields = {"helperId", "name", "type", "constructsList", "elementId", "properties", "currentTargetId"}
     local expectedValues = {}
     local ignoreFields = {"errorMessage", "identifiedConstructs", "identifyConstructs", "radarStatus",
                           "selectedConstruct", "worksInEnvironment", "staticProperties", "ranges", "identify16m",
                           "identify32m", "identify64m", "identify128m", "scan", "worksInAtmosphere", "worksInSpace",
-                          "maxIdentifiedTargets","broken"}
+                          "maxIdentifiedTargets", "broken", "sortMethod"}
     expectedValues["helperId"] = '"radar"'
     expectedValues["type"] = '"radar"'
     _G.Utilities.verifyWidgetData(data, expectedFields, expectedValues, ignoreFields)
@@ -91,7 +101,7 @@ function _G.TestRadarUnit.gameBehaviorHelper(mock, slot1)
     system.print("Success")
     unit.exit()
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 

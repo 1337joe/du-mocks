@@ -8,7 +8,7 @@ package.path = "src/?.lua;" .. package.path
 local lu = require("luaunit")
 
 local mtu = require("dumocks.TelemeterUnit")
-require("test.Utilities")
+local utilities = require("test.Utilities")
 
 _G.TestTelemeterUnit = {}
 
@@ -16,10 +16,10 @@ _G.TestTelemeterUnit = {}
 function _G.TestTelemeterUnit.testConstructor()
 
     -- default element:
-    -- ["telemeter"] = {mass = 49.79, maxHitPoints = 50.0}
+    -- ["telemeter xs"] = {mass = 40.79, maxHitPoints = 50.0, itemId = 1722901246}
 
     local telemeter0 = mtu:new()
-    local telemeter1 = mtu:new(nil, 1, "Telemeter")
+    local telemeter1 = mtu:new(nil, 1, "Telemeter XS")
     local telemeter2 = mtu:new(nil, 2, "invalid")
 
     local telemeterClosure0 = telemeter0:mockGetClosure()
@@ -34,6 +34,11 @@ function _G.TestTelemeterUnit.testConstructor()
     lu.assertEquals(telemeterClosure0.getMass(), defaultMass)
     lu.assertEquals(telemeterClosure1.getMass(), defaultMass)
     lu.assertEquals(telemeterClosure2.getMass(), defaultMass)
+
+    local defaultId = 1722901246
+    lu.assertEquals(telemeterClosure0.getItemId(), defaultId)
+    lu.assertEquals(telemeterClosure1.getItemId(), defaultId)
+    lu.assertEquals(telemeterClosure2.getItemId(), defaultId)
 end
 
 -- Verify get distance works and respects max range.
@@ -94,7 +99,7 @@ function _G.TestTelemeterUnit.testGameBehavior()
     unit.exit = function()
     end
     local system = {}
-    system.print = function()
+    system.print = function(_)
     end
 
     -- set ranges measured in test setup
@@ -103,19 +108,22 @@ function _G.TestTelemeterUnit.testGameBehavior()
     mock3.distance = 0.35531205231629
 
     ---------------
-    -- copy from here to unit.start()
+    -- copy from here to unit.onStart()
     ---------------
     -- verify expected functions
-    local expectedFunctions = {"getMaxDistance", "getDistance"}
+    local expectedFunctions = {"getMaxDistance", "getDistance", "raycast", "getRayWorldAxis", "getRayAxis",
+                               "getRayOrigin", "getRayWorldOrigin"}
     for _, v in pairs(_G.Utilities.elementFunctions) do
         table.insert(expectedFunctions, v)
     end
     _G.Utilities.verifyExpectedFunctions(slot1, expectedFunctions)
 
     -- test element class and inherited methods
-    assert(slot1.getElementClass() == "TelemeterUnit")
-    assert(slot2.getElementClass() == "TelemeterUnit")
-    assert(slot3.getElementClass() == "TelemeterUnit")
+    assert(slot1.getClass() == "TelemeterUnit")
+    assert(slot2.getClass() == "TelemeterUnit")
+    assert(slot3.getClass() == "TelemeterUnit")
+    assert(string.match(string.lower(slot1.getName()), "telemeter xs %[%d+%]"), slot1.getName())
+    assert(slot1.getItemId() == 1722901246, "Unexpected id: " .. slot1.getItemId())
     assert(slot1.getMaxHitPoints() == 50.0)
     assert(slot1.getMass() == 40.79)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3)
@@ -134,7 +142,7 @@ function _G.TestTelemeterUnit.testGameBehavior()
     system.print("Success")
     unit.exit()
     ---------------
-    -- copy to here to unit.start()
+    -- copy to here to unit.onStart()
     ---------------
 end
 
