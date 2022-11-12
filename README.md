@@ -71,12 +71,12 @@ Luarocks can be used to install all dependencies: `luarocks install --only-deps 
 The unit tests on the mocks themselves provide an example of how to use the mocks. In short, the mock must be imported, then instantiated (and configured), then bundled into a closure for use by the script you are testing:
 
 ```lua
-local mockCoreUnit = require("dumocks.CoreUnit")
-local coreMock = mockCoreUnit:new(nil, 1, "dynamic core unit s")
-coreMock.constructName = "My Construct"
-local core = self.coreMock:mockGetClosure()
+local mockConstruct = require("dumocks.Construct")
+local mock = mockConstruct:new()
+mock.name = "My Construct"
+local construct = mock:mockGetClosure()
 
-local name = core.getConstructName()
+local name = construct.getName()
 
 assert(name == "My Construct")
 ```
@@ -207,7 +207,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 
 * The start and end blocks should match on method signatures. 
 * `slot1` indicates what slot should receive the code (other options besides a numbered slot are `library`, `system`, and `unit`).
-* `statusChanged(status)` must match the method signature of the handler you want to create. If in doubt create one in-game and export the configuration to clipboard, then paste in notepad to examine it.
+* `onStatusChanged(status)` must match the method signature of the handler you want to create. If in doubt create one in-game and export the configuration to clipboard, then paste in notepad to examine it.
 * Arguments to be passed in follow the method signature (optionally indictaed by a colon), and should be separated by spaces or commas in the case of multiple arguments.
 
 ## Progress
