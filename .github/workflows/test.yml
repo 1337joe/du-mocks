@@ -40,7 +40,7 @@ jobs:
         run: ./test/runTests.sh -o junit
 
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@713caf1dd6f1c273144546ed2d79ca24a01f4623 # v2.1.0
+        uses: EnricoMi/publish-unit-test-result-action@46ab8d49369d898e381a607119161771bc65c2a6 # v2.2.0
         if: always()
         with:
           junit_files: "test/results/**/*.xml"
@@ -55,7 +55,7 @@ jobs:
         run: ./test/exportAll.sh
 
       - name: Upload Test Artifacts
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # v3.1.0
+        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # v3.1.1
         if: ${{ matrix.luaVersion == '5.3' }}
         with:
           name: test_configs
