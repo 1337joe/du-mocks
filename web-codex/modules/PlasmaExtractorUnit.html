@@ -63,13 +63,13 @@
   <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
   <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
-  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
+  <li><strong>PlasmaExtractorUnit</strong></li>
   <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
   <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
   <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
   <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
-  <li><strong>TelemeterUnit</strong></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
   <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
   <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
   <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
@@ -86,42 +86,44 @@
 
 <div id="content">
 
-<h1>Module <code>TelemeterUnit</code></h1>
-<p>Measures the distance to an obstacle in front of it.</p>
+<h1>Module <code>PlasmaExtractorUnit</code></h1>
+<p>Extracts a regular amount of plasma from the space surrounding an alien core.</p>
 <p>
-<p> Element class: TelemeterUnit
+<p> <p style="color:red;">Note: This is generated from patch notes and in-game codex and has not yet been tested
+   against the actual element. Accuracy not guaranteed.</p>
+<p> Element class: ???
 <p> Extends: <a href="../modules/Element.html#">Element</a></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#getDistance">getDistance ()</a></td>
-	<td class="summary"><b>Deprecated:</b> Returns the distance to the first obstacle in front of the telemeter.</td>
+	<td class="name" nowrap><a href="#getState">getState ()</a></td>
+	<td class="summary">Returns the current state of the plasma extractor.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#raycast">raycast ()</a></td>
-	<td class="summary">Emits a raycast from the telemeter, returns a raycastHit object.</td>
+	<td class="name" nowrap><a href="#getRemainingTime">getRemainingTime ()</a></td>
+	<td class="summary">Returns the remaining time of the current batch extraction process.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getRayOrigin">getRayOrigin ()</a></td>
-	<td class="summary">Returns telemeter raycast origin in local construct coordinates.</td>
+	<td class="name" nowrap><a href="#getPlasmaPools">getPlasmaPools ()</a></td>
+	<td class="summary">Returns the list of available plasma pools.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getRayWorldOrigin">getRayWorldOrigin ()</a></td>
-	<td class="summary">Returns telemeter raycast origin in world coordinates.</td>
+	<td class="name" nowrap><a href="#EVENT_onStarted">EVENT_onStarted ()</a></td>
+	<td class="summary">Event: Emitted when the plasma extractor started a new extraction process.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getRayAxis">getRayAxis ()</a></td>
-	<td class="summary">Returns telemeter raycast axis in local construct coordinates.</td>
+	<td class="name" nowrap><a href="#EVENT_onCompleted">EVENT_onCompleted ()</a></td>
+	<td class="summary">Event: Emitted when the plasma extractor completes a batch.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getRayWorldAxis">getRayWorldAxis ()</a></td>
-	<td class="summary">Returns telemeter raycast axis in world coordinates.</td>
+	<td class="name" nowrap><a href="#EVENT_onStateChanged">EVENT_onStateChanged (state)</a></td>
+	<td class="summary">Event: Emitted when the plasma extractor state is changed.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getMaxDistance">getMaxDistance ()</a></td>
-	<td class="summary">Returns the max distance from which an obstacle can be detected (default is 100m).</td>
+	<td class="name" nowrap><a href="#EVENT_onStopped">EVENT_onStopped ()</a></td>
+	<td class="summary">Event: Emitted when the plasma extractor stopped the extraction process.</td>
 	</tr>
 </table>
 
@@ -133,44 +135,20 @@
 
     <dl class="function">
     <dt>
-    <a name = "getDistance"></a>
-    <strong>getDistance ()</strong>
+    <a name = "getState"></a>
+    <strong>getState ()</strong>
     </dt>
     <dd>
-    <b>Deprecated:</b> Returns the distance to the first obstacle in front of the telemeter.
-<p> This method is deprecated: raycast().distance should be used instead
+    Returns the current state of the plasma extractor.
 
 
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">meter</span></span>
-        The distance to the obstacle. Returns -1 if there are no obstacles up to getMaxDistance.
-    </ol>
-
-
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/TelemeterUnit.html#raycast">raycast</a>
-    </ul>
-
-
-</dd>
-    <dt>
-    <a name = "raycast"></a>
-    <strong>raycast ()</strong>
-    </dt>
-    <dd>
-    Emits a raycast from the telemeter, returns a raycastHit object.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-        A table with fields: {[bool] hit, [float] distance, [vec3] point}
+           <span class="types"><span class="type">int</span></span>
+        The state of the plasma extractor can be (Stopped = 1, Running = 2, Jammed output full = 3, Jammed no
+   output container = 4)
     </ol>
 
 
@@ -178,91 +156,11 @@
 
 </dd>
     <dt>
-    <a name = "getRayOrigin"></a>
-    <strong>getRayOrigin ()</strong>
+    <a name = "getRemainingTime"></a>
+    <strong>getRemainingTime ()</strong>
     </dt>
     <dd>
-    Returns telemeter raycast origin in local construct coordinates.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">vec3</span></span>
-        The telemeter raycast origin.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getRayWorldOrigin"></a>
-    <strong>getRayWorldOrigin ()</strong>
-    </dt>
-    <dd>
-    Returns telemeter raycast origin in world coordinates.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">vec3</span></span>
-        The telemeter raycast origin.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getRayAxis"></a>
-    <strong>getRayAxis ()</strong>
-    </dt>
-    <dd>
-    Returns telemeter raycast axis in local construct coordinates.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">vec3</span></span>
-        The telemeter raycast axis.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getRayWorldAxis"></a>
-    <strong>getRayWorldAxis ()</strong>
-    </dt>
-    <dd>
-    Returns telemeter raycast axis in world coordinates.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">vec3</span></span>
-        The telemeter raycast axis.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getMaxDistance"></a>
-    <strong>getMaxDistance ()</strong>
-    </dt>
-    <dd>
-    Returns the max distance from which an obstacle can be detected (default is 100m).
+    Returns the remaining time of the current batch extraction process.
 
 
 
@@ -270,8 +168,96 @@
     <ol>
 
            <span class="types"><span class="type">float</span></span>
-        The max distance to detectable obstacles in meters.
+        The remaining time in seconds.
     </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getPlasmaPools"></a>
+    <strong>getPlasmaPools ()</strong>
+    </dt>
+    <dd>
+    Returns the list of available plasma pools.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A list of tables composed with {[int] oreId, [int] quantity}.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStarted"></a>
+    <strong>EVENT_onStarted ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the plasma extractor started a new extraction process.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onCompleted"></a>
+    <strong>EVENT_onCompleted ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the plasma extractor completes a batch.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStateChanged"></a>
+    <strong>EVENT_onStateChanged (state)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the plasma extractor state is changed.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">state</span>
+            <span class="types"><span class="type">int</span></span>
+         The state of the plasma extractor can be (Stopped = 1, Running = 2, Jammed output full = 3, Jammed no
+   output container = 4)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onStopped"></a>
+    <strong>EVENT_onStopped ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the plasma extractor stopped the extraction process.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+
 
 
 

@@ -63,6 +63,7 @@
   <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
   <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
   <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
   <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
@@ -72,9 +73,11 @@
   <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
   <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
   <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/construct.html">construct</a></li>
   <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
   <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
   <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/player.html">player</a></li>
   <li><a href="../modules/renderScript.html">renderScript</a></li>
   <li><a href="../modules/system.html">system</a></li>
 </ul>
@@ -87,27 +90,34 @@
 <p>Detect the hit of a laser.</p>
 <p>
 <p> Element class: LaserDetectorUnit
-<p> Extends: Element &gt; ElementWithState</p>
-    <h3>See also:</h3>
-    <ul>
-         <li><a href="../modules/Element.html#">Element</a></li>
-         <li><a href="../modules/ElementWithState.html#">ElementWithState</a></li>
-    </ul>
+<p> Extends: <a href="../modules/Element.html#">Element</a> &gt; <a href="../modules/ElementWithState.html#">ElementWithState</a></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#isHit">isHit ()</a></td>
+	<td class="summary">Checks if any laser is hitting the detector.</td>
+	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getSignalOut">getSignalOut (plug)</a></td>
 	<td class="summary">Return the value of a signal in the specified OUT plug of the element.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_laserHit">EVENT_laserHit ()</a></td>
-	<td class="summary">Event: A laser has just hit the detector.</td>
+	<td class="summary"><b>Deprecated:</b> Event: A laser has just hit the detector.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onHit">EVENT_onHit ()</a></td>
+	<td class="summary">Event: Emitted when a laser hit the detector.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_laserRelease">EVENT_laserRelease ()</a></td>
-	<td class="summary">Event: All lasers have stopped hitting the detector.</td>
+	<td class="summary"><b>Deprecated:</b> Event: All lasers have stopped hitting the detector.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onLoss">EVENT_onLoss ()</a></td>
+	<td class="summary">Event: Emitted when all lasers stop hitting the detector.</td>
 	</tr>
 </table>
 
@@ -118,6 +128,26 @@
     <h2 class="section-header "><a name="Functions"></a>Functions</h2>
 
     <dl class="function">
+    <dt>
+    <a name = "isHit"></a>
+    <strong>isHit ()</strong>
+    </dt>
+    <dd>
+    Checks if any laser is hitting the detector.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if a laser is hitting the detector.
+    </ol>
+
+
+
+
+</dd>
     <dt>
     <a name = "getSignalOut"></a>
     <strong>getSignalOut (plug)</strong>
@@ -154,7 +184,27 @@
     <strong>EVENT_laserHit ()</strong>
     </dt>
     <dd>
-    Event: A laser has just hit the detector.
+    <b>Deprecated:</b> Event: A laser has just hit the detector.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onHit should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/LaserDetectorUnit.html#EVENT_onHit">EVENT_onHit</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onHit"></a>
+    <strong>EVENT_onHit ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when a laser hit the detector.
 <p> Note: This is documentation on an event handler, not a callable method.
 
 
@@ -169,7 +219,27 @@
     <strong>EVENT_laserRelease ()</strong>
     </dt>
     <dd>
-    Event: All lasers have stopped hitting the detector.
+    <b>Deprecated:</b> Event: All lasers have stopped hitting the detector.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onLoss should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/LaserDetectorUnit.html#EVENT_onLoss">EVENT_onLoss</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onLoss"></a>
+    <strong>EVENT_onLoss ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when all lasers stop hitting the detector.
 <p> Note: This is documentation on an event handler, not a callable method.
 
 
@@ -186,7 +256,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-06-16 13:27:28 </i>
+<i style="float:right;">Last updated 2022-11-12 05:23:13 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

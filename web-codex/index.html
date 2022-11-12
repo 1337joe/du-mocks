@@ -56,6 +56,7 @@
   <li><a href="modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><a href="modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
   <li><a href="modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
   <li><a href="modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><a href="modules/RadarUnit.html">RadarUnit</a></li>
   <li><a href="modules/ReceiverUnit.html">ReceiverUnit</a></li>
@@ -65,9 +66,11 @@
   <li><a href="modules/TransponderUnit.html">TransponderUnit</a></li>
   <li><a href="modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
   <li><a href="modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="modules/construct.html">construct</a></li>
   <li><a href="modules/game_data_lua.database.html">game_data_lua.database</a></li>
   <li><a href="modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
   <li><a href="modules/library.html">library</a></li>
+  <li><a href="modules/player.html">player</a></li>
   <li><a href="modules/renderScript.html">renderScript</a></li>
   <li><a href="modules/system.html">system</a></li>
 </ul>
@@ -79,7 +82,8 @@
 
   <h2>Mock objects for generating a more useful codex and for use testing Dual Universe scripts offline.</h2>
   <p>    See this project on <a href="https://github.com/1337joe/du-mocks">github</a> for code and more details.
-<p>    If you notice typos or differences between the in-game behavior and the documentation please drop me a message either on github or discord: <b>1337joe#6186</b>
+<p>    If you notice typos or differences between the in-game behavior and this documentation please drop me a message either on github or discord: <b>1337joe#6186</b>
+<p>    The official NQ API mockup can be found <a href="https://github.com/dual-universe/lua-examples/tree/main/api-mockup">here</a>.
 <p>    This site is maintained in my free time as a public service to the community. If you find value in my work and want to toss a few quanta my way, my Dual Universe character is: <b>W3asel</b>
 <p>    The "Dual Universe" brand, the "Dual Universe" logo and all associated logos and designs are the intellectual property of Novaquark S.A.S. https://du.w3asel.com is a fansite that Novaquark S.A.S. does not endorse, and the latter is not affiliated with it in any way.
 </p>
@@ -96,7 +100,7 @@
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/ContainerUnit.html">ContainerUnit</a></td>
-		<td class="summary">Stores items.</td>
+		<td class="summary">Containers are elements designed to store items and resources.</td>
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/ControlUnit.html">ControlUnit</a></td>
@@ -125,7 +129,7 @@
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/Element.html">Element</a></td>
-		<td class="summary">Base type for all mock DU elements.</td>
+		<td class="summary">All elements share the same generic methods described below.</td>
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/ElementWithState.html">ElementWithState</a></td>
@@ -149,7 +153,7 @@
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/ForceFieldUnit.html">ForceFieldUnit</a></td>
-		<td class="summary">A forcefield to create an uncrossable energy barrier</td>
+		<td class="summary">A force field to create an uncrossable energy barrier.</td>
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/GyroUnit.html">GyroUnit</a></td>
@@ -157,7 +161,7 @@
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/IndustryUnit.html">IndustryUnit</a></td>
-		<td class="summary">Can mass-produce produce any item/element.</td>
+		<td class="summary">An industry unit is a machine designed to produce different types of elements.</td>
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/LandingGearUnit.html">LandingGearUnit</a></td>
@@ -186,6 +190,10 @@
 	<tr>
 		<td class="name"  nowrap><a href="modules/MiningUnit.html">MiningUnit</a></td>
 		<td class="summary">Extracts a regular amount of resources from the ground.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></td>
+		<td class="summary">Extracts a regular amount of plasma from the space surrounding an alien core.</td>
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/PressureTileUnit.html">PressureTileUnit</a></td>
@@ -223,12 +231,16 @@
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/WeaponUnit.html">WeaponUnit</a></td>
-		<td class="summary">A unit capable of doing damage in construct PVP.</td>
+		<td class="summary">Displays information about the weapon's state.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/construct.html">construct</a></td>
+		<td class="summary">Construct represents your construct.</td>
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/game_data_lua.database.html">game_data_lua.database</a></td>
-		<td class="summary">The database library offers multiple useful functions to get all information in one object about a player, a
- construct, an organization or an element.</td>
+		<td class="summary">The database library offers multiple useful functions to get all information
+ in one object about a player, a construct, an organization or an element.</td>
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/game_data_lua.rslib.html">game_data_lua.rslib</a></td>
@@ -239,6 +251,10 @@
 		<td class="name"  nowrap><a href="modules/library.html">library</a></td>
 		<td class="summary">Contains a list of useful math and helper methods that would be slow to implement in Lua, and which are given here
  as fast C++ implementation.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/player.html">player</a></td>
+		<td class="summary">This class represents the player who is executing the control unit.</td>
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/renderScript.html">renderScript</a></td>
@@ -255,7 +271,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-06-16 13:27:28 </i>
+<i style="float:right;">Last updated 2022-11-12 05:23:13 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

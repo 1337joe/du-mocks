@@ -63,6 +63,7 @@
   <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
   <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
   <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
   <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
@@ -72,9 +73,11 @@
   <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
   <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
   <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/construct.html">construct</a></li>
   <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
   <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
   <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/player.html">player</a></li>
   <li><a href="../modules/renderScript.html">renderScript</a></li>
   <li><a href="../modules/system.html">system</a></li>
 </ul>
@@ -87,23 +90,35 @@
 <p>Cycle its output signal over a set of n-plugs, incrementing the activate plug by one step at each impulse received
  on its IN plug.</p>
 <p>
-<p> Element Class: CounterUnit
-<p> Extends: Element</p>
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/Element.html#">Element</a>
-    </ul>
+<p> Element class: CounterUnit
+<p> Extends: <a href="../modules/Element.html#">Element</a></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#getCounterState">getCounterState ()</a></td>
-	<td class="summary">Returns the rank of the currently active OUT plug.</td>
+	<td class="summary"><b>Deprecated:</b> Returns the rank of the currently active OUT plug.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getIndex">getIndex ()</a></td>
+	<td class="summary">Returns the index of the current active output plug.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxIndex">getMaxIndex ()</a></td>
+	<td class="summary">Returns the maximum index of the counter.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#next">next ()</a></td>
-	<td class="summary">Moves the counter one step further (equivalent to signal received on the IN plug).</td>
+	<td class="summary"><b>Deprecated:</b> Moves the counter one step further (equivalent to signal received on the IN plug).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#nextIndex">nextIndex ()</a></td>
+	<td class="summary">Moves the next counter index.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setIndex">setIndex (index)</a></td>
+	<td class="summary">Sets the counter index.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setSignalIn">setSignalIn (plug, state)</a></td>
@@ -131,7 +146,8 @@
     <strong>getCounterState ()</strong>
     </dt>
     <dd>
-    Returns the rank of the currently active OUT plug.
+    <b>Deprecated:</b> Returns the rank of the currently active OUT plug.
+<p> This method is deprecated: getIndex should be used instead
 
 
 
@@ -139,6 +155,50 @@
     <ol>
 
         The index of the active plug.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/CounterUnit.html#getIndex">getIndex</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getIndex"></a>
+    <strong>getIndex ()</strong>
+    </dt>
+    <dd>
+    Returns the index of the current active output plug.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The index of the active plug (1-indexed, so a 2 counter can return 1 or 2).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxIndex"></a>
+    <strong>getMaxIndex ()</strong>
+    </dt>
+    <dd>
+    Returns the maximum index of the counter.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The maximum index (0-indexed, so a 2 counter returns 1).
     </ol>
 
 
@@ -150,9 +210,49 @@
     <strong>next ()</strong>
     </dt>
     <dd>
-    Moves the counter one step further (equivalent to signal received on the IN plug).
+    <b>Deprecated:</b> Moves the counter one step further (equivalent to signal received on the IN plug).
+<p> This method is deprecated: nextIndex should be used instead
 
 
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/CounterUnit.html#nextIndex">nextIndex</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "nextIndex"></a>
+    <strong>nextIndex ()</strong>
+    </dt>
+    <dd>
+    Moves the next counter index.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setIndex"></a>
+    <strong>setIndex (index)</strong>
+    </dt>
+    <dd>
+    Sets the counter index.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">index</span>
+            <span class="types"><span class="type">int</span></span>
+         The index of the plug to activate (1-indexed, so valid inputs for a 2 counter are 1 and 2).
+        </li>
+    </ul>
 
 
 
@@ -167,7 +267,7 @@
     Set the value of a signal in the specified IN plug of the element.
 <p> Valid plug names are:
  <ul>
- <li>"in" for the in signal.</li>
+ <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
  </ul>
 
 
@@ -257,7 +357,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-06-16 13:27:28 </i>
+<i style="float:right;">Last updated 2022-11-12 05:23:13 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

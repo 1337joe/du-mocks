@@ -63,6 +63,7 @@
   <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
   <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
   <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
   <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
@@ -72,9 +73,11 @@
   <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
   <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
   <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/construct.html">construct</a></li>
   <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
   <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
   <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/player.html">player</a></li>
   <li><a href="../modules/renderScript.html">renderScript</a></li>
   <li><a href="../modules/system.html">system</a></li>
 </ul>
@@ -93,19 +96,25 @@
    <li>ShieldGeneratorMediumGroup</li>
    <li>ShieldGeneratorLargeGroup</li>
  </ul>
-<p> Extends: Element &gt; ElementWithState &gt; ElementWithToggle</p>
-    <h3>See also:</h3>
-    <ul>
-         <li><a href="../modules/Element.html#">Element</a></li>
-         <li><a href="../modules/ElementWithState.html#">ElementWithState</a></li>
-         <li><a href="../modules/ElementWithToggle.html#">ElementWithToggle</a></li>
-    </ul>
+<p> Extends: <a href="../modules/Element.html#">Element</a> &gt; <a href="../modules/ElementWithState.html#">ElementWithState</a> &gt; <a href="../modules/ElementWithToggle.html#">ElementWithToggle</a></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#getData">getData ()</a></td>
+	<td class="name" nowrap><a href="#activate">activate ()</a></td>
+	<td class="summary">Activate the shield.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#deactivate">deactivate ()</a></td>
+	<td class="summary">Deactivate the shield.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isActive">isActive ()</a></td>
+	<td class="summary">Returns the activation state of the shield.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWidgetData">getWidgetData ()</a></td>
 	<td class="summary">Get element data as JSON.</td>
 	</tr>
 	<tr>
@@ -186,22 +195,42 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_toggled">EVENT_toggled (active)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when we started or stopped the shield generator.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onToggled">EVENT_onToggled (active)</a></td>
 	<td class="summary">Event: Emitted when we started or stopped the shield generator.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_absorbed">EVENT_absorbed (hitpoints, rawHitpoints)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the shield absorbed incoming damage.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onAbsorbed">EVENT_onAbsorbed (hitpoints, rawHitpoints)</a></td>
 	<td class="summary">Event: Emitted when the shield absorbed incoming damage.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_venting">EVENT_venting (active, restoredHitpoints)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when venting started, stopped or restored some hitpoints.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onVenting">EVENT_onVenting (active, restoredHitpoints)</a></td>
 	<td class="summary">Event: Emitted when venting started, stopped or restored some hitpoints.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_down">EVENT_down ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the shield hit points reached 0 due to damages.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onDown">EVENT_onDown ()</a></td>
 	<td class="summary">Event: Emitted when the shield hit points reached 0 due to damages.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_restored">EVENT_restored ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the shield hit points were fully restored.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onRestored">EVENT_onRestored ()</a></td>
 	<td class="summary">Event: Emitted when the shield hit points were fully restored.</td>
 	</tr>
 </table>
@@ -214,8 +243,56 @@
 
     <dl class="function">
     <dt>
-    <a name = "getData"></a>
-    <strong>getData ()</strong>
+    <a name = "activate"></a>
+    <strong>activate ()</strong>
+    </dt>
+    <dd>
+    Activate the shield.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "deactivate"></a>
+    <strong>deactivate ()</strong>
+    </dt>
+    <dd>
+    Deactivate the shield.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isActive"></a>
+    <strong>isActive ()</strong>
+    </dt>
+    <dd>
+    Returns the activation state of the shield.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 when the shield is active, 0 otherwise.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWidgetData"></a>
+    <strong>getWidgetData ()</strong>
     </dt>
     <dd>
     Get element data as JSON.
@@ -417,8 +494,8 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">vec4</span></span>
-        Resistance to damage type (antimatter, electromagnetic, kinetic, thermic).
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        Resistance to damage type {antimatter, electromagnetic, kinetic, thermic}.
     </ol>
 
 
@@ -556,8 +633,8 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">vec4</span></span>
-        Stress ratio due to damage type (antimatter, electromagnetic, kinetic, thermic).
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        Stress ratio due to damage type {antimatter, electromagnetic, kinetic, thermic}.
     </ol>
 
 
@@ -576,8 +653,8 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">vec4</span></span>
-        Stress ratio due to damage type (antimatter, electromagnetic, kinetic, thermic).
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        Stress ratio due to damage type {antimatter, electromagnetic, kinetic, thermic}.
     </ol>
 
 
@@ -632,7 +709,7 @@
     Set the value of a signal in the specified IN plug of the element.
 <p> Valid plug names are:
  <ul>
- <li>"in" for the in signal (has no actual effect on agg state when modified this way).</li>
+ <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
  </ul>
 
 
@@ -689,6 +766,33 @@
     <strong>EVENT_toggled (active)</strong>
     </dt>
     <dd>
+    <b>Deprecated:</b> Event: Emitted when we started or stopped the shield generator.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onToggled should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">active</span>
+            <span class="types"><span class="type">0/1</span></span>
+         1 if the element was activated, 0 otherwise.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ShieldGeneratorUnit.html#EVENT_onToggled">EVENT_onToggled</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onToggled"></a>
+    <strong>EVENT_onToggled (active)</strong>
+    </dt>
+    <dd>
     Event: Emitted when we started or stopped the shield generator.
 <p> Note: This is documentation on an event handler, not a callable method.
 
@@ -709,6 +813,37 @@
     <dt>
     <a name = "EVENT_absorbed"></a>
     <strong>EVENT_absorbed (hitpoints, rawHitpoints)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Event: Emitted when the shield absorbed incoming damage.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onAbsorbed should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">hitpoints</span>
+            <span class="types"><span class="type">float</span></span>
+         Hit points the shield lost.
+        </li>
+        <li><span class="parameter">rawHitpoints</span>
+            <span class="types"><span class="type">float</span></span>
+         Total damage without taking resistances into account.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ShieldGeneratorUnit.html#EVENT_onAbsorbed">EVENT_onAbsorbed</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onAbsorbed"></a>
+    <strong>EVENT_onAbsorbed (hitpoints, rawHitpoints)</strong>
     </dt>
     <dd>
     Event: Emitted when the shield absorbed incoming damage.
@@ -737,6 +872,37 @@
     <strong>EVENT_venting (active, restoredHitpoints)</strong>
     </dt>
     <dd>
+    <b>Deprecated:</b> Event: Emitted when venting started, stopped or restored some hitpoints.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onVenting should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">active</span>
+            <span class="types"><span class="type">0/1</span></span>
+         1 when venting is active, 0 otherwise.
+        </li>
+        <li><span class="parameter">restoredHitpoints</span>
+            <span class="types"><span class="type">float</span></span>
+         Hitpoints restored since last venting step.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ShieldGeneratorUnit.html#EVENT_onVenting">EVENT_onVenting</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onVenting"></a>
+    <strong>EVENT_onVenting (active, restoredHitpoints)</strong>
+    </dt>
+    <dd>
     Event: Emitted when venting started, stopped or restored some hitpoints.
 <p> Note: This is documentation on an event handler, not a callable method.
 
@@ -763,6 +929,26 @@
     <strong>EVENT_down ()</strong>
     </dt>
     <dd>
+    <b>Deprecated:</b> Event: Emitted when the shield hit points reached 0 due to damages.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onDown should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ShieldGeneratorUnit.html#EVENT_onDown">EVENT_onDown</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onDown"></a>
+    <strong>EVENT_onDown ()</strong>
+    </dt>
+    <dd>
     Event: Emitted when the shield hit points reached 0 due to damages.
 <p> Note: This is documentation on an event handler, not a callable method.
 
@@ -776,6 +962,26 @@
     <dt>
     <a name = "EVENT_restored"></a>
     <strong>EVENT_restored ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Event: Emitted when the shield hit points were fully restored.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onRestored should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ShieldGeneratorUnit.html#EVENT_onRestored">EVENT_onRestored</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onRestored"></a>
+    <strong>EVENT_onRestored ()</strong>
     </dt>
     <dd>
     Event: Emitted when the shield hit points were fully restored.
@@ -795,7 +1001,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-06-16 13:27:28 </i>
+<i style="float:right;">Last updated 2022-11-12 05:23:13 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

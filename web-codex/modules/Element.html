@@ -63,6 +63,7 @@
   <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
   <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
   <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
   <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
@@ -72,9 +73,11 @@
   <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
   <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
   <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/construct.html">construct</a></li>
   <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
   <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
   <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/player.html">player</a></li>
   <li><a href="../modules/renderScript.html">renderScript</a></li>
   <li><a href="../modules/system.html">system</a></li>
 </ul>
@@ -84,101 +87,151 @@
 <div id="content">
 
 <h1>Module <code>Element</code></h1>
-<p>Base type for all mock DU elements.</p>
+<p>All elements share the same generic methods described below.</p>
 <p>
 <p> Extended by:
  <ul>
-   <li>BaseShieldGeneratorUnit</li>
-   <li>ContainerUnit</li>
-   <li>ControlUnit</li>
-   <li>CoreUnit</li>
-   <li>CounterUnit</li>
-   <li>DatabankUnit</li>
-   <li>DetectionZoneUnit</li>
-   <li>ElementWithState</li>
-   <li>EmitterUnit</li>
-   <li>MiningUnit</li>
-   <li>IndustryUnit</li>
-   <li>RadarUnit</li>
-   <li>ReceiverUnit</li>
-   <li>TelemeterUnit</li>
-   <li>WarpDriveUnit</li>
-   <li>WeaponUnit</li>
+   <li><a href="../modules/ContainerUnit.html#">ContainerUnit</a></li>
+   <li><a href="../modules/ControlUnit.html#">ControlUnit</a></li>
+   <li><a href="../modules/CoreUnit.html#">CoreUnit</a></li>
+   <li><a href="../modules/CounterUnit.html#">CounterUnit</a></li>
+   <li><a href="../modules/DatabankUnit.html#">DatabankUnit</a></li>
+   <li><a href="../modules/DetectionZoneUnit.html#">DetectionZoneUnit</a></li>
+   <li><a href="../modules/ElementWithState.html#">ElementWithState</a></li>
+   <li><a href="../modules/EmitterUnit.html#">EmitterUnit</a></li>
+   <li><a href="../modules/FireworksUnit.html#">FireworksUnit</a></li>
+   <li><a href="../modules/IndustryUnit.html#">IndustryUnit</a></li>
+   <li><a href="../modules/MiningUnit.html#">MiningUnit</a></li>
+   <li><a href="../modules/PlasmaExtractorUnit.html#">PlasmaExtractorUnit</a></li>
+   <li><a href="../modules/RadarUnit.html#">RadarUnit</a></li>
+   <li><a href="../modules/ReceiverUnit.html#">ReceiverUnit</a></li>
+   <li><a href="../modules/TelemeterUnit.html#">TelemeterUnit</a></li>
+   <li><a href="../modules/WarpDriveUnit.html#">WarpDriveUnit</a></li>
+   <li><a href="../modules/WeaponUnit.html#">WeaponUnit</a></li>
  </ul></p>
-    <h3>See also:</h3>
-    <ul>
-         <li><a href="../modules/BaseShieldGeneratorUnit.html#">BaseShieldGeneratorUnit</a></li>
-         <li><a href="../modules/ContainerUnit.html#">ContainerUnit</a></li>
-         <li><a href="../modules/ControlUnit.html#">ControlUnit</a></li>
-         <li><a href="../modules/CoreUnit.html#">CoreUnit</a></li>
-         <li><a href="../modules/CounterUnit.html#">CounterUnit</a></li>
-         <li><a href="../modules/DatabankUnit.html#">DatabankUnit</a></li>
-         <li><a href="../modules/DetectionZoneUnit.html#">DetectionZoneUnit</a></li>
-         <li><a href="../modules/ElementWithState.html#">ElementWithState</a></li>
-         <li><a href="../modules/EmitterUnit.html#">EmitterUnit</a></li>
-         <li><a href="../modules/IndustryUnit.html#">IndustryUnit</a></li>
-         <li><a href="../modules/MiningUnit.html#">MiningUnit</a></li>
-         <li><a href="../modules/RadarUnit.html#">RadarUnit</a></li>
-         <li><a href="../modules/ReceiverUnit.html#">ReceiverUnit</a></li>
-         <li><a href="../modules/TelemeterUnit.html#">TelemeterUnit</a></li>
-         <li><a href="../modules/WarpDriveUnit.html#">WarpDriveUnit</a></li>
-         <li><a href="../modules/WeaponUnit.html#">WeaponUnit</a></li>
-    </ul>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#show">show ()</a></td>
-	<td class="summary">Show the element widget in the in-game widget stack.</td>
+	<td class="summary"><b>Deprecated:</b> Show the element's widget in the in-game widget stack.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#showWidget">showWidget ()</a></td>
+	<td class="summary">Show the element's widget in the in-game widget stack.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#hide">hide ()</a></td>
-	<td class="summary">Hide the element widget in the in-game widget stack.</td>
+	<td class="summary"><b>Deprecated:</b> Hide the element's widget in the in-game widget stack.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getData">getData ()</a></td>
-	<td class="summary">Get element data as JSON.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#getDataId">getDataId ()</a></td>
-	<td class="summary">Get element data ID.</td>
+	<td class="name" nowrap><a href="#hideWidget">hideWidget ()</a></td>
+	<td class="summary">Hide the element's widget in the in-game widget stack.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getWidgetType">getWidgetType ()</a></td>
-	<td class="summary">Get widget type compatible with the element data.</td>
+	<td class="summary">Returns the widget type compatible with the element data.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getIntegrity">getIntegrity ()</a></td>
-	<td class="summary">The element integrity between 0 and 100.</td>
+	<td class="name" nowrap><a href="#getData">getData ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Returns the element data as JSON.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getHitPoints">getHitPoints ()</a></td>
-	<td class="summary">The element current hit points (0 = destroyed).</td>
+	<td class="name" nowrap><a href="#getWidgetData">getWidgetData ()</a></td>
+	<td class="summary">Returns the element data as JSON.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getMaxHitPoints">getMaxHitPoints ()</a></td>
-	<td class="summary">The element's maximal hit points when it's fully functional.</td>
+	<td class="name" nowrap><a href="#getDataId">getDataId ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Returns the element data ID.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getId">getId ()</a></td>
-	<td class="summary">A construct unique ID for the element.</td>
+	<td class="name" nowrap><a href="#getWidgetDataId">getWidgetDataId ()</a></td>
+	<td class="summary">Returns the element data ID.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getMass">getMass ()</a></td>
-	<td class="summary">The mass of the element.</td>
+	<td class="name" nowrap><a href="#getName">getName ()</a></td>
+	<td class="summary">Returns the element's name.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getElementClass">getElementClass ()</a></td>
+	<td class="summary"><b>Deprecated:</b> The class of the element.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getClass">getClass ()</a></td>
 	<td class="summary">The class of the element.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#getMass">getMass ()</a></td>
+	<td class="summary">Returns the mass of the element (includes the included items' mass when the element is a container).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getItemId">getItemId ()</a></td>
+	<td class="summary">Returns the element item ID (to be used with system.getItem() function to get information about the element).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getId">getId ()</a></td>
+	<td class="summary"><b>Deprecated:</b> A construct unique ID for the element.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getLocalId">getLocalId ()</a></td>
+	<td class="summary">Returns the unique local ID of the element.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getIntegrity">getIntegrity ()</a></td>
+	<td class="summary">Returns the element's integrity between 0 and 100.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getHitPoints">getHitPoints ()</a></td>
+	<td class="summary">Returns the element's current hit points (0 = destroyed).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxHitPoints">getMaxHitPoints ()</a></td>
+	<td class="summary">Returns the element's maximal hit points.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#getRemainingRestorations">getRemainingRestorations ()</a></td>
-	<td class="summary">The element's remaining number of restorations.</td>
+	<td class="summary">Returns the element's remaining number of restorations.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getMaxRestorations">getMaxRestorations ()</a></td>
-	<td class="summary">The element's maximal number of restorations when it was new.</td>
+	<td class="summary">Returns the element's maximal number of restorations.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getPosition">getPosition ()</a></td>
+	<td class="summary">Returns the position of the element in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getBoundingBoxSize">getBoundingBoxSize ()</a></td>
+	<td class="summary">Returns the bounding box dimensions of the element.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getBoundingBoxCenter">getBoundingBoxCenter ()</a></td>
+	<td class="summary">Returns the position of the center of bounding box of the element in local construct coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getUp">getUp ()</a></td>
+	<td class="summary">Returns the up direction vector of the element in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getRight">getRight ()</a></td>
+	<td class="summary">Returns the right direction vector of the element in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getForward">getForward ()</a></td>
+	<td class="summary">Returns the forward direction vector of the element in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldUp">getWorldUp ()</a></td>
+	<td class="summary">Returns the up direction vector of the element in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldRight">getWorldRight ()</a></td>
+	<td class="summary">Returns the right direction vector of the element in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldForward">getWorldForward ()</a></td>
+	<td class="summary">Returns the forward direction vector of the element in world coordinates.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setSignalIn">setSignalIn (plug, state)</a></td>
@@ -186,11 +239,11 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getSignalIn">getSignalIn (plug)</a></td>
-	<td class="summary">Return the value of a signal in the specified IN plug of the element.</td>
+	<td class="summary">Returns the value of a signal in the specified IN plug of the element.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getSignalOut">getSignalOut (plug)</a></td>
-	<td class="summary">Return the value of a signal in the specified OUT plug of the element.</td>
+	<td class="summary">Returns the value of a signal in the specified OUT plug of the element.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#load">load ()</a></td>
@@ -210,7 +263,26 @@
     <strong>show ()</strong>
     </dt>
     <dd>
-    Show the element widget in the in-game widget stack.
+    <b>Deprecated:</b> Show the element's widget in the in-game widget stack.
+<p> This method is deprecated: showWidget should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#showWidget">showWidget</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "showWidget"></a>
+    <strong>showWidget ()</strong>
+    </dt>
+    <dd>
+    Show the element's widget in the in-game widget stack.
 
 
 
@@ -224,10 +296,49 @@
     <strong>hide ()</strong>
     </dt>
     <dd>
-    Hide the element widget in the in-game widget stack.
+    <b>Deprecated:</b> Hide the element's widget in the in-game widget stack.
+<p> This method is deprecated: hideWidget should be used instead.
 
 
 
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#hideWidget">hideWidget</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "hideWidget"></a>
+    <strong>hideWidget ()</strong>
+    </dt>
+    <dd>
+    Hide the element's widget in the in-game widget stack.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWidgetType"></a>
+    <strong>getWidgetType ()</strong>
+    </dt>
+    <dd>
+    Returns the widget type compatible with the element data.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        Widget type. "" if invalid.
+    </ol>
 
 
 
@@ -238,7 +349,32 @@
     <strong>getData ()</strong>
     </dt>
     <dd>
-    Get element data as JSON.
+    <b>Deprecated:</b> Returns the element data as JSON.
+<p> This method is deprecated: getWidgetData should be used instead.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        Data as JSON.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#getWidgetData">getWidgetData</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getWidgetData"></a>
+    <strong>getWidgetData ()</strong>
+    </dt>
+    <dd>
+    Returns the element data as JSON.
 
 
 
@@ -258,7 +394,33 @@
     <strong>getDataId ()</strong>
     </dt>
     <dd>
-    Get element data ID.  Used to link en element to a custom widget.
+    <b>Deprecated:</b> Returns the element data ID.  Used to link en element to a custom widget.
+<p> This method is deprecated: getWidgetDataId should be used instead.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        Data ID. "" if invalid.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../modules/Element.html#getWidgetDataId">getWidgetDataId</a></li>
+         <li><a href="../modules/system.html#addDataToWidget">system.addDataToWidget</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getWidgetDataId"></a>
+    <strong>getWidgetDataId ()</strong>
+    </dt>
+    <dd>
+    Returns the element data ID.  Used to link en element to a custom widget.
 
 
 
@@ -278,11 +440,11 @@
 
 </dd>
     <dt>
-    <a name = "getWidgetType"></a>
-    <strong>getWidgetType ()</strong>
+    <a name = "getName"></a>
+    <strong>getName ()</strong>
     </dt>
     <dd>
-    Get widget type compatible with the element data.
+    Returns the element's name.
 
 
 
@@ -290,104 +452,7 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        Widget type. "" if invalid.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getIntegrity"></a>
-    <strong>getIntegrity ()</strong>
-    </dt>
-    <dd>
-    The element integrity between 0 and 100.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">0..100</span></span>
-        0 = element fully destroyed, 100 = element fully functional
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getHitPoints"></a>
-    <strong>getHitPoints ()</strong>
-    </dt>
-    <dd>
-    The element current hit points (0 = destroyed).
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        The hit points, where 0 = element fully destroyed.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getMaxHitPoints"></a>
-    <strong>getMaxHitPoints ()</strong>
-    </dt>
-    <dd>
-    The element's maximal hit points when it's fully functional.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        The max hit points of the element.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getId"></a>
-    <strong>getId ()</strong>
-    </dt>
-    <dd>
-    A construct unique ID for the element.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        The element ID.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getMass"></a>
-    <strong>getMass ()</strong>
-    </dt>
-    <dd>
-    The mass of the element.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">kg</span></span>
-        The mass of the element (includes the included items' mass when the element is a container).
+        The element's name.
     </ol>
 
 
@@ -397,6 +462,31 @@
     <dt>
     <a name = "getElementClass"></a>
     <strong>getElementClass ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> The class of the element.
+<p> This method is deprecated: getClass should be used instead.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The class name of the element.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#getClass">getClass</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getClass"></a>
+    <strong>getClass ()</strong>
     </dt>
     <dd>
     The class of the element.
@@ -415,11 +505,155 @@
 
 </dd>
     <dt>
+    <a name = "getMass"></a>
+    <strong>getMass ()</strong>
+    </dt>
+    <dd>
+    Returns the mass of the element (includes the included items' mass when the element is a container).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The mass of the element in kg.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getItemId"></a>
+    <strong>getItemId ()</strong>
+    </dt>
+    <dd>
+    Returns the element item ID (to be used with system.getItem() function to get information about the element).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The element item ID.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getId"></a>
+    <strong>getId ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> A construct unique ID for the element.
+<p> This method is deprecated: getLocalId should be used instead.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The element ID.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#getLocalId">getLocalId</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getLocalId"></a>
+    <strong>getLocalId ()</strong>
+    </dt>
+    <dd>
+    Returns the unique local ID of the element.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The element local ID.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getIntegrity"></a>
+    <strong>getIntegrity ()</strong>
+    </dt>
+    <dd>
+    Returns the element's integrity between 0 and 100.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        0 = element fully destroyed, 100 = element fully functional.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getHitPoints"></a>
+    <strong>getHitPoints ()</strong>
+    </dt>
+    <dd>
+    Returns the element's current hit points (0 = destroyed).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The hit points, where 0 = element fully destroyed.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxHitPoints"></a>
+    <strong>getMaxHitPoints ()</strong>
+    </dt>
+    <dd>
+    Returns the element's maximal hit points.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The max hit points of the element.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "getRemainingRestorations"></a>
     <strong>getRemainingRestorations ()</strong>
     </dt>
     <dd>
-    The element's remaining number of restorations.
+    Returns the element's remaining number of restorations.
 
 
 
@@ -439,7 +673,7 @@
     <strong>getMaxRestorations ()</strong>
     </dt>
     <dd>
-    The element's maximal number of restorations when it was new.
+    Returns the element's maximal number of restorations.
 
 
 
@@ -455,15 +689,200 @@
 
 </dd>
     <dt>
+    <a name = "getPosition"></a>
+    <strong>getPosition ()</strong>
+    </dt>
+    <dd>
+    Returns the position of the element in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The position of the element in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getBoundingBoxSize"></a>
+    <strong>getBoundingBoxSize ()</strong>
+    </dt>
+    <dd>
+    Returns the bounding box dimensions of the element.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The dimensions of the element bounding box.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getBoundingBoxCenter"></a>
+    <strong>getBoundingBoxCenter ()</strong>
+    </dt>
+    <dd>
+    Returns the position of the center of bounding box of the element in local construct coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The position of the center of the bounding box.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getUp"></a>
+    <strong>getUp ()</strong>
+    </dt>
+    <dd>
+    Returns the up direction vector of the element in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Up direction vector of the element in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getRight"></a>
+    <strong>getRight ()</strong>
+    </dt>
+    <dd>
+    Returns the right direction vector of the element in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Right direction vector of the element in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getForward"></a>
+    <strong>getForward ()</strong>
+    </dt>
+    <dd>
+    Returns the forward direction vector of the element in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Forward direction vector of the element in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldUp"></a>
+    <strong>getWorldUp ()</strong>
+    </dt>
+    <dd>
+    Returns the up direction vector of the element in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Up direction vector of the element in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldRight"></a>
+    <strong>getWorldRight ()</strong>
+    </dt>
+    <dd>
+    Returns the right direction vector of the element in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Right direction vector of the element in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldForward"></a>
+    <strong>getWorldForward ()</strong>
+    </dt>
+    <dd>
+    Returns the forward direction vector of the element in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Forward direction vector of the element in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "setSignalIn"></a>
     <strong>setSignalIn (plug, state)</strong>
     </dt>
     <dd>
     Set the value of a signal in the specified IN plug of the element.
- Standard plug names are composed with the following syntax => direction-type-index where 'direction' can be IN or
- OUT, 'type' is one of the following => ITEM, FUEL, ELECTRICITY, SIGNAL, HEAT, FLUID, CONTROL, and 'index' is a number
- between 0 and the total number of plugs of the given type in the given direction. Some plugs have special names like
- "on" or "off" for the manual switch unit, just check in-game for the plug names if you have a doubt.
+<p> Standard plug names are built with the following syntax: direction-type-index.
+ <ul>
+   <li><span class="parameter">direction</span>IN or OUT</li>
+   <li><span class="parameter">type</span>ITEM, FUEL, ELECTRICITY, SIGNAL, HEAT, FLUID, or CONTROL</li>
+   <li><span class="parameter">index</span>A number between 0 and the total number of plugs of the given type in the
+     given direction.</li>
+ </ul>
+<p> Some plugs have special names like "on" or "off" for the manual switch unit, just check in-game for the plug names
+ if you have a doubt.
 <p> Note: This will have no effect if called on a plug that is connected to something that generates a signal, such as a
  switch or button.
 
@@ -490,11 +909,16 @@
     <strong>getSignalIn (plug)</strong>
     </dt>
     <dd>
-    Return the value of a signal in the specified IN plug of the element.
- Standard plug names are composed with the following syntax => direction-type-index where 'direction' can be IN or
- OUT, 'type' is one of the following => ITEM, FUEL, ELECTRICITY, SIGNAL, HEAT, FLUID, CONTROL, and 'index' is a number
- between 0 and the total number of plugs of the given type in the given direction. Some plugs have special names like
- "on" or "off" for the manual switch unit, just check in-game for the plug names if you have a doubt.
+    Returns the value of a signal in the specified IN plug of the element.
+<p> Standard plug names are built with the following syntax: direction-type-index.
+ <ul>
+   <li><span class="parameter">direction</span>IN or OUT</li>
+   <li><span class="parameter">type</span>ITEM, FUEL, ELECTRICITY, SIGNAL, HEAT, FLUID, or CONTROL</li>
+   <li><span class="parameter">index</span>A number between 0 and the total number of plugs of the given type in the
+     given direction.</li>
+ </ul>
+<p> Some plugs have special names like "on" or "off" for the manual switch unit, just check in-game for the plug names
+ if you have a doubt.
 
 
     <h3>Parameters:</h3>
@@ -521,11 +945,16 @@
     <strong>getSignalOut (plug)</strong>
     </dt>
     <dd>
-    Return the value of a signal in the specified OUT plug of the element.
- Standard plug names are composed with the following syntax => direction-type-index where 'direction' can be IN or
- OUT, 'type' is one of the following => ITEM, FUEL, ELECTRICITY, SIGNAL, HEAT, FLUID, CONTROL, and 'index' is a number
- between 0 and the total number of plugs of the given type in the given direction. Some plugs have special names like
- "on" or "off" for the manual switch unit, just check in-game for the plug names if you have a doubt.
+    Returns the value of a signal in the specified OUT plug of the element.
+<p> Standard plug names are built with the following syntax: direction-type-index.
+ <ul>
+   <li><span class="parameter">direction</span>IN or OUT</li>
+   <li><span class="parameter">type</span>ITEM, FUEL, ELECTRICITY, SIGNAL, HEAT, FLUID, or CONTROL</li>
+   <li><span class="parameter">index</span>A number between 0 and the total number of plugs of the given type in the
+     given direction.</li>
+ </ul>
+<p> Some plugs have special names like "on" or "off" for the manual switch unit, just check in-game for the plug names
+ if you have a doubt.
 
 
     <h3>Parameters:</h3>
@@ -576,7 +1005,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-06-16 13:27:28 </i>
+<i style="float:right;">Last updated 2022-11-12 05:23:13 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

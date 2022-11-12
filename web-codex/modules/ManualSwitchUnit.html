@@ -63,6 +63,7 @@
   <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><strong>ManualSwitchUnit</strong></li>
   <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
   <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
   <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
@@ -72,9 +73,11 @@
   <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
   <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
   <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/construct.html">construct</a></li>
   <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
   <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
   <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/player.html">player</a></li>
   <li><a href="../modules/renderScript.html">renderScript</a></li>
   <li><a href="../modules/system.html">system</a></li>
 </ul>
@@ -87,17 +90,23 @@
 <p>A manual switch that can be in an on/off state.</p>
 <p>
 <p> Element class: ManualSwitchUnit
-<p> Extends: Element &gt; ElementWithState &gt; ElementWithToggle</p>
-    <h3>See also:</h3>
-    <ul>
-         <li><a href="../modules/Element.html#">Element</a></li>
-         <li><a href="../modules/ElementWithState.html#">ElementWithState</a></li>
-         <li><a href="../modules/ElementWithToggle.html#">ElementWithToggle</a></li>
-    </ul>
+<p> Extends: <a href="../modules/Element.html#">Element</a> &gt; <a href="../modules/ElementWithState.html#">ElementWithState</a> &gt; <a href="../modules/ElementWithToggle.html#">ElementWithToggle</a></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#activate">activate ()</a></td>
+	<td class="summary">Switches the switch on.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#deactivate">deactivate ()</a></td>
+	<td class="summary">Switches the switch off.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isActive">isActive ()</a></td>
+	<td class="summary">Checks if the switch is active.</td>
+	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setSignalIn">setSignalIn (plug, state)</a></td>
 	<td class="summary">Set the value of a signal in the specified IN plug of the element.</td>
@@ -112,11 +121,19 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_pressed">EVENT_pressed ()</a></td>
-	<td class="summary">Event: The button has been pressed.</td>
+	<td class="summary"><b>Deprecated:</b> Event: The button has been pressed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onPressed">EVENT_onPressed ()</a></td>
+	<td class="summary">Event: Emitted when the button is pressed.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_released">EVENT_released ()</a></td>
-	<td class="summary">Event: The button has been released.</td>
+	<td class="summary"><b>Deprecated:</b> Event: The button has been released.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onReleased">EVENT_onReleased ()</a></td>
+	<td class="summary">Event: Emitted when the button is released.</td>
 	</tr>
 </table>
 
@@ -128,6 +145,54 @@
 
     <dl class="function">
     <dt>
+    <a name = "activate"></a>
+    <strong>activate ()</strong>
+    </dt>
+    <dd>
+    Switches the switch on.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "deactivate"></a>
+    <strong>deactivate ()</strong>
+    </dt>
+    <dd>
+    Switches the switch off.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isActive"></a>
+    <strong>isActive ()</strong>
+    </dt>
+    <dd>
+    Checks if the switch is active.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the switch is active.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "setSignalIn"></a>
     <strong>setSignalIn (plug, state)</strong>
     </dt>
@@ -135,7 +200,7 @@
     Set the value of a signal in the specified IN plug of the element.
 <p> Valid plug names are:
  <ul>
- <li>"on" for the in signal.</li>
+ <li>"on" for the in signal (seems to have no actual effect when modified this way).</li>
  </ul>
 
 
@@ -223,7 +288,27 @@
     <strong>EVENT_pressed ()</strong>
     </dt>
     <dd>
-    Event: The button has been pressed.
+    <b>Deprecated:</b> Event: The button has been pressed.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onPressed should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ManualSwitchUnit.html#EVENT_onPressed">EVENT_onPressed</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onPressed"></a>
+    <strong>EVENT_onPressed ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the button is pressed.
 <p> Note: This is documentation on an event handler, not a callable method.
 
 
@@ -238,7 +323,27 @@
     <strong>EVENT_released ()</strong>
     </dt>
     <dd>
-    Event: The button has been released.
+    <b>Deprecated:</b> Event: The button has been released.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onReleased should be used instead.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ManualSwitchUnit.html#EVENT_onReleased">EVENT_onReleased</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onReleased"></a>
+    <strong>EVENT_onReleased ()</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the button is released.
 <p> Note: This is documentation on an event handler, not a callable method.
 
 
@@ -255,7 +360,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-06-16 13:27:28 </i>
+<i style="float:right;">Last updated 2022-11-12 05:23:13 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -63,6 +63,7 @@
   <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
   <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
   <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
   <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
@@ -72,9 +73,11 @@
   <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
   <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
   <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/construct.html">construct</a></li>
   <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
   <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
   <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/player.html">player</a></li>
   <li><a href="../modules/renderScript.html">renderScript</a></li>
   <li><a href="../modules/system.html">system</a></li>
 </ul>
@@ -95,18 +98,27 @@
 <p> Documentation for the <a href="../modules/renderScript.html#">renderScript</a> is separate.
 <p> Note: The max size of screen content is 50,000 characters. Any calls to set or add content that result in the screen
  exceeding this will silently fail.
-<p> Extends: Element &gt; ElementWithState &gt; ElementWithToggle</p>
+<p> Extends: <a href="../modules/Element.html#">Element</a> &gt; <a href="../modules/ElementWithState.html#">ElementWithState</a> &gt; <a href="../modules/ElementWithToggle.html#">ElementWithToggle</a></p>
     <h3>See also:</h3>
     <ul>
-         <li><a href="../modules/Element.html#">Element</a></li>
-         <li><a href="../modules/ElementWithState.html#">ElementWithState</a></li>
-         <li><a href="../modules/ElementWithToggle.html#">ElementWithToggle</a></li>
-         <li><a href="../modules/renderScript.html#">renderScript</a></li>
+         <a href="../modules/renderScript.html#">renderScript</a>
     </ul>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#activate">activate ()</a></td>
+	<td class="summary">Switch on the screen.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#deactivate">deactivate ()</a></td>
+	<td class="summary">Switch off the screen.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isActive">isActive ()</a></td>
+	<td class="summary">Checks if the screen is on.</td>
+	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#addText">addText (x, y, fontSize, text)</a></td>
 	<td class="summary">Displays the given text at the given coordinates in the screen, and returns an ID to move it later.</td>
@@ -125,7 +137,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setScriptInput">setScriptInput (params)</a></td>
-	<td class="summary">Set the screen render script parameters, which will be automatically set during the Lua execution.</td>
+	<td class="summary">Defines the input of the screen rendering script, which will be automatically defined during the execution of Lua.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#clearScriptOutput">clearScriptOutput ()</a></td>
@@ -145,19 +157,19 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#resetContent">resetContent (id, html)</a></td>
-	<td class="summary">Update the element with the given ID (returned by setContent) with a new HTML content.</td>
+	<td class="summary">Update the element with the given ID (returned by addContent) with a new HTML content.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#deleteContent">deleteContent (id)</a></td>
-	<td class="summary">Delete the element with the given ID (returned by setContent).</td>
+	<td class="summary">Delete the element with the given ID (returned by addContent).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#showContent">showContent (id, state)</a></td>
-	<td class="summary">Update the visibility of the element with the given ID (returned by setContent).</td>
+	<td class="summary">Update the visibility of the element with the given ID (returned by addContent).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#moveContent">moveContent (id, x, y)</a></td>
-	<td class="summary">Move the element with the given id (returned by setContent) to a new position in the screen.</td>
+	<td class="summary">Move the element with the given id (returned by addContent) to a new position in the screen.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getMouseX">getMouseX ()</a></td>
@@ -185,11 +197,23 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_mouseDown">EVENT_mouseDown (x, y)</a></td>
-	<td class="summary">Event: Emitted when the player starts a click on the screen unit.</td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the player starts a click on the screen unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onMouseDown">EVENT_onMouseDown (x, y)</a></td>
+	<td class="summary">Event: Emitted when the player starts a click on the screen.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_mouseUp">EVENT_mouseUp (x, y)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when the player releases a click on the screen unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onMouseUp">EVENT_onMouseUp (x, y)</a></td>
 	<td class="summary">Event: Emitted when the player releases a click on the screen unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onOutputChanged">EVENT_onOutputChanged (output)</a></td>
+	<td class="summary">Event: Emitted when the output of the screen is changed.</td>
 	</tr>
 </table>
 
@@ -201,6 +225,54 @@
 
     <dl class="function">
     <dt>
+    <a name = "activate"></a>
+    <strong>activate ()</strong>
+    </dt>
+    <dd>
+    Switch on the screen.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "deactivate"></a>
+    <strong>deactivate ()</strong>
+    </dt>
+    <dd>
+    Switch off the screen.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isActive"></a>
+    <strong>isActive ()</strong>
+    </dt>
+    <dd>
+    Checks if the screen is on.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the screen is on.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "addText"></a>
     <strong>addText (x, y, fontSize, text)</strong>
     </dt>
@@ -211,16 +283,16 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">x</span>
-            <span class="types"><span class="type">0..100</span></span>
-         Horizontal position, as a percentage of the screen width.
+            <span class="types"><span class="type">float</span></span>
+         Horizontal position, as a percentage (between 0 and 100) of the screen width.
         </li>
         <li><span class="parameter">y</span>
-            <span class="types"><span class="type">0..100</span></span>
-         Vertical position, as a percentage of the screen height.
+            <span class="types"><span class="type">float</span></span>
+         Vertical position, as a percentage (between 0 and 100) of the screen height.
         </li>
         <li><span class="parameter">fontSize</span>
-            <span class="types"><span class="type">0..100</span></span>
-         Text font size, as a percentage of the screen width.
+            <span class="types"><span class="type">float</span></span>
+         Text font size, as a percentage (between 0 and 100) of the screen width.
         </li>
         <li><span class="parameter">text</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
@@ -270,7 +342,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">html</span>
-            <span class="types"><span class="type">html</span></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          The HTML content to display.
         </li>
     </ul>
@@ -306,7 +378,7 @@
     <strong>setScriptInput (params)</strong>
     </dt>
     <dd>
-    Set the screen render script parameters, which will be automatically set during the Lua execution.
+    Defines the input of the screen rendering script, which will be automatically defined during the execution of Lua.
 
 
     <h3>Parameters:</h3>
@@ -379,15 +451,15 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">x</span>
-            <span class="types"><span class="type">0..100</span></span>
-         Horizontal position, as a percentage of the screen width.
+            <span class="types"><span class="type">float</span></span>
+         Horizontal position, as a percentage (between 0 and 100) of the screen width.
         </li>
         <li><span class="parameter">y</span>
-            <span class="types"><span class="type">0..100</span></span>
-         Vertical position, as a percentage of the screen height.
+            <span class="types"><span class="type">float</span></span>
+         Vertical position, as a percentage (between 0 and 100) of the screen height.
         </li>
         <li><span class="parameter">html</span>
-            <span class="types"><span class="type">html</span></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          The HTML content to display, which can contain SVG elements to make drawings.
         </li>
     </ul>
@@ -413,7 +485,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">svg</span>
-            <span class="types"><span class="type">svg</span></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          The SVG content to display, which fits inside a 1920x1080 canvas.
         </li>
     </ul>
@@ -428,24 +500,28 @@
     <strong>resetContent (id, html)</strong>
     </dt>
     <dd>
-    Update the element with the given ID (returned by setContent) with a new HTML content.
+    Update the element with the given ID (returned by addContent) with a new HTML content.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
             <span class="types"><span class="type">int</span></span>
-         An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+         An integer ID that is used to identify the element in the screen. Methods such as addContent return the ID
  that you can store to use later here.
         </li>
         <li><span class="parameter">html</span>
-            <span class="types"><span class="type">html</span></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          The HTML content to display, which can contain SVG elements to make drawings.
         </li>
     </ul>
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#addContent">addContent</a>
+    </ul>
 
 
 </dd>
@@ -454,20 +530,24 @@
     <strong>deleteContent (id)</strong>
     </dt>
     <dd>
-    Delete the element with the given ID (returned by setContent).
+    Delete the element with the given ID (returned by addContent).
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
             <span class="types"><span class="type">int</span></span>
-         An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+         An integer ID that is used to identify the element in the screen. Methods such as addContent return the ID
  that you can store to use later here.
         </li>
     </ul>
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#addContent">addContent</a>
+    </ul>
 
 
 </dd>
@@ -476,14 +556,14 @@
     <strong>showContent (id, state)</strong>
     </dt>
     <dd>
-    Update the visibility of the element with the given ID (returned by setContent).
+    Update the visibility of the element with the given ID (returned by addContent).
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
             <span class="types"><span class="type">int</span></span>
-         An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+         An integer ID that is used to identify the element in the screen. Methods such as addContent return the ID
  that you can store to use later here.
         </li>
         <li><span class="parameter">state</span>
@@ -494,6 +574,10 @@
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#addContent">addContent</a>
+    </ul>
 
 
 </dd>
@@ -502,28 +586,32 @@
     <strong>moveContent (id, x, y)</strong>
     </dt>
     <dd>
-    Move the element with the given id (returned by setContent) to a new position in the screen.
+    Move the element with the given id (returned by addContent) to a new position in the screen.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
             <span class="types"><span class="type">int</span></span>
-         An integer ID that is used to identify the element in the screen. Methods such as setContent return the ID
+         An integer ID that is used to identify the element in the screen. Methods such as addContent return the ID
  that you can store to use later here.
         </li>
         <li><span class="parameter">x</span>
-            <span class="types"><span class="type">0..100</span></span>
-         Horizontal position, as a percentage of the screen width.
+            <span class="types"><span class="type">float</span></span>
+         Horizontal position, as a percentage (between 0 and 1) of the screen width.
         </li>
         <li><span class="parameter">y</span>
-            <span class="types"><span class="type">0..100</span></span>
-         Vertical position, as a percentage of the screen height.
+            <span class="types"><span class="type">float</span></span>
+         Vertical position, as a percentage (between 0 and 1) of the screen height.
         </li>
     </ul>
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#addContent">addContent</a>
+    </ul>
 
 
 </dd>
@@ -539,8 +627,8 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">0..1</span></span>
-        The x-position as a percentage of screen width; -1 if nothing is pointed at.
+           <span class="types"><span class="type">float</span></span>
+        The x-position as a percentage (between 0 and 1) of screen width; -1 if nothing is pointed at.
     </ol>
 
 
@@ -559,8 +647,8 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">0..1</span></span>
-        The y-position as a percentage of screen height; -1 if nothing is pointed at.
+           <span class="types"><span class="type">float</span></span>
+        The y-position as a percentage (between 0 and 1) of screen height; -1 if nothing is pointed at.
     </ol>
 
 
@@ -580,7 +668,7 @@
     <ol>
 
            <span class="types"><span class="type">0/1</span></span>
-        0 when the mouse is not clicked and 1 otherwise.
+        1 if the mouse is pressed, otherwise 0.
     </ol>
 
 
@@ -609,7 +697,7 @@
     Set the value of a signal in the specified IN plug of the element.
 <p> Valid plug names are:
  <ul>
- <li>"in" for the in signal (has no actual effect on screen state when modified this way).</li>
+ <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
  </ul>
 
 
@@ -666,19 +754,50 @@
     <strong>EVENT_mouseDown (x, y)</strong>
     </dt>
     <dd>
-    Event: Emitted when the player starts a click on the screen unit.
+    <b>Deprecated:</b> Event: Emitted when the player starts a click on the screen unit.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onMouseDown should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">float</span></span>
+         X-coordinate of the click in percentage of the screen width.
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">float</span></span>
+         Y-coordinate of the click in percentage of the screen height.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#EVENT_onMouseDown">EVENT_onMouseDown</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onMouseDown"></a>
+    <strong>EVENT_onMouseDown (x, y)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the player starts a click on the screen.
 <p> Note: This is documentation on an event handler, not a callable method.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">x</span>
-            <span class="types"><span class="type">0..1</span></span>
-         X-coordinate of the click in percentage of the screen width.
+            <span class="types"><span class="type">float</span></span>
+         X-coordinate of the click in percentage (between 0 and 1) of the screen width.
         </li>
         <li><span class="parameter">y</span>
-            <span class="types"><span class="type">0..1</span></span>
-         Y-coordinate of the click in percentage of the screen height.
+            <span class="types"><span class="type">float</span></span>
+         Y-coordinate of the click in percentage (between 0 and 1) of the screen height.
         </li>
     </ul>
 
@@ -692,6 +811,37 @@
     <strong>EVENT_mouseUp (x, y)</strong>
     </dt>
     <dd>
+    <b>Deprecated:</b> Event: Emitted when the player releases a click on the screen unit.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onMouseUp should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">float</span></span>
+         X-coordinate of the click in percentage of the screen width.
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">float</span></span>
+         Y-coordinate of the click in percentage of the screen height.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#EVENT_onMouseUp">EVENT_onMouseUp</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onMouseUp"></a>
+    <strong>EVENT_onMouseUp (x, y)</strong>
+    </dt>
+    <dd>
     Event: Emitted when the player releases a click on the screen unit.
 <p> Note: This is documentation on an event handler, not a callable method.
 
@@ -699,12 +849,34 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">x</span>
-            <span class="types"><span class="type">0..1</span></span>
-         X-coordinate of the click in percentage of the screen width.
+            <span class="types"><span class="type">float</span></span>
+         X-coordinate of the click in percentage (between 0 and 1) of the screen width.
         </li>
         <li><span class="parameter">y</span>
-            <span class="types"><span class="type">0..1</span></span>
-         Y-coordinate of the click in percentage of the screen height.
+            <span class="types"><span class="type">float</span></span>
+         Y-coordinate of the click in percentage (between 0 and 1) of the screen height.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onOutputChanged"></a>
+    <strong>EVENT_onOutputChanged (output)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the output of the screen is changed.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">output</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The output string of the screen.
         </li>
     </ul>
 
@@ -720,7 +892,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-06-16 13:27:28 </i>
+<i style="float:right;">Last updated 2022-11-12 05:23:13 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
