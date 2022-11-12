@@ -16,11 +16,11 @@ jobs:
       CODEX_SUFFIX: "${{ github.ref == 'refs/heads/pts' && 'codex-pts' || 'codex' }}"
 
     steps:
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
 
-      - uses: leafo/gh-actions-lua@v9.1.0
+      - uses: leafo/gh-actions-lua@d84e7d61946edb679210088bc1378c099fde51fe # v9.1.0
 
-      - uses: leafo/gh-actions-luarocks@v4.3.0
+      - uses: leafo/gh-actions-luarocks@e65774a6386cb4f24e293dca7fc4ff89165b64c5 # v4.3.0
 
       - name: Setup
         run: |
@@ -33,7 +33,7 @@ jobs:
           mv doc docs/mock-codex
       
       - name: Remove mock methods
-        uses: jacobtomlinson/gha-find-replace@v2
+        uses: jacobtomlinson/gha-find-replace@f485fdc3f67a6d87ae6e3d11e41f648c26d7aee3 # v2
         with:
           find: '--- Mock'
           replace: '-- Mock'
@@ -46,7 +46,7 @@ jobs:
           mv doc docs/web-codex
       
       - name: Clean up CSS
-        uses: jacobtomlinson/gha-find-replace@v2
+        uses: jacobtomlinson/gha-find-replace@f485fdc3f67a6d87ae6e3d11e41f648c26d7aee3 # v2
         with:
           find: 'width: 700px;'
           replace: ';'
@@ -54,14 +54,14 @@ jobs:
           include: docs/**/ldoc.css
 
       - name: Deploy Web Codex
-        uses: JamesIves/github-pages-deploy-action@v4.4.1
+        uses: JamesIves/github-pages-deploy-action@ba1486788b0490a235422264426c45848eac35c6 # v4.4.1
         with:
           branch: codex
           folder: docs/web-codex
           target-folder: web-${{ env.CODEX_SUFFIX }}
 
       - name: Deploy Mock Codex
-        uses: JamesIves/github-pages-deploy-action@v4.4.1
+        uses: JamesIves/github-pages-deploy-action@ba1486788b0490a235422264426c45848eac35c6 # v4.4.1
         with:
           branch: codex
           folder: docs/mock-codex
