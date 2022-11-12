@@ -40,7 +40,7 @@
 --   <li>maxBrake (not always shown)</li>
 -- </ul>
 --
--- Extends: @{Element} &gt
+-- Extends: @{Element}
 -- @module ControlUnit
 -- @alias M
 
