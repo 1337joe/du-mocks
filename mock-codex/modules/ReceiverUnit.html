@@ -63,6 +63,7 @@
   <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
   <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
   <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
   <li><strong>ReceiverUnit</strong></li>
@@ -72,9 +73,11 @@
   <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
   <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
   <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/construct.html">construct</a></li>
   <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
   <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
   <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/player.html">player</a></li>
   <li><a href="../modules/renderScript.html">renderScript</a></li>
   <li><a href="../modules/system.html">system</a></li>
 </ul>
@@ -87,11 +90,7 @@
 <p>Receives messages on given channels.</p>
 <p>
 <p> Element class: ReceiverUnit
-<p> Extends: Element</p>
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/Element.html#">Element</a>
-    </ul>
+<p> Extends: <a href="../modules/Element.html#">Element</a></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
@@ -101,11 +100,23 @@
 	<td class="summary">Returns the receiver range.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#hasChannel">hasChannel (channel)</a></td>
+	<td class="summary">Checks if the given channel exists in the receiver channels list.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#setChannels">setChannels (channelList)</a></td>
+	<td class="summary"><b>Deprecated:</b> Set the channels list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setChannelList">setChannelList (channels)</a></td>
 	<td class="summary">Set the channels list.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getChannels">getChannels ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Returns the channels list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getChannelList">getChannelList ()</a></td>
 	<td class="summary">Returns the channels list.</td>
 	</tr>
 	<tr>
@@ -114,6 +125,10 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_receive">EVENT_receive (channel, message)</a></td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when a message is received on any channel defined on the element.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onReceived">EVENT_onReceived (channel, message)</a></td>
 	<td class="summary">Event: Emitted when a message is received on any channel defined on the element.</td>
 	</tr>
 	<tr>
@@ -149,8 +164,35 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">meter</span></span>
-        The range.
+           <span class="types"><span class="type">float</span></span>
+        The range in m (meters).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "hasChannel"></a>
+    <strong>hasChannel (channel)</strong>
+    </dt>
+    <dd>
+    Checks if the given channel exists in the receiver channels list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">channel</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The channel to check for.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the channels list contains the given channel.
     </ol>
 
 
@@ -162,7 +204,8 @@
     <strong>setChannels (channelList)</strong>
     </dt>
     <dd>
-    Set the channels list.
+    <b>Deprecated:</b> Set the channels list.
+<p> This method is deprecated: setChannelList should be used instead
 
 
     <h3>Parameters:</h3>
@@ -175,12 +218,69 @@
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ReceiverUnit.html#setChannelList">setChannelList</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "setChannelList"></a>
+    <strong>setChannelList (channels)</strong>
+    </dt>
+    <dd>
+    Set the channels list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">channels</span>
+            <span class="types"><span class="type">list</span></span>
+         The channels list as a Lua table. At most 8 channels may be set, but a comma-separated string
+   in the table will be split on the commas into multiple channels.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the channels list has been successfully set.
+    </ol>
+
+
 
 
 </dd>
     <dt>
     <a name = "getChannels"></a>
     <strong>getChannels ()</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Returns the channels list.
+<p> This method is deprecated: getChannelList should be used instead
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The channels list separated by commas.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ReceiverUnit.html#getChannelList">getChannelList</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getChannelList"></a>
+    <strong>getChannelList ()</strong>
     </dt>
     <dd>
     Returns the channels list.
@@ -190,8 +290,8 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        The channels list separated by commas.
+           <span class="types"><span class="type">list</span></span>
+        The channels list as a Lua table.
     </ol>
 
 
@@ -232,6 +332,37 @@
     <dt>
     <a name = "EVENT_receive"></a>
     <strong>EVENT_receive (channel, message)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Event: Emitted when a message is received on any channel defined on the element.
+<p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onReceived should be used instead.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">channel</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The channel; can be used as a filter.
+        </li>
+        <li><span class="parameter">message</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The message received.
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ReceiverUnit.html#EVENT_onReceived">EVENT_onReceived</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onReceived"></a>
+    <strong>EVENT_onReceived (channel, message)</strong>
     </dt>
     <dd>
     Event: Emitted when a message is received on any channel defined on the element.
@@ -306,7 +437,7 @@
     <ul>
         <li><span class="parameter">channel</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         The channel a message was sent on, must match a channel in channelList to be received.
+         The channel a message was sent on, receiver must have channel to be received.
         </li>
         <li><span class="parameter">message</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
@@ -350,7 +481,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-06-16 13:27:25 </i>
+<i style="float:right;">Last updated 2022-11-12 05:23:12 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -1,0 +1,2298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>DU Mocks</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><strong>construct</strong></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/player.html">player</a></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>construct</code></h1>
+<p>Construct represents your construct.</p>
+<p> It gives access to the properties of your constructions and to the events
+ linked to them, which can be used in your scripts.</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#getName">getName ()</a></td>
+	<td class="summary">Returns the name of the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getId">getId ()</a></td>
+	<td class="summary">Returns the construct unique ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOwner">getOwner ()</a></td>
+	<td class="summary">Returns the owner entity.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCreator">getCreator ()</a></td>
+	<td class="summary">Returns the creator entity.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isWarping">isWarping ()</a></td>
+	<td class="summary">Checks if the construct is currently warping.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWarpState">getWarpState ()</a></td>
+	<td class="summary">Returns the current warp state.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isInPvPZone">isInPvPZone ()</a></td>
+	<td class="summary">Checks if the construct is in the PvP zone.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getDistanceToSafeZone">getDistanceToSafeZone ()</a></td>
+	<td class="summary">Returns the distance between the construct and the nearest safe zone.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getPvPTimer">getPvPTimer ()</a></td>
+	<td class="summary">Returns the current construct PvP timer state.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMass">getMass ()</a></td>
+	<td class="summary">Returns the mass of the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getInertialMass">getInertialMass ()</a></td>
+	<td class="summary">Returns the inertial mass of the construct, calculated as 1/3 of the trace of the inertial tensor.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getInertialTensor">getInertialTensor ()</a></td>
+	<td class="summary">Returns the inertial tensor of the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCenterOfMass">getCenterOfMass ()</a></td>
+	<td class="summary">Returns the position of the center of mass of the construct, in local construct coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldCenterOfMass">getWorldCenterOfMass ()</a></td>
+	<td class="summary">Returns the position of the center of mass of the construct, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCrossSection">getCrossSection ()</a></td>
+	<td class="summary">Returns the construct's cross sectional surface in the current direction of movement.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getSize">getSize ()</a></td>
+	<td class="summary">Returns the size of the building zone of the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getBoundingBoxSize">getBoundingBoxSize ()</a></td>
+	<td class="summary">Returns the size of the bounding box of the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getBoundingBoxCenter">getBoundingBoxCenter ()</a></td>
+	<td class="summary">Returns the position of the center of the bounding box of the construct in local construct coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxSpeed">getMaxSpeed ()</a></td>
+	<td class="summary">Returns the max speed along current moving direction.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxAngularSpeed">getMaxAngularSpeed ()</a></td>
+	<td class="summary">Returns the max angular speed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxSpeedPerAxis">getMaxSpeedPerAxis ()</a></td>
+	<td class="summary">Returns the max speed per axis.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxThrustAlongAxis">getMaxThrustAlongAxis (taglist, CRefAxis)</a></td>
+	<td class="summary">Returns the construct max kinematics parameters in both atmo and space range, in newtons.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCurrentBrake">getCurrentBrake ()</a></td>
+	<td class="summary">Returns the current braking force genrated by construct brakes.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxBrake">getMaxBrake ()</a></td>
+	<td class="summary">Returns the maximum brake force that can currently be generated by the construct brakes.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldPosition">getWorldPosition ()</a></td>
+	<td class="summary">Returns the world position of the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getVelocity">getVelocity ()</a></td>
+	<td class="summary">The construct's linear velocity, relative to its parent, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldVelocity">getWorldVelocity ()</a></td>
+	<td class="summary">The construct's linear velocity, relative to its parent, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAbsoluteVelocity">getAbsoluteVelocity ()</a></td>
+	<td class="summary">The construct's absolute linear velocity, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldAbsoluteVelocity">getWorldAbsoluteVelocity ()</a></td>
+	<td class="summary">The construct's absolute linear velocity, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAcceleration">getAcceleration ()</a></td>
+	<td class="summary">The construct's linear acceleration, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldAcceleration">getWorldAcceleration ()</a></td>
+	<td class="summary">The construct's linear acceleration, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAngularVelocity">getAngularVelocity ()</a></td>
+	<td class="summary">The construct's angular velocity, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldAngularVelocity">getWorldAngularVelocity ()</a></td>
+	<td class="summary">The constructs angular velocity, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAngularAcceleration">getAngularAcceleration ()</a></td>
+	<td class="summary">The construct's angular acceleration, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldAngularAcceleration">getWorldAngularAcceleration ()</a></td>
+	<td class="summary">The construct's angular acceleration, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldAirFrictionAcceleration">getWorldAirFrictionAcceleration ()</a></td>
+	<td class="summary">Returns the acceleration generated by air resistance.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldAirFrictionAngularAcceleration">getWorldAirFrictionAngularAcceleration ()</a></td>
+	<td class="summary">Returns the acceleration torque generated by air resistance.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getFrictionBurnSpeed">getFrictionBurnSpeed ()</a></td>
+	<td class="summary">Returns the speed at which your construct will suffer damage due to friction with the air.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getForward">getForward ()</a></td>
+	<td class="summary">Returns the forward vector of the construct coordinates system.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getRight">getRight ()</a></td>
+	<td class="summary">Returns the right vector of the construct coordinates system.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getUp">getUp ()</a></td>
+	<td class="summary">Returns the up vector of the construct coordinates system.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldForward">getWorldForward ()</a></td>
+	<td class="summary">Returns the forward direction of the construct, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldRight">getWorldRight ()</a></td>
+	<td class="summary">Returns the right direction of the construct, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldUp">getWorldUp ()</a></td>
+	<td class="summary">Returns the up direction of the construct, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOrientationUnitId">getOrientationUnitId ()</a></td>
+	<td class="summary">Returns the local ID of the current active orientation unit (core unit or gyro unit).</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOrientationForward">getOrientationForward ()</a></td>
+	<td class="summary">Returns the forward direction vector of the active orientation unit, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOrientationRight">getOrientationRight ()</a></td>
+	<td class="summary">Returns the right direction vector of the active orientation unit, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOrientationUp">getOrientationUp ()</a></td>
+	<td class="summary">Returns the up direction vector of the active orientation unit, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldOrientationForward">getWorldOrientationForward ()</a></td>
+	<td class="summary">Returns the forward direction vector of the active orientation unit, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldOrientationRight">getWorldOrientationRight ()</a></td>
+	<td class="summary">Returns the right direction vector of the active orientation unit, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldOrientationUp">getWorldOrientationUp ()</a></td>
+	<td class="summary">Returns the up direction vector of the active orientation unit, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getParent">getParent ()</a></td>
+	<td class="summary">Returns the ID of the parent construct of our active construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getClosestParent">getClosestParent ()</a></td>
+	<td class="summary">Returns the ID of the nearest construct on which the construct can dock.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCloseParents">getCloseParents ()</a></td>
+	<td class="summary">Returns the list of IDs of nearby constructs, on which the construct can dock.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getParentPosition">getParentPosition ()</a></td>
+	<td class="summary">Returns the position of the construct's parent when docked in local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getParentWorldPosition">getParentWorldPosition ()</a></td>
+	<td class="summary">Returns the position of the construct's parent when docked in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getParentForward">getParentForward ()</a></td>
+	<td class="summary">Returns the construct's parent forward direction vector, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getParentRight">getParentRight ()</a></td>
+	<td class="summary">Returns the construct's parent right direction vector, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getParentUp">getParentUp ()</a></td>
+	<td class="summary">Returns the construct's parent up direction vector, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getParentWorldForward">getParentWorldForward ()</a></td>
+	<td class="summary">Returns the construct's parent forward direction vector, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getParentWorldRight">getParentWorldRight ()</a></td>
+	<td class="summary">Returns the construct's parent right direction vector, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getParentWorldUp">getParentWorldUp ()</a></td>
+	<td class="summary">Returns the construct's parent up direction vector, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getPlayersOnBoard">getPlayersOnBoard ()</a></td>
+	<td class="summary">Returns the list of player IDs on board the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getPlayersOnBoardInVRStation">getPlayersOnBoardInVRStation ()</a></td>
+	<td class="summary">Returns the list of player IDs on board the construct inside a VR station.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isPlayerBoarded">isPlayerBoarded (id)</a></td>
+	<td class="summary">Checks if the given player is on board in the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isPlayerBoardedInVRStation">isPlayerBoardedInVRStation (id)</a></td>
+	<td class="summary">Returns 1 if the given player is boarded to the construct inside a VR station.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getBoardedPlayerMass">getBoardedPlayerMass (id)</a></td>
+	<td class="summary">Returns the mass of the given player or surrogate if it is on board the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getBoardedInVRStationAvatarMass">getBoardedInVRStationAvatarMass (id)</a></td>
+	<td class="summary">Returns the mass of the given player if in VR station on board the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getDockedConstructs">getDockedConstructs ()</a></td>
+	<td class="summary">Returns the list of IDs of constructs docked to the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isConstructDocked">isConstructDocked (id)</a></td>
+	<td class="summary">Checks if the given construct is docked to the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getDockedConstructMass">getDockedConstructMass (id)</a></td>
+	<td class="summary">Returns the mass of the given construct if it is docked to the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setDockingMode">setDockingMode (mode)</a></td>
+	<td class="summary">Sets the docking mode.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getDockingMode">getDockingMode ()</a></td>
+	<td class="summary">Returns the current docking mode.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#dock">dock (id)</a></td>
+	<td class="summary">Sends a request to dock to the given construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#undock">undock ()</a></td>
+	<td class="summary">Sends a request to undock the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#forceDeboard">forceDeboard (id)</a></td>
+	<td class="summary">Sends a request to deboard a player or surrogate with the given ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#forceUndock">forceUndock (id)</a></td>
+	<td class="summary">Sends a request to undock a construct with the given ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#forceInterruptVRSession">forceInterruptVRSession (id)</a></td>
+	<td class="summary">Sends a request to interrupt the surrogate session of a player with the given ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#load">load ()</a></td>
+	<td class="summary">Unknown use.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onDocked">EVENT_onDocked (id)</a></td>
+	<td class="summary">Event: Emitted when the construct becomes docked.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onUndocked">EVENT_onUndocked (id)</a></td>
+	<td class="summary">Event: Emitted when the construct is undocked.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onPlayerBoarded">EVENT_onPlayerBoarded (id)</a></td>
+	<td class="summary">Event: Emitted when a player or surrogate boards the construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onVRStationEntered">EVENT_onVRStationEntered (id)</a></td>
+	<td class="summary">Event: Emitted when a player enters a VR station.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onConstructDocked">EVENT_onConstructDocked (id)</a></td>
+	<td class="summary">Event: Emitted when another construct docks to this construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onPvPTimer">EVENT_onPvPTimer (active)</a></td>
+	<td class="summary">Event: Emitted when the PvP timer started or elapsed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mockGetClosure">mockGetClosure ()</a></td>
+	<td class="summary">Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "getName"></a>
+    <strong>getName ()</strong>
+    </dt>
+    <dd>
+    Returns the name of the construct.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The construct name.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getId"></a>
+    <strong>getId ()</strong>
+    </dt>
+    <dd>
+    Returns the construct unique ID.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The unique ID.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOwner"></a>
+    <strong>getOwner ()</strong>
+    </dt>
+    <dd>
+    Returns the owner entity.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The owner entity table with fields {[int] id, [bool] isOrganization} describing the owner. Use
+ system.getPlayerName(id) and system.getOrganization(id) to retrieve info about it.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../modules/system.html#getPlayerName">system.getPlayerName</a></li>
+         <li><a href="../modules/system.html#getOrganization">system.getOrganization</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getCreator"></a>
+    <strong>getCreator ()</strong>
+    </dt>
+    <dd>
+    Returns the creator entity.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The creator entity table with fields {[int] id, [bool] isOrganization} describing the owner. Use
+ system.getPlayerName(id) and system.getOrganization(id) to retrieve info about it.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../modules/system.html#getPlayerName">system.getPlayerName</a></li>
+         <li><a href="../modules/system.html#getOrganization">system.getOrganization</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "isWarping"></a>
+    <strong>isWarping ()</strong>
+    </dt>
+    <dd>
+    Checks if the construct is currently warping.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the construct is currently warping.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWarpState"></a>
+    <strong>getWarpState ()</strong>
+    </dt>
+    <dd>
+    Returns the current warp state.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The current warp state index (Idle = 1, Engage = 2, Align = 3, Spool = 4, Accelerate = 5, Cruise = 6,
+   Decelerate = 7, Stopping = 8, Disengage = 9)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isInPvPZone"></a>
+    <strong>isInPvPZone ()</strong>
+    </dt>
+    <dd>
+    Checks if the construct is in the PvP zone.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the construct is in the PVP zone.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getDistanceToSafeZone"></a>
+    <strong>getDistanceToSafeZone ()</strong>
+    </dt>
+    <dd>
+    Returns the distance between the construct and the nearest safe zone.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The distance to the nearest safe zone border in meters. Positive value if the construct is outside of any safe zone.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getPvPTimer"></a>
+    <strong>getPvPTimer ()</strong>
+    </dt>
+    <dd>
+    Returns the current construct PvP timer state.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The remaining time of the PvP timer, or 0.0 if elapsed.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMass"></a>
+    <strong>getMass ()</strong>
+    </dt>
+    <dd>
+    Returns the mass of the construct.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The mass of the construct in kilograms.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getInertialMass"></a>
+    <strong>getInertialMass ()</strong>
+    </dt>
+    <dd>
+    Returns the inertial mass of the construct, calculated as 1/3 of the trace of the inertial tensor.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The inertial mass of the construct in kilograms * meters square.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getInertialTensor"></a>
+    <strong>getInertialTensor ()</strong>
+    </dt>
+    <dd>
+    Returns the inertial tensor of the construct.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">mat</span></span>
+        The inertial tensor of the construct in kilograms * meters square.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCenterOfMass"></a>
+    <strong>getCenterOfMass ()</strong>
+    </dt>
+    <dd>
+    Returns the position of the center of mass of the construct, in local construct coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The position of the center of mass of the construct in local construct coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldCenterOfMass"></a>
+    <strong>getWorldCenterOfMass ()</strong>
+    </dt>
+    <dd>
+    Returns the position of the center of mass of the construct, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The position of the center of mass of the construct in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCrossSection"></a>
+    <strong>getCrossSection ()</strong>
+    </dt>
+    <dd>
+    Returns the construct's cross sectional surface in the current direction of movement.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The construct's surface exposed in the current direction of movement in meters square.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getSize"></a>
+    <strong>getSize ()</strong>
+    </dt>
+    <dd>
+    Returns the size of the building zone of the construct.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The building zone size in meters.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getBoundingBoxSize"></a>
+    <strong>getBoundingBoxSize ()</strong>
+    </dt>
+    <dd>
+    Returns the size of the bounding box of the construct.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The bounding box size in meters.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getBoundingBoxCenter"></a>
+    <strong>getBoundingBoxCenter ()</strong>
+    </dt>
+    <dd>
+    Returns the position of the center of the bounding box of the construct in local construct coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The dimensions of the position of the center of the bounding box of the construct in local construct
+   coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxSpeed"></a>
+    <strong>getMaxSpeed ()</strong>
+    </dt>
+    <dd>
+    Returns the max speed along current moving direction.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The max speed along current moving direction in m/s.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxAngularSpeed"></a>
+    <strong>getMaxAngularSpeed ()</strong>
+    </dt>
+    <dd>
+    Returns the max angular speed.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The max angular speed in rad/s.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxSpeedPerAxis"></a>
+    <strong>getMaxSpeedPerAxis ()</strong>
+    </dt>
+    <dd>
+    Returns the max speed per axis.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The max speed along axes {x, -x, y, -y, z, -z} in m/s.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxThrustAlongAxis"></a>
+    <strong>getMaxThrustAlongAxis (taglist, CRefAxis)</strong>
+    </dt>
+    <dd>
+    Returns the construct max kinematics parameters in both atmo and space range, in newtons.  Kinematics parameters
+ designate here the maximal positive and negative base force the construct is capable of producing along the chosen
+ CRefAxis. In practice, this gives you an estimate of the maximum thrust your ship is capable of producing in space
+ or in atmosphere, as well as the max reverse thrust. These are theoretical estimates and correspond with the
+ addition of the max thrust along the corresponding axis. It might not reflect the accurate current max thrust
+ capacity of your ship, which depends on various local conditions (velocity, atmospheric density, orientation,
+ obstruction, engine damage, etc). This is typically used in conjunction with the control unit throttle to setup the
+ desired forward acceleration.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">taglist</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Comma (for union) or space (for intersection) separated list of tags. You can set tags directly
+ on the engines in the right-click menu.
+        </li>
+        <li><span class="parameter">CRefAxis</span>
+            <span class="types"><span class="type">vec3</span></span>
+         Axis along which to compute the max force in construct local coordinates.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec4,Newton</span></span>
+        The kinematics parameters in newtons in the order: atmoRange.FMaxPlus, atmoRange.FMaxMinus,
+ spaceRange.FMaxPlus, spaceRange.FMaxMinus
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCurrentBrake"></a>
+    <strong>getCurrentBrake ()</strong>
+    </dt>
+    <dd>
+    Returns the current braking force genrated by construct brakes.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The current braking force in newtons.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxBrake"></a>
+    <strong>getMaxBrake ()</strong>
+    </dt>
+    <dd>
+    Returns the maximum brake force that can currently be generated by the construct brakes.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The maximum braking force in newtons.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldPosition"></a>
+    <strong>getWorldPosition ()</strong>
+    </dt>
+    <dd>
+    Returns the world position of the construct.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The xyz world coordinates of the construct center position in meters.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getVelocity"></a>
+    <strong>getVelocity ()</strong>
+    </dt>
+    <dd>
+    The construct's linear velocity, relative to its parent, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Relative linear velocity vector, in construct local coordinates in m/s.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldVelocity"></a>
+    <strong>getWorldVelocity ()</strong>
+    </dt>
+    <dd>
+    The construct's linear velocity, relative to its parent, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Relative linear velocity vector, in world coordinates in m/s.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAbsoluteVelocity"></a>
+    <strong>getAbsoluteVelocity ()</strong>
+    </dt>
+    <dd>
+    The construct's absolute linear velocity, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Absolute linear velocity vector, in construct local coordinates in m/s.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldAbsoluteVelocity"></a>
+    <strong>getWorldAbsoluteVelocity ()</strong>
+    </dt>
+    <dd>
+    The construct's absolute linear velocity, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Absolute linear velocity vector, in world coordinates in m/s.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAcceleration"></a>
+    <strong>getAcceleration ()</strong>
+    </dt>
+    <dd>
+    The construct's linear acceleration, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Linear acceleration vector, in construct local coordinates in m/s2.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldAcceleration"></a>
+    <strong>getWorldAcceleration ()</strong>
+    </dt>
+    <dd>
+    The construct's linear acceleration, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Linear acceleration vector, in world coordinates in m/s2.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAngularVelocity"></a>
+    <strong>getAngularVelocity ()</strong>
+    </dt>
+    <dd>
+    The construct's angular velocity, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Angular velocity vector, in construct local coordinates in rad/s.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldAngularVelocity"></a>
+    <strong>getWorldAngularVelocity ()</strong>
+    </dt>
+    <dd>
+    The constructs angular velocity, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Angular velocity vector, in world coordinates in rad/s.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAngularAcceleration"></a>
+    <strong>getAngularAcceleration ()</strong>
+    </dt>
+    <dd>
+    The construct's angular acceleration, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Angular acceleration vector, in construct local coordinates in rad/s2.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldAngularAcceleration"></a>
+    <strong>getWorldAngularAcceleration ()</strong>
+    </dt>
+    <dd>
+    The construct's angular acceleration, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Angular acceleration vector, in world coordinates in rad/s2.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldAirFrictionAcceleration"></a>
+    <strong>getWorldAirFrictionAcceleration ()</strong>
+    </dt>
+    <dd>
+    Returns the acceleration generated by air resistance.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The xyz world acceleration generated by air resistance.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldAirFrictionAngularAcceleration"></a>
+    <strong>getWorldAirFrictionAngularAcceleration ()</strong>
+    </dt>
+    <dd>
+    Returns the acceleration torque generated by air resistance.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The xyz world acceleration torque generated by air resistance.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getFrictionBurnSpeed"></a>
+    <strong>getFrictionBurnSpeed ()</strong>
+    </dt>
+    <dd>
+    Returns the speed at which your construct will suffer damage due to friction with the air.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The construct speed to get damages due to friction in m/s.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getForward"></a>
+    <strong>getForward ()</strong>
+    </dt>
+    <dd>
+    Returns the forward vector of the construct coordinates system.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The forward vector of the construct coordinates system. It's a static value equal to (0, 1, 0).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getRight"></a>
+    <strong>getRight ()</strong>
+    </dt>
+    <dd>
+    Returns the right vector of the construct coordinates system.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The right vector of the construct coordinates system. It's a static value equal to (1, 0, 0).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getUp"></a>
+    <strong>getUp ()</strong>
+    </dt>
+    <dd>
+    Returns the up vector of the construct coordinates system.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The up vector of the construct coordinates system. It's a static value equal to (0, 0, 1).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldForward"></a>
+    <strong>getWorldForward ()</strong>
+    </dt>
+    <dd>
+    Returns the forward direction of the construct, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The forward direction vector of the construct, in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldRight"></a>
+    <strong>getWorldRight ()</strong>
+    </dt>
+    <dd>
+    Returns the right direction of the construct, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The right direction vector of the construct, in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldUp"></a>
+    <strong>getWorldUp ()</strong>
+    </dt>
+    <dd>
+    Returns the up direction of the construct, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The up direction vector of the construct, in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOrientationUnitId"></a>
+    <strong>getOrientationUnitId ()</strong>
+    </dt>
+    <dd>
+    Returns the local ID of the current active orientation unit (core unit or gyro unit).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The local ID of the current active orientation unit (core unit or gyro unit).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOrientationForward"></a>
+    <strong>getOrientationForward ()</strong>
+    </dt>
+    <dd>
+    Returns the forward direction vector of the active orientation unit, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Forward direction vector of the active orientation unit, in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOrientationRight"></a>
+    <strong>getOrientationRight ()</strong>
+    </dt>
+    <dd>
+    Returns the right direction vector of the active orientation unit, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Right direction vector of the active orientation unit, in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOrientationUp"></a>
+    <strong>getOrientationUp ()</strong>
+    </dt>
+    <dd>
+    Returns the up direction vector of the active orientation unit, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Up direction vector of the active orientation unit, in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldOrientationForward"></a>
+    <strong>getWorldOrientationForward ()</strong>
+    </dt>
+    <dd>
+    Returns the forward direction vector of the active orientation unit, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Forward direction vector of the active orientation unit, in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldOrientationRight"></a>
+    <strong>getWorldOrientationRight ()</strong>
+    </dt>
+    <dd>
+    Returns the right direction vector of the active orientation unit, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Right direction vector of the active orientation unit, in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldOrientationUp"></a>
+    <strong>getWorldOrientationUp ()</strong>
+    </dt>
+    <dd>
+    Returns the up direction vector of the active orientation unit, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        Up direction vector of the active orientation unit, in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getParent"></a>
+    <strong>getParent ()</strong>
+    </dt>
+    <dd>
+    Returns the ID of the parent construct of our active construct.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The parent ID.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getClosestParent"></a>
+    <strong>getClosestParent ()</strong>
+    </dt>
+    <dd>
+    Returns the ID of the nearest construct on which the construct can dock.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The ID of the nearest construct.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCloseParents"></a>
+    <strong>getCloseParents ()</strong>
+    </dt>
+    <dd>
+    Returns the list of IDs of nearby constructs, on which the construct can dock.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">list</span></span>
+        List of IDs of nearby constructs.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getParentPosition"></a>
+    <strong>getParentPosition ()</strong>
+    </dt>
+    <dd>
+    Returns the position of the construct's parent when docked in local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The position of the constructs parent in local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getParentWorldPosition"></a>
+    <strong>getParentWorldPosition ()</strong>
+    </dt>
+    <dd>
+    Returns the position of the construct's parent when docked in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The position of the constructs parent in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getParentForward"></a>
+    <strong>getParentForward ()</strong>
+    </dt>
+    <dd>
+    Returns the construct's parent forward direction vector, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The construct's parent forward direction vector, in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getParentRight"></a>
+    <strong>getParentRight ()</strong>
+    </dt>
+    <dd>
+    Returns the construct's parent right direction vector, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The construct's parent right direction vector, in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getParentUp"></a>
+    <strong>getParentUp ()</strong>
+    </dt>
+    <dd>
+    Returns the construct's parent up direction vector, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The construct's parent up direction vector, in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getParentWorldForward"></a>
+    <strong>getParentWorldForward ()</strong>
+    </dt>
+    <dd>
+    Returns the construct's parent forward direction vector, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The construct's parent forward direction vector, in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getParentWorldRight"></a>
+    <strong>getParentWorldRight ()</strong>
+    </dt>
+    <dd>
+    Returns the construct's parent right direction vector, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The construct's parent right direction vector, in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getParentWorldUp"></a>
+    <strong>getParentWorldUp ()</strong>
+    </dt>
+    <dd>
+    Returns the construct's parent up direction vector, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The construct's parent up direction vector, in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getPlayersOnBoard"></a>
+    <strong>getPlayersOnBoard ()</strong>
+    </dt>
+    <dd>
+    Returns the list of player IDs on board the construct.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">list</span></span>
+        The list of player IDs on board.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getPlayersOnBoardInVRStation"></a>
+    <strong>getPlayersOnBoardInVRStation ()</strong>
+    </dt>
+    <dd>
+    Returns the list of player IDs on board the construct inside a VR station.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">list</span></span>
+        The list of player IDs.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isPlayerBoarded"></a>
+    <strong>isPlayerBoarded (id)</strong>
+    </dt>
+    <dd>
+    Checks if the given player is on board in the construct.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The player ID.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the given player is on board.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isPlayerBoardedInVRStation"></a>
+    <strong>isPlayerBoardedInVRStation (id)</strong>
+    </dt>
+    <dd>
+    Returns 1 if the given player is boarded to the construct inside a VR station.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The player ID.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the given player is boarded to the construct.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getBoardedPlayerMass"></a>
+    <strong>getBoardedPlayerMass (id)</strong>
+    </dt>
+    <dd>
+    Returns the mass of the given player or surrogate if it is on board the construct.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The player ID.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The mass of the player.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getBoardedInVRStationAvatarMass"></a>
+    <strong>getBoardedInVRStationAvatarMass (id)</strong>
+    </dt>
+    <dd>
+    Returns the mass of the given player if in VR station on board the construct.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The player ID.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The mass of the player.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getDockedConstructs"></a>
+    <strong>getDockedConstructs ()</strong>
+    </dt>
+    <dd>
+    Returns the list of IDs of constructs docked to the construct.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">list</span></span>
+        The list of IDs of docked constructs.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isConstructDocked"></a>
+    <strong>isConstructDocked (id)</strong>
+    </dt>
+    <dd>
+    Checks if the given construct is docked to the construct.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The construct ID.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the given construct is docked.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getDockedConstructMass"></a>
+    <strong>getDockedConstructMass (id)</strong>
+    </dt>
+    <dd>
+    Returns the mass of the given construct if it is docked to the construct.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The construct ID.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The mass of the construct.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setDockingMode"></a>
+    <strong>setDockingMode (mode)</strong>
+    </dt>
+    <dd>
+    Sets the docking mode.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">mode</span>
+            <span class="types"><span class="type">int</span></span>
+         The docking mode (Manual = 1, Automatic = 2, Semi-automatic = 3).
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the operation is a success.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getDockingMode"></a>
+    <strong>getDockingMode ()</strong>
+    </dt>
+    <dd>
+    Returns the current docking mode.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The docking mode (Manual = 1, Automatic = 2, Semi-automatic = 3).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "dock"></a>
+    <strong>dock (id)</strong>
+    </dt>
+    <dd>
+    Sends a request to dock to the given construct.  Limited to piloting controllers.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The parent construct ID.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the operation is a success.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "undock"></a>
+    <strong>undock ()</strong>
+    </dt>
+    <dd>
+    Sends a request to undock the construct.  Limited to piloting controllers.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the operation is a success.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "forceDeboard"></a>
+    <strong>forceDeboard (id)</strong>
+    </dt>
+    <dd>
+    Sends a request to deboard a player or surrogate with the given ID.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The player ID.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the operation is a success.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "forceUndock"></a>
+    <strong>forceUndock (id)</strong>
+    </dt>
+    <dd>
+    Sends a request to undock a construct with the given ID.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The construct ID.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the operation is a success.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "forceInterruptVRSession"></a>
+    <strong>forceInterruptVRSession (id)</strong>
+    </dt>
+    <dd>
+    Sends a request to interrupt the surrogate session of a player with the given ID.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The player ID.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the operation is a success.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "load"></a>
+    <strong>load ()</strong>
+    </dt>
+    <dd>
+    Unknown use.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onDocked"></a>
+    <strong>EVENT_onDocked (id)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the construct becomes docked.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The parent ID.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onUndocked"></a>
+    <strong>EVENT_onUndocked (id)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the construct is undocked.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The previous parent ID.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onPlayerBoarded"></a>
+    <strong>EVENT_onPlayerBoarded (id)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when a player or surrogate boards the construct.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the boarding player.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onVRStationEntered"></a>
+    <strong>EVENT_onVRStationEntered (id)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when a player enters a VR station.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the VR player.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onConstructDocked"></a>
+    <strong>EVENT_onConstructDocked (id)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when another construct docks to this construct.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the docking construct.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onPvPTimer"></a>
+    <strong>EVENT_onPvPTimer (active)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the PvP timer started or elapsed.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">active</span>
+            <span class="types"><span class="type">0/1</span></span>
+         1 if the timer started, 0 when the timer elapsed.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mockGetClosure"></a>
+    <strong>mockGetClosure ()</strong>
+    </dt>
+    <dd>
+    Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A table encompasing the api calls of object.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-11-12 05:23:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

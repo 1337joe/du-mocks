@@ -63,6 +63,7 @@
   <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
   <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
   <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
   <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
   <li><strong>RadarUnit</strong></li>
   <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
@@ -72,9 +73,11 @@
   <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
   <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
   <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/construct.html">construct</a></li>
   <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
   <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
   <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/player.html">player</a></li>
   <li><a href="../modules/renderScript.html">renderScript</a></li>
   <li><a href="../modules/system.html">system</a></li>
 </ul>
@@ -101,17 +104,17 @@
    <li>properties</li>
    <li>staticProperties</li>
  </ul>
-<p> Extends: Element</p>
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/Element.html#">Element</a>
-    </ul>
+<p> Extends: <a href="../modules/Element.html#">Element</a></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#isOperational">isOperational ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Returns 1 if the radar is not broken, works in the current environment and is not used by another control unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOperationalState">getOperationalState ()</a></td>
 	<td class="summary">Returns 1 if the radar is not broken, works in the current environment and is not used by another control unit.</td>
 	</tr>
 	<tr>
@@ -123,16 +126,24 @@
 	<td class="summary">Returns ranges to identify a target based on its core size.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getEntries">getEntries ()</a></td>
-	<td class="summary"><b>Deprecated:</b> Returns the list of construct IDs currently detection in the range.</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#getConstructIds">getConstructIds ()</a></td>
 	<td class="summary">Returns the list of construct IDs in the scan range.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#getSortMethod">getSortMethod ()</a></td>
+	<td class="summary">Gets the sort method for construct data.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setSortMethod">setSortMethod (method)</a></td>
+	<td class="summary">Sets the sort method for construct data.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#getIdentifiedConstructIds">getIdentifiedConstructIds ()</a></td>
 	<td class="summary">Returns the list of identified construct IDs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructs">getConstructs (offset, size)</a></td>
+	<td class="summary">Returns a list of constructs in a given range according to the sort method.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getTargetId">getTargetId ()</a></td>
@@ -152,14 +163,22 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructCoreSize">getConstructCoreSize (id)</a></td>
-	<td class="summary">Return the core size of the given construct.</td>
+	<td class="summary">Returns the core size of the given construct.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getThreatTo">getThreatTo (id)</a></td>
+	<td class="summary"><b>Deprecated:</b> Returns the threat rate your construct is for the given construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getThreatRateTo">getThreatRateTo (id)</a></td>
 	<td class="summary">Returns the threat rate your construct is for the given construct.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getThreatFrom">getThreatFrom (id)</a></td>
+	<td class="summary"><b>Deprecated:</b> Returns the threat rate the given construct is for your construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getThreatRateFrom">getThreatRateFrom (id)</a></td>
 	<td class="summary">Returns the threat rate the given construct is for your construct.</td>
 	</tr>
 	<tr>
@@ -168,8 +187,13 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructOwner">getConstructOwner (id)</a></td>
-	<td class="summary">Returns a table with id of the owner entities (player or organization) of the given construct, if in range and if
- active transponder tags match.</td>
+	<td class="summary"><b>Deprecated:</b> Returns a table with id of the owner entities (player or organization) of the given construct,
+ if in range and if active transponder tags match.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructOwnerEntity">getConstructOwnerEntity (id)</a></td>
+	<td class="summary">Returns a table with id of the owner entity (player or organization) of the given construct, if in range and if
+ active transponder tags match for owned dynamic constructs.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructSize">getConstructSize (id)</a></td>
@@ -177,30 +201,35 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructType">getConstructType (id)</a></td>
-	<td class="summary">Return the type of the given construct.</td>
+	<td class="summary"><b>Deprecated:</b> Return the type of the given construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getConstructKind">getConstructKind (id)</a></td>
+	<td class="summary">Returns the kind of the given construct.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructPos">getConstructPos (id)</a></td>
-	<td class="summary">Returns the position of the given construct in construct local coordinates, if the active transponder tags match.</td>
+	<td class="summary">Returns the position of the given construct in construct local coordinates, if the active transponder tags match
+ for owned dynamic constructs.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructWorldPos">getConstructWorldPos (id)</a></td>
 	<td class="summary">Returns the position of the given construct in world coordinates, if in range and if the active transponder tags
- match.</td>
+ match for owned dynamic constructs.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructVelocity">getConstructVelocity (id)</a></td>
 	<td class="summary">Returns the velocity vector of the given construct in construct local coordinates, if identified and if the active
- transponder tags match.</td>
+ transponder tags match for owned dynamic constructs.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructWorldVelocity">getConstructWorldVelocity (id)</a></td>
 	<td class="summary">Returns the velocity vector of the given construct in world coordinates, if identified and if the active
- transponder tags match.</td>
+ transponder tags match for owned dynamic constructs.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructMass">getConstructMass (id)</a></td>
-	<td class="summary">Returns the mass of the given construct, if identified.</td>
+	<td class="summary">Returns the mass of the given construct, if identified for owned dynamic constructs.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructName">getConstructName (id)</a></td>
@@ -208,27 +237,39 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructInfos">getConstructInfos (id)</a></td>
-	<td class="summary">Returns a list of working elements on the given construction, if identified.</td>
+	<td class="summary">Returns a list of working elements on the given construction, if identified for owned dynamic constructs.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructSpeed">getConstructSpeed (id)</a></td>
-	<td class="summary">Returns the speed of the given construct, if identified.</td>
+	<td class="summary">Returns the speed of the given construct, if identified for owned dynamic constructs.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructAngularSpeed">getConstructAngularSpeed (id)</a></td>
-	<td class="summary">Returns the angular speed of the given construct to your construct, if identified.</td>
+	<td class="summary">Returns the angular speed of the given construct to your construct, if identified for owned dynamic constructs.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getConstructRadialSpeed">getConstructRadialSpeed (id)</a></td>
-	<td class="summary">Returns the radial speed of the given construct to your construct, if identified.</td>
+	<td class="summary">Returns the radial speed of the given construct to your construct, if identified for owned dynamic constructs.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_enter">EVENT_enter (id)</a></td>
-	<td class="summary">Event: Emitted when a construct enters the range of the radar unit.</td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when a construct enters the range of the radar unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onEnter">EVENT_onEnter (id)</a></td>
+	<td class="summary">Event: Emitted when a construct enters the scan range of the radar.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#EVENT_leave">EVENT_leave (id)</a></td>
-	<td class="summary">Event: Emitted when a construct leaves the range of the radar unit.</td>
+	<td class="summary"><b>Deprecated:</b> Event: Emitted when a construct leaves the range of the radar unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onLeave">EVENT_onLeave (id)</a></td>
+	<td class="summary">Event: Emitted when a construct leaves the range of the radar.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onIdentified">EVENT_onIdentified (id)</a></td>
+	<td class="summary">Event: Emitted when a construct is identified.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#mockRegisterEnter">mockRegisterEnter (callback)</a></td>
@@ -264,7 +305,8 @@
     <strong>isOperational ()</strong>
     </dt>
     <dd>
-    Returns 1 if the radar is not broken, works in the current environment and is not used by another control unit.
+    <b>Deprecated:</b> Returns 1 if the radar is not broken, works in the current environment and is not used by another control unit.
+<p> This method is deprecated: getOperationalState should be used instead
 
 
 
@@ -273,6 +315,31 @@
 
            <span class="types"><span class="type">0/1</span></span>
         1 if the radar is operational, 0 otherwise.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/RadarUnit.html#getOperationalState">getOperationalState</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getOperationalState"></a>
+    <strong>getOperationalState ()</strong>
+    </dt>
+    <dd>
+    Returns 1 if the radar is not broken, works in the current environment and is not used by another control unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        1 if the radar is operational, otherwise: 0 = broken, -1 = bad environment, -2 = obstructed,
+   -3 = already in use.
     </ol>
 
 
@@ -291,8 +358,8 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">meter</span></span>
-        The scan range.
+           <span class="types"><span class="type">float</span></span>
+        The scan range in meters.
     </ol>
 
 
@@ -312,35 +379,10 @@
     <ol>
 
            <span class="types"><span class="type">list</span></span>
-        { xsRange, sRange, mRange, lRange }
+        The list of float values for ranges in meters as { xsRange, sRange, mRange, lRange }.
     </ol>
 
 
-
-
-</dd>
-    <dt>
-    <a name = "getEntries"></a>
-    <strong>getEntries ()</strong>
-    </dt>
-    <dd>
-    <b>Deprecated:</b> Returns the list of construct IDs currently detection in the range.
-<p> This method is deprecated: getConstructIds should be used instead.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">list</span></span>
-        The list of construct IDs.
-    </ol>
-
-
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/RadarUnit.html#getConstructIds">getConstructIds</a>
-    </ul>
 
 
 </dd>
@@ -365,6 +407,71 @@
 
 </dd>
     <dt>
+    <a name = "getSortMethod"></a>
+    <strong>getSortMethod ()</strong>
+    </dt>
+    <dd>
+    Gets the sort method for construct data.
+<p> Possible sort methods:
+ <ul>
+   <li>1: Distance Ascending</li>
+   <li>2: Distance Descending</li>
+   <li>3: Size Ascending</li>
+   <li>4: Size Descending</li>
+   <li>5: Threat Ascending</li>
+   <li>6: Threat Descending</li>
+ </ul>
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The sort method.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setSortMethod"></a>
+    <strong>setSortMethod (method)</strong>
+    </dt>
+    <dd>
+    Sets the sort method for construct data.
+<p> Possible sort methods:
+ <ul>
+   <li>1: Distance Ascending</li>
+   <li>2: Distance Descending</li>
+   <li>3: Size Ascending</li>
+   <li>4: Size Descending</li>
+   <li>5: Threat Ascending</li>
+   <li>6: Threat Descending</li>
+ </ul>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">method</span>
+            <span class="types"><span class="type">int</span></span>
+         The sort method.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the sort method was set successfully, 0 otherwise.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "getIdentifiedConstructIds"></a>
     <strong>getIdentifiedConstructIds ()</strong>
     </dt>
@@ -378,6 +485,37 @@
 
            <span class="types"><span class="type">list</span></span>
         The list of identified construct IDs.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getConstructs"></a>
+    <strong>getConstructs (offset, size)</strong>
+    </dt>
+    <dd>
+    Returns a list of constructs in a given range according to the sort method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">offset</span>
+            <span class="types"><span class="type">int</span></span>
+         Offset from the first entry.
+        </li>
+        <li><span class="parameter">size</span>
+            <span class="types"><span class="type">int</span></span>
+         Total entries to return following the offset, 0 to return all entries.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">list</span></span>
+        The list of constructs.
     </ol>
 
 
@@ -490,7 +628,7 @@
     <strong>getConstructCoreSize (id)</strong>
     </dt>
     <dd>
-    Return the core size of the given construct.
+    Returns the core size of the given construct.
 
 
     <h3>Parameters:</h3>
@@ -505,7 +643,7 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        XS, S, M, L
+        The core size name; can be: XS, S, M, L
     </ol>
 
 
@@ -515,6 +653,38 @@
     <dt>
     <a name = "getThreatTo"></a>
     <strong>getThreatTo (id)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Returns the threat rate your construct is for the given construct.
+<p> This method is deprecated: getThreatRateTo should be used instead
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        none, identified, threatened_identified, threatened, attacked
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/RadarUnit.html#getThreatRateTo">getThreatRateTo</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getThreatRateTo"></a>
+    <strong>getThreatRateTo (id)</strong>
     </dt>
     <dd>
     Returns the threat rate your construct is for the given construct.
@@ -542,6 +712,38 @@
     <dt>
     <a name = "getThreatFrom"></a>
     <strong>getThreatFrom (id)</strong>
+    </dt>
+    <dd>
+    <b>Deprecated:</b> Returns the threat rate the given construct is for your construct.
+<p> This method is deprecated: getThreatRateFrom should be used instead
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        none, identified, threatened_identified, threatened, attacked
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/RadarUnit.html#getThreatRateFrom">getThreatRateFrom</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getThreatRateFrom"></a>
+    <strong>getThreatRateFrom (id)</strong>
     </dt>
     <dd>
     Returns the threat rate the given construct is for your construct.
@@ -598,8 +800,9 @@
     <strong>getConstructOwner (id)</strong>
     </dt>
     <dd>
-    Returns a table with id of the owner entities (player or organization) of the given construct, if in range and if
- active transponder tags match.
+    <b>Deprecated:</b> Returns a table with id of the owner entities (player or organization) of the given construct,
+ if in range and if active transponder tags match.
+<p> This method is deprecated: getConstructOwnerEntity should be used instead
 
 
     <h3>Parameters:</h3>
@@ -622,9 +825,39 @@
 
     <h3>See also:</h3>
     <ul>
+         <li><a href="../modules/RadarUnit.html#getConstructOwnerEntity">getConstructOwnerEntity</a></li>
          <li><a href="../modules/system.html#getPlayerName">system:getPlayerName</a></li>
          <li><a href="../modules/system.html#getOrganizationName">system:getOrganizationName</a></li>
     </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getConstructOwnerEntity"></a>
+    <strong>getConstructOwnerEntity (id)</strong>
+    </dt>
+    <dd>
+    Returns a table with id of the owner entity (player or organization) of the given construct, if in range and if
+ active transponder tags match for owned dynamic constructs.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         the ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A table with fields {[int] id, [bool] isOrganization} descriving the owner. Use
+   <a href="../modules/system.html#getPlayerName">system:getPlayerName</a> and <a href="../modules/system.html#getOrganization">system:getOrganization</a> to retrieve info about it.
+    </ol>
+
+
 
 
 </dd>
@@ -660,7 +893,8 @@
     <strong>getConstructType (id)</strong>
     </dt>
     <dd>
-    Return the type of the given construct.
+    <b>Deprecated:</b> Return the type of the given construct.
+<p> This method is deprecated: getConstructKind should be used instead
 
 
     <h3>Parameters:</h3>
@@ -679,6 +913,47 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/RadarUnit.html#getConstructKind">getConstructKind</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "getConstructKind"></a>
+    <strong>getConstructKind (id)</strong>
+    </dt>
+    <dd>
+    Returns the kind of the given construct.
+<p> Possible kinds:
+ <ul>
+   <li>1: Universe</li>
+   <li>2: Planet</li>
+   <li>3: Asteroid</li>
+   <li>4: Static</li>
+   <li>5: Dynamic</li>
+   <li>6: Space</li>
+   <li>7: Alien</li>
+ </ul>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         the ID of the construct.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The kind index of the construct.
+    </ol>
+
+
 
 
 </dd>
@@ -687,7 +962,8 @@
     <strong>getConstructPos (id)</strong>
     </dt>
     <dd>
-    Returns the position of the given construct in construct local coordinates, if the active transponder tags match.
+    Returns the position of the given construct in construct local coordinates, if the active transponder tags match
+ for owned dynamic constructs.
 
 
     <h3>Parameters:</h3>
@@ -715,7 +991,7 @@
     </dt>
     <dd>
     Returns the position of the given construct in world coordinates, if in range and if the active transponder tags
- match.
+ match for owned dynamic constructs.
 
 
     <h3>Parameters:</h3>
@@ -743,7 +1019,7 @@
     </dt>
     <dd>
     Returns the velocity vector of the given construct in construct local coordinates, if identified and if the active
- transponder tags match.
+ transponder tags match for owned dynamic constructs.
 
 
     <h3>Parameters:</h3>
@@ -771,7 +1047,7 @@
     </dt>
     <dd>
     Returns the velocity vector of the given construct in world coordinates, if identified and if the active
- transponder tags match.
+ transponder tags match for owned dynamic constructs.
 
 
     <h3>Parameters:</h3>
@@ -798,7 +1074,7 @@
     <strong>getConstructMass (id)</strong>
     </dt>
     <dd>
-    Returns the mass of the given construct, if identified.
+    Returns the mass of the given construct, if identified for owned dynamic constructs.
 
 
     <h3>Parameters:</h3>
@@ -813,7 +1089,7 @@
     <ol>
 
            <span class="types"><span class="type">float</span></span>
-        the mass of the construct.
+        the mass of the construct in kilograms.
     </ol>
 
 
@@ -852,7 +1128,7 @@
     <strong>getConstructInfos (id)</strong>
     </dt>
     <dd>
-    Returns a list of working elements on the given construction, if identified.
+    Returns a list of working elements on the given construction, if identified for owned dynamic constructs.
 
 
     <h3>Parameters:</h3>
@@ -867,8 +1143,9 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-        A table { weapons: f, radars: f, antiGravity: f, atmoEngines: f, spaceEngines: f, rocketEngines: f }
-   with values 0.0-1.0. Exceptionally antiGravity and rocketEngines are always 1.0 if present, even if broken.
+         A table {[float] weapons, [float] radars, [float] antiGravity], [float] atmoEngines,
+   [float] spaceEngines, [float] rocketEngines} with values between 0.0 and 1.0. Exceptionally antiGravity and
+   rocketEngines are always 1.0 if present, even if broken.
     </ol>
 
 
@@ -880,7 +1157,7 @@
     <strong>getConstructSpeed (id)</strong>
     </dt>
     <dd>
-    Returns the speed of the given construct, if identified.
+    Returns the speed of the given construct, if identified for owned dynamic constructs.
 
 
     <h3>Parameters:</h3>
@@ -895,7 +1172,7 @@
     <ol>
 
            <span class="types"><span class="type">float</span></span>
-        The speed of the construct relative to the universe.
+        The speed of the construct relative to the universe in meters per second.
     </ol>
 
 
@@ -907,7 +1184,7 @@
     <strong>getConstructAngularSpeed (id)</strong>
     </dt>
     <dd>
-    Returns the angular speed of the given construct to your construct, if identified.
+    Returns the angular speed of the given construct to your construct, if identified for owned dynamic constructs.
 
 
     <h3>Parameters:</h3>
@@ -922,7 +1199,7 @@
     <ol>
 
            <span class="types"><span class="type">float</span></span>
-        The angular speed of the construct relative to your construct.
+        The angular speed of the construct relative to your construct in radians per second.
     </ol>
 
 
@@ -934,7 +1211,7 @@
     <strong>getConstructRadialSpeed (id)</strong>
     </dt>
     <dd>
-    Returns the radial speed of the given construct to your construct, if identified.
+    Returns the radial speed of the given construct to your construct, if identified for owned dynamic constructs.
 
 
     <h3>Parameters:</h3>
@@ -949,7 +1226,7 @@
     <ol>
 
            <span class="types"><span class="type">float</span></span>
-        The radial speed of the construct relative to your construct.
+        The radial speed of the construct relative to your construct in meters per second.
     </ol>
 
 
@@ -961,8 +1238,9 @@
     <strong>EVENT_enter (id)</strong>
     </dt>
     <dd>
-    Event: Emitted when a construct enters the range of the radar unit.
+    <b>Deprecated:</b> Event: Emitted when a construct enters the range of the radar unit.
 <p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onEnter should be used instead.
 
 
     <h3>Parameters:</h3>
@@ -978,8 +1256,31 @@
 
     <h3>See also:</h3>
     <ul>
-         <a href="../modules/game_data_lua.database.html#getConstruct">game_data_lua.database.getConstruct</a>
+         <li><a href="../modules/RadarUnit.html#EVENT_onEnter">EVENT_onEnter</a></li>
+         <li><a href="../modules/game_data_lua.database.html#getConstruct">game_data_lua.database.getConstruct</a></li>
     </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onEnter"></a>
+    <strong>EVENT_onEnter (id)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when a construct enters the scan range of the radar.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+
+
 
 
 </dd>
@@ -988,8 +1289,9 @@
     <strong>EVENT_leave (id)</strong>
     </dt>
     <dd>
-    Event: Emitted when a construct leaves the range of the radar unit.
+    <b>Deprecated:</b> Event: Emitted when a construct leaves the range of the radar unit.
 <p> Note: This is documentation on an event handler, not a callable method.
+<p> This event is deprecated: EVENT_onLeave should be used instead.
 
 
     <h3>Parameters:</h3>
@@ -1005,8 +1307,53 @@
 
     <h3>See also:</h3>
     <ul>
-         <a href="../modules/game_data_lua.database.html#getConstruct">game_data_lua.database.getConstruct</a>
+         <li><a href="../modules/RadarUnit.html#EVENT_onLeave">EVENT_onLeave</a></li>
+         <li><a href="../modules/game_data_lua.database.html#getConstruct">game_data_lua.database.getConstruct</a></li>
     </ul>
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onLeave"></a>
+    <strong>EVENT_onLeave (id)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when a construct leaves the range of the radar.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onIdentified"></a>
+    <strong>EVENT_onIdentified (id)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when a construct is identified.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The ID of the construct.
+        </li>
+    </ul>
+
+
+
 
 
 </dd>
@@ -1145,7 +1492,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-06-16 13:27:25 </i>
+<i style="float:right;">Last updated 2022-11-12 05:23:12 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

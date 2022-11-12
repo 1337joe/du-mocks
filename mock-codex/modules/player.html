@@ -1,0 +1,967 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>DU Mocks</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/construct.html">construct</a></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><strong>player</strong></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>player</code></h1>
+<p>This class represents the player who is executing the control unit.</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#getName">getName ()</a></td>
+	<td class="summary">Returns the player name.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getId">getId ()</a></td>
+	<td class="summary">Returns the ID of the player.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMass">getMass ()</a></td>
+	<td class="summary">Returns the player mass.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getNanopackMass">getNanopackMass ()</a></td>
+	<td class="summary">Returns the player's nanopack content mass.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getNanopackVolume">getNanopackVolume ()</a></td>
+	<td class="summary">Returns the player's nanopack content volume.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getNanopackMaxVolume">getNanopackMaxVolume ()</a></td>
+	<td class="summary">Returns the player's nanopack maximum volume.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOrgIds">getOrgIds ()</a></td>
+	<td class="summary">Returns the list of organization IDs of the player.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getPosition">getPosition ()</a></td>
+	<td class="summary">Returns the position of the player, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldPosition">getWorldPosition ()</a></td>
+	<td class="summary">Returns the position of the player, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getHeadPosition">getHeadPosition ()</a></td>
+	<td class="summary">Returns the position of the head of the player's character, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldHeadPosition">getWorldHeadPosition ()</a></td>
+	<td class="summary">Returns the position of the head of the player's character, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getVelocity">getVelocity ()</a></td>
+	<td class="summary">Returns the velocity vector of the player, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldVelocity">getWorldVelocity ()</a></td>
+	<td class="summary">Returns the velocity vector of the player, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAbsoluteVelocity">getAbsoluteVelocity ()</a></td>
+	<td class="summary">Returns the absolute velocity vector of the player, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getForward">getForward ()</a></td>
+	<td class="summary">Returns the forward direction vector of the player, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getRight">getRight ()</a></td>
+	<td class="summary">Returns the right direction vector of the player, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getUp">getUp ()</a></td>
+	<td class="summary">Returns the up direction vector of the player, in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldForward">getWorldForward ()</a></td>
+	<td class="summary">Returns the forward direction vector of the player, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldRight">getWorldRight ()</a></td>
+	<td class="summary">Returns the right direction vector of the player, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldUp">getWorldUp ()</a></td>
+	<td class="summary">Returns the up direction vector of the player, in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getPlanet">getPlanet ()</a></td>
+	<td class="summary">Returns the id of the planet the player is located on.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getParent">getParent ()</a></td>
+	<td class="summary">Returns the identifier of the construct to which the player is parented.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isSeated">isSeated ()</a></td>
+	<td class="summary">Checks if the player is seated.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getSeatId">getSeatId ()</a></td>
+	<td class="summary">Returns the local ID of the seat on which the player is sitting.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isParentedTo">isParentedTo (id)</a></td>
+	<td class="summary">Checks if the player is parented to the given construct.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isSprinting">isSprinting ()</a></td>
+	<td class="summary">Checks if the player is currently sprinting.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isJetpackOn">isJetpackOn ()</a></td>
+	<td class="summary">Checks if the player's jetpack is on.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isHeadlightOn">isHeadlightOn ()</a></td>
+	<td class="summary">Returns the state of the headlight of the player.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setHeadlightOn">setHeadlightOn (state)</a></td>
+	<td class="summary">Set the state of the headlight of the player.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#freeze">freeze (state)</a></td>
+	<td class="summary">Freezes the player movements, liberating the associated movement keys to be used by the script.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isFrozen">isFrozen (1)</a></td>
+	<td class="summary">Checks if the player movements are frozen.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#hasDRMAutorization">hasDRMAutorization ()</a></td>
+	<td class="summary">Checks if the player has DRM authorization to the control unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#load">load ()</a></td>
+	<td class="summary">Unknown use.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#EVENT_onParentChanged">EVENT_onParentChanged (oldId, newId)</a></td>
+	<td class="summary">Event: Emitted when the player parent changes.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mockGetClosure">mockGetClosure ()</a></td>
+	<td class="summary">Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "getName"></a>
+    <strong>getName ()</strong>
+    </dt>
+    <dd>
+    Returns the player name.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The player name.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getId"></a>
+    <strong>getId ()</strong>
+    </dt>
+    <dd>
+    Returns the ID of the player.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The ID of the player.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMass"></a>
+    <strong>getMass ()</strong>
+    </dt>
+    <dd>
+    Returns the player mass.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The mass of the player .
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getNanopackMass"></a>
+    <strong>getNanopackMass ()</strong>
+    </dt>
+    <dd>
+    Returns the player's nanopack content mass.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The player's nanopack content mass in kilograms.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getNanopackVolume"></a>
+    <strong>getNanopackVolume ()</strong>
+    </dt>
+    <dd>
+    Returns the player's nanopack content volume.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        THe player's nanopack content volume in liters.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getNanopackMaxVolume"></a>
+    <strong>getNanopackMaxVolume ()</strong>
+    </dt>
+    <dd>
+    Returns the player's nanopack maximum volume.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The player's nanopack maximum volume in liters.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOrgIds"></a>
+    <strong>getOrgIds ()</strong>
+    </dt>
+    <dd>
+    Returns the list of organization IDs of the player.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">list</span></span>
+        The list of organization IDs.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getPosition"></a>
+    <strong>getPosition ()</strong>
+    </dt>
+    <dd>
+    Returns the position of the player, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The position in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldPosition"></a>
+    <strong>getWorldPosition ()</strong>
+    </dt>
+    <dd>
+    Returns the position of the player, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The position in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getHeadPosition"></a>
+    <strong>getHeadPosition ()</strong>
+    </dt>
+    <dd>
+    Returns the position of the head of the player's character, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The position of the head in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldHeadPosition"></a>
+    <strong>getWorldHeadPosition ()</strong>
+    </dt>
+    <dd>
+    Returns the position of the head of the player's character, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The position of the head in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getVelocity"></a>
+    <strong>getVelocity ()</strong>
+    </dt>
+    <dd>
+    Returns the velocity vector of the player, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The velocity vector in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldVelocity"></a>
+    <strong>getWorldVelocity ()</strong>
+    </dt>
+    <dd>
+    Returns the velocity vector of the player, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The velocity vector in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAbsoluteVelocity"></a>
+    <strong>getAbsoluteVelocity ()</strong>
+    </dt>
+    <dd>
+    Returns the absolute velocity vector of the player, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The velocity absolute vector in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getForward"></a>
+    <strong>getForward ()</strong>
+    </dt>
+    <dd>
+    Returns the forward direction vector of the player, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The forward direction vector in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getRight"></a>
+    <strong>getRight ()</strong>
+    </dt>
+    <dd>
+    Returns the right direction vector of the player, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The right direction vector in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getUp"></a>
+    <strong>getUp ()</strong>
+    </dt>
+    <dd>
+    Returns the up direction vector of the player, in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The up direction vector in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldForward"></a>
+    <strong>getWorldForward ()</strong>
+    </dt>
+    <dd>
+    Returns the forward direction vector of the player, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The forward direction vector in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldRight"></a>
+    <strong>getWorldRight ()</strong>
+    </dt>
+    <dd>
+    Returns the right direction vector of the player, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The right direction vector in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldUp"></a>
+    <strong>getWorldUp ()</strong>
+    </dt>
+    <dd>
+    Returns the up direction vector of the player, in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The up direction vector in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getPlanet"></a>
+    <strong>getPlanet ()</strong>
+    </dt>
+    <dd>
+    Returns the id of the planet the player is located on.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">int</span></span>
+        The ID of the planet, 0 if none.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getParent"></a>
+    <strong>getParent ()</strong>
+    </dt>
+    <dd>
+    Returns the identifier of the construct to which the player is parented.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">The</span></span>
+        ID of the construct, 0 if none.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isSeated"></a>
+    <strong>isSeated ()</strong>
+    </dt>
+    <dd>
+    Checks if the player is seated.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the player is seated.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getSeatId"></a>
+    <strong>getSeatId ()</strong>
+    </dt>
+    <dd>
+    Returns the local ID of the seat on which the player is sitting.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">The</span></span>
+        local ID of the seat, or 0 if not seated.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isParentedTo"></a>
+    <strong>isParentedTo (id)</strong>
+    </dt>
+    <dd>
+    Checks if the player is parented to the given construct.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">int</span></span>
+         The construct ID.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the player is parented to the given construct.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isSprinting"></a>
+    <strong>isSprinting ()</strong>
+    </dt>
+    <dd>
+    Checks if the player is currently sprinting.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the player is sprinting.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isJetpackOn"></a>
+    <strong>isJetpackOn ()</strong>
+    </dt>
+    <dd>
+    Checks if the player's jetpack is on.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the player's jetpack is on.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isHeadlightOn"></a>
+    <strong>isHeadlightOn ()</strong>
+    </dt>
+    <dd>
+    Returns the state of the headlight of the player.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the player has his headlight on.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setHeadlightOn"></a>
+    <strong>setHeadlightOn (state)</strong>
+    </dt>
+    <dd>
+    Set the state of the headlight of the player.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">state</span>
+            <span class="types"><span class="type">bool</span></span>
+         True to turn on the headlight.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "freeze"></a>
+    <strong>freeze (state)</strong>
+    </dt>
+    <dd>
+    Freezes the player movements, liberating the associated movement keys to be used by the script.
+<p> Note: This function is disabled if the player is not running the script explicitly (pressing F on the control unit, vs. via a plug signal).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">state</span>
+            <span class="types"><span class="type">bool</span></span>
+         1 to freeze the character, 0 to unfreeze the character.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isFrozen"></a>
+    <strong>isFrozen (1)</strong>
+    </dt>
+    <dd>
+    Checks if the player movements are frozen.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">1</span>
+            <span class="types"><span class="type">0/1</span></span>
+         if the player is frozen, 0 otherwise.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "hasDRMAutorization"></a>
+    <strong>hasDRMAutorization ()</strong>
+    </dt>
+    <dd>
+    Checks if the player has DRM authorization to the control unit.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the player has DRM authorization on the control unit.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "load"></a>
+    <strong>load ()</strong>
+    </dt>
+    <dd>
+    Unknown use.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "EVENT_onParentChanged"></a>
+    <strong>EVENT_onParentChanged (oldId, newId)</strong>
+    </dt>
+    <dd>
+    Event: Emitted when the player parent changes.
+<p> Note: This is documentation on an event handler, not a callable method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">oldId</span>
+            <span class="types"><span class="type">int</span></span>
+         The previous parent construct ID.
+        </li>
+        <li><span class="parameter">newId</span>
+            <span class="types"><span class="type">int</span></span>
+         The new parent construct ID.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mockGetClosure"></a>
+    <strong>mockGetClosure ()</strong>
+    </dt>
+    <dd>
+    Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A table encompasing the api calls of object.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-11-12 05:23:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
