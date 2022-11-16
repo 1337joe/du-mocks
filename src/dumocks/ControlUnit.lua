@@ -3,8 +3,6 @@
 -- Kinematics control units like cockpit or commander seats are also capable of controlling the ship's engines via the
 -- update ICC method.
 --
--- Note: Not all methods are available on on control units.
---
 -- Element class:
 -- <ul>
 --   <li>Generic: Programming Board</li>
