@@ -169,7 +169,7 @@ end
 --       <li><span class="parameter">maxStress</span> (<span class="type">float</span>) Max core stress.</li>
 --     </ul>
 --   </li>
---   <li><span class="parameter">@{EngineUnit:getWidgetData|engine_unit}</span> The widget created by engines.</li>
+--   <li><span class="parameter">@{Engine:getWidgetData|engine_unit}</span> The widget created by engines.</li>
 --   <li><span class="parameter">@{GyroUnit:getWidgetData|gyro}</span> The widget created by gyroscopes.</li>
 --   <li><span class="parameter">@{ShieldGeneratorUnit:getWidgetData|shield_generator}</span> The widget created by
 --     shield generators.</li>
