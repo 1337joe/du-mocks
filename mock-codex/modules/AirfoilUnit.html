@@ -1,0 +1,528 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>DU Mocks</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>DU Mocks</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/AdjustorUnit.html">AdjustorUnit</a></li>
+  <li><strong>AirfoilUnit</strong></li>
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
+  <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
+  <li><a href="../modules/BrakeUnit.html">BrakeUnit</a></li>
+  <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
+  <li><a href="../modules/ControlUnit.html">ControlUnit</a></li>
+  <li><a href="../modules/CoreUnit.html">CoreUnit</a></li>
+  <li><a href="../modules/CounterUnit.html">CounterUnit</a></li>
+  <li><a href="../modules/DatabankUnit.html">DatabankUnit</a></li>
+  <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
+  <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
+  <li><a href="../modules/Element.html">Element</a></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
+  <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
+  <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
+  <li><a href="../modules/Engine.html">Engine</a></li>
+  <li><a href="../modules/EngineUnit.html">EngineUnit</a></li>
+  <li><a href="../modules/FireworksUnit.html">FireworksUnit</a></li>
+  <li><a href="../modules/ForceFieldUnit.html">ForceFieldUnit</a></li>
+  <li><a href="../modules/FueledEngine.html">FueledEngine</a></li>
+  <li><a href="../modules/GyroUnit.html">GyroUnit</a></li>
+  <li><a href="../modules/IndustryUnit.html">IndustryUnit</a></li>
+  <li><a href="../modules/LandingGearUnit.html">LandingGearUnit</a></li>
+  <li><a href="../modules/LaserDetectorUnit.html">LaserDetectorUnit</a></li>
+  <li><a href="../modules/LaserEmitterUnit.html">LaserEmitterUnit</a></li>
+  <li><a href="../modules/LightUnit.html">LightUnit</a></li>
+  <li><a href="../modules/ManualButtonUnit.html">ManualButtonUnit</a></li>
+  <li><a href="../modules/ManualSwitchUnit.html">ManualSwitchUnit</a></li>
+  <li><a href="../modules/MiningUnit.html">MiningUnit</a></li>
+  <li><a href="../modules/PlasmaExtractorUnit.html">PlasmaExtractorUnit</a></li>
+  <li><a href="../modules/PressureTileUnit.html">PressureTileUnit</a></li>
+  <li><a href="../modules/RadarUnit.html">RadarUnit</a></li>
+  <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
+  <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
+  <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
+  <li><a href="../modules/SurfaceEngineUnit.html">SurfaceEngineUnit</a></li>
+  <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
+  <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
+  <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
+  <li><a href="../modules/WeaponUnit.html">WeaponUnit</a></li>
+  <li><a href="../modules/construct.html">construct</a></li>
+  <li><a href="../modules/game_data_lua.database.html">game_data_lua.database</a></li>
+  <li><a href="../modules/game_data_lua.rslib.html">game_data_lua.rslib</a></li>
+  <li><a href="../modules/library.html">library</a></li>
+  <li><a href="../modules/player.html">player</a></li>
+  <li><a href="../modules/renderScript.html">renderScript</a></li>
+  <li><a href="../modules/system.html">system</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>AirfoilUnit</code></h1>
+<p>Airfoils are aerodynamic elements that produce a lift force according to their aerodynamic profile as wings,
+ stabilizers, and ailerons.</p>
+<p>
+<p> Element class:
+ <ul>
+   <li>Aileron2</li>
+   <li>Stabilizer</li>
+   <li>Wing2</li>
+ </ul>
+<p> Extends: <a href="../modules/Element.html#">Element</a> &gt; <a href="../modules/Engine.html#">Engine</a></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#getLift">getLift ()</a></td>
+	<td class="summary">Returns the current lift of the airfoil.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxLift">getMaxLift ()</a></td>
+	<td class="summary">Gives the maximum lift that the airfoil can generate, under optimal conditions.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getDrag">getDrag ()</a></td>
+	<td class="summary">Returns the current drag of the airfoil.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getDragRatio">getDragRatio ()</a></td>
+	<td class="summary">The ratio between lift and drag, depending on the aerodynamic profile of the airfoil.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCurrentMinLift">getCurrentMinLift ()</a></td>
+	<td class="summary">Returns the minimal lift the airfoil can deliver at the moment (can be higher than zero), which will depend on
+ various conditions like velocity, atmospheric density, obstruction, orientation, etc.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCurrentMaxLift">getCurrentMaxLift ()</a></td>
+	<td class="summary">Returns the maximal lift the airfoil can deliver at the moment, which might depend on various conditions like
+ velocity, atmospheric density, obstruction, orientation, etc.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxLiftEfficiency">getMaxLiftEfficiency ()</a></td>
+	<td class="summary">Returns the ratio between the current maximum lift and the optimal maximum lift.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getLiftAxis">getLiftAxis ()</a></td>
+	<td class="summary">Returns the airfoil lift direction in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getTorqueAxis">getTorqueAxis ()</a></td>
+	<td class="summary">Returns the airfoil torque axis in construct local coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldLiftAxis">getWorldLiftAxis ()</a></td>
+	<td class="summary">Returns the airfoil lift direction in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getWorldTorqueAxis">getWorldTorqueAxis ()</a></td>
+	<td class="summary">Returns the airfoil torque axis in world coordinates.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isStalled">isStalled ()</a></td>
+	<td class="summary">Checks if the airfoil is stalled.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getStallAngle">getStallAngle ()</a></td>
+	<td class="summary">Returns the airfoil stall angle.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMinAngle">getMinAngle ()</a></td>
+	<td class="summary">Returns the minimum angle to produce the maximum lift of the airfoil.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxAngle">getMaxAngle ()</a></td>
+	<td class="summary">Returns the maximum angle to produce the maximum lift of the airfoil.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mockGetClosure">mockGetClosure ()</a></td>
+	<td class="summary">Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "getLift"></a>
+    <strong>getLift ()</strong>
+    </dt>
+    <dd>
+    Returns the current lift of the airfoil.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The current lift of the airfoil.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxLift"></a>
+    <strong>getMaxLift ()</strong>
+    </dt>
+    <dd>
+    Gives the maximum lift that the airfoil can generate, under optimal conditions.  Note that the actual maximum lift
+ will most of the time be less than this value.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The maximum lift of the airfoil in newtons.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getDrag"></a>
+    <strong>getDrag ()</strong>
+    </dt>
+    <dd>
+    Returns the current drag of the airfoil.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The current drag of the airfoil.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getDragRatio"></a>
+    <strong>getDragRatio ()</strong>
+    </dt>
+    <dd>
+    The ratio between lift and drag, depending on the aerodynamic profile of the airfoil.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The ration between lift and drag.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCurrentMinLift"></a>
+    <strong>getCurrentMinLift ()</strong>
+    </dt>
+    <dd>
+    Returns the minimal lift the airfoil can deliver at the moment (can be higher than zero), which will depend on
+ various conditions like velocity, atmospheric density, obstruction, orientation, etc.  Most of the time, this will be
+ 0, but it can be greater than 0, particularly for ailerons, in which case the actual thrust will be at least equal
+ to minThrust.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The current minimal airfoil lift in newtons.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCurrentMaxLift"></a>
+    <strong>getCurrentMaxLift ()</strong>
+    </dt>
+    <dd>
+    Returns the maximal lift the airfoil can deliver at the moment, which might depend on various conditions like
+ velocity, atmospheric density, obstruction, orientation, etc.  The actual lift will be anything below this maximum
+ lift, which devines the current max capability of the airfoil.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The current maximal airfoil lift in newtons.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxLiftEfficiency"></a>
+    <strong>getMaxLiftEfficiency ()</strong>
+    </dt>
+    <dd>
+    Returns the ratio between the current maximum lift and the optimal maximum lift.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        Usually 1 but can be lower for certain airfoils.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getLiftAxis"></a>
+    <strong>getLiftAxis ()</strong>
+    </dt>
+    <dd>
+    Returns the airfoil lift direction in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The airfoil lift direction vector in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getTorqueAxis"></a>
+    <strong>getTorqueAxis ()</strong>
+    </dt>
+    <dd>
+    Returns the airfoil torque axis in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The torque axis vector in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldLiftAxis"></a>
+    <strong>getWorldLiftAxis ()</strong>
+    </dt>
+    <dd>
+    Returns the airfoil lift direction in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The torque axis vector in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldTorqueAxis"></a>
+    <strong>getWorldTorqueAxis ()</strong>
+    </dt>
+    <dd>
+    Returns the airfoil torque axis in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The torque axis vector in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isStalled"></a>
+    <strong>isStalled ()</strong>
+    </dt>
+    <dd>
+    Checks if the airfoil is stalled.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">0/1</span></span>
+        1 if the airfoil is stalled.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getStallAngle"></a>
+    <strong>getStallAngle ()</strong>
+    </dt>
+    <dd>
+    Returns the airfoil stall angle.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The stall angle of the airfoil in degrees.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMinAngle"></a>
+    <strong>getMinAngle ()</strong>
+    </dt>
+    <dd>
+    Returns the minimum angle to produce the maximum lift of the airfoil.  Note that the airfoil will produce lift at a
+ lower angle but not optimally.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The angle of the airfoil in degrees.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxAngle"></a>
+    <strong>getMaxAngle ()</strong>
+    </dt>
+    <dd>
+    Returns the maximum angle to produce the maximum lift of the airfoil.  Note that the airfoil will produce lift at a
+ higher angle but not optimally.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The angle of the airfoil in degrees.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mockGetClosure"></a>
+    <strong>mockGetClosure ()</strong>
+    </dt>
+    <dd>
+    Mock only, not in-game: Bundles the object into a closure so functions can be called with "." instead of ":".
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        A table encompasing the api calls of object.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/Element.html#mockGetClosure">Element:mockGetClosure</a>
+    </ul>
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-11-20 20:09:39 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
