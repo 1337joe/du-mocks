@@ -1,32 +1,32 @@
 #!/usr/bin/env lua
---- Tests on dumocks.EngineUnit.
--- @see dumocks.EngineUnit
+--- Tests on dumocks.SurfaceEngineUnit.
+-- @see dumocks.SurfaceEngineUnit
 
 -- set search path to include src directory
 package.path = "src/?.lua;" .. package.path
 
 local lu = require("luaunit")
 
-local meu = require("dumocks.EngineUnit")
+local mseu = require("dumocks.SurfaceEngineUnit")
 require("test.Utilities")
 
-TestEngineUnit = {}
+TestSurfaceEngineUnit = {}
 
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --
 -- Test setup:
--- 1. atmo, space, or rocket engine of any size, connected to Programming Board on slot1
+-- 1. hover engine or vertical booster of any size, connected to Programming Board on slot1
 --
 -- Exercises: getClass, getWidgetData
-function _G.TestEngineUnit.testGameBehavior()
+function _G.TestSurfaceEngineUnit.testGameBehavior()
     local mock, closure
     local result, message
-    for _, element in pairs({"basic atmospheric engine xs", "basic space engine xs", "rocket engine s"}) do
-        mock = meu:new(nil, 1, element)
+    for _, element in pairs({"basic hover engine s", "basic vertical booster xs"}) do
+        mock = mseu:new(nil, 1, element)
         closure = mock:mockGetClosure()
 
-        result, message = pcall(_G.TestEngineUnit.gameBehaviorHelper, mock, closure)
+        result, message = pcall(_G.TestSurfaceEngineUnit.gameBehaviorHelper, mock, closure)
         if not result then
             lu.fail("Element: " .. element .. ", Error: " .. message)
         end
@@ -34,7 +34,7 @@ function _G.TestEngineUnit.testGameBehavior()
 end
 
 --- Runs characterization tests on the provided element.
-function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
+function _G.TestSurfaceEngineUnit.gameBehaviorHelper(mock, slot1)
     -- stub this in directly to supress print in the unit test
     local unit = {}
     unit.exit = function()
@@ -47,7 +47,7 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
     -- copy from here to unit.onStart()
     ---------------
     local expectedFunctions = {"isTorqueEnabled", "enableTorque", "getFuelId", "getFuelTankId",
-                               "getWarmupTime", "hasBrokenFuelTank",
+                               "getWarmupTime", "getMaxDistance", "hasBrokenFuelTank",
                                "activate", "deactivate", "isActive", "toggle", "setThrust", "getThrust",
                                "getMaxThrust", "getCurrentMinThrust", "getCurrentMaxThrust", "getMaxThrustEfficiency",
                                "getThrustAxis", "getTorqueAxis", "getWorldThrustAxis", "getWorldTorqueAxis",
@@ -65,15 +65,12 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
     -- test element class and inherited methods
     local class = slot1.getClass()
     local expectedName, expectedIds
-    if string.match(class, "AtmosphericEngine%w+Group") then
-        expectedName = "%w+ atmospheric engine"
-        expectedIds = {[710193240] = true}
-    elseif string.match(class, "SpaceEngine%w+Group") then
-        expectedName = "%w+ space engine"
-        expectedIds = {[2243775376] = true}
-    elseif class == "RocketEngine" then
-        expectedName = "rocket engine"
-        expectedIds = {[2112772336] = true, [3623903713] = true, [359938916] = true}
+    if string.match(class, "HoverEngine%w+Group") then
+        expectedName = "%w+ hover engine"
+        expectedIds = {[2333052331] = true}
+    elseif string.match(class, "AtmosphericVerticalBooster%w+Group") then
+        expectedName = "%w+ vertical booster"
+        expectedIds = {[3775402879] = true}
     else
         assert(false, "Unexpected class: " .. class)
     end
@@ -81,7 +78,7 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
     assert(string.match(string.lower(slot1.getName()), expectedName), slot1.getName())
     assert(expectedIds[slot1.getItemId()], "Unexpected ID: " .. slot1.getItemId())
     assert(slot1.getMaxHitPoints() >= 50.0)
-    assert(slot1.getMass() >= 100.0)
+    assert(slot1.getMass() >= 22.7)
 
     -- test inherited methods
     local data = slot1.getWidgetData()
@@ -94,6 +91,11 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
     assert(slot1.getMaxHitPoints() >= 50.0)
     assert(slot1.getMass() > 7.0)
     _G.Utilities.verifyBasicElementFunctions(slot1, 3, "engine_unit")
+
+    local distance = slot1.getDistance()
+    local maxDistance = slot1.getMaxDistance()
+    assert(maxDistance >= 30, "Unexpectedly small maxDistance: " .. maxDistance)
+    assert(distance <= maxDistance)
 
     system.print("Success")
     unit.exit()

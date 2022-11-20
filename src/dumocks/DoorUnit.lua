@@ -36,7 +36,7 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
-    self.plugIn = 0.0
+    o.plugIn = 0.0
 
     return o
 end
@@ -84,17 +84,7 @@ end
 -- @treturn 0/1 The plug signal state
 function M:getSignalIn(plug)
     if plug == "in" then
-        -- clamp to valid values
-        local value = tonumber(self.plugIn)
-        if type(value) ~= "number" then
-            return 0.0
-        elseif value >= 1.0 then
-            return 1.0
-        elseif value <= 0.0 then
-            return 0.0
-        else
-            return value
-        end
+        return self.plugIn
     end
     return MockElement.getSignalIn(self)
 end

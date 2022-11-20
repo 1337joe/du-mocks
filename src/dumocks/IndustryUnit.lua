@@ -200,11 +200,10 @@ end
 --   components (optional, defaults to false).
 function M:stop(force, allowLoss)
     -- accepts 1 or true, as well as anything parseable as a whole number besides 0
-    local numberState = tonumber(state)
-    self.blinking = (state == true) or (numberState and numberState ~= 0 and numberState % 1 == 0) or false
-
-    force = force or false
-    allowLoss = allowLoss or false
+    local numberForce = tonumber(force)
+    force = (force == true) or (numberForce and numberForce ~= 0 and numberForce % 1 == 0)
+    local numberAllowLoss = tonumber(allowLoss)
+    allowLoss = (allowLoss == true) or (numberAllowLoss and numberAllowLoss ~= 0 and numberAllowLoss % 1 == 0)
 
     if not force then
         self.currentMode = M.mode.SOFT_STOP

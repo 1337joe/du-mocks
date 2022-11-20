@@ -51,7 +51,7 @@ function M:new(o, id, elementName)
     setmetatable(o, self)
     self.__index = self
 
-    self.elementClass = elementDefinition.class
+    o.elementClass = elementDefinition.class
 
     o.constructName = ""
     o.constructMass = 0 -- kg

@@ -1,32 +1,32 @@
 #!/usr/bin/env lua
---- Tests on dumocks.EngineUnit.
--- @see dumocks.EngineUnit
+--- Tests on dumocks.BrakeUnit.
+-- @see dumocks.BrakeUnit
 
 -- set search path to include src directory
 package.path = "src/?.lua;" .. package.path
 
 local lu = require("luaunit")
 
-local meu = require("dumocks.EngineUnit")
+local mbu = require("dumocks.BrakeUnit")
 require("test.Utilities")
 
-TestEngineUnit = {}
+TestBrakeUnit = {}
 
 --- Characterization test to determine in-game behavior, can run on mock and uses assert instead of luaunit to run
 -- in-game.
 --
 -- Test setup:
--- 1. atmo, space, or rocket engine of any size, connected to Programming Board on slot1
+-- 1. brake of any size, connected to Programming Board on slot1
 --
 -- Exercises: getClass, getWidgetData
-function _G.TestEngineUnit.testGameBehavior()
+function _G.TestBrakeUnit.testGameBehavior()
     local mock, closure
     local result, message
-    for _, element in pairs({"basic atmospheric engine xs", "basic space engine xs", "rocket engine s"}) do
-        mock = meu:new(nil, 1, element)
+    for _, element in pairs({"atmospheric airbrake s", "retro-rocket brake s"}) do
+        mock = mbu:new(nil, 1, element)
         closure = mock:mockGetClosure()
 
-        result, message = pcall(_G.TestEngineUnit.gameBehaviorHelper, mock, closure)
+        result, message = pcall(_G.TestBrakeUnit.gameBehaviorHelper, mock, closure)
         if not result then
             lu.fail("Element: " .. element .. ", Error: " .. message)
         end
@@ -34,7 +34,7 @@ function _G.TestEngineUnit.testGameBehavior()
 end
 
 --- Runs characterization tests on the provided element.
-function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
+function _G.TestBrakeUnit.gameBehaviorHelper(mock, slot1)
     -- stub this in directly to supress print in the unit test
     local unit = {}
     unit.exit = function()
@@ -46,11 +46,9 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
     ---------------
     -- copy from here to unit.onStart()
     ---------------
-    local expectedFunctions = {"isTorqueEnabled", "enableTorque", "getFuelId", "getFuelTankId",
-                               "getWarmupTime", "hasBrokenFuelTank",
-                               "activate", "deactivate", "isActive", "toggle", "setThrust", "getThrust",
+    local expectedFunctions = {"activate", "deactivate", "isActive", "toggle", "setThrust", "getThrust",
                                "getMaxThrust", "getCurrentMinThrust", "getCurrentMaxThrust", "getMaxThrustEfficiency",
-                               "getThrustAxis", "getTorqueAxis", "getWorldThrustAxis", "getWorldTorqueAxis",
+                               "getThrustAxis", "getWorldThrustAxis",
                                "getObstructionFactor", "getTags", "setTags", "isIgnoringTags",
                                "getMinThrust",
                                "getSignalIn", "setSignalIn", "getState", "getT50",
@@ -65,23 +63,20 @@ function _G.TestEngineUnit.gameBehaviorHelper(mock, slot1)
     -- test element class and inherited methods
     local class = slot1.getClass()
     local expectedName, expectedIds
-    if string.match(class, "AtmosphericEngine%w+Group") then
-        expectedName = "%w+ atmospheric engine"
-        expectedIds = {[710193240] = true}
-    elseif string.match(class, "SpaceEngine%w+Group") then
-        expectedName = "%w+ space engine"
-        expectedIds = {[2243775376] = true}
-    elseif class == "RocketEngine" then
-        expectedName = "rocket engine"
-        expectedIds = {[2112772336] = true, [3623903713] = true, [359938916] = true}
+    if class == "Airbrake" then
+        expectedName = "atmospheric airbrake"
+        expectedIds = {[65048663] = true, [2198271703] = true, [104971834] = true}
+    elseif class == "Spacebrake" then
+        expectedName = "retro%-rocket brake"
+        expectedIds = {[3039211660] = true, [3243532126] = true, [1452351552] = true}
     else
         assert(false, "Unexpected class: " .. class)
     end
-    expectedName = expectedName .. " %w+ %[%d+%]"
+    expectedName = expectedName .. " %w %[%d+%]"
     assert(string.match(string.lower(slot1.getName()), expectedName), slot1.getName())
     assert(expectedIds[slot1.getItemId()], "Unexpected ID: " .. slot1.getItemId())
     assert(slot1.getMaxHitPoints() >= 50.0)
-    assert(slot1.getMass() >= 100.0)
+    assert(slot1.getMass() >= 25.0)
 
     -- test inherited methods
     local data = slot1.getWidgetData()

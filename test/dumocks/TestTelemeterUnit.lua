@@ -26,9 +26,9 @@ function _G.TestTelemeterUnit.testConstructor()
     local telemeterClosure1 = telemeter1:mockGetClosure()
     local telemeterClosure2 = telemeter2:mockGetClosure()
 
-    lu.assertEquals(telemeterClosure0.getId(), 0)
-    lu.assertEquals(telemeterClosure1.getId(), 1)
-    lu.assertEquals(telemeterClosure2.getId(), 2)
+    lu.assertEquals(telemeterClosure0.getLocalId(), 0)
+    lu.assertEquals(telemeterClosure1.getLocalId(), 1)
+    lu.assertEquals(telemeterClosure2.getLocalId(), 2)
 
     local defaultMass = 40.79
     lu.assertEquals(telemeterClosure0.getMass(), defaultMass)
@@ -47,21 +47,22 @@ function _G.TestTelemeterUnit.testGetDistance()
     local closure = mock:mockGetClosure()
 
     -- default
-    lu.assertEquals(closure.getDistance(), -1)
+    lu.assertEquals(closure.raycast().distance, -1)
+    lu.assertEquals(utilities.verifyDeprecated("getDistance", closure.getDistance), -1)
 
     mock.maxDistance = 100
 
     -- in range
     mock.distance = 20
-    lu.assertEquals(closure.getDistance(), 20)
+    lu.assertEquals(closure.raycast().distance, 20)
 
     -- out of range
     mock.distance = 200
-    lu.assertEquals(closure.getDistance(), -1)
+    lu.assertEquals(closure.raycast().distance, -1)
 
     -- invalid
     mock.distance = -10
-    lu.assertEquals(closure.getDistance(), -1)
+    lu.assertEquals(closure.raycast().distance, -1)
 end
 
 -- Verify get max distance works.
@@ -132,11 +133,11 @@ function _G.TestTelemeterUnit.testGameBehavior()
 
     local UNDEF_DISTANCE = -1
 
-    local slot1Distance = slot1.getDistance()
+    local slot1Distance = slot1.raycast().distance
     assert(slot1Distance == UNDEF_DISTANCE, "Telemeter 1 distance: " .. slot1Distance)
-    local slot2Distance = slot2.getDistance()
+    local slot2Distance = slot2.raycast().distance
     assert(slot2Distance > 0.5 and slot2Distance < 1.0, "Telemeter 2 distance: " .. slot2Distance)
-    local slot3Distance = slot3.getDistance()
+    local slot3Distance = slot3.raycast().distance
     assert(slot3Distance > 0 and slot3Distance < 0.5, "Telemeter 3 distance: " .. slot3Distance)
 
     system.print("Success")

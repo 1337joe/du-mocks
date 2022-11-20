@@ -237,8 +237,11 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | Player | :heavy_check_mark: :heavy_minus_sign: | :soon: | :white_large_square: | :soon: :heavy_check_mark: | :heavy_minus_sign: |
 | System | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_minus_sign: |
 | Element | :heavy_check_mark: :heavy_minus_sign: | :soon: | :soon: | :heavy_minus_sign: :heavy_minus_sign: | :heavy_minus_sign: |
+| AdjustorUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :white_large_square: | :white_large_square: :heavy_check_mark: | :heavy_check_mark: |
+| AirfoilUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :white_large_square: | :white_large_square: :heavy_check_mark: | :heavy_check_mark: |
 | AntiGravityGeneratorUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :soon: :soon: | :heavy_check_mark: |
 | BaseShieldGeneratorUnit | :heavy_check_mark: :white_large_square: | :white_large_square: | :white_large_square: | :white_large_square: :white_large_square: | :white_large_square: |
+| BrakeUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :white_large_square: | :white_large_square: :heavy_check_mark: | :heavy_check_mark: |
 | ContainerUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :soon: |
 | ControlUnit | :heavy_check_mark: :white_large_square: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | CoreUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
@@ -247,7 +250,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | DetectionZoneUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | DoorUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :soon: |
 | EmitterUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
-| EngineUnit | :soon: :heavy_check_mark: | :soon: | :soon: | :soon: :soon: | :soon: |
+| EngineUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :white_large_square: | :white_large_square: :heavy_check_mark: | :soon: |
 | FireworksUnit | :heavy_check_mark: :heavy_minus_sign: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | ForceFieldUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | GyroUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
@@ -266,6 +269,7 @@ Blocks of code to be extracted should be surrounded by comment blocks with the f
 | RenderScript | :heavy_check_mark: :heavy_minus_sign: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_minus_sign: |
 | ScreenUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark:| :soon: :heavy_check_mark: | :heavy_check_mark: |
 | ShieldGeneratorUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :soon: | :soon: :heavy_check_mark: | :soon: |
+| SurfaceEngineUnit | :heavy_check_mark: :heavy_check_mark: | :soon: | :white_large_square: | :heavy_check_mark: :heavy_check_mark: | :soon: |
 | TelemeterUnit | :heavy_check_mark: :heavy_minus_sign: | :soon: | :soon: | :soon: :heavy_check_mark: | :heavy_check_mark: |
 | TransponderUnit | :heavy_check_mark: :heavy_minus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: |
 | WarpDriveUnit | :heavy_check_mark: :heavy_check_mark: | :heavy_check_mark: | :soon: | :heavy_check_mark: :soon: | :heavy_check_mark: |
