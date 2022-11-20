@@ -25,9 +25,9 @@ function M:new(o, id, elementName)
 
     o.toggledCallbacks = {}
 
-    self.plugIn = 0.0
+    o.plugIn = 0.0
 
-    self.tags = {}
+    o.tags = {}
 
     return o
 end

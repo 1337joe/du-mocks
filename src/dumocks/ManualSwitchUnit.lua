@@ -26,7 +26,7 @@ function M:new(o, id, elementName)
     o.pressedCallbacks = {}
     o.releasedCallbacks = {}
 
-    self.plugOn = 0.0
+    o.plugOn = 0.0
 
     return o
 end

@@ -31,7 +31,7 @@ function M:new(o, id, elementName)
     o.enterCallbacks = {}
     o.leaveCallbacks = {}
 
-    self.plugOut = 0.0
+    o.plugOut = 0.0
 
     return o
 end
