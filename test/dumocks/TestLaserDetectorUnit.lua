@@ -203,19 +203,19 @@ function _G.TestLaserDetectorUnit.testGameBehavior()
     -- pressed handlers
     local hitHandler1 = function()
         ---------------
-        -- copy from here to slot1.laserHit()
+        -- copy from here to slot1.onHit()
         ---------------
         hitCount = hitCount + 1
         assert(slot1.isHit() == 1) -- toggles before calling handlers
         assert(hitCount % 2 == 1) -- called first, odd number
         assert(slot1.getSignalOut("out") == 1.0)
         ---------------
-        -- copy to here to slot1.laserHit()
+        -- copy to here to slot1.onHit()
         ---------------
     end
     local hitHandler2 = function()
         ---------------
-        -- copy from here to slot1.laserHit()
+        -- copy from here to slot1.onHit()
         ---------------
         hitCount = hitCount + 1
         assert(hitCount % 2 == 0) -- called second in hit handler list, even number
@@ -223,7 +223,7 @@ function _G.TestLaserDetectorUnit.testGameBehavior()
         -- turn off emitter
         slot2.deactivate()
         ---------------
-        -- copy to here to slot1.laserHit()
+        -- copy to here to slot1.onHit()
         ---------------
     end
     detector:mockRegisterLaserHit(hitHandler1)
