@@ -222,6 +222,7 @@ end
 
 --- Verify get signal in aligns with state.
 function _G.TestCounterUnit.testGetSignalIn()
+    lu.skip("Can't validate against game behavior without a working setSignalIn")
     local mock = mcu:new()
     local closure = mock:mockGetClosure()
 

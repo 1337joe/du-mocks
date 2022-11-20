@@ -29,6 +29,8 @@ function M:new(o, id, elementName)
     o.maxThrustBase = elementDefinition.maxThrust
     o.currentMaxThrust = o.maxThrustBase
 
+    o.plugIn = 0.0
+
     return o
 end
 
@@ -101,27 +103,14 @@ end
 --
 -- Valid plug names are:
 -- <ul>
--- <li>"in" for the in signal.</li>
+-- <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
 -- </ul>
 --
 -- @tparam string plug A valid plug name to set.
 -- @tparam 0/1 state The plug signal state
 function M:setSignalIn(plug, state)
     if plug == "in" then
-        local value = tonumber(state)
-        if type(value) ~= "number" then
-            value = 0.0
-        end
-
-        -- todo, determine behavior
-
-        if value <= 0 then
-            self.plugIn = 0
-        elseif value >= 1.0 then
-            self.plugIn = 1.0
-        else
-            self.plugIn = value
-        end
+        -- testing found no response to setSignalIn
     end
 end
 
@@ -136,17 +125,7 @@ end
 -- @treturn 0/1 The plug signal state
 function M:getSignalIn(plug)
     if plug == "in" then
-        -- clamp to valid values
-        local value = tonumber(self.plugIn)
-        if type(value) ~= "number" then
-            return 0.0
-        elseif value >= 1.0 then
-            return 1.0
-        elseif value <= 0.0 then
-            return 0.0
-        else
-            return value
-        end
+        return self.plugIn
     end
     return MockElement.getSignalIn(self)
 end
