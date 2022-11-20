@@ -1,0 +1,51 @@
+name: Prepare for publish to LuaRocks
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'New version number (tag name without the "v")'
+        required: true
+        type: string
+      commit_and_tag:
+        description: 'Commit the rockspec and create the new tag on success'
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  prepare_for_publish:
+    name: Prepare for publish
+    runs-on: ubuntu-latest
+
+    env:
+      ROCKSPEC: "rockspecs/du-mocks-${{ inputs.version }}-1.rockspec"
+
+    steps:
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
+        with:
+          ref: main
+
+      - name: Create new rockspec file
+        run: |
+          cp du-mocks-scm-0.rockspec $ROCKSPEC
+          sed -i 's/scm-0/${{ inputs.version }}-1/g' $ROCKSPEC
+          sed -i 's/branch = "main"/tag = "v${{ inputs.version }}"/g' $ROCKSPEC
+
+      - uses: leafo/gh-actions-lua@d84e7d61946edb679210088bc1378c099fde51fe # v9.1.0
+
+      - uses: leafo/gh-actions-luarocks@e65774a6386cb4f24e293dca7fc4ff89165b64c5 # v4.3.0
+
+      - name: Verify new rockspec builds
+        run: luarocks make $ROCKSPEC
+
+      - name: Commit rockspec and tag
+        if: ${{ inputs.commit_and_tag }}
+        run: |
+          git config --global user.name 'Joe Rogers'
+          git config --global user.email '1337joe@users.noreply.github.com'
+          git add $ROCKSPEC
+          git commit -m "Prepare for release ${{ inputs.version }}"
+          git tag v${{ inputs.version }}
+          git push
+          git push --tags
