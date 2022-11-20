@@ -38,9 +38,9 @@
 
 <h2>Modules</h2>
 <ul class="nowrap">
-  <li><a href="../modules/AdjustorUnit.html">AdjustorUnit</a></li>
+  <li><strong>AdjustorUnit</strong></li>
   <li><a href="../modules/AirfoilUnit.html">AirfoilUnit</a></li>
-  <li><strong>AntiGravityGeneratorUnit</strong></li>
+  <li><a href="../modules/AntiGravityGeneratorUnit.html">AntiGravityGeneratorUnit</a></li>
   <li><a href="../modules/BaseShieldGeneratorUnit.html">BaseShieldGeneratorUnit</a></li>
   <li><a href="../modules/BrakeUnit.html">BrakeUnit</a></li>
   <li><a href="../modules/ContainerUnit.html">ContainerUnit</a></li>
@@ -92,64 +92,62 @@
 
 <div id="content">
 
-<h1>Module <code>AntiGravityGeneratorUnit</code></h1>
-<p>Generates graviton condensates to power anti-gravity pulsors.</p>
+<h1>Module <code>AdjustorUnit</code></h1>
+<p>Adjustors are specific motors that expel gas to generate torque on your construct.</p>
 <p>
-<p> <p style="color:red;">Note: This is generated from patch notes and in-game codex and has not yet been tested
-   against the actual element. Accuracy not guaranteed.</p>
-<p> Element class: AntiGravityGeneratorUnit
-<p> Extends: <a href="../modules/Element.html#">Element</a> &gt; <a href="../modules/ElementWithState.html#">ElementWithState</a> &gt; <a href="../modules/ElementWithToggle.html#">ElementWithToggle</a></p>
+<p> Element class: Adjustor
+<p> Extends: <a href="../modules/Element.html#">Element</a> &gt; <a href="../modules/Engine.html#">Engine</a></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#activate">activate ()</a></td>
-	<td class="summary">Activate the anti-gravity generator.</td>
+	<td class="summary">Start the adjustor at full power (works only when run inside a cockpit or under remote control).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#deactivate">deactivate ()</a></td>
-	<td class="summary">Deactivate the anti-gravity generator.</td>
+	<td class="summary">Stops the adjustor (works only when run inside a cockpit or under remote control).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#isActive">isActive ()</a></td>
-	<td class="summary">Returns the state of activation of the anti-gravity generator.</td>
+	<td class="summary">Checks if the adjustor is active.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getWidgetData">getWidgetData ()</a></td>
-	<td class="summary">Get element data as JSON.</td>
+	<td class="name" nowrap><a href="#getState">getState ()</a></td>
+	<td class="summary"><b>Deprecated:</b> Returns the activation state of the engine.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getFieldStrength">getFieldStrength ()</a></td>
-	<td class="summary">Returns the field strength of the anti-gravitational field.</td>
+	<td class="name" nowrap><a href="#toggle">toggle ()</a></td>
+	<td class="summary">Toggle the state of the adjustor.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getCompensationRate">getCompensationRate ()</a></td>
-	<td class="summary">Returns the current rate of compensation of the gravitational field.</td>
+	<td class="name" nowrap><a href="#setThrust">setThrust (thrust)</a></td>
+	<td class="summary">Set the exhaust thrust of the adjustor.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getFieldPower">getFieldPower ()</a></td>
-	<td class="summary">Returns the current power of the gravitational field.</td>
+	<td class="name" nowrap><a href="#getThrust">getThrust ()</a></td>
+	<td class="summary">Returns the current exhaust thrust of the adjustor.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getPulsorCount">getPulsorCount ()</a></td>
-	<td class="summary">Returns the number of pulsors linked to the anti-gravity generator.</td>
+	<td class="name" nowrap><a href="#getMaxThrust">getMaxThrust ()</a></td>
+	<td class="summary">Returns the maximal exhaust thrust the adjustor can deliver.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#setBaseAltitude">setBaseAltitude (altitude)</a></td>
-	<td class="summary"><b>Deprecated:</b> Sets the base altitude for the anti-gravity field.</td>
+	<td class="name" nowrap><a href="#getThrustAxis">getThrustAxis ()</a></td>
+	<td class="summary">Returns the adjustor exhaust thrust direction in construct local coordinates.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#setTargetAltitude">setTargetAltitude (altitude)</a></td>
-	<td class="summary">Sets the target altitude for the anti-gravity field.</td>
+	<td class="name" nowrap><a href="#getTorqueAxis">getTorqueAxis ()</a></td>
+	<td class="summary">Returns the adjustor torque axis in construct local coordinates.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getTargetAltitude">getTargetAltitude ()</a></td>
-	<td class="summary">Return the target altitude defined for the anti-gravitational field.</td>
+	<td class="name" nowrap><a href="#getWorldThrustAxis">getWorldThrustAxis ()</a></td>
+	<td class="summary">Returns the adjustor exhaust thrust direction in world coordinates.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getBaseAltitude">getBaseAltitude ()</a></td>
-	<td class="summary">Return the current base altitude for the anti-gravitational field.</td>
+	<td class="name" nowrap><a href="#getWorldTorqueAxis">getWorldTorqueAxis ()</a></td>
+	<td class="summary">Returns the adjustor torque axis in world coordinates.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setSignalIn">setSignalIn (plug, state)</a></td>
@@ -173,7 +171,7 @@
     <strong>activate ()</strong>
     </dt>
     <dd>
-    Activate the anti-gravity generator.
+    Start the adjustor at full power (works only when run inside a cockpit or under remote control).
 
 
 
@@ -187,7 +185,7 @@
     <strong>deactivate ()</strong>
     </dt>
     <dd>
-    Deactivate the anti-gravity generator.
+    Stops the adjustor (works only when run inside a cockpit or under remote control).
 
 
 
@@ -201,7 +199,7 @@
     <strong>isActive ()</strong>
     </dt>
     <dd>
-    Returns the state of activation of the anti-gravity generator.
+    Checks if the adjustor is active.
 
 
 
@@ -209,7 +207,7 @@
     <ol>
 
            <span class="types"><span class="type">0/1</span></span>
-        1 when the anti-gravity generator is started, 0 otherwise.
+        1 when the adjustor is on.
     </ol>
 
 
@@ -217,159 +215,57 @@
 
 </dd>
     <dt>
-    <a name = "getWidgetData"></a>
-    <strong>getWidgetData ()</strong>
+    <a name = "getState"></a>
+    <strong>getState ()</strong>
     </dt>
     <dd>
-    Get element data as JSON.
-<p> Anti-gravity generators have an <code>antigravity_generator</code> widget, which contains the following fields (bold
- fields are visible when making custom use of the widget):
- <ul>
-   <li><b><span class="parameter">antiGravityField</span></b> (<span class="type">float</span>) Field strength.</li>
-   <li><b><span class="parameter">antiGPower</span></b> (<span class="type">float</span>) Power as a fraction of
-     1.0.</li>
-   <li><b><span class="parameter">baseAltitude</span></b> (<span class="type">float</span>) Base altitude in
-     meters.</li>
-   <li><b><span class="parameter">showError</span></b> (<span class="type">boolean</span>) True if the error banner
-     should be shown, false otherwise.</li>
-   <li><span class="parameter">name</span> (<span class="type">string</span>) The name of the element.</li>
-   <li><span class="parameter">helperId</span> (<span class="type">string</span>)
-     <code>antigravity_generator</code></li>
-   <li><span class="parameter">type</span> (<span class="type">string</span>) <code>antigravity_generator</code></li>
- </ul>
+    <b>Deprecated:</b> Returns the activation state of the engine.
+<p> This method is deprecated: isActive should be used instead
 
 
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        Data as JSON.
+           <span class="types"><span class="type">0/1</span></span>
+        1 when the engine is on, 0 otherwise.
     </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getFieldStrength"></a>
-    <strong>getFieldStrength ()</strong>
-    </dt>
-    <dd>
-    Returns the field strength of the anti-gravitational field.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">float</span></span>
-        The power of the anti-gravitational field in Es.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getCompensationRate"></a>
-    <strong>getCompensationRate ()</strong>
-    </dt>
-    <dd>
-    Returns the current rate of compensation of the gravitational field.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">float</span></span>
-        The current rate in percentage.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getFieldPower"></a>
-    <strong>getFieldPower ()</strong>
-    </dt>
-    <dd>
-    Returns the current power of the gravitational field.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">float</span></span>
-        The current power in percentage.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getPulsorCount"></a>
-    <strong>getPulsorCount ()</strong>
-    </dt>
-    <dd>
-    Returns the number of pulsors linked to the anti-gravity generator.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">int</span></span>
-        The number of pulsors linked.
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "setBaseAltitude"></a>
-    <strong>setBaseAltitude (altitude)</strong>
-    </dt>
-    <dd>
-    <b>Deprecated:</b> Sets the base altitude for the anti-gravity field.
-<p> This method is deprecated: setTargetAltitude should be used instead
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">altitude</span>
-            <span class="types"><span class="type">m</span></span>
-         The desired altitude. It will be reached with a slow acceleration (not instantaneous).
-        </li>
-    </ul>
-
 
 
     <h3>See also:</h3>
     <ul>
-         <a href="../modules/AntiGravityGeneratorUnit.html#setTargetAltitude">setTargetAltitude</a>
+         <a href="../modules/AdjustorUnit.html#isActive">isActive</a>
     </ul>
 
 
 </dd>
     <dt>
-    <a name = "setTargetAltitude"></a>
-    <strong>setTargetAltitude (altitude)</strong>
+    <a name = "toggle"></a>
+    <strong>toggle ()</strong>
     </dt>
     <dd>
-    Sets the target altitude for the anti-gravity field.  Cannot be called from <a href="../modules/system.html#EVENT_onFlush">system.onFlush</a>.
+    Toggle the state of the adjustor.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setThrust"></a>
+    <strong>setThrust (thrust)</strong>
+    </dt>
+    <dd>
+    Set the exhaust thrust of the adjustor.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">altitude</span>
+        <li><span class="parameter">thrust</span>
             <span class="types"><span class="type">float</span></span>
-         The target altitude in meters. It will be reached with a slow acceleration (not instantaneous).
+         The adjustor thrust in newtons (limited by the maximum thrust).
         </li>
     </ul>
 
@@ -379,11 +275,11 @@
 
 </dd>
     <dt>
-    <a name = "getTargetAltitude"></a>
-    <strong>getTargetAltitude ()</strong>
+    <a name = "getThrust"></a>
+    <strong>getThrust ()</strong>
     </dt>
     <dd>
-    Return the target altitude defined for the anti-gravitational field.
+    Returns the current exhaust thrust of the adjustor.
 
 
 
@@ -391,7 +287,7 @@
     <ol>
 
            <span class="types"><span class="type">float</span></span>
-        The target altitude in meters.
+        The current exhaust thrust of the adjustor in newtons.
     </ol>
 
 
@@ -399,13 +295,11 @@
 
 </dd>
     <dt>
-    <a name = "getBaseAltitude"></a>
-    <strong>getBaseAltitude ()</strong>
+    <a name = "getMaxThrust"></a>
+    <strong>getMaxThrust ()</strong>
     </dt>
     <dd>
-    Return the current base altitude for the anti-gravitational field.
-<p> Note: This is the altitude that the anti-gravity generator is currently trying to hold at. It will adjust slowly
- to match the target altitude but will not instantly reflect the value set.
+    Returns the maximal exhaust thrust the adjustor can deliver.
 
 
 
@@ -413,7 +307,87 @@
     <ol>
 
            <span class="types"><span class="type">float</span></span>
-        The base altitude in meters.
+        The maximum exhaust thrust of the adjustor in newtons.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getThrustAxis"></a>
+    <strong>getThrustAxis ()</strong>
+    </dt>
+    <dd>
+    Returns the adjustor exhaust thrust direction in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The adjustor exhaust thrust direction vector in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getTorqueAxis"></a>
+    <strong>getTorqueAxis ()</strong>
+    </dt>
+    <dd>
+    Returns the adjustor torque axis in construct local coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The torque axis vector in construct local coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldThrustAxis"></a>
+    <strong>getWorldThrustAxis ()</strong>
+    </dt>
+    <dd>
+    Returns the adjustor exhaust thrust direction in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The adjustor exhaust thrust direction vector in world coordinates.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getWorldTorqueAxis"></a>
+    <strong>getWorldTorqueAxis ()</strong>
+    </dt>
+    <dd>
+    Returns the adjustor torque axis in world coordinates.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">vec3</span></span>
+        The torque axis vector in world coordinates.
     </ol>
 
 
@@ -430,6 +404,7 @@
  <ul>
  <li>"in" for the in signal (seems to have no actual effect when modified this way).</li>
  </ul>
+
 
 
     <h3>Parameters:</h3>
@@ -459,6 +434,7 @@
  <ul>
  <li>"in" for the in signal.</li>
  </ul>
+
 
 
     <h3>Parameters:</h3>
