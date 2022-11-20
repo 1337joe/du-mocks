@@ -51,7 +51,7 @@
   <li><a href="../modules/DetectionZoneUnit.html">DetectionZoneUnit</a></li>
   <li><a href="../modules/DoorUnit.html">DoorUnit</a></li>
   <li><a href="../modules/Element.html">Element</a></li>
-  <li><strong>ElementWithState</strong></li>
+  <li><a href="../modules/ElementWithState.html">ElementWithState</a></li>
   <li><a href="../modules/ElementWithToggle.html">ElementWithToggle</a></li>
   <li><a href="../modules/EmitterUnit.html">EmitterUnit</a></li>
   <li><a href="../modules/Engine.html">Engine</a></li>
@@ -74,7 +74,7 @@
   <li><a href="../modules/ReceiverUnit.html">ReceiverUnit</a></li>
   <li><a href="../modules/ScreenUnit.html">ScreenUnit</a></li>
   <li><a href="../modules/ShieldGeneratorUnit.html">ShieldGeneratorUnit</a></li>
-  <li><a href="../modules/SurfaceEngineUnit.html">SurfaceEngineUnit</a></li>
+  <li><strong>SurfaceEngineUnit</strong></li>
   <li><a href="../modules/TelemeterUnit.html">TelemeterUnit</a></li>
   <li><a href="../modules/TransponderUnit.html">TransponderUnit</a></li>
   <li><a href="../modules/WarpDriveUnit.html">WarpDriveUnit</a></li>
@@ -92,25 +92,33 @@
 
 <div id="content">
 
-<h1>Module <code>ElementWithState</code></h1>
-<p>Abstract class to define elements with a getState method.</p>
-<p>
-<p> Element class: <none>
-<p> Extends: <a href="../modules/Element.html#">Element</a>
-<p> Extended by:
+<h1>Module <code>SurfaceEngineUnit</code></h1>
+<p>Surface engines require a surface to push off from.</p>
+<p> They support movement of ships across the ground or other
+ surfaces. Hover engines require an atmosphere to function, while vertical boosters provide more thrust and can
+ operate in space but consume space fuel.
+<p> Element class:
  <ul>
-   <li><a href="../modules/ElementWithToggle.html#">ElementWithToggle</a></li>
-   <li><a href="../modules/LaserDetectorUnit.html#">LaserDetectorUnit</a></li>
-   <li><a href="../modules/ManualButtonUnit.html#">ManualButtonUnit</a></li>
-   <li><a href="../modules/PressureTileUnit.html#">PressureTileUnit</a></li>
- </ul></p>
+   <li>HoverEngineSmallGroup</li>
+   <li>HoverEngineMediumGroup</li>
+   <li>HoverEngineLargeGroup</li>
+   <li>AtmosphericVerticalBoosterXtraSmallGroup</li>
+   <li>AtmosphericVerticalBoosterSmallGroup</li>
+   <li>AtmosphericVerticalBoosterMediumGroup</li>
+   <li>AtmosphericVerticalBoosterLargeGroup</li>
+ </ul>
+<p> Extends: <a href="../modules/Element.html#">Element</a> &gt; <a href="../modules/Engine.html#">Engine</a> &gt; <a href="../modules/FueledEngine.html#">FueledEngine</a></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#getState">getState ()</a></td>
-	<td class="summary"><b>Deprecated:</b> Returns the activation state of the element.</td>
+	<td class="name" nowrap><a href="#getDistance">getDistance ()</a></td>
+	<td class="summary">Returns the distance to the first object detected in the direction of the thrust.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getMaxDistance">getMaxDistance ()</a></td>
+	<td class="summary">Returns the maximum functional distance from the ground.</td>
 	</tr>
 </table>
 
@@ -122,20 +130,39 @@
 
     <dl class="function">
     <dt>
-    <a name = "getState"></a>
-    <strong>getState ()</strong>
+    <a name = "getDistance"></a>
+    <strong>getDistance ()</strong>
     </dt>
     <dd>
-    <b>Deprecated:</b> Returns the activation state of the element.
-<p> This method is deprecated: element-specific methods should be used instead.
+    Returns the distance to the first object detected in the direction of the thrust.
 
 
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">0/1</span></span>
-        1 when the element is on, 0 otherwise.
+           <span class="types"><span class="type">float</span></span>
+        The distance to the first obstacle in meters or -1 if nothing closer than max distance.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getMaxDistance"></a>
+    <strong>getMaxDistance ()</strong>
+    </dt>
+    <dd>
+    Returns the maximum functional distance from the ground.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">float</span></span>
+        The maximum functional distance in meters.
     </ol>
 
 
