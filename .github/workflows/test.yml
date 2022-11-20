@@ -1,4 +1,4 @@
-name: Tests
+name: Test
 
 on: 
   push:
@@ -7,8 +7,48 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
-    name: Unit Tests
+  luarocks:
+    name: Test LuaRocks
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
+
+      - uses: leafo/gh-actions-lua@d84e7d61946edb679210088bc1378c099fde51fe # v9.1.0
+
+      - uses: leafo/gh-actions-luarocks@e65774a6386cb4f24e293dca7fc4ff89165b64c5 # v4.3.0
+
+      - name: Setup
+        run: |
+          luarocks install --only-deps du-mocks-scm-0.rockspec
+
+      - name: Verify LuaRocks config
+        run: luarocks make
+
+  ldoc:
+    name: Test LDoc
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
+
+      - uses: leafo/gh-actions-lua@d84e7d61946edb679210088bc1378c099fde51fe # v9.1.0
+
+      - uses: leafo/gh-actions-luarocks@e65774a6386cb4f24e293dca7fc4ff89165b64c5 # v4.3.0
+
+      - name: Setup
+        run: |
+          luarocks install --only-deps du-mocks-scm-0.rockspec
+          luarocks install ldoc
+
+      - name: Verify codex builds cleanly
+        run: ldoc . --fatalwarnings
+
+      - name: Verify PTS codex builds cleanly
+        run: ldoc -c config-pts.ld . --fatalwarnings
+
+  unit-test:
+    name: Run Unit Tests
     runs-on: ubuntu-latest
 
     strategy:
@@ -32,9 +72,6 @@ jobs:
           luarocks install luaunit
           luarocks install luacov
           luarocks install luafilesystem
-
-      - name: Verify LuaRocks config
-        run: luarocks make
 
       - name: Test
         run: ./test/runTests.sh -o junit
