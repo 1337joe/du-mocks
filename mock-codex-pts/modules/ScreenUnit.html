@@ -127,7 +127,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#addText">addText (x, y, fontSize, text)</a></td>
-	<td class="summary">Displays the given text at the given coordinates in the screen, and returns an ID to move it later.</td>
+	<td class="summary"><b>Deprecated:</b> Displays the given text at the given coordinates in the screen, and returns an ID to move it later.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setCenteredText">setCenteredText (text)</a></td>
@@ -135,7 +135,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setHTML">setHTML (html)</a></td>
-	<td class="summary">Set the whole screen HTML content (overrides anything already set).</td>
+	<td class="summary"><b>Deprecated:</b> Set the whole screen HTML content (overrides anything already set).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setRenderScript">setRenderScript (script)</a></td>
@@ -155,27 +155,27 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#addContent">addContent (x, y, html)</a></td>
-	<td class="summary">Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.</td>
+	<td class="summary"><b>Deprecated:</b> Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setSVG">setSVG (svg)</a></td>
-	<td class="summary">Displays SVG code (anything that fits within a &lt;svg&gt; section), which overrides any preexisting content.</td>
+	<td class="summary"><b>Deprecated:</b> Displays SVG code (anything that fits within a &lt;svg&gt; section), which overrides any preexisting content.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#resetContent">resetContent (id, html)</a></td>
-	<td class="summary">Update the element with the given ID (returned by addContent) with a new HTML content.</td>
+	<td class="summary"><b>Deprecated:</b> Update the element with the given ID (returned by addContent) with a new HTML content.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#deleteContent">deleteContent (id)</a></td>
-	<td class="summary">Delete the element with the given ID (returned by addContent).</td>
+	<td class="summary"><b>Deprecated:</b> Delete the element with the given ID (returned by addContent).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#showContent">showContent (id, state)</a></td>
-	<td class="summary">Update the visibility of the element with the given ID (returned by addContent).</td>
+	<td class="summary"><b>Deprecated:</b> Update the visibility of the element with the given ID (returned by addContent).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#moveContent">moveContent (id, x, y)</a></td>
-	<td class="summary">Move the element with the given id (returned by addContent) to a new position in the screen.</td>
+	<td class="summary"><b>Deprecated:</b> Move the element with the given id (returned by addContent) to a new position in the screen.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#getMouseX">getMouseX ()</a></td>
@@ -191,7 +191,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#clear">clear ()</a></td>
-	<td class="summary">Clear the screen.</td>
+	<td class="summary"><b>Deprecated:</b> Clear the screen.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setSignalIn">setSignalIn (plug, state)</a></td>
@@ -312,7 +312,8 @@
     <strong>addText (x, y, fontSize, text)</strong>
     </dt>
     <dd>
-    Displays the given text at the given coordinates in the screen, and returns an ID to move it later.
+    <b>Deprecated:</b> Displays the given text at the given coordinates in the screen, and returns an ID to move it later.
+<p> This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
 
 
     <h3>Parameters:</h3>
@@ -342,6 +343,10 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#setRenderScript">setRenderScript</a>
+    </ul>
 
 
 </dd>
@@ -371,7 +376,8 @@
     <strong>setHTML (html)</strong>
     </dt>
     <dd>
-    Set the whole screen HTML content (overrides anything already set).
+    <b>Deprecated:</b> Set the whole screen HTML content (overrides anything already set).
+<p> This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
 
 
     <h3>Parameters:</h3>
@@ -384,6 +390,10 @@
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#setRenderScript">setRenderScript</a>
+    </ul>
 
 
 </dd>
@@ -480,7 +490,8 @@
     <strong>addContent (x, y, html)</strong>
     </dt>
     <dd>
-    Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
+    <b>Deprecated:</b> Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
+<p> This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
 
 
     <h3>Parameters:</h3>
@@ -506,6 +517,10 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#setRenderScript">setRenderScript</a>
+    </ul>
 
 
 </dd>
@@ -514,7 +529,8 @@
     <strong>setSVG (svg)</strong>
     </dt>
     <dd>
-    Displays SVG code (anything that fits within a &lt;svg&gt; section), which overrides any preexisting content.
+    <b>Deprecated:</b> Displays SVG code (anything that fits within a &lt;svg&gt; section), which overrides any preexisting content.
+<p> This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
 
 
     <h3>Parameters:</h3>
@@ -527,6 +543,10 @@
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#setRenderScript">setRenderScript</a>
+    </ul>
 
 
 </dd>
@@ -535,7 +555,8 @@
     <strong>resetContent (id, html)</strong>
     </dt>
     <dd>
-    Update the element with the given ID (returned by addContent) with a new HTML content.
+    <b>Deprecated:</b> Update the element with the given ID (returned by addContent) with a new HTML content.
+<p> This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
 
 
     <h3>Parameters:</h3>
@@ -555,7 +576,8 @@
 
     <h3>See also:</h3>
     <ul>
-         <a href="../modules/ScreenUnit.html#addContent">addContent</a>
+         <li><a href="../modules/ScreenUnit.html#setRenderScript">setRenderScript</a></li>
+         <li><a href="../modules/ScreenUnit.html#addContent">addContent</a></li>
     </ul>
 
 
@@ -565,7 +587,8 @@
     <strong>deleteContent (id)</strong>
     </dt>
     <dd>
-    Delete the element with the given ID (returned by addContent).
+    <b>Deprecated:</b> Delete the element with the given ID (returned by addContent).
+<p> This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
 
 
     <h3>Parameters:</h3>
@@ -581,7 +604,8 @@
 
     <h3>See also:</h3>
     <ul>
-         <a href="../modules/ScreenUnit.html#addContent">addContent</a>
+         <li><a href="../modules/ScreenUnit.html#setRenderScript">setRenderScript</a></li>
+         <li><a href="../modules/ScreenUnit.html#addContent">addContent</a></li>
     </ul>
 
 
@@ -591,7 +615,8 @@
     <strong>showContent (id, state)</strong>
     </dt>
     <dd>
-    Update the visibility of the element with the given ID (returned by addContent).
+    <b>Deprecated:</b> Update the visibility of the element with the given ID (returned by addContent).
+<p> This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
 
 
     <h3>Parameters:</h3>
@@ -611,7 +636,8 @@
 
     <h3>See also:</h3>
     <ul>
-         <a href="../modules/ScreenUnit.html#addContent">addContent</a>
+         <li><a href="../modules/ScreenUnit.html#setRenderScript">setRenderScript</a></li>
+         <li><a href="../modules/ScreenUnit.html#addContent">addContent</a></li>
     </ul>
 
 
@@ -621,7 +647,8 @@
     <strong>moveContent (id, x, y)</strong>
     </dt>
     <dd>
-    Move the element with the given id (returned by addContent) to a new position in the screen.
+    <b>Deprecated:</b> Move the element with the given id (returned by addContent) to a new position in the screen.
+<p> This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
 
 
     <h3>Parameters:</h3>
@@ -645,7 +672,8 @@
 
     <h3>See also:</h3>
     <ul>
-         <a href="../modules/ScreenUnit.html#addContent">addContent</a>
+         <li><a href="../modules/ScreenUnit.html#setRenderScript">setRenderScript</a></li>
+         <li><a href="../modules/ScreenUnit.html#addContent">addContent</a></li>
     </ul>
 
 
@@ -715,12 +743,17 @@
     <strong>clear ()</strong>
     </dt>
     <dd>
-    Clear the screen.
+    <b>Deprecated:</b> Clear the screen.
+<p> This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
 
 
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/ScreenUnit.html#setRenderScript">setRenderScript</a>
+    </ul>
 
 
 </dd>
@@ -1127,7 +1160,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-11-20 23:53:41 </i>
+<i style="float:right;">Last updated 2022-11-30 05:20:29 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
