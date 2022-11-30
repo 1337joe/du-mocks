@@ -8,7 +8,7 @@ package.path = "src/?.lua;" .. package.path
 local lu = require("luaunit")
 
 local msu = require("dumocks.ScreenUnit")
-require("test.Utilities")
+local utilities = require("test.Utilities")
 local AbstractTestElementWithToggle = require("test.dumocks.AbstractTestElementWithToggle")
 
 _G.TestScreenUnit = AbstractTestElementWithToggle
@@ -88,54 +88,54 @@ function _G.TestScreenUnit.testRegisterHtmlCallback()
     -- specific set methods verify against mock.html
     -- just need to check to make sure that's what was sent to the callback
     closure.setCenteredText("1")
+    -- uses renderscript now
+    lu.assertFalse(called)
+
+    called = false
+    utilities.verifyDeprecated("setHTML", closure.setHTML, "<div>test</div>")
     lu.assertEquals(providedHtml, mock.html)
     lu.assertTrue(called)
 
     called = false
-    closure.setHTML("<div>test</div>")
-    lu.assertEquals(providedHtml, mock.html)
-    lu.assertTrue(called)
-
-    called = false
-    closure.setSVG('<rect width="100" height="100" />')
+    utilities.verifyDeprecated("setSVG", closure.setSVG, '<rect width="100" height="100" />')
     lu.assertEquals(providedHtml, mock.html)
     lu.assertTrue(called)
 
     called = false
     -- addContent with existing SVG
-    local id = closure.addContent(25, 50, "<div>text</div>")
+    local id = utilities.verifyDeprecated("addContent", closure.addContent, 25, 50, "<div>text</div>")
     lu.assertEquals(providedHtml, mock.html)
     lu.assertTrue(called)
 
     called = false
-    closure.addText(50, 75, 10, "test")
+    utilities.verifyDeprecated("addText", closure.addText, 50, 75, 10, "test")
     lu.assertEquals(providedHtml, mock.html)
     lu.assertTrue(called)
 
     called = false
-    closure.resetContent(id, "<div>new text</div>")
+    utilities.verifyDeprecated("resetContent", closure.resetContent, id, "<div>new text</div>")
     lu.assertEquals(providedHtml, mock.html)
     lu.assertTrue(called)
 
     -- hide first content
     called = false
-    closure.showContent(id, 0)
+    utilities.verifyDeprecated("showContent", closure.showContent, id, 0)
     lu.assertEquals(providedHtml, mock.html)
     lu.assertTrue(called)
 
     -- move hidden content
     called = false
-    closure.moveContent(id, 75, 50)
+    utilities.verifyDeprecated("moveContent", closure.moveContent, id, 75, 50)
     lu.assertTrue(called)
 
     -- delete hidden content
     called = false
-    closure.deleteContent(id)
+    utilities.verifyDeprecated("deleteContent", closure.deleteContent, id)
     lu.assertEquals(providedHtml, mock.html)
     lu.assertTrue(called)
 
     called = false
-    closure.clear()
+    utilities.verifyDeprecated("clear", closure.clear)
     lu.assertEquals(providedHtml, mock.html)
     lu.assertTrue(called)
 end
@@ -171,7 +171,7 @@ function _G.TestScreenUnit.testRegisterHtmlCallbackSuppressError()
     lu.assertNil(providedHtml)
 
     -- just need to set something to trigger the callbacks
-    closure.setCenteredText("1")
+    utilities.verifyDeprecated("clear", closure.clear)
 
     lu.assertNotNil(call1Order, "Callback 1 not called.")
     lu.assertFalse(callback1Finished, "Callback 1 finished despite error.")
@@ -213,7 +213,7 @@ function _G.TestScreenUnit.testRegisterHtmlCallbackPropagateError()
     lu.assertNil(providedHtml)
 
     -- just need to set something to trigger the callbacks
-    lu.assertError(closure.setCenteredText, "1")
+    lu.assertError(utilities.verifyDeprecated, "clear", closure.clear)
 
     lu.assertNotNil(call1Order, "Callback 1 not called.")
     lu.assertFalse(callback1Finished, "Callback 1 finished despite error.")
@@ -230,43 +230,45 @@ function _G.TestScreenUnit.testSetCenteredText()
     local closure = mock:mockGetClosure()
 
     closure.setCenteredText(nil)
-    lu.assertEquals(mock.html, '<div class="bootstrap" style="font-size:12.000000vw; "></div>')
+    lu.assertStrContains(mock.renderScript, 'text = ""')
+    lu.assertStrContains(mock.renderScript, 'fontSize = 122')
 
     closure.setCenteredText("")
-    lu.assertEquals(mock.html, '<div class="bootstrap" style="font-size:12.000000vw; "></div>')
+    lu.assertStrContains(mock.renderScript, 'text = ""')
+    lu.assertStrContains(mock.renderScript, 'fontSize = 122')
 
     closure.setCenteredText("1")
-    lu.assertEquals(mock.html, '<div class="bootstrap" style="font-size:12.000000vw; ">1</div>')
+    lu.assertStrContains(mock.renderScript, 'text = "1"')
+    lu.assertStrContains(mock.renderScript, 'fontSize = 122')
 
     closure.setCenteredText("12")
-    lu.assertEquals(mock.html, '<div class="bootstrap" style="font-size:11.000000vw; ">12</div>')
+    lu.assertStrContains(mock.renderScript, 'text = "12"')
+    lu.assertStrContains(mock.renderScript, 'fontSize = 112')
 
     closure.setCenteredText("123")
-    lu.assertEquals(mock.html, '<div class="bootstrap" style="font-size:10.415037vw; ">123</div>')
+    lu.assertStrContains(mock.renderScript, 'text = "123"')
+    lu.assertStrContains(mock.renderScript, 'fontSize = 106')
 
     closure.setCenteredText("1234")
-    lu.assertEquals(mock.html, '<div class="bootstrap" style="font-size:10.000000vw; ">1234</div>')
+    lu.assertStrContains(mock.renderScript, 'text = "1234"')
+    lu.assertStrContains(mock.renderScript, 'fontSize = 102')
 
     closure.setCenteredText("12345678")
-    lu.assertEquals(mock.html, '<div class="bootstrap" style="font-size:9.000000vw; ">12345678</div>')
+    lu.assertStrContains(mock.renderScript, 'text = "12345678"')
+    lu.assertStrContains(mock.renderScript, 'fontSize = 92')
 
     closure.setCenteredText(1.0)
-    lu.assertEquals(mock.html, '<div class="bootstrap" style="font-size:10.415037vw; ">1.0</div>')
-
-    -- verify clears content
-    table.insert(mock.contentList, {
-        x = 0,
-        y = 0,
-        html = "<div>text</div>",
-        visible = true
-    })
-    closure.setCenteredText("1234")
-    lu.assertEquals(mock.html, '<div class="bootstrap" style="font-size:10.000000vw; ">1234</div>')
-    lu.assertEquals(#mock.contentList, 0)
+    lu.assertStrContains(mock.renderScript, 'text = "1.0"')
+    lu.assertStrContains(mock.renderScript, 'fontSize = 106')
 end
 
 --- Verify set html does so.
 function _G.TestScreenUnit.testSetHTML()
+    -- suppress deprecated prints
+    _G.system = {}
+    _G.system.print = function(_)
+    end
+
     local mock = msu:new()
     local closure = mock:mockGetClosure()
     local html
@@ -294,6 +296,8 @@ function _G.TestScreenUnit.testSetHTML()
     closure.setHTML(html)
     lu.assertEquals(mock.html, html)
     lu.assertEquals(#mock.contentList, 0)
+
+    _G.system = nil
 end
 
 function _G.TestScreenUnit.testSetScriptInput()
@@ -366,6 +370,11 @@ end
 
 --- Verify set svg sets fills template correctly.
 function _G.TestScreenUnit.testSetSVG()
+    -- suppress deprecated prints
+    _G.system = {}
+    _G.system.print = function(_)
+    end
+
     local mock = msu:new()
     local closure = mock:mockGetClosure()
 
@@ -394,9 +403,16 @@ function _G.TestScreenUnit.testSetSVG()
     lu.assertEquals(mock.html, '<svg class="bootstrap" viewBox="0 0 1920 1080" style="width:100%; height:100%">' ..
         '<rect width="100" height="100" /></svg>')
     lu.assertEquals(#mock.contentList, 0)
+
+    _G.system = nil
 end
 
 function _G.TestScreenUnit.testAddContent()
+    -- suppress deprecated prints
+    _G.system = {}
+    _G.system.print = function(_)
+    end
+
     local mock = msu:new()
     local closure = mock:mockGetClosure()
     local content, x, y, id
@@ -428,9 +444,16 @@ function _G.TestScreenUnit.testAddContent()
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:75.000000vw; top:25.000000vh; display: block;"><div>test</div></div>')
     lu.assertEquals(3, id)
+
+    _G.system = nil
 end
 
 function _G.TestScreenUnit.testAddText()
+    -- suppress deprecated prints
+    _G.system = {}
+    _G.system.print = function(_)
+    end
+
     local mock = msu:new()
     local closure = mock:mockGetClosure()
     local content, x, y, size, id
@@ -463,9 +486,16 @@ function _G.TestScreenUnit.testAddText()
     lu.assertEquals(mock.html, '<div style="position:absolute; left:75.000000vw; top:25.000000vh; display: block;">' ..
         '<div style="font-size:20.000000vw">test</div></div>')
     lu.assertEquals(3, id)
+
+    _G.system = nil
 end
 
 function _G.TestScreenUnit.testResetContent()
+    -- suppress deprecated prints
+    _G.system = {}
+    _G.system.print = function(_)
+    end
+
     local mock = msu:new()
     local closure = mock:mockGetClosure()
     local content, x, y, id
@@ -483,9 +513,16 @@ function _G.TestScreenUnit.testResetContent()
     closure.resetContent(id, content)
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;"><div>test</div></div>')
+
+    _G.system = nil
 end
 
 function _G.TestScreenUnit.testDeleteContent()
+    -- suppress deprecated prints
+    _G.system = {}
+    _G.system.print = function(_)
+    end
+
     local mock = msu:new()
     local closure = mock:mockGetClosure()
     local content, x, y
@@ -528,9 +565,16 @@ function _G.TestScreenUnit.testDeleteContent()
     closure.showContent(id1, 1)
     closure.showContent(id2, 1)
     lu.assertEquals(mock.html, '')
+
+    _G.system = nil
 end
 
 function _G.TestScreenUnit.testShowContent()
+    -- suppress deprecated prints
+    _G.system = {}
+    _G.system.print = function(_)
+    end
+
     local mock = msu:new()
     local closure = mock:mockGetClosure()
     local content, x, y
@@ -580,9 +624,16 @@ function _G.TestScreenUnit.testShowContent()
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:50.000000vw; top:75.000000vh; display: block;"><div>1</div></div>' ..
             '<div style="position:absolute; left:25.000000vw; top:50.000000vh; display: block;"><div>2</div></div>')
+
+    _G.system = nil
 end
 
 function _G.TestScreenUnit.testMoveContent()
+    -- suppress deprecated prints
+    _G.system = {}
+    _G.system.print = function(_)
+    end
+
     local mock = msu:new()
     local closure = mock:mockGetClosure()
     local content, x, y
@@ -626,10 +677,17 @@ function _G.TestScreenUnit.testMoveContent()
     lu.assertEquals(mock.html,
         '<div style="position:absolute; left:75.000000vw; top:50.000000vh; display: block;"><div>1</div></div>' ..
             '<div style="position:absolute; left:0.000000vw; top:0.000000vh; display: none;"><div>2</div></div>')
+
+    _G.system = nil
 end
 
 --- Verify clear blanks the screen.
 function _G.TestScreenUnit.testClear()
+    -- suppress deprecated prints
+    _G.system = {}
+    _G.system.print = function(_)
+    end
+
     local mock = msu:new()
     local closure = mock:mockGetClosure()
 
@@ -654,6 +712,8 @@ function _G.TestScreenUnit.testClear()
     closure.clear()
     lu.assertEquals(mock.html, "")
     lu.assertEquals(#mock.contentList, 0)
+
+    _G.system = nil
 end
 
 --- Verify getMouseX returns values within correct range.

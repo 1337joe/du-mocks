@@ -152,13 +152,17 @@ function M:isActive()
 end
 
 local ADD_TEXT_TEMPLATE = '<div style="font-size:%.6fvw">%s</div>'
---- Displays the given text at the given coordinates in the screen, and returns an ID to move it later.
+--- <b>Deprecated:</b> Displays the given text at the given coordinates in the screen, and returns an ID to move it later.
+--
+-- This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
+-- @see setRenderScript
 -- @tparam float x Horizontal position, as a percentage (between 0 and 100) of the screen width.
 -- @tparam float y Vertical position, as a percentage (between 0 and 100) of the screen height.
 -- @tparam float fontSize Text font size, as a percentage (between 0 and 100) of the screen width.
 -- @tparam string text The text to display.
 -- @return An integer ID that can be used later to update/remove the added element.
 function M:addText(x, y, fontSize, text)
+    M.deprecated("addText", "Lua rendering on the screen or setRenderScript(script)")
     fontSize = validateFloat(fontSize)
     text = validateText(text)
 
@@ -166,26 +170,32 @@ function M:addText(x, y, fontSize, text)
     return self:addContent(x, y, htmlContent)
 end
 
-local CENTERED_TEXT_TEMPLATE = '<div class="bootstrap" style="font-size:%.6fvw; ">%s</div>'
+local CENTERED_TEXT_TEMPLATE = [[local rslib = require('rslib')
+local text = "%s"
+local config = { fontSize = %d }
+rslib.drawQuickText(text, config)]]
 --- Displays the given text centered in the screen with a font to maximize its visibility.
 -- @tparam string text The text to display.
 function M:setCenteredText(text)
     text = validateText(text)
     local fontSize
     if string.len(text) == 0 then
-        fontSize = 12
+        fontSize = 122
     else
-        -- calculated based on lengths 1-8
-        fontSize = 12 - 1.442695041 * math.log(string.len(text))
+        -- calculated based on lengths 1-10
+        fontSize = 122 - math.floor(34 * math.log(string.len(text), 10))
     end
 
-    -- intentionally clear any additional content
-    self:setHTML(string.format(CENTERED_TEXT_TEMPLATE, fontSize, text))
+    self:setRenderScript(string.format(CENTERED_TEXT_TEMPLATE, text, fontSize))
 end
 
---- Set the whole screen HTML content (overrides anything already set).
+--- <b>Deprecated:</b> Set the whole screen HTML content (overrides anything already set).
+--
+-- This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
+-- @see setRenderScript
 -- @tparam string html The HTML content to display.
 function M:setHTML(html)
+    M.deprecated("setHTML", "Lua rendering on the screen or setRenderScript(script)")
     self.contentList = {}
     self.directHtml = validateText(html)
 
@@ -218,12 +228,16 @@ function M:getScriptOutput()
     return validateText(self.scriptOutput)
 end
 
---- Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
+--- <b>Deprecated:</b> Displays the given HTML content at the given coordinates in the screen, and returns an ID to move it later.
+--
+-- This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
+-- @see setRenderScript
 -- @tparam float x Horizontal position, as a percentage (between 0 and 100) of the screen width.
 -- @tparam float y Vertical position, as a percentage (between 0 and 100) of the screen height.
 -- @tparam string html The HTML content to display, which can contain SVG elements to make drawings.
 -- @return An integer ID that can be used later to update/remove the added element.
 function M:addContent(x, y, html)
+    M.deprecated("addContent", "Lua rendering on the screen or setRenderScript(script)")
     x = validateFloat(x)
     y = validateFloat(y)
     html = validateText(html)
@@ -245,9 +259,13 @@ function M:addContent(x, y, html)
 end
 
 local SVG_TEMPLATE = '<svg class="bootstrap" viewBox="0 0 1920 1080" style="width:100%%; height:100%%">%s</svg>'
---- Displays SVG code (anything that fits within a &lt;svg&gt; section), which overrides any preexisting content.
+--- <b>Deprecated:</b> Displays SVG code (anything that fits within a &lt;svg&gt; section), which overrides any preexisting content.
+--
+-- This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
+-- @see setRenderScript
 -- @tparam string svg The SVG content to display, which fits inside a 1920x1080 canvas.
 function M:setSVG(svg)
+    M.deprecated("setSVG", "Lua rendering on the screen or setRenderScript(script)")
     if svg == nil then
         svg = ""
     elseif type(svg) ~= "string" then
@@ -258,22 +276,30 @@ function M:setSVG(svg)
     self:setHTML(string.format(SVG_TEMPLATE, svg))
 end
 
---- Update the element with the given ID (returned by addContent) with a new HTML content.
+--- <b>Deprecated:</b> Update the element with the given ID (returned by addContent) with a new HTML content.
+--
+-- This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
+-- @see setRenderScript
 -- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as addContent return the ID
 -- that you can store to use later here.
 -- @tparam string html The HTML content to display, which can contain SVG elements to make drawings.
 -- @see addContent
 function M:resetContent(id, html)
+    M.deprecated("resetContent", "Lua rendering on the screen or setRenderScript(script)")
     self.contentList[id].html = html
 
     generateHtml(self)
 end
 
---- Delete the element with the given ID (returned by addContent).
+--- <b>Deprecated:</b> Delete the element with the given ID (returned by addContent).
+--
+-- This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
+-- @see setRenderScript
 -- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as addContent return the ID
 -- that you can store to use later here.
 -- @see addContent
 function M:deleteContent(id)
+    M.deprecated("deleteContent", "Lua rendering on the screen or setRenderScript(script)")
     -- deleting non-existent index is no-op
     if not self.contentList[id] then
         return
@@ -284,12 +310,16 @@ function M:deleteContent(id)
     generateHtml(self)
 end
 
---- Update the visibility of the element with the given ID (returned by addContent).
+--- <b>Deprecated:</b> Update the visibility of the element with the given ID (returned by addContent).
+--
+-- This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
+-- @see setRenderScript
 -- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as addContent return the ID
 -- that you can store to use later here.
 -- @tparam 0/1 state 0 = invisible, 1 = visible.
 -- @see addContent
 function M:showContent(id, state)
+    M.deprecated("showContent", "Lua rendering on the screen or setRenderScript(script)")
     -- showing non-existent index is no-op
     if not self.contentList[id] then
         return
@@ -300,13 +330,17 @@ function M:showContent(id, state)
     generateHtml(self)
 end
 
---- Move the element with the given id (returned by addContent) to a new position in the screen.
+--- <b>Deprecated:</b> Move the element with the given id (returned by addContent) to a new position in the screen.
+--
+-- This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
+-- @see setRenderScript
 -- @tparam int id An integer ID that is used to identify the element in the screen. Methods such as addContent return the ID
 -- that you can store to use later here.
 -- @tparam float x Horizontal position, as a percentage (between 0 and 1) of the screen width.
 -- @tparam float y Vertical position, as a percentage (between 0 and 1) of the screen height.
 -- @see addContent
 function M:moveContent(id, x, y)
+    M.deprecated("moveContent", "Lua rendering on the screen or setRenderScript(script)")
     -- moving non-existent index is no-op
     if not self.contentList[id] then
         return
@@ -348,8 +382,12 @@ function M:getMouseState()
     return 0
 end
 
---- Clear the screen.
+--- <b>Deprecated:</b> Clear the screen.
+--
+-- This method is deprecated: Lua rendering on the screen or setRenderScript(script) should be used instead
+-- @see setRenderScript
 function M:clear()
+    M.deprecated("clear", "Lua rendering on the screen or setRenderScript(script)")
     self.directHtml = ""
     self.contentList = {}
 
