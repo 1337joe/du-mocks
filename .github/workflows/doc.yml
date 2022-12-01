@@ -33,12 +33,8 @@ jobs:
           mv doc docs/mock-codex
       
       - name: Remove mock methods
-        uses: jacobtomlinson/gha-find-replace@f485fdc3f67a6d87ae6e3d11e41f648c26d7aee3 # v2
-        with:
-          find: '--- Mock'
-          replace: '-- Mock'
-          regex: false
-          include: src/dumocks/*.lua
+        run: |
+          find src/dumocks -name \*.lua -exec sed -i 's/--- Mock/-- Mock/g' {} +
 
       - name: Build web codex
         run: |
@@ -46,12 +42,8 @@ jobs:
           mv doc docs/web-codex
       
       - name: Clean up CSS
-        uses: jacobtomlinson/gha-find-replace@f485fdc3f67a6d87ae6e3d11e41f648c26d7aee3 # v2
-        with:
-          find: 'width: 700px;'
-          replace: ';'
-          regex: false
-          include: docs/**/ldoc.css
+        run: |
+          find docs -name ldoc.css -exec sed -i 's/width: 700px;//g' {} +
 
       - name: Deploy Web Codex
         uses: JamesIves/github-pages-deploy-action@ba1486788b0490a235422264426c45848eac35c6 # v4.4.1
