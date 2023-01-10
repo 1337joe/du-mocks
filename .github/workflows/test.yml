@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - uses: leafo/gh-actions-lua@d84e7d61946edb679210088bc1378c099fde51fe # v9.1.0
 
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - uses: leafo/gh-actions-lua@d84e7d61946edb679210088bc1378c099fde51fe # v9.1.0
 
@@ -58,7 +58,7 @@ jobs:
         luaVersion: [ "5.3", "5.4" ]
 
     steps:
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - uses: leafo/gh-actions-lua@d84e7d61946edb679210088bc1378c099fde51fe # v9.1.0
         with:
@@ -77,7 +77,7 @@ jobs:
         run: ./test/runTests.sh -o junit
 
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@46ab8d49369d898e381a607119161771bc65c2a6 # v2.2.0
+        uses: EnricoMi/publish-unit-test-result-action@a3caf02865c0604ad3dc1ecfcc5cdec9c41b7936 # v2.3.0
         if: always()
         with:
           junit_files: "test/results/**/*.xml"
@@ -92,7 +92,7 @@ jobs:
         run: ./test/exportAll.sh
 
       - name: Upload Test Artifacts
-        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # v3.1.1
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: ${{ matrix.luaVersion == '5.3' }}
         with:
           name: test_configs
