@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+      - uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4.0.0
 
       - uses: leafo/gh-actions-lua@35bcb06abec04ec87df82e08caa84d545348536e # v10.0.0
 
