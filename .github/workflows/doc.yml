@@ -46,14 +46,14 @@ jobs:
           find docs -name ldoc.css -exec sed -i 's/width: 700px;//g' {} +
 
       - name: Deploy Web Codex
-        uses: JamesIves/github-pages-deploy-action@920cbb300dcd3f0568dbc42700c61e2fd9e6139c # v4.6.4
+        uses: JamesIves/github-pages-deploy-action@a96ffa23204731ec64e3e1316072197d98bfbaea # v4.6.6
         with:
           branch: codex
           folder: docs/web-codex
           target-folder: web-${{ env.CODEX_SUFFIX }}
 
       - name: Deploy Mock Codex
-        uses: JamesIves/github-pages-deploy-action@920cbb300dcd3f0568dbc42700c61e2fd9e6139c # v4.6.4
+        uses: JamesIves/github-pages-deploy-action@a96ffa23204731ec64e3e1316072197d98bfbaea # v4.6.6
         with:
           branch: codex
           folder: docs/mock-codex
