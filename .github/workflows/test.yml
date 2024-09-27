@@ -103,7 +103,7 @@ jobs:
       - run: rm -f test/results/*.xml
 
       - name: Deploy Screen Renderer Output
-        uses: JamesIves/github-pages-deploy-action@920cbb300dcd3f0568dbc42700c61e2fd9e6139c # v4.6.4
+        uses: JamesIves/github-pages-deploy-action@a96ffa23204731ec64e3e1316072197d98bfbaea # v4.6.6
         if: ${{ matrix.luaVersion == '5.3' && (github.event_name == 'push' && github.ref_name == 'main') }}
         with:
           branch: codex
