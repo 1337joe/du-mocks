@@ -16,7 +16,7 @@ jobs:
       CODEX_SUFFIX: "${{ github.ref == 'refs/heads/pts' && 'codex-pts' || 'codex' }}"
 
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - uses: leafo/gh-actions-lua@35bcb06abec04ec87df82e08caa84d545348536e # v10.0.0
 
@@ -46,14 +46,14 @@ jobs:
           find docs -name ldoc.css -exec sed -i 's/width: 700px;//g' {} +
 
       - name: Deploy Web Codex
-        uses: JamesIves/github-pages-deploy-action@a96ffa23204731ec64e3e1316072197d98bfbaea # v4.6.6
+        uses: JamesIves/github-pages-deploy-action@881db5376404c5c8d621010bcbec0310b58d5e29 # v4.6.8
         with:
           branch: codex
           folder: docs/web-codex
           target-folder: web-${{ env.CODEX_SUFFIX }}
 
       - name: Deploy Mock Codex
-        uses: JamesIves/github-pages-deploy-action@a96ffa23204731ec64e3e1316072197d98bfbaea # v4.6.6
+        uses: JamesIves/github-pages-deploy-action@881db5376404c5c8d621010bcbec0310b58d5e29 # v4.6.8
         with:
           branch: codex
           folder: docs/mock-codex
