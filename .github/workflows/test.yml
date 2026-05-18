@@ -85,7 +85,7 @@ jobs:
       - run: luacov
 
       - name: Upload to Codecov
-        uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         if: ${{ matrix.luaVersion == '5.3' }}
 
       - name: Export In-Game Tests
